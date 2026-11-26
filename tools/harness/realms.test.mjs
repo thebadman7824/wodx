@@ -6,7 +6,7 @@ import {readFileSync} from "node:fs";
 import * as RR from "../../modules/wodx-rules/otherworlds/realms-rules.mjs";
 import * as J from "../../modules/wodx-rules/otherworlds/journey-rules.mjs";
 import {JOURNEY_TABLES} from "../../modules/wodx-otherworlds/data/journey-tables.mjs";
-import * as G from "../../modules/wodx-chronicle/scripts/gen-core.mjs";
+import * as G from "../../modules/wodx-rules/chronicle/gen-core.mjs";
 
 const seq = list => { let i = 0; return () => list[i++ % list.length]; };
 

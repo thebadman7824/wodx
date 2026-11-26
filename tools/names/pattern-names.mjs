@@ -1,7 +1,7 @@
 /**
  * Names made by pattern (B5600): for peoples whose recorded own names are two-part names in translation (a word that
  * describes, then a thing: Red Cloud, Spotted Tail, Two Crows), new names are made from the same parts, never from parts
- * the records lack. Writes modules/wodx-creation/data/people-patterned.mjs; the recorded names stay where they are.
+ * the records lack. Writes modules/wodx-rules/creation/data/people-patterned.mjs; the recorded names stay where they are.
  *   node tools/names/pattern-names.mjs
  */
 import {writeFileSync} from "node:fs";
@@ -9,7 +9,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const P = await import(join(root, "modules/wodx-creation/data/people-world.mjs"));
+const P = await import(join(root, "modules/wodx-rules/creation/data/people-world.mjs"));
 
 // Peoples whose recorded own names are mostly two-part names in translation
 export const PEOPLES = ["lakota", "cheyenne", "mandan", "hidatsa", "arikara", "pawnee", "crow", "blackfoot", "arapaho", "kiowa"];
@@ -67,7 +67,7 @@ for ( const o of PEOPLES ) {
 }
 
 const body = Object.entries(out).map(([o, v]) => `  ${o}: {\n    male: ${JSON.stringify(v.male)},\n    female: ${JSON.stringify(v.female)}}`).join(",\n");
-writeFileSync(join(root, "modules/wodx-creation/data/people-patterned.mjs"), `/**
+writeFileSync(join(root, "modules/wodx-rules/creation/data/people-patterned.mjs"), `/**
  * WoDX Creation: names made by pattern (B5600), kept apart from the recorded names. Written by
  * tools/names/pattern-names.mjs; run it again rather than editing by hand.
  *

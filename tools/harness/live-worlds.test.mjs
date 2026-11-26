@@ -9,7 +9,7 @@ import {fileURLToPath, pathToFileURL} from "node:url";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = rel => import(pathToFileURL(path.join(root, rel)).href);
-const LW = await imp("modules/wodx-chronicle/scripts/live-worlds.mjs");
+const LW = await imp("modules/wodx-rules/chronicle/live-worlds.mjs");
 
 test("the Live list guards rothenstein-live with every chronicle module off, and the flag counts", () => {
   assert.ok(LW.LIVE_WORLDS.includes("rothenstein-live"));
@@ -20,7 +20,7 @@ test("the Live list guards rothenstein-live with every chronicle module off, and
 });
 
 test("a chronicle's Live worlds join the list when it registers, and every module reads the same list", async () => {
-  const CD = await imp("modules/wodx-chronicle/scripts/chronicle-data.mjs");
+  const CD = await imp("modules/wodx-rules/chronicle/chronicle-data.mjs");
   CD.registerChronicle({id: "gate-live", manifest: {live: ["gate-live-world"]}});
   try {
     assert.ok(LW.isLiveWorld("gate-live-world"));
@@ -40,7 +40,7 @@ test("no WoDX module keeps its own copy of the Live list (a chronicle's manifest
   const walk = d => { for ( const e of fs.readdirSync(d, {withFileTypes: true}) ) {
     const p = path.join(d, e.name);
     if ( e.isDirectory() ) { if ( !["tests", "data", "node_modules"].includes(e.name) ) walk(p); }
-    else if ( /\.m?js$/.test(e.name) && !p.endsWith(path.join("wodx-chronicle", "scripts", "live-worlds.mjs")) && e.name !== "chronicle.mjs" && /\[\s*"rothenstein-live"\s*\]/.test(fs.readFileSync(p, "utf8")) ) hits.push(path.relative(root, p));
+    else if ( /\.m?js$/.test(e.name) && !p.endsWith(path.join("wodx-rules", "chronicle", "live-worlds.mjs")) && e.name !== "chronicle.mjs" && /\[\s*"rothenstein-live"\s*\]/.test(fs.readFileSync(p, "utf8")) ) hits.push(path.relative(root, p));
   } };
   walk(path.join(root, "modules"));
   assert.deepEqual(hits, [], "read live-worlds.mjs instead");

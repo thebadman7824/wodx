@@ -15,7 +15,7 @@
  * manifest.local (optional, desk d1, B7610): what belongs to the chronicle's own place: feasts, seat titles, languages,
  * caerns and the hunters' start, read through chronicle-local-rules.mjs.
  */
-import {WEEK as TERMS_WEEK, DAY} from "../../wodx-rules/core/terms.mjs";
+import {WEEK as TERMS_WEEK, DAY} from "../core/terms.mjs";
 import {addLiveWorlds} from "./live-worlds.mjs";
 
 const EMPTY_SAGA = Object.freeze({key: "", title: "", where: "", region: "", origin: null, books: []});

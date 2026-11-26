@@ -12,7 +12,7 @@ import {installActors} from "./actors-mock.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const R = await import(join(root, "modules/wodx-rules/creation/advance-rules.mjs"));
-const D = await import(join(root, "modules/wodx-creation/data/advance.mjs"));
+const D = await import(join(root, "modules/wodx-rules/creation/data/advance.mjs"));
 
 const DA = {id: "dark-ages", name: "Dark Ages", system: {mortal: "darkages"}};
 const REN = {id: "renaissance", name: "Renaissance", system: {mortal: "darkages"}};

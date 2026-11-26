@@ -24,7 +24,7 @@ const J = p => JSON.parse(fs.readFileSync(path.join(ROOT, "modules/wodx-actions/
 const E = await import(A("../wodx-rules/actions/effects-rules.js"));
 const PK = await import(A("scripts/power-keywords.js"));
 const PE = await import(A("scripts/path-effects.js"));
-const DAE = await import(A("scripts/mage-da-effects.js"));
+const DAE = await import(A("../wodx-rules/actions/mage-da-effects.js"));
 const BR = await import(A("scripts/book-rituals.js"));
 const D = await import(A("../wodx-rules/actions/demon-rules.js"));
 const DE = await import(A("scripts/demon-evocations.js"));

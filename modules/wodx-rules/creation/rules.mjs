@@ -1,4 +1,4 @@
-import {GENERATIONS, CLANS, XP, GHOUL, BOND} from "../../wodx-creation/data/vampire.mjs";
+import {GENERATIONS, CLANS, XP, GHOUL, BOND} from "./data/vampire.mjs";
 
 /** Pure rules: no Foundry calls, so they can be tested on their own. */
 

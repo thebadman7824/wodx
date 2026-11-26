@@ -168,7 +168,7 @@ test("3.25.0: countermagick takes successes off the card; reflected, the rest la
 
 test("3.26.0: every Dark Ages rote says what it does on the table, or leaves it to the Storyteller", async () => {
   const M = await import(join(root, "modules/wodx-rules/actions/mage-da-rules.js"));
-  const D = await import(join(root, "modules/wodx-actions/scripts/mage-da-effects.js"));
+  const D = await import(join(root, "modules/wodx-rules/actions/mage-da-effects.js"));
   assert.equal(M.ROTES.length, 97);
   for ( const r of M.ROTES ) {
     const spec = D.DA_EFFECTS[r.id];
@@ -256,7 +256,7 @@ test("Actions 3.28.0: the Sorcerers Crusade's magic charts", () => {
 });
 
 test("Actions 3.30.0: the shared keyword roster for every line's powers", async () => {
-  const DA = await import(join(root, "modules/wodx-actions/scripts/mage-da-effects.js"));
+  const DA = await import(join(root, "modules/wodx-rules/actions/mage-da-effects.js"));
   for ( const k of ["know", "speak", "boost", "summon", "make", "work", "illusion", "possess", "bind", "banish", "manifest", "imbue", "place", "weather", "time"] )
     assert.ok(E.KEYWORDS[k], k);
   const got = {ok: true, strength: 3, duration: 0, targets: 0};

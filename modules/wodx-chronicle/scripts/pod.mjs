@@ -10,7 +10,7 @@ import {watched} from "../../wodx-rules/chronicle/signature-rules.mjs";
 import {isQuiet} from "./quiet.mjs";
 import * as Roads from "./roads.mjs";
 import {DAY} from "../../wodx-rules/core/terms.mjs";
-import {current as chronicleInPlay, chronicles, settleInPlay} from "./chronicle-data.mjs";
+import {current as chronicleInPlay, chronicles, settleInPlay} from "../../wodx-rules/chronicle/chronicle-data.mjs";
 import * as CL from "../../wodx-rules/chronicle/close-rules.mjs";
 import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {record as nightRecord} from "./nightwork.mjs";

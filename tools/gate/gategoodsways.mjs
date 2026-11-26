@@ -33,7 +33,7 @@ export async function run() {
   const t0 = game.time.worldTime;
   try {
     const G = await import(`/modules/wodx-library/data/goods.mjs?${Date.now()}`);
-    const L = await import(`/modules/wodx-library/data/goods-ways.mjs?${Date.now()}`);
+    const L = await import(`/modules/wodx-rules/library/data/goods-ways.mjs?${Date.now()}`);
     const F = await import(`/modules/wodx-rules/interactables/fill-rules.mjs?${Date.now()}`);
     const FI = await import(`/modules/wodx-interactables/scripts/fill.mjs?${Date.now()}`);
     const made = await Scene.create([{name: "WoDX gate: Cairo goods", width: 1200, height: 1000, padding: 0.1, grid: {size: 100, distance: 5}},

@@ -743,7 +743,7 @@
    "files": [
     "modules/wodx-creation/scripts/dac-demons.mjs",
     "modules/wodx-rules/creation/dac-demons-rules.mjs",
-    "modules/wodx-creation/data/daw-monsters.mjs"
+    "modules/wodx-rules/creation/data/daw-monsters.mjs"
    ],
    "steps": {
     "built": {

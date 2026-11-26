@@ -11,7 +11,7 @@
  * use (the Tempest: The Sea of Shadows pdf 20-21 / p. 19-20). wildTile() gives the same model generate() does in
  * realm-maps-rules.mjs, so its svg(), sceneParts() and notes draw it. No Foundry here.
  */
-import {stream, pick} from "../../wodx-chronicle/scripts/gen-core.mjs";
+import {stream, pick} from "../chronicle/gen-core.mjs";
 import {T, SIZES, VERSION, REALMS, walkable, wallsOf, reach, inB} from "./realm-maps-rules.mjs";
 
 const P = (ground, path, solid, water, hazard, growth, glow, voidC, ink = "#e8e2d0") => ({ground, path, solid, water, hazard, growth, glow, void: voidC, ink});

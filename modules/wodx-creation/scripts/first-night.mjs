@@ -20,7 +20,7 @@ import {postSeedCards, registerSeedCards} from "./first-night-seed.mjs";
 import {WizardApp, ledgerFor} from "./wizard.mjs";
 import {PreludeRunApp, writtenPrelude, sendTies, meetingJournal, registerTies} from "./first-night-prelude.mjs";
 import {underWay} from "../../wodx-rules/creation/first-night-prelude-rules.mjs";
-import {isLiveWorld} from "../../wodx-chronicle/scripts/live-worlds.mjs";
+import {isLiveWorld} from "../../wodx-rules/chronicle/live-worlds.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const FLAG = "firstNight";

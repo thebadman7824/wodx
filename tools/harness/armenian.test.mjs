@@ -7,11 +7,11 @@ import {dirname, join} from "node:path";
 /* The Armenians in the People generator (B3940 to B3942) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
-const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
+const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-rules/creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
-const {ARMENIAN_LISTS: L} = await import(join(root, "modules/wodx-creation/data/people-armenian.mjs"));
+const {ARMENIAN_LISTS: L} = await import(join(root, "modules/wodx-rules/creation/data/people-armenian.mjs"));
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const people = (era, region = "anatolia", n = 200) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("hy", era, i),
   tables: id => G.resolveTable(PEOPLE_TABLES, id, {era, culture: W.cultureOf(region)}), origin: "armenian", sex: i % 2 ? "female" : "male"}));

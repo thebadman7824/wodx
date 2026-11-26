@@ -7,11 +7,11 @@ import {dirname, join} from "node:path";
 /* The Maya in the People generator (B3830 to B3833): own names and a patronym before the conquest, church names after */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
-const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
+const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-rules/creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
-const {MAYA_LISTS: L} = await import(join(root, "modules/wodx-creation/data/people-maya.mjs"));
+const {MAYA_LISTS: L} = await import(join(root, "modules/wodx-rules/creation/data/people-maya.mjs"));
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const MEX = W.cultureOf("mexico");
 const people = (era, n = 200) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("maya", era, i),

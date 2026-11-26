@@ -14,7 +14,7 @@
  * bonus rows: [type, setting, value] as wodx-library gear-rules.mjs writes them (attr, dice, fixed, ab, abd, soak,
  * health, move, init). spec: an effects result (mage-da-effects.js helpers). once: per "scene" or "day".
  */
-import { H, T, C, N, S, MV, outcomesOf } from "./mage-da-effects.js";
+import { H, T, C, N, S, MV, outcomesOf } from "../../wodx-rules/actions/mage-da-effects.js";
 import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };

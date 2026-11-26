@@ -346,7 +346,7 @@ let waysLib = null;
 export async function goodsList() {
   if ( goodsCache ) return goodsCache;
   try { goodsCache = (await import("../../wodx-library/data/goods.mjs")).GOODS ?? []; } catch (e) { goodsCache = []; }
-  try { waysLib = await import("../../wodx-library/data/goods-ways.mjs"); } catch (e) { waysLib = null; }
+  try { waysLib = await import("../../wodx-rules/library/data/goods-ways.mjs"); } catch (e) { waysLib = null; }
   return goodsCache;
 }
 

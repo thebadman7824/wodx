@@ -7,7 +7,7 @@
  * brandings: [{level, text, at}], lastCast (world time), sceneTries: {key, failures, botches}}.
  */
 
-import { GRIMOIRE_ROTES } from "../../wodx-actions/scripts/mage-da-grimoire.js";
+import { GRIMOIRE_ROTES } from "./mage-da-grimoire.js";
 
 /* ------------------------------------------------------------------ */
 /*  The fellowships (pp. 105–135)                                      */

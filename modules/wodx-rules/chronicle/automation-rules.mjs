@@ -8,7 +8,7 @@
  * changed a setting by hand since. No Foundry here: the harness tests every function.
  */
 import {NEVER_AUTO} from "./approvals-rules.mjs";
-import {LIVE_WORLDS} from "../../wodx-chronicle/scripts/live-worlds.mjs";
+import {LIVE_WORLDS} from "./live-worlds.mjs";
 
 export const LEVELS = ["handsOn", "balanced", "handsOff"];
 export const LEVEL_LABELS = {

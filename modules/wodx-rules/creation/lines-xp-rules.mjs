@@ -9,7 +9,7 @@
  *             sorcery); cat: which; own: affinity, favoured or of the character's House
  *   newPower  the first dot of one; a Gift (cat "gift") is bought whole, at its level
  */
-import {LINE_XP, POWER_ITEMS, SPHERES} from "../../wodx-creation/data/lines-xp.mjs";
+import {LINE_XP, POWER_ITEMS, SPHERES} from "./data/lines-xp.mjs";
 
 export {LINE_XP, POWER_ITEMS, SPHERES};
 

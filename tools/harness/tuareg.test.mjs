@@ -7,9 +7,9 @@ import {dirname, join} from "node:path";
 /* The Tuareg in the People generator (B4950 to B4952): son of and daughter of the father in every age */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
-const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
+const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-rules/creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
 const people = (region, era, n = 200) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("tuareg", era, i),
   tables: id => G.resolveTable(PEOPLE_TABLES, id, {era, culture: W.cultureOf(region)}), origin: "tuareg", sex: i % 2 ? "female" : "male"}));

@@ -8,8 +8,8 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const T = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/trait-rules.mjs")));
-const D = await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/trait-effects.mjs")));
-const M = await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/trait-effects-more.mjs")));
+const D = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/data/trait-effects.mjs")));
+const M = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/data/trait-effects-more.mjs")));
 
 const feat = (name, kind = "merit") => ({id: name, name, kind, value: 0});
 const view = (kind, ...features) => ({kind, features});

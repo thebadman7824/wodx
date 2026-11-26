@@ -11,7 +11,7 @@
  * The common cantrips appear once in each Dominion, under that Dominion's own name for them (Leaves of Gold, of Silver...).
  * Pure: no Foundry calls.
  */
-import { H, T, C, N, S, MV, K, P, A, HL, outcomesOf } from "./mage-da-effects.js";
+import { H, T, C, N, S, MV, K, P, A, HL, outcomesOf } from "../../wodx-rules/actions/mage-da-effects.js";
 import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 export const REF = "Dark Ages: Fae";

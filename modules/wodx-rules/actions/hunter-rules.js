@@ -4,7 +4,7 @@
  *   The Hunters Hunted II pp. 83–85 later), the mortal Numina of The Hunters Hunted II (pp. 70–85).
  * Hunter: The Reckoning (1999 on) lives in reckoning-rules.js. No Foundry calls here, so the harness can test it.
  */
-import { outcomesOf } from "../../wodx-actions/scripts/mage-da-effects.js";
+import { outcomesOf } from "./mage-da-effects.js";
 
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));

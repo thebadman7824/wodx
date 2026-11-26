@@ -14,11 +14,11 @@
  * Garou, a Tradition and their like) comes up only between two of its own members, voices lowered (B2752).
  */
 import {squaresBetween} from "./talk-rules.mjs";
-import {generate, mix, bandOf} from "../../wodx-npc/scripts/talk-grammar.mjs";
+import {generate, mix, bandOf} from "./talk-grammar.mjs";
 import {sphereFor, regionOf, DEFAULT_REGION} from "../chronicle/world-rules.mjs";
 import {mediaFor} from "../chronicle/media-rules.mjs";
-import {TIMES} from "../../wodx-npc/data/grammar/overheard-times.mjs";
-import {TOPICS} from "../../wodx-npc/data/grammar/overheard.mjs";
+import {TIMES} from "./data/grammar/overheard-times.mjs";
+import {TOPICS} from "./data/grammar/overheard.mjs";
 
 export {TOPICS};
 /** Defaults the world settings start from: squares between the two speakers, squares a listener may stand off. */

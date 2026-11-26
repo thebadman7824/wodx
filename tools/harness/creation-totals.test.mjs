@@ -18,7 +18,7 @@ await import(join(root, "modules/wodx-creation/scripts/main.mjs"));
 game.modules.set(M, {});
 const api = () => game.modules.get(M).api;
 const R = await import(join(root, "modules/wodx-rules/creation/totals-rules.mjs"));
-const {defaultLine} = await import(join(root, "modules/wodx-creation/data/creation-totals.mjs"));
+const {defaultLine} = await import(join(root, "modules/wodx-rules/creation/data/creation-totals.mjs"));
 
 test("ready", async () => {
   await Hooks.callAll("init");

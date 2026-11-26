@@ -7,7 +7,7 @@
  * cost, the effect, and an effects-card spec (mage-da-effects.js helpers, plus PL for a pool and CV for Conviction).
  * The Superior Virtues themselves roll in the Virtue roll window. Pure: no Foundry calls.
  */
-import { H, T, C, N, HL, outcomesOf } from "./mage-da-effects.js";
+import { H, T, C, N, HL, outcomesOf } from "../../wodx-rules/actions/mage-da-effects.js";
 import { DAY, WEEK } from "../../wodx-rules/core/terms.mjs";
 
 export const REF = "Dark Ages: Inquisitor";

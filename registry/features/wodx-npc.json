@@ -428,7 +428,7 @@
    "files": [
     "modules/wodx-npc/scripts/talk.mjs",
     "modules/wodx-rules/npc/talk-rules.mjs",
-    "modules/wodx-npc/scripts/talk-grammar.mjs",
+    "modules/wodx-rules/npc/talk-grammar.mjs",
     "modules/wodx-rules/npc/region-talk-rules.mjs"
    ],
    "steps": {
@@ -499,8 +499,8 @@
    "files": [
     "modules/wodx-npc/scripts/passersby.mjs",
     "modules/wodx-rules/npc/passerby-rules.mjs",
-    "modules/wodx-npc/scripts/passerby-world.mjs",
-    "modules/wodx-npc/scripts/passerby-local.mjs",
+    "modules/wodx-rules/npc/passerby-world.mjs",
+    "modules/wodx-rules/npc/passerby-local.mjs",
     "modules/wodx-rules/npc/crowd-rules.mjs"
    ],
    "steps": {

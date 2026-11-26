@@ -7,11 +7,11 @@ import {dirname, join} from "node:path";
 /* The Taíno in the People generator (B4660 to B4663): the Caribbean named from 1197, church names at baptism from 1493 */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
-const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
+const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-rules/creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
-const T = await import(join(root, "modules/wodx-creation/data/people-taino.mjs"));
+const T = await import(join(root, "modules/wodx-rules/creation/data/people-taino.mjs"));
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const CB = W.cultureOf("caribbean");
 const people = (era, n = 200) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("ta", era, i),

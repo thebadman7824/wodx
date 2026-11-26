@@ -1,8 +1,8 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import {MERITS_FLAWS, SHOWS} from "../../modules/wodx-chronicle/data/trait-effects.mjs";
-import {daTable, DA_MERITS_FLAWS} from "../../modules/wodx-chronicle/data/trait-lines.mjs";
+import {MERITS_FLAWS, SHOWS} from "../../modules/wodx-rules/chronicle/data/trait-effects.mjs";
+import {daTable, DA_MERITS_FLAWS} from "../../modules/wodx-rules/chronicle/data/trait-lines.mjs";
 import {meritOptions} from "../../modules/wodx-rules/creation/wizard-rules.mjs";
 import {flawPowerDiff} from "../../modules/wodx-rules/actions/kindred-rules.js";
 

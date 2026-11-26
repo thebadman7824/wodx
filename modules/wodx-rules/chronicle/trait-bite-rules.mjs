@@ -21,7 +21,7 @@
  */
 import * as TERMS from "../core/terms.mjs";
 import {DAY} from "../core/terms.mjs";
-import {BITES_W6} from "../../wodx-chronicle/data/trait-effects-w6.mjs";
+import {BITES_W6} from "./data/trait-effects-w6.mjs";
 export const BITES = {
   "eat-food": {fail: {diff: 1, tags: ["strength", "dexterity", "stamina"], lasts: "night", name: "Food sits heavy"}},
   "common-sense": {fail: {hint: true}},

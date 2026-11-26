@@ -10,7 +10,7 @@
  */
 const opt = ([label, g = "", p = null, text = ""]) => ({label, g, ...(p ? {p} : {}), ...(text ? {text} : {})});
 const sp = (key, label, title, text, options, x = {}) => ({key, label, ...x, beat: {title, text, options: options.map(opt)}});
-import * as RR from "../../wodx-rules/creation/revenant-rules.mjs";
+import * as RR from "../revenant-rules.mjs";
 const ALL = undefined;
 const DA = [[1100, 1499]];
 const SABBAT = [[1493, 2300]];

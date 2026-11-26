@@ -23,7 +23,7 @@
  * Result: Data/wodx-gate/gateevents-result.json.
  */
 const M = "wodx-chronicle";
-const {isLiveWorld} = await import(`/modules/${M}/scripts/live-worlds.mjs`);
+const {isLiveWorld} = await import(`/modules/wodx-rules/chronicle/live-worlds.mjs`);
 /** A testbed world: the owner's testing world, or one the lane tools flag as a testbed (wodx-clean: flags.wodx.clean). */
 const isTestbed = w => !isLiveWorld(w) && (w.id === "rothenstein-wodx" || !!w.flags?.wodx?.clean);
 const sleep = ms => new Promise(r => setTimeout(r, ms));

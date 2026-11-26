@@ -900,7 +900,7 @@ game.world.id = worldId;
 }
 // The night's draw, a story aid and the chooser (Storyteller 0.5.0); an Otherworld journey (Otherworlds 0.3.0)
 {
-  const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+  const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
   const {NIGHT_TABLES} = await import(join(root, "modules/wodx-storyteller/data/night-tables.mjs"));
   const {JOURNEY_TABLES} = await import(join(root, "modules/wodx-otherworlds/data/journey-tables.mjs"));
   const defs = [...NIGHT_TABLES, ...JOURNEY_TABLES].map(d => ({...d, results: G.withRanges(d.results)}));

@@ -83,7 +83,7 @@ export async function run() {
     await step("1 no chronicle", async () => {
       const on = found.filter(c => c.active).map(c => c.id);
       const listed = (chron()?.chronicle?.list?.() ?? []).map(p => p.id), inPlay = chron()?.chronicle?.current?.() ?? null;
-      const data = await import("/modules/wodx-chronicle/scripts/chronicle-data.mjs");
+      const data = await import("/modules/wodx-rules/chronicle/chronicle-data.mjs");
       const held = {books: data.SAGA.books.length, fronts: data.FRONTS.length, twists: data.TWISTS.length, reveals: Object.keys(data.REVEALS).length, encounters: data.ENCOUNTERS.length, clues: data.CLUES.length};
       const errs = found.filter(c => c.error).map(c => `${c.id}: ${c.error}`);
       ok("1 no chronicle", !on.length && !listed.length && !inPlay && Object.values(held).every(n => n === 0) && !errs.length && !!chron()?.chronicle,

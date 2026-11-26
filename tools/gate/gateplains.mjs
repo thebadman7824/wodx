@@ -282,7 +282,7 @@ export async function run() {
         {region: ph?.label, money: ph?.money, medieval: med, earlyModern: em, malayWorld: mw});
     });
     await G.step("26. the raised lists", async () => {
-      const {RAISED} = await import(`/modules/${CR}/data/people-world.mjs`);
+      const {RAISED} = await import(`/modules/wodx-rules/creation/data/people-world.mjs`);
       const thin = [];
       for ( const o of RAISED ) for ( const era of ["medieval", "early-modern", "industrial", "modern"] ) for ( const sex of ["male", "female"] ) {
         const n = results({era}, `names.${sex}.${o}`).length;
@@ -293,7 +293,7 @@ export async function run() {
 
     await G.step("27. names made by pattern", async () => {
       // B5600: the world's Roll Tables hold each people's made names apart, and a medieval Lakota draw can land on one
-      const {PATTERNED} = await import(`/modules/${CR}/data/people-patterned.mjs`);
+      const {PATTERNED} = await import(`/modules/wodx-rules/creation/data/people-patterned.mjs`);
       const made = new Set(PATTERNED.lakota.male);
       const own = results({}, "names.patterned.male.lakota");
       const men = draw("medieval", "lakota", 200, "made").filter((p, i) => i % 2 === 0).map(p => p.name);
@@ -304,7 +304,7 @@ export async function run() {
     await G.step("28. no installed table is empty", async () => {
       // B5641: a Roll Table cut off midway through an update is refilled at start-up, so none stays empty
       // A table shipped empty on purpose (a people with no recorded women's own names, B5600) is left out
-      const {hash128} = await import("/modules/wodx-chronicle/scripts/gen-core.mjs");
+      const {hash128} = await import("/modules/wodx-rules/chronicle/gen-core.mjs");
       const none = hash128(JSON.stringify([])).join("-");
       const empty = [...game.tables].filter(t => { const f = t.getFlag("wodx-chronicle", "table");
         return f?.id && !t.results.size && f.shipped !== none; }).map(t => t.name);

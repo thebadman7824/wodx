@@ -8,10 +8,10 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
-const NC = await imp("modules/wodx-creation/data/name-customs.mjs");
+const NC = await imp("modules/wodx-rules/creation/data/name-customs.mjs");
 const PR = await imp("modules/wodx-rules/creation/people-rules.mjs");
-const {PEOPLE_TABLES} = await imp("modules/wodx-creation/data/people.mjs");
-const G = await imp("modules/wodx-chronicle/scripts/gen-core.mjs");
+const {PEOPLE_TABLES} = await imp("modules/wodx-rules/creation/data/people.mjs");
+const G = await imp("modules/wodx-rules/chronicle/gen-core.mjs");
 const RS = await imp("modules/wodx-rules/npc/resident-rules.mjs");
 
 const lookup = (era, culture = "bohemia") => id => G.resolveTable(PEOPLE_TABLES, id, {era, culture});
@@ -110,7 +110,7 @@ test("households: kin of 1250 keep their own bynames; a child of a ben-or-bat or
 });
 
 test("childNamesOf: patterns and listed pairs only", async () => {
-  const {WORLD_PEOPLE_TABLES} = await imp("modules/wodx-creation/data/people-world.mjs");
+  const {WORLD_PEOPLE_TABLES} = await imp("modules/wodx-rules/creation/data/people-world.mjs");
   const lk = era => id => G.resolveTable(WORLD_PEOPLE_TABLES, id, {era, culture: null});
   const n = PR.childNamesOf(lk("early-modern"), "norse", "Erik");
   assert.deepEqual(n, {male: "Eriksson", female: "Eriksdotter"});
@@ -151,7 +151,7 @@ test("customs B6540: the new dated laws fall where the sources put them", () => 
 });
 
 test("people B6541: a Khmer of 1880 and a Lakota of 1880 bear one name; a Khmer of 1920 a family name", async () => {
-  const {WORLD_PEOPLE_TABLES} = await imp("modules/wodx-creation/data/people-world.mjs");
+  const {WORLD_PEOPLE_TABLES} = await imp("modules/wodx-rules/creation/data/people-world.mjs");
   const lk = era => id => G.resolveTable(WORLD_PEOPLE_TABLES, id, {era, culture: null});
   const mk = (origin, year, era, sex = "male", n = 20) => Array.from({length: n}, (_, i) =>
     PR.person({rand: G.stream("b6541", `${origin}:${year}`, i), tables: lk(era), era, culture: null, sex, trade: "farmer", origin, year, later: lk("modern")}));

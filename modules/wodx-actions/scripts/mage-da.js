@@ -15,11 +15,11 @@
  * Built by main.js with its helpers (ctx). Pure rules: mage-da-rules.js.
  */
 import * as NPW from "../../wodx-rules/actions/npc-power-rules.js";
-import * as DAE from "./mage-da-effects.js";
+import * as DAE from "../../wodx-rules/actions/mage-da-effects.js";
 import * as LIM from "./limits.js";
 import * as TH from "./trait-hooks.js";
 import * as M from "../../wodx-rules/actions/mage-da-rules.js";
-import * as G from "./mage-da-grimoire.js";
+import * as G from "../../wodx-rules/actions/mage-da-grimoire.js";
 import * as HH from "./mage-household.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";

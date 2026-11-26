@@ -9,7 +9,7 @@
  * decide which sources this character could perceive at all; successes decide how many lines and which ones.
  * The draw is seeded, so the same question in the same hour and place gives the same answer.
  */
-import {stream, shuffled, expand} from "../../wodx-chronicle/scripts/gen-core.mjs";
+import {stream, shuffled, expand} from "../chronicle/gen-core.mjs";
 import * as TERMS from "../core/terms.mjs";
 
 export const SENSES = {

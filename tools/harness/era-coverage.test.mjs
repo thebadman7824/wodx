@@ -1,9 +1,9 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as G from "../../modules/wodx-chronicle/scripts/gen-core.mjs";
+import * as G from "../../modules/wodx-rules/chronicle/gen-core.mjs";
 import {NIGHT_TABLES} from "../../modules/wodx-storyteller/data/night-tables.mjs";
-import {PEOPLE_TABLES} from "../../modules/wodx-creation/data/people.mjs";
+import {PEOPLE_TABLES} from "../../modules/wodx-rules/creation/data/people.mjs";
 import {COMMON} from "../../modules/wodx-rules/creation/people-rules.mjs";
 import * as F from "../../modules/wodx-rules/interactables/fill-rules.mjs";
 import * as S from "../../modules/wodx-rules/library/shelf-rules.mjs";

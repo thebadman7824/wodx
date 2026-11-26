@@ -8,7 +8,7 @@
  *   Tell the time: a clock or a watch gives the hour; a sundial only while the sun is up; an hourglass the time
  *     since it was last turned.
  */
-import {CROPS} from "../../wodx-library/data/goods-crops.mjs";
+import {CROPS} from "./data/goods-crops.mjs";
 import {DAY} from "../core/terms.mjs";
 
 const bare = s => String(s ?? "").toLowerCase().replace(/\s*\(\d+\)\s*$/, "").trim();

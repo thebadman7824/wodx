@@ -20,7 +20,7 @@ game.modules.set(M, {});
 const api = () => game.modules.get(M).api;
 const W = await import(join(root, "modules/wodx-rules/creation/wizard-rules.mjs"));
 const R = await import(join(root, "modules/wodx-rules/creation/first-night-rules.mjs"));
-const {MERITS_FLAWS, BACKGROUNDS} = await import(join(root, "modules/wodx-chronicle/data/trait-effects.mjs"));
+const {MERITS_FLAWS, BACKGROUNDS} = await import(join(root, "modules/wodx-rules/chronicle/data/trait-effects.mjs"));
 
 const exact = () => ({attributes: {physical: 7, social: 5, mental: 3}, abilities: {talent: {dots: 13, aboveCap: 0}, skill: {dots: 9, aboveCap: 0}, knowledge: {dots: 5, aboveCap: 0}},
   backgrounds: 5, powers: {discipline: 3}, virtues: 7});

@@ -4,7 +4,7 @@
  *
  * State: {debts: {who: {from, what, at, called}}, murders: {name: at}, cold: at | null, sounds: {n: {scene, text, until}}}.
  */
-import {REVEALS, JUDGED_FAVOURS, MURDERS, COLD, TWISTS} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
+import {REVEALS, JUDGED_FAVOURS, MURDERS, COLD, TWISTS} from "./chronicle-data.mjs";
 import {CHAPTERS, chapterNow, frontOf, judgementOf} from "./front-rules.mjs";
 
 export {REVEALS, JUDGED_FAVOURS, MURDERS, COLD};

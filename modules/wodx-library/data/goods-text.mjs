@@ -3,7 +3,7 @@
  * One line per good: "name | text". A line "@YEAR name | text" is the wording from that year on, where the thing itself
  * changed. WoDX's own words. Edit here; the Item Review Desk reads the same text.
  */
-import {WAY_DESC_RAW} from "./goods-ways.mjs";
+import {WAY_DESC_RAW} from "../../wodx-rules/library/data/goods-ways.mjs";
 
 export const DESC_RAW = `
 a bronze coin | A small, worn disc of bronze. The stamped head is rubbed almost smooth by hands and purses.

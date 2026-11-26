@@ -38,9 +38,9 @@ import * as firstNightRules from "../../wodx-rules/creation/first-night-rules.mj
 import * as wizardRules from "../../wodx-rules/creation/wizard-rules.mjs";
 import {WizardApp, creationUnfinished, ledgerFor as wizardLedger, derivedFor} from "./wizard.mjs";
 import * as derivedRules from "../../wodx-rules/creation/derived-rules.mjs";
-import * as BOOKP from "../data/vtda-people.mjs";
+import * as BOOKP from "../../wodx-rules/creation/data/vtda-people.mjs";
 import * as BOOKPM from "./book-people.mjs";
-import * as DASC from "../data/dasc-templates.mjs";
+import * as DASC from "../../wodx-rules/creation/data/dasc-templates.mjs";
 import * as SCR from "../../wodx-rules/creation/supporting-cast-rules.mjs";
 import * as SCM from "./supporting-cast.mjs";
 import * as DDR from "../../wodx-rules/creation/dac-demons-rules.mjs";

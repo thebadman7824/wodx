@@ -9,7 +9,7 @@
  * its own Arete, its Quintessence and its Paradox (the wonder-powers shape on flags.wodx-library.wonder).
  */
 import {MAGE_WONDERS, MAGE_FETISH, DIFF, byKey as mageByKey} from "../data/wonders-mage.mjs";
-import {WONDERS as GAROU_ROWS, MAKES} from "../data/wonders.mjs";
+import {WONDERS as GAROU_ROWS, MAKES} from "../../wodx-rules/library/data/wonders.mjs";
 import {KEYWORDS, spheresFor, leanOf} from "../../wodx-rules/actions/effects-rules.js";
 import {SPHERES} from "../../wodx-rules/actions/m20-rules.js";
 import {registerLine} from "./wonder-registry.mjs";

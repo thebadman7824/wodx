@@ -4,7 +4,7 @@ import {searchBox} from "./search.mjs";
 import EVENT_DATA from "../data/events.mjs";
 import {eventTable, dateKey, dateLabel, cleanOverride, newsCodes, heardIn, newsFor, NEWS_PARTS, capTold, isWorld, worldEraAt, shownIn} from "../../wodx-rules/chronicle/events-rules.mjs";
 import * as place from "./place.mjs";
-import {current as chronicleInPlay} from "./chronicle-data.mjs";
+import {current as chronicleInPlay} from "../../wodx-rules/chronicle/chronicle-data.mjs";
 
 /**
  * Dated events. When the Chronicle Clock passes an event's date it fires once: a chat card, the hook

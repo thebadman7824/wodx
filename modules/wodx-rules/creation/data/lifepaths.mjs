@@ -10,7 +10,7 @@
  *           f flag or [flags], n {eventId: weight} (the next scene, as Princes of Darkness chains its events)}
  * Station flags start "st:"; they shape the later scenes. Writing rule: second person, no gendered words.
  */
-import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
+import {canon} from "../../chronicle/data/canon/index.mjs";
 
 /** Era bands, 1197 to the World of Future Darkness. */
 export const BANDS = [

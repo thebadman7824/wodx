@@ -5,7 +5,7 @@
  * rotes (mage-da-effects.js). A power with no entry, or whose result is a summoned being, a vision, a long ritual or a
  * judgement, stays the Storyteller's call and is only listed on the card.
  */
-import { H, T, C, N, S, K as KW, P, MV, HL, outcomesOf } from "./mage-da-effects.js";
+import { H, T, C, N, S, K as KW, P, MV, HL, outcomesOf } from "../../wodx-rules/actions/mage-da-effects.js";
 import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 /**

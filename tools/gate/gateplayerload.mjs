@@ -23,7 +23,7 @@
 const PLAYER = "Player Test";
 const C = () => game.modules.get("wodx-chronicle")?.api;
 const HEAVY = ["wodx-chronicle/data/world-history.mjs", "wodx-chronicle/data/future-events.mjs", "wodx-chronicle/data/future-world.mjs",
-  "wodx-storyteller/data/threads-cards.mjs", "wodx-creation/data/people-world.mjs", "wodx-creation/data/people.mjs",
+  "wodx-storyteller/data/threads-cards.mjs", "wodx-rules/creation/data/people-world.mjs", "wodx-rules/creation/data/people.mjs",
   "wodx-rothenstein/data/cards.mjs"];
 
 /** What this browser fetched from the WoDX modules since it opened the game. */

@@ -9,9 +9,9 @@
  * gains are paid from the prelude's own 3 points. Traits the creation check does not count (Willpower, Humanity or a
  * Road, Rage, Gnosis, Arete, Glamour) are bought on the freebie page and kept in the wizard's ledger.
  */
-import {daTable} from "../../wodx-chronicle/data/trait-lines.mjs";
+import {daTable} from "../chronicle/data/trait-lines.mjs";
 import {TOTALS, checkCreation} from "./totals-rules.mjs";
-import {CLANS} from "../../wodx-creation/data/vampire.mjs";
+import {CLANS} from "./data/vampire.mjs";
 import {clanOpen, clansOpen} from "./rules.mjs";
 export {clanOpen, clansOpen};
 

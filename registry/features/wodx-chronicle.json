@@ -78,7 +78,7 @@
    "module": "wodx-chronicle",
    "core": false,
    "files": [
-    "modules/wodx-chronicle/data/trait-lines-da.mjs"
+    "modules/wodx-rules/chronicle/data/trait-lines-da.mjs"
    ],
    "steps": {
     "built": {
@@ -86,7 +86,7 @@
      "decisions": "B7931-B7934"
     },
     "wired": {
-     "reader": "modules/wodx-chronicle/data/trait-effects.mjs:MERITS_FLAWS"
+     "reader": "modules/wodx-rules/chronicle/data/trait-effects.mjs:MERITS_FLAWS"
     },
     "shown": {
      "what": "the rows in the Trait effects window with book and page, their lines on the roll window's odds and its tick boxes, the fae window and the Curse roll card"

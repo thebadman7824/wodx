@@ -2,7 +2,7 @@
  * Creation totals and the two changes of state that keep the character (death into a wraith, the Awakening): the
  * pure part. No Foundry calls, so the tests use it directly. The books' numbers live in ../data/creation-totals.mjs.
  */
-import {TOTALS} from "../../wodx-creation/data/creation-totals.mjs";
+import {TOTALS} from "./data/creation-totals.mjs";
 import * as TERMS from "../core/terms.mjs";
 
 export {TOTALS};

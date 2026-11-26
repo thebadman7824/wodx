@@ -7,11 +7,11 @@ import {dirname, join} from "node:path";
 /* Aboriginal Australians in the People generator (B4680 to B4683): Australia named from 1197 */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
-const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
+const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-rules/creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
-const A = await import(join(root, "modules/wodx-creation/data/people-aboriginal.mjs"));
+const A = await import(join(root, "modules/wodx-rules/creation/data/people-aboriginal.mjs"));
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const AU = W.cultureOf("australia");
 const people = (era, n = 200) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("ab", era, i),

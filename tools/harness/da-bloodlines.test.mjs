@@ -2,7 +2,7 @@ import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {findClan, clanDisciplines, clanOpen} from "../../modules/wodx-rules/creation/rules.mjs";
-import {BLOODLINES} from "../../modules/wodx-chronicle/data/signatures.mjs";
+import {BLOODLINES} from "../../modules/wodx-rules/chronicle/data/signatures.mjs";
 import {bloodlinePowerDiff} from "../../modules/wodx-rules/actions/kindred-rules.js";
 import {clanKey, ruleFor, nourishment} from "../../modules/wodx-rules/actions/feeding-rules.js";
 

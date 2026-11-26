@@ -1,7 +1,7 @@
 import {PACK} from "../../modules/wodx-rothenstein/scripts/register.mjs";
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import * as CD from "../../modules/wodx-chronicle/scripts/chronicle-data.mjs";
+import * as CD from "../../modules/wodx-rules/chronicle/chronicle-data.mjs";
 import * as CL from "../../modules/wodx-rules/chronicle/close-rules.mjs";
 import * as S from "../../modules/wodx-rules/chronicle/saga-rules.mjs";
 import * as K from "../../modules/wodx-rules/storyteller/carry-rules.mjs";

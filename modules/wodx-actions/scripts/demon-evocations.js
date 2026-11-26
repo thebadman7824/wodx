@@ -5,7 +5,7 @@
  * Durations "FT" and "FD" run the demon's permanent Faith in turns or days; "T1" is a single turn.
  * Pure: no Foundry calls. Also the apocalyptic form's powers by name (FORM_POWERS).
  */
-import { H, T, C, N, S, MV, HL, A, K, outcomesOf } from "./mage-da-effects.js";
+import { H, T, C, N, S, MV, HL, A, K, outcomesOf } from "../../wodx-rules/actions/mage-da-effects.js";
 import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const E = (fx, lasts, range, high, spec = null, highSpec = null) => ({ fx, lasts, range, high, spec, highSpec });

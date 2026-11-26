@@ -95,7 +95,7 @@ test("B6737: a woken fetish puts its keywords on the effects card", async () => 
   const PW = await imp("modules/wodx-actions/scripts/power-effects.js");
   const PK = await imp("modules/wodx-actions/scripts/power-keywords.js");
   const {KEYWORDS} = await imp("modules/wodx-rules/actions/effects-rules.js");
-  const lib = await imp("modules/wodx-library/data/wonders.mjs");
+  const lib = await imp("modules/wodx-rules/library/data/wonders.mjs");
   const all = Object.values(lib).find(v => Array.isArray(v) && v[0]?.key);
   const keys = new Set(all.filter(w => w.line === "garou").map(w => w.key));
   for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.fetish) ) {
@@ -136,7 +136,7 @@ test("B6739: a cantrip's timed result carries its keyword where power-mods reads
   assert.equal(r.out.key, "boost");
   assert.equal(PM.keyFor(r.out), "wodx-effect-boost");
   assert.deepEqual(PM.timedData(r.out), {dice: -3, on: "all"});
-  const D = await imp("modules/wodx-actions/scripts/mage-da-effects.js");
+  const D = await imp("modules/wodx-rules/actions/mage-da-effects.js");
   const chain = D.outcomesOf([D.T("light", "L", "scene", "self"), D.T("fortune", "F", "scene", "one", {curse: true})], {label: "x"}, 2, "");
   assert.deepEqual(chain.map(x => x.out.key), ["light", "fortune"]);
 });
@@ -194,7 +194,7 @@ test("B6853: a passive power picked from the menu turns on", async () => {
 });
 
 test("B6854: a spell that tells the caster something gives the Know, Sense or Speak result", async () => {
-  const D = await imp("modules/wodx-actions/scripts/mage-da-effects.js");
+  const D = await imp("modules/wodx-rules/actions/mage-da-effects.js");
   const [r] = D.outcomesOf({kw: "know", kind: "note", who: "self"}, {label: "Gate Know"}, 3, "a secret");
   assert.notEqual(r.out.kind, "note");
   assert.equal(r.st, undefined);
@@ -211,7 +211,7 @@ test("B6855: the Dark Ages paths and Disciplines that only told now apply, or sa
 });
 
 test("B6856: a Storyteller's spec that names a working keyword gives that keyword's result", async () => {
-  const D = await imp("modules/wodx-actions/scripts/mage-da-effects.js");
+  const D = await imp("modules/wodx-rules/actions/mage-da-effects.js");
   const [m] = D.outcomesOf({kw: "move", kind: "st"}, {label: "Gate Move"}, 2, "away");
   assert.equal(m.out.kind, "move");
   const [b] = D.outcomesOf({kw: "bind", kind: "st"}, {label: "Gate Bind"}, 2, "held");
@@ -222,7 +222,7 @@ test("B6856: a Storyteller's spec that names a working keyword gives that keywor
 
 test("B6857: Dark Ages rotes and cantrips, Kuei-jin arts, Orpheus Horrors and Totem Gift that only told now apply, or say why not", async () => {
   const M = await imp("modules/wodx-rules/actions/mage-da-rules.js");
-  const D = await imp("modules/wodx-actions/scripts/mage-da-effects.js");
+  const D = await imp("modules/wodx-rules/actions/mage-da-effects.js");
   const rote = id => D.daOutcomes(M.ROTES.find(r => r.id === id), 3)[0];
   assert.equal(rote("g-slumber").out.condition, "incapacitated");
   assert.equal(rote("g-horsebringer").out.kind, "summon");

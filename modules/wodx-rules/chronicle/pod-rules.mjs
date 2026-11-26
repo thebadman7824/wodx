@@ -2,13 +2,13 @@
  * WoDX Chronicle 0.37.0: pure rules for the four Princes of Darkness ideas (city exposure, great cities, Golconda as
  * a long road, story chains). No Foundry calls here, so the harness can test them.
  */
-import * as D from "../../wodx-chronicle/data/pod.mjs";
-export * from "../../wodx-chronicle/data/pod.mjs";
-import * as LPD from "../../wodx-chronicle/data/pod-lifepath.mjs";
+import * as D from "./data/pod.mjs";
+export * from "./data/pod.mjs";
+import * as LPD from "./data/pod-lifepath.mjs";
 import * as S from "./saga-rules.mjs";
 import {DAY} from "../core/terms.mjs";
 export * as saga from "./saga-rules.mjs";
-export {LP_CHAINS, LP_DAYS, meansFor} from "../../wodx-chronicle/data/pod-lifepath.mjs";
+export {LP_CHAINS, LP_DAYS, meansFor} from "./data/pod-lifepath.mjs";
 
 const norm = s => String(s ?? "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
 

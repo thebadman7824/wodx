@@ -8,7 +8,7 @@
  *
  * Book basis, in WoDX's own words (V20 pdf pages):
  *   Torpor lasts by Humanity or Path: from a day at 10 to a millennium at 0 (V20 pdf p. 291; the same table as V20
- *     Dark Ages p. 350, kept in wodx-creation/data/time.mjs).
+ *     Dark Ages p. 350, kept in wodx-rules/creation/data/time.mjs).
  *   A vampire who drains another of lower Generation lowers their own Generation by one, for good (V20 pdf p. 302).
  *   The Third Tradition: a Camarilla sire needs an elder's leave before Embracing (V20 pdf pp. 31-32), so Camarilla
  *     Embraces are few; the Sabbat Embraces freely and in numbers.
@@ -17,10 +17,10 @@
  * books give no such tables. The Storyteller sees every result on one card and approves it before anything is written.
  */
 
-import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
+import {canon} from "../chronicle/data/canon/index.mjs";
 import {embraceReason, withoutLeave, EMBRACE_REASONS} from "./duty-rules.mjs";
 export {EMBRACE_REASONS};
-import {TORPOR} from "../../wodx-creation/data/time.mjs";
+import {TORPOR} from "../creation/data/time.mjs";
 import {DAY} from "../core/terms.mjs";
 
 /** The actor types that live off-screen, and the line each one follows. */

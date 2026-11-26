@@ -11,7 +11,7 @@
  * State: {since, played: {n: at}, later: {n: until}, never: {n: at}, closed: {n: at}, offered: {n: at}, seen: {n: 1},
  *   people: {n: [actor ids]}}.
  */
-import {ENCOUNTERS, KINDS, LAST_ENCOUNTER} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
+import {ENCOUNTERS, KINDS, LAST_ENCOUNTER} from "./chronicle-data.mjs";
 import {CHAPTERS, chapterNow, pickScene, frontOf, clueOf, judgementOf} from "./front-rules.mjs";
 import {SAGA_CLOCKS} from "./saga-rules.mjs";
 import {DAY} from "../core/terms.mjs";

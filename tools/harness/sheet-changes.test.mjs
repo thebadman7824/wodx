@@ -81,7 +81,7 @@ test("the change strip draws its lines, folds the rest and offers Mark as read",
 });
 
 test("every feature engine says when it fires", () => {
-  const data = readFileSync(join(root, "modules/wodx-chronicle/data/signatures.mjs"), "utf8");
+  const data = readFileSync(join(root, "modules/wodx-rules/chronicle/data/signatures.mjs"), "utf8");
   const engines = new Set([...data.matchAll(/feature:\s*"([a-z-]+)"/g)].map(m => m[1]));
   for ( const e of engines ) assert.ok(S.FEATURE_WHEN[e], e);
   assert.match(S.whenOf({feature: "muse"}), /Muse/);

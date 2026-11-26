@@ -34,8 +34,8 @@
  * Stored in the world setting wodx-storyteller.battles: {v, list: [battle]}.
  */
 
-import {normOffers, POSTS as DEED_POSTS} from "../../wodx-storyteller/scripts/battle-deeds.mjs";
-import {normAftermath} from "../../wodx-storyteller/scripts/battle-aftermath.mjs";
+import {normOffers, POSTS as DEED_POSTS} from "./battle-deeds.mjs";
+import {normAftermath} from "./battle-aftermath.mjs";
 import {normCampaign} from "./siege-works-rules.mjs";
 import * as WL from "./war-lands-rules.mjs";
 import {DAY, HOUR} from "../core/terms.mjs";

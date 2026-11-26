@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const D = await imp("modules/wodx-chronicle/data/trait-effects.mjs");
-const L = await imp("modules/wodx-chronicle/data/trait-lines-da.mjs");
+const D = await imp("modules/wodx-rules/chronicle/data/trait-effects.mjs");
+const L = await imp("modules/wodx-rules/chronicle/data/trait-lines-da.mjs");
 const T = await imp("modules/wodx-rules/chronicle/trait-rules.mjs");
 const F = await imp("modules/wodx-rules/actions/fae-da-rules.js");
 
@@ -110,7 +110,7 @@ test("B7934: the Inquisitor Companion's merits and flaws: every one in the table
 });
 
 test("B7931-B7933: own words, no gendered pronouns, no em-dashes", () => {
-  const s = src("modules/wodx-chronicle/data/trait-lines-da.mjs");
+  const s = src("modules/wodx-rules/chronicle/data/trait-lines-da.mjs");
   assert.ok(!/—/.test(s));
   assert.ok(!/\b(he|she|his|her|him|hers)\b/i.test(s));
 });

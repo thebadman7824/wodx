@@ -10,7 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 const D = await imp("modules/wodx-rules/library/gadget-rules.mjs");
-const C = await imp("modules/wodx-library/data/goods-crops.mjs");
+const C = await imp("modules/wodx-rules/library/data/goods-crops.mjs");
 const G = await imp("modules/wodx-library/data/goods.mjs");
 const U = await imp("modules/wodx-rules/library/use-rules.mjs");
 const good = n => G.GOODS.find(g => g.name === n);

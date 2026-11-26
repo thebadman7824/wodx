@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const MOD = "wodx-npc";
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 await import(join(root, "modules/wodx-rothenstein/scripts/register.mjs"));
 
 /* ---- the stand-in ---- */
@@ -115,7 +115,7 @@ test("Rothenstein's factions: twelve powers, leaders and members found by name, 
 });
 
 test("chronicle factions come from the chronicle in play: with none in play there are none to set up", async () => {
-  const CD = await import(join(root, "modules/wodx-chronicle/scripts/chronicle-data.mjs"));
+  const CD = await import(join(root, "modules/wodx-rules/chronicle/chronicle-data.mjs"));
   assert.equal(Fx.chronicleFactions().TITLE, "Rothenstein's factions");
   CD.useChronicle("");
   try { assert.equal(Fx.chronicleFactions(), null); } finally { CD.useChronicle("rothenstein"); }

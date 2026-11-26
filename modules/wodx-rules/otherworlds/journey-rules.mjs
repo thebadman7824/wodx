@@ -7,7 +7,7 @@
  *   Decay     How the Shadowlands look by the local Shroud: the lower the Shroud, the nearer death, the more the
  *             world rots and greys on the map. A CSS filter, applied on the viewer's own client.
  */
-import * as G from "../../wodx-chronicle/scripts/gen-core.mjs";
+import * as G from "../chronicle/gen-core.mjs";
 import {greatMaelstrom as gm, moonRisk, trodTime, TRODS} from "./realms-rules.mjs";
 
 /** The realms a journey can cross. Fixed list. */

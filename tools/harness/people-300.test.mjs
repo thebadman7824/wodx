@@ -7,7 +7,7 @@ import {dirname, join} from "node:path";
 /* Peoples raised to 300 names (the owner 2026-11-13, B3310 on) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const PW = await import(join(root, "modules/wodx-creation/data/people-world.mjs"));
+const PW = await import(join(root, "modules/wodx-rules/creation/data/people-world.mjs"));
 
 test("raised peoples: 300 distinct names or more, no pronoun words, no repeats within a list", () => {
   assert.ok(PW.RAISED.length >= 1);
@@ -33,7 +33,7 @@ test("raised peoples: every list in every age has names", () => {
 
 test("raised peoples: lists kept in the core People tables (German in Bohemia before 1900) have 50 names too", async () => {
   // B5640: the gate draws a people's names in every age, and the old German lists live in data/people.mjs
-  const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
+  const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-rules/creation/data/people.mjs"));
   for ( const o of PW.RAISED ) for ( const x of PEOPLE_TABLES.filter(t => t.id === `names.male.${o}` || t.id === `names.female.${o}`) ) {
     const texts = x.results.map(r => r.text);
     assert.ok(texts.length >= 50, `${x.name}: ${texts.length}`);

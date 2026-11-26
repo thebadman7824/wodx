@@ -15,7 +15,7 @@ import * as Setup from "./setup.mjs";
 import * as Ways from "./ways.mjs";
 import * as WR from "../../wodx-rules/storyteller/way-rules.mjs";
 import {MOD, esc} from "./core.mjs";
-import {chronicles, current} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
+import {chronicles, current} from "../../wodx-rules/chronicle/chronicle-data.mjs";
 
 /** Every registered chronicle's recipe, by recipe id (Chronicle Packs Desk a3: the builder reads the chronicles that are on). */
 export const recipes = () => Object.fromEntries(chronicles().filter(c => c.recipe).map(c => [c.recipe.id, c.recipe]));

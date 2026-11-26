@@ -23,7 +23,7 @@ const num = v => Number(v) || 0;
 let DATA = null, LOADED = null;
 export function loadKit() {
   return DATA ??= Promise.all([
-    import("../../wodx-library/data/goods.mjs"), import("../../wodx-library/data/goods-ways.mjs"), import("../../wodx-library/data/goods-tags.mjs"),
+    import("../../wodx-library/data/goods.mjs"), import("../../wodx-rules/library/data/goods-ways.mjs"), import("../../wodx-library/data/goods-tags.mjs"),
     import("../../wodx-rules/library/gear-rules.mjs"),
     fetch(`modules/${LIB}/data/gear.json`).then(r => (r.ok ? r.json() : {items: []})).catch(() => ({items: []}))
   ]).then(([G, W, T, GR, gear]) => (LOADED = {goods: G.GOODS ?? [], ways: W, tags: T, gearRules: GR, gear: gear?.items ?? []}))

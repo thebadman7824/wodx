@@ -5,7 +5,7 @@
  * Pure: no Foundry calls.
  */
 import {DAY} from "../../wodx-rules/core/terms.mjs";
-import {outcomesOf, N} from "./mage-da-effects.js";
+import {outcomesOf, N} from "../../wodx-rules/actions/mage-da-effects.js";
 const n = v => Number(v) || 0;
 const turns = k => ({ label: `${k + 1} turn${k ? "s" : ""}`, timed: { kind: "rounds", rounds: k + 1 } });
 const scene = () => ({ label: "the scene", timed: { kind: "scene" } });

@@ -17,7 +17,7 @@ import * as P from "../../wodx-rules/creation/first-night-prelude-rules.mjs";
 import * as LP from "../../wodx-rules/creation/lifepath-rules.mjs";
 import {lifepathOf, makePeople} from "./lifepath.mjs";
 import {TOTALS} from "../../wodx-rules/creation/totals-rules.mjs";
-import {defaultLine} from "../data/creation-totals.mjs";
+import {defaultLine} from "../../wodx-rules/creation/data/creation-totals.mjs";
 import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 
 const {ApplicationV2, DialogV2} = foundry.applications.api;

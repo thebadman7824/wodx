@@ -22,7 +22,7 @@ export async function run() {
   const ST = "wodx-storyteller", CH = "wodx-chronicle";
   const before = game.settings.get(CH, "homeland");
   try {
-    const P = await import(`/modules/${ST}/data/primers-world.mjs`);
+    const P = await import(`/modules/wodx-rules/storyteller/data/primers-world.mjs`);
     const S = await import(`/modules/wodx-rules/storyteller/setup-rules.mjs`);
     let j = [...game.journal].find(d => d.flags?.[ST]?.template?.kind === "primer");
     if ( !j ) {

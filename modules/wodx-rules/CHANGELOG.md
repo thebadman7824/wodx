@@ -2,6 +2,7 @@
 
 Newest first. Add each new release at the top.
 
+- 0.2.2 (The book tables and helpers the rules package reads (the outside list: Creation, Chronicle, Library, NPC, Storyteller, Otherworlds and Actions data) moved into modules/wodx-rules, and every import points at their new place (B8069). Nothing changes in play)
 - 0.2.1 (The core's terms.mjs no longer names Chronicle's old copy, which went in B8068)
 - 0.2.0 (Plain words (B8180, #2503): the action descriptions in actions/theme-rules.js, moved here from WoDX Actions, are one plain line each saying what happens when the action is used)
 - 0.1.1 (Off-screen lives: a skip of 360 days or more counts as a year (isLongJump, LONG_JUMP_DAYS), so a one-year Pass the years brings the Off-screen lives card (B8161, #2627))
