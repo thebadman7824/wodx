@@ -364,11 +364,13 @@
     },
     "shown": {
      "what": "the regard on the Relationships tab and the reasons behind it for the Storyteller"
+    },
+    "gated": {
+     "gate": "tools/gate/gatefoughtregard.mjs",
+     "step": "1. the fight ends: the NPC's regard names the character with Fought them"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -719,11 +721,13 @@
     },
     "shown": {
      "what": "ties grouped on the sheet's Relationships tab, with hidden ties and secrets kept from players"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetiehide.mjs",
+     "step": "1. the eye button hides a tie: marked for the Storyteller, gone from a player's view"
     }
    },
-   "open": [
-    "gated: gatepeople '10. sheet' is graded marker and the rest are direct calls"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -749,10 +753,13 @@
     },
     "shown": {
      "what": "trust on the sheet, betrayal and boon cards, and a hidden loyalty named to its owner"
+    },
+    "gated": {
+     "gate": "tools/gate/gateboonkept.mjs",
+     "step": "1. Kept or paid in the Ledger window: the holder's Relationships tab reads Inclined to trust"
     }
    },
    "open": [
-    "gated: gatetrust '8. sheet' is graded marker and the rest are direct calls",
     "boon scale is a labelled house rule: V20 Dark Ages has no prestation"
    ],
    "deferred": [],

@@ -288,7 +288,8 @@ export function build({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry}) {
   function regardHtml(npcLike) {
     const npc = worldOf(npcLike);
     if ( !game.user.isGM || !npc || npc.hasPlayerOwner ) return "";
-    const met = Object.keys(npc.flags?.[MOD]?.attitude ?? {});
+    // a character the NPC has fought counts as met, so the "Fought them" reason shows (gatefoughtregard)
+    const met = [...Object.keys(npc.flags?.[MOD]?.attitude ?? {}), ...Object.keys(npc.flags?.[MOD]?.fought ?? {})];
     const linked = TR.tiesOf(npc.id, allEdges()).map(e => e.to.id).filter(id => game.actors.get(id)?.hasPlayerOwner);
     const ids = [...new Set([...met, ...linked])].filter(id => game.actors.get(id));
     if ( !ids.length ) return `<p class="wodx-quiet">${esc(npc.name)} has not met any player's character yet.</p>`;
