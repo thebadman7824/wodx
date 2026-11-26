@@ -1,6 +1,7 @@
 {
   "_about": "Corrections to the gate map in gate-map.mjs: add or remove modules a gate covers, and files in tools/gate that are diagnostics, not gates.",
   "notGates": ["gatecleanworld",
+    "gatefateswake",
     "gatevoices",
     "gate6c-diag",
     "gatecssprobe",
@@ -125,8 +126,8 @@
     ]
   },
   "remove": {},
-  "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd, gatetruthlooks, gateplaylang: run them by name on their own; gatesolo turns solo mode on). gatevoices is out again since Voices is shelved (B7134); run it by name if Voices ever stops the world from loading.",
-  "timeouts": {"gatepassyears": 25},
+  "_notGates": "Diagnostics, the two-browser gates (gatesolo, gatelookhand, gatedisplayb, gatedisplayd, gatetruthlooks, gateplaylang: run them by name on their own; gatesolo turns solo mode on). gatevoices is out again since Voices is shelved (B7134); run it by name if Voices ever stops the world from loading. gatefateswake (B8160) is heavy (a one-year Pass the years in a released world, about 20 minutes on cloud lane 9): it is run by name on a New PC lane when nothing else is waiting, not on the train.",
+  "timeouts": {"gatepassyears": 25, "gatefateswake": 40},
   "_timeouts": "Minutes a gate may take when it needs more than run-gate's default (15), as {\"gatename\": 30}.",
   "_clean": "Chronicle Packs Desk e2: the clean smoke set, run in wodx-clean (run-gate.mjs --world clean --clean-set) after the nightly full run, on one lane. gatecleanworld is left out of the map because in rothenstein-wodx a chronicle is in play on purpose; the others are ordinary gates that must also pass with no chronicle in play.",
   "clean": ["gatecleanworld", "gatethreads", "gateoworld", "gatepod", "gate7d", "gatebuilder", "gateevents", "gatealarmbell", "gatemakeresidents", "gategatheringgift", "gatefactionend", "gatesummontime", "gatesecondsight", "gatearchetypehours", "gateprowlmark", "gatekeepanachronism", "gatekinbring", "gatestainclaws", "gatespectrethorn"],
