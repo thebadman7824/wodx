@@ -63,7 +63,7 @@ export function build(ctx) {
       scope: "world", config: true, type: Number, default: 21, range: {min: 17, max: 24, step: 1}
     });
     game.settings.register(MOD, "mapReactions", {
-      name: "NPCs answer what they hear", hint: "When a player's action on the map makes a noise or raises an alarm (WoDX Interactables), the NPCs who heard it react by their profile, through the same card as a WoDX: Reaction region.",
+      name: "NPCs answer what they hear", hint: "NPCs who hear a noise or an alarm react to it.",
       scope: "world", config: true, type: Boolean, default: true
     });
     game.settings.register(MOD, "feasts", {
@@ -639,7 +639,7 @@ export function build(ctx) {
           does: new f.StringField({required: true, initial: "note", choices: AR.TRIGGER_DOES, label: "What happens"}),
           who: new f.StringField({required: true, initial: "pcs", choices: {pcs: "Player characters only", anyone: "Anyone"}, label: "Whom it fires for"}),
           when: new f.StringField({required: false, blank: true, initial: "", label: "Only when",
-            hint: "Tests for who walks in and when, separated by ; such as: year 1200-1492; night; kind kindred; not clan Tremere. Blank: always. WoDX Chronicle's checker (Storyteller tools) lists every test."}),
+            hint: "Who comes in and when, such as: year 1200-1492; night; kind kindred. Blank: always."}),
           then: new f.StringField({required: false, blank: true, initial: "", label: "Then also",
             hint: "Outcomes, separated by ; such as: tell {name} smells the incense; cue notice; ledger consequence: the abbot hears of it. Also alarm, event, whisper."}),
           once: new f.BooleanField({initial: false, label: "Only once", hint: "After the first time, it stays quiet until you untick Already set off."}),

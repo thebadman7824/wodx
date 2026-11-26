@@ -27,7 +27,7 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
 
   function registerSettings() {
     game.settings.register(MOD, "rivalries", {
-      name: "Rivalries start fights", hint: "NPCs of rival sides who meet and know each other for what they are may come to blows (Garou and Kindred, Sabbat and Camarilla, the Inquisition and every monster, and so on, by year). The fight goes through WoDX Combat's \"Start fights by themselves\", so it follows that setting.",
+      name: "Rivalries start fights", hint: "NPCs of rival sides who meet and know each other may fight.",
       scope: "world", config: true, type: Boolean, default: true
     });
     game.settings.register(MOD, "rivalryRows", {scope: "world", config: false, type: Object, default: {off: [], extra: ""}});

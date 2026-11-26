@@ -31,7 +31,7 @@ const num = v => (v === null || v === undefined || v === "" || !Number.isFinite(
 export function registerSettings() {
   game.settings.register(MOD, "npcFates", {scope: "world", config: true, type: Boolean, default: false,
     name: "Off-screen lives of supernatural NPCs",
-    hint: "When the clock jumps a year or more, supernatural NPCs live through the gap: Embraces, torpor and waking, diablerie, Rank and Arete, deaths. One card for the Storyteller to approve; player characters are left to Pass the Years."});
+    hint: "When the clock jumps a year or more, supernatural NPCs live through the gap, for the Storyteller to approve."});
   game.settings.register(MOD, "brood", {scope: "world", config: false, type: Object, default: {records: {}}});
 }
 

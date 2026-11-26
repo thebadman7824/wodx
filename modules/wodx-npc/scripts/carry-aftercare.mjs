@@ -66,7 +66,7 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
   /* ---------------- settings and the hurt ---------------- */
 
   function registerSettings() {
-    game.settings.register(MOD, "carryAftercare", {name: "Aftercare of the carried", hint: "What NPCs do once they have carried someone home: tend and heal the hurt, bury the dead by their faith, dispose of dead foes, and keep, question, feed on, ransom or free their prisoners.",
+    game.settings.register(MOD, "carryAftercare", {name: "Aftercare of the carried", hint: "What NPCs do with the people they carry home: tend the hurt, bury the dead, and keep or free prisoners.",
       scope: "world", config: true, type: Boolean, default: true});
     game.settings.register(MOD, "wards", {scope: "world", config: false, type: Array, default: []});
     game.settings.register(MOD, "stores", {scope: "world", config: false, type: Object, default: {}});

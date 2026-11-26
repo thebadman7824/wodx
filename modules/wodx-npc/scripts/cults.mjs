@@ -38,7 +38,7 @@ export function build(ctx) {
   const actorFromUuid = u => { try { const d = u ? fromUuidSync(u) : null; return worldActor(d?.actor ?? d); } catch (e) { return null; } };
 
   function registerSettings() {
-    game.settings.register(MOD, "cultsOn", {name: "Cults that gather around characters", hint: "Words spoken in character where people can hear, sermons, powers seen and feedings build awe in a place; enough of it and a following gathers (approval queue). Cults grow, lose heart and draw notice each week of world time. Off until the Storyteller turns it on.",
+    game.settings.register(MOD, "cultsOn", {name: "Cults that gather around characters", hint: "Sermons, powers seen and feedings can gather a following in a place, which grows or fades week by week.",
       scope: "world", config: true, type: Boolean, default: false});
     game.settings.register(MOD, "cultWords", {name: "Cults: words in chat count", hint: "In-character chat lines with words of faith, blood, power or doom add awe when NPCs are near enough to hear. Off: only sermons and deeds count.",
       scope: "world", config: true, type: Boolean, default: true});
