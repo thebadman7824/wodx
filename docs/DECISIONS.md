@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B8110
+Next free block: B8140
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -479,6 +479,7 @@ Next free block: B8110
 | B8020-B8029 | Book overlap: the matches the daily gate found after the late Wraith OCR (used B8020-B8024) | Actions, Library, Otherworlds, tools (books) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
 | B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
+| B8130-B8139 | Fewer merge train ejects: the push guard (used B8130) | tools (git hooks, release) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16717,3 +16718,15 @@ Reverse: set the setting off, or remove the createActor hook and askSoon in spri
 ## B8101. The solo world is the one that draws, and no gate lane does (2026-11-26)
 PC job runner. A gate makes characters, and with B8100 each would start a drawing on a gate lane, so runner.json's spriteData is now empty and the New PC's (runner.new_pc_lebrun.json) names only the solo world, D:/WoDX/FoundryData-solo. The New PC's python is its system Python 3.12 (%LOCALAPPDATA%/Programs/Python/Python312, numpy and Pillow already there); a runner whose Python is missing says so once in its log and draws nothing. gatespritecheck turns the new setting off while it runs and checks the ask with it on, taking the ask back before it is sent.
 Reverse: put the lane folders back in spriteData.
+
+## B8130. A clone refuses a push to a pull request in the merge train (2026-11-26)
+Tools. Of the 32 pull requests the train ejected from 17 to 25 November, 9 left because of a push while labelled: 3 were
+the train's own commits (fixed by B7390), and 6 were threads that pushed a fix or merged main after labelling. A
+pre-push hook (tools/git-hooks/pre-push.mjs) now asks GitHub for the branch's open pull request and refuses the push
+when it carries `merge-train`, saying to take the label off first. Commits that all carry `Merge-Train: yes` (the
+train's) go through, `WODX_PUSH_GUARD=off` passes one push, and a push GitHub cannot be asked about goes through, so
+the guard never blocks work offline; the train's own eject (B7332) still catches what it misses. review.mjs, claim.mjs
+and merge-stamp.mjs set `core.hooksPath` to tools/git-hooks on first run (only when it is unset), so each thread's
+clone has the guard before it labels.
+
+Reverse: `git config --unset core.hooksPath` in a clone, or take the installHooks calls out of the three scripts.
