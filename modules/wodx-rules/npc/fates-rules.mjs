@@ -21,7 +21,7 @@ import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
 import {embraceReason, withoutLeave, EMBRACE_REASONS} from "./duty-rules.mjs";
 export {EMBRACE_REASONS};
 import {TORPOR} from "../../wodx-creation/data/time.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../core/terms.mjs";
 
 /** The actor types that live off-screen, and the line each one follows. */
 /**
