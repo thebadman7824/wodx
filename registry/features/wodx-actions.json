@@ -1567,7 +1567,7 @@
    ],
    "steps": {
     "built": {
-     "pr": null,
+     "pr": 2590,
      "decisions": "B7832"
     },
     "wired": {
@@ -1586,7 +1586,9 @@
    ],
    "deferred": [],
    "faults": [],
-   "prs": []
+   "prs": [
+    2590
+   ]
   },
   {
    "id": "actions.infernal-pacts",
