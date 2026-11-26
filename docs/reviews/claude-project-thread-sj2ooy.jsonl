@@ -40,3 +40,6 @@
 {"file":"registry/features/wodx-actions.json","verdict":"working","how":"PR number filled in; registry check 0 problems","hash":"0bff6b6872ac","at":"2026-11-26T07:42Z"}
 {"file":"docs/FEATURES.md","verdict":"working","how":"PR number filled in; registry check 0 problems","hash":"9570102529b3","at":"2026-11-26T07:42Z"}
 {"file":"modules/wodx-actions/scripts/orpheus-stains.js","verdict":"working","how":"core-icons and orpheus-stains tests pass; sword.svg is a core icon","hash":"7cd6c27a6d91","at":"2026-11-26T08:02Z"}
+{"file":"modules/wodx-actions/scripts/orpheus-spectres.js","verdict":"working","how":"orpheus-spectres 4/4, full harness 4574/4577 (2 fixed since: icon, registry files untracked); gatespectrethorn 2/2 on lane 9","hash":"1a98b7873f8c","at":"2026-11-26T08:16Z"}
+{"file":"modules/wodx-actions/scripts/orpheus.js","verdict":"working","how":"orpheus-spectres 4/4, full harness 4574/4577 (2 fixed since: icon, registry files untracked); gatespectrethorn 2/2 on lane 9","hash":"737e1d3369c5","at":"2026-11-26T08:16Z"}
+{"file":"tools/gate/gatespectrethorn.mjs","verdict":"working","how":"orpheus-spectres 4/4, full harness 4574/4577 (2 fixed since: icon, registry files untracked); gatespectrethorn 2/2 on lane 9","hash":"6d62306f1a27","at":"2026-11-26T08:16Z"}
