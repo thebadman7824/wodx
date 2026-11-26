@@ -1,1 +1,0 @@
-| 2026-11-26 | Ledger Due badge on the sheet (B7838): who sees it | shown to the troupe on both characters' Relationships tabs, not only the Storyteller; the Comes due card stays whispered (B7838) | Show the wodx-tie-due span in modules/wodx-sheets/scripts/extras-html.mjs only when gm is true, or remove it and the due flag in modules/wodx-npc/scripts/ties-rules.mjs |
