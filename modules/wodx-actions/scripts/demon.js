@@ -22,7 +22,7 @@ import { aim } from "./aim.js";
 import * as DE from "./demon-evocations.js";
 import * as EF from "./effects.js";
 import * as P from "./profiles.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };

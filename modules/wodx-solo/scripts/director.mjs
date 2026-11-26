@@ -18,7 +18,7 @@
  *   setting wodx-solo.director   Boolean            "The director brings the night's trouble" (on)
  *   setting wodx-solo.nightXp    Boolean            "Experience at the end of each night" (on)
  */
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 import * as D from "../../wodx-rules/solo/director-rules.mjs";
 import * as WR from "../../wodx-rules/storyteller/wrapup-rules.mjs";
 import {lineFor} from "../../wodx-rules/storyteller/prelude-rules.mjs";
@@ -219,7 +219,7 @@ export function installDirector(helpers) {
     last = t;
     busy = true;
     (async () => {
-      const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
+      const cal = await import("../../wodx-rules/core/calendar.mjs");
       let lat = 50;
       try { lat = game.settings.get("wodx-chronicle", "latitude") ?? 50; } catch (e) { lat = 50; }
       const now = game.time.worldTime;

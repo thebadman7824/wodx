@@ -19,7 +19,7 @@ const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/peop
 const PW = await import(join(root, "modules/wodx-creation/data/people-world.mjs"));
 const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
 const RR = await import(join(root, "modules/wodx-rules/npc/resident-rules.mjs"));
-const {gregorianToJDN} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
+const {gregorianToJDN} = await import(join(root, "modules/wodx-rules/core/calendar-math.mjs"));
 
 const ids = Object.keys(WR.WORLD_REGIONS);
 const tablesFor = ctx => id => G.resolveTable(PEOPLE_TABLES, id, ctx);
@@ -166,7 +166,7 @@ test("money changers: a cut by age, none where the money is the same, and a pric
 });
 
 const F = await import(join(root, "modules/wodx-rules/chronicle/faith-rules.mjs"));
-const {jdnToGregorian} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
+const {jdnToGregorian} = await import(join(root, "modules/wodx-rules/core/calendar-math.mjs"));
 const day = (y, m, d) => { const jdn = gregorianToJDN(y, m, d); return {year: y, month: m, day: d, calendar: "gregorian", jdn}; };
 const iso = jdn => { const g = jdnToGregorian(jdn); return `${g.year}-${g.month}-${g.day}`; };
 

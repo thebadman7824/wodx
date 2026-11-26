@@ -1,7 +1,7 @@
 /**
  * WoDX shared terms (B6180-B6199): one meaning for the words every module uses. Pure: no Foundry calls, so the
  * harness and every module's rules files can import it ("../../wodx-rules/core/terms.mjs"). It sits in the rules
- * core (B8060); WoDX Chronicle re-exports it at its old path, wodx-chronicle/scripts/terms.mjs.
+ * core (B8060); its old path in WoDX Chronicle went in B8068.
  *
  * Time follows V20 (pdf p. 262): a turn is the time a simple action takes, three seconds at its shortest; a scene is
  * a stretch of play in one place; a chapter is one session; a story is a full plot; downtime runs between scenes.

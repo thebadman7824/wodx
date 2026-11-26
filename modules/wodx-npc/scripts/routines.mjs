@@ -78,7 +78,7 @@ export function build(ctx) {
   /* ------------------------------------------------------------------ */
 
   let cal = null;
-  async function loadCalendar() { cal ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); return cal; }
+  async function loadCalendar() { cal ??= await import("../../wodx-rules/core/calendar.mjs"); return cal; }
   /** describe(time) for the rules: the Chronicle's own reading of the clock, with the feast of the day. */
   function describer(faith = "western") {
     const lat = (() => { try { return game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return 50; } })();

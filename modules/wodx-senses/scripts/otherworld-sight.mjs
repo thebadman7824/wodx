@@ -17,8 +17,8 @@
 import * as O from "../../wodx-rules/senses/otherworld-sight-rules.mjs";
 import {detectProfile} from "../../wodx-actions/scripts/profiles.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-senses", SOCKET = `module.${MOD}`;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);

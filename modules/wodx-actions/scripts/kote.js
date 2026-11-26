@@ -20,7 +20,7 @@ import * as K from "../../wodx-rules/actions/kote-rules.js";
 import * as KA from "./kote-arts.js";
 import * as EF from "./effects.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };

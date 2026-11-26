@@ -7,7 +7,7 @@ import * as Rumours from "./rumours.mjs";
 import * as RR from "../../wodx-rules/storyteller/rumour-rules.mjs";
 import * as Clocks from "./clocks.mjs";
 import {clockSVG} from "../../wodx-rules/storyteller/clock-rules.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 /**

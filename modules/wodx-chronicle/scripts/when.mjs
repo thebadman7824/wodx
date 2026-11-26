@@ -1,5 +1,5 @@
 import {MODULE_ID, esc, rule, setting} from "./util.mjs";
-import {describeTime} from "./calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import * as eras from "./eras.mjs";
 import * as church from "./church.mjs";
 import * as conditions from "./conditions.mjs";

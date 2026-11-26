@@ -13,8 +13,8 @@
  */
 import * as F from "../../wodx-rules/npc/fates-rules.mjs";
 import {officesOf, polityFor, POLITIES} from "../../wodx-rules/npc/politics-rules.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
-import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
+import {YEAR} from "../../wodx-rules/core/terms.mjs";
 import {sexFromDraw} from "../../wodx-rules/chronicle/gender-rules.mjs";
 
 const MOD = "wodx-npc";

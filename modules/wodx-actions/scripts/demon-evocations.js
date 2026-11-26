@@ -6,7 +6,7 @@
  * Pure: no Foundry calls. Also the apocalyptic form's powers by name (FORM_POWERS).
  */
 import { H, T, C, N, S, MV, HL, A, K, outcomesOf } from "./mage-da-effects.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const E = (fx, lasts, range, high, spec = null, highSpec = null) => ({ fx, lasts, range, high, spec, highSpec });
 

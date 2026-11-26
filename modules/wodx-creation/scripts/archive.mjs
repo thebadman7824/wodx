@@ -1,7 +1,7 @@
 import {MODULE_ID, esc, lineOf, chronology} from "./actor-data.mjs";
 import {splatOf} from "./lines.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import * as AR from "../../wodx-rules/creation/archive-rules.mjs";
 
 /**

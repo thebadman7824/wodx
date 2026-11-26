@@ -150,7 +150,7 @@ const ctx = {
 };
 const RT = build(ctx);
 await RT.loadCalendar();
-const {getEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar.mjs"));
+const {getEngine} = await import(join(root, "modules/wodx-rules/core/calendar.mjs"));
 const at = (m, d, h, min = 0) => getEngine().dateToTime({year: 1197, month: m, day: d, hour: h, minute: min});
 
 /* ---- Rothenstein in miniature ---- */

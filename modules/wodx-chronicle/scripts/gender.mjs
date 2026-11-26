@@ -3,7 +3,7 @@
  * recorded; api.gender.forRules(actor) is what a rule may use, "" for every player character (the owner, 2026-11-13).
  */
 import * as GR from "../../wodx-rules/chronicle/gender-rules.mjs";
-import * as TERMS from "./terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const actorOf = x => (x?.documentName === "Actor" ? x : x?.actor ?? (typeof x === "string" ? game.actors.get(x) ?? null : null));
 /** A character a player owns. */

@@ -1,5 +1,5 @@
 import {MODULE_ID, esc, isActiveGM, rule, setting, setSetting, log} from "./util.mjs";
-import {getEngine} from "./calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "./search.mjs";
 import EVENT_DATA from "../data/events.mjs";
 import {eventTable, dateKey, dateLabel, cleanOverride, newsCodes, heardIn, newsFor, NEWS_PARTS, capTold, isWorld, worldEraAt, shownIn} from "../../wodx-rules/chronicle/events-rules.mjs";

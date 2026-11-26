@@ -1,15 +1,15 @@
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import {propose, registerHandler} from "./approvals.mjs";
 import {currentYear} from "./eras.mjs";
-import {getEngine, describeTime} from "./calendar.mjs";
+import {getEngine, describeTime} from "../../wodx-rules/core/calendar.mjs";
 import * as events from "./events.mjs";
 import * as S from "../../wodx-rules/chronicle/signature-rules.mjs";
 import * as POD from "./pod.mjs";
 import {registerTokenLook} from "./token-looks.mjs";
 import {on as ghoulNeedOn, isGhoul as needIsGhoul} from "./ghoul-need.mjs";
 import {isQuiet} from "./quiet.mjs";
-import * as TERMS from "./terms.mjs";
-import {DAY} from "./terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 /**
  * WoDX Chronicle 0.30.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in

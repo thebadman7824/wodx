@@ -14,9 +14,9 @@
 import * as LR from "../../wodx-rules/npc/legacy-rules.mjs";
 import * as TR from "../../wodx-rules/npc/ties-rules.mjs";
 import * as SR from "../../wodx-rules/npc/standing-rules.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {DAY, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY, WEEK} from "../../wodx-rules/core/terms.mjs";
 // B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
 const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 

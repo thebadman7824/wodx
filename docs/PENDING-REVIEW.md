@@ -467,6 +467,7 @@ Rows dated 24 and 25 November that Ben had not approved or disapproved by 26 Nov
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-26 | Rules core: keep Chronicle's terms.mjs and calendar.mjs copies now every rules file has moved? | No: every import points at modules/wodx-rules/core, the two copies are deleted and calendar.mjs keeps only the Foundry calendar class and config; a test fails any import of the old paths (B8068) | Restore the two files as re-exports of the core |
 | 2026-11-26 | Rules core: where does the one rules package live? | A library module, modules/wodx-rules, with folders by the module each file came from, so Foundry serves it and every module reaches it with the usual ../../wodx-rules/ paths (B8060, docs/RULES-CORE.md) | Move the files back with tools/rules-core/move.mjs in reverse (git mv) and drop the folder |
 | 2026-11-26 | Should the modules list WoDX Rules under relationships.requires? | No: a requires entry would make every gate run on any rules change and ask each world to switch it on; its files load while it is off, as other sibling imports do today (B8060) | Add it to requires in each module.json and teach gate-map.mjs not to follow it |
 | 2026-11-26 | What does the rules core guard fail? | Any Foundry global named in the package or in any rules file's reach, a package file that will not load in plain Node, an import from outside the package not listed, a new rules file outside the package; the lists only shrink (B8061) | Edit tools/harness/rules-core.test.mjs or its baseline |

@@ -15,7 +15,7 @@ import {MODULE_ID, esc, generationOf} from "./actor-data.mjs";
 import * as R from "../../wodx-rules/creation/first-night-rules.mjs";
 import * as LP from "../../wodx-rules/creation/lifepath-rules.mjs";
 import {lifepathOf, splatText, LifepathApp} from "./lifepath.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 import {postSeedCards, registerSeedCards} from "./first-night-seed.mjs";
 import {WizardApp, ledgerFor} from "./wizard.mjs";
 import {PreludeRunApp, writtenPrelude, sendTies, meetingJournal, registerTies} from "./first-night-prelude.mjs";

@@ -14,7 +14,7 @@ const LR = await import(join(root, "modules/wodx-rules/chronicle/languages-rules
 const I = await import(join(root, "modules/wodx-rules/storyteller/institution-rules.mjs"));
 const P = await import(join(root, "modules/wodx-rules/storyteller/power-rules.mjs"));
 const H = await import(join(root, "modules/wodx-rules/storyteller/hunters-rules.mjs"));
-const {DateEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
+const {DateEngine} = await import(join(root, "modules/wodx-rules/core/calendar-math.mjs"));
 const {PACK} = await import(join(root, "modules/wodx-rothenstein/chronicle.mjs"));
 const src = f => readFileSync(join(root, f), "utf8");
 

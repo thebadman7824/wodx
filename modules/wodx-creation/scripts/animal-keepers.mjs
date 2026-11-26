@@ -11,8 +11,8 @@ import {MODULE_ID, esc, lineOf, isAnimal, animalKindOf, isAnimalGhoul, clanOf, d
 import * as AG from "../../wodx-rules/creation/animal-ghoul-rules.mjs";
 import * as AK from "../../wodx-rules/creation/animal-keepers-rules.mjs";
 import {makeBeast} from "./animal-stock.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const REACH = 1.5;
 const storyteller = () => game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null;

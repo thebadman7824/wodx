@@ -13,7 +13,7 @@
 import * as LIM from "./limits.js";
 import * as V from "../../wodx-rules/actions/voice-rules.js";
 import * as P from "./profiles.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };

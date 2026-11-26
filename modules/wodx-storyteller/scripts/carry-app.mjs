@@ -52,7 +52,7 @@ async function upload(name, data) {
 /** The window: tick what to keep, then write the carry file. */
 export async function openCarry() {
   if ( !game.user.isGM ) return null;
-  cal ??= await import("../../wodx-chronicle/scripts/calendar.mjs").catch(() => null);
+  cal ??= await import("../../wodx-rules/core/calendar.mjs").catch(() => null);
   const actors = all(game.actors).sort((a, b) => Number(isPC(b)) - Number(isPC(a)) || a.name.localeCompare(b.name));
   const items = all(game.items).sort((a, b) => a.name.localeCompare(b.name));
   const row = (kind, d, on) => `<label class="wstory-check" data-search-item><input type="checkbox" name="${kind}-${d.id}"${on ? " checked" : ""}> ${esc(d.name)}${kind === "Actor" && isPC(d) ? " (player character)" : ""}</label>`;

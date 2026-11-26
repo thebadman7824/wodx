@@ -63,8 +63,8 @@ export function build(ctx) {
     /** The sun now: {altitude, azimuth, phase, dateLabel, timeLabel, toDawn (s)}. */
     async function sunNow(time = game.time.worldTime, scene = globalThis.canvas?.scene ?? null) {
         try {
-            const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
-            const cm = await import("../../wodx-chronicle/scripts/calendar-math.mjs");
+            const cal = await import("../../wodx-rules/core/calendar.mjs");
+            const cm = await import("../../wodx-rules/core/calendar-math.mjs");
             let lat = game.settings.get("wodx-chronicle", "latitude");
             // 3.50.0: a scene far from home keeps its own latitude and hour (WoDX Chronicle 0.39.0, B1969)
             try {

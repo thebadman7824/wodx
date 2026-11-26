@@ -78,7 +78,7 @@ export async function run() {
     await step("4 shut at night", async () => {
       const gate = await W().make(a, b, {kind: "gate", shut: "night", side: "west"});
       // Find the next midnight and set the walker's own time there
-      const cal = await import(`/modules/wodx-chronicle/scripts/calendar.mjs`);
+      const cal = await import(`/modules/wodx-rules/core/calendar.mjs`);
       const d = cal.getEngine().timeToDate(game.time.worldTime);
       const toMidnight = ((24 - (d.hour ?? 0)) % 24) * 3600;
       await game.time.advance(toMidnight || 1);

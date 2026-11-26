@@ -24,7 +24,7 @@ import * as Signals from "./signals.mjs";
 import {backgroundsOf} from "./havens.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, setting, whereIs} from "./core.mjs";
 import {sphereFor} from "../../wodx-rules/chronicle/world-rules.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 import {dateKey} from "../../wodx-rules/chronicle/events-rules.mjs";
 import {countSuccesses} from "../../wodx-rules/actions/core-rules.js";
 

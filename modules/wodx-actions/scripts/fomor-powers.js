@@ -15,7 +15,7 @@
  * health, move, init). spec: an effects result (mage-da-effects.js helpers). once: per "scene" or "day".
  */
 import { H, T, C, N, S, MV, outcomesOf } from "./mage-da-effects.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 export const BOOK = "W20";

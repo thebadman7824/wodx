@@ -110,7 +110,7 @@ import * as SVA from "./servant-actions.js";
 import * as DR_DEBTS from "../../wodx-rules/actions/debts-rules.js";
 import * as DR_BEAST from "../../wodx-rules/actions/beast-marks-rules.js";
 import * as NAT from "../../wodx-rules/actions/nature-rules.js";
-import {DAY, TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY, TURN_SECONDS} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -1887,7 +1887,7 @@ function huntOdds(root, actor, faithWhy = "") {
 /** The night's nudge for a hunt here: {n, reasons}. Nothing when the clock can't be read. */
 async function huntNight(scene, area, year) {
     try {
-        const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
+        const cal = await import("../../wodx-rules/core/calendar.mjs");
         const lat = (() => { try { return game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return 50; } })();
         const t = cal.describeTime(game.time.worldTime, lat);
         const crowd = scene?.getFlag?.("wodx-npc", "crowd") ?? {};

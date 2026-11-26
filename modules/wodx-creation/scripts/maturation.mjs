@@ -11,7 +11,7 @@ import * as M from "../../wodx-rules/creation/maturation-rules.mjs";
 import {MODULE_ID, esc, clanOf, vampireEra, disciplinesOf} from "./actor-data.mjs";
 import {clanDisciplines} from "../../wodx-rules/creation/rules.mjs";
 import {awakeBefore, viewOf} from "./advance.mjs";
-import {successes} from "../../wodx-chronicle/scripts/terms.mjs";
+import {successes} from "../../wodx-rules/core/terms.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };

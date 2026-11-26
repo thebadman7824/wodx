@@ -19,7 +19,7 @@ import * as F from "../../wodx-rules/chronicle/front-rules.mjs";
 import * as S from "../../wodx-rules/chronicle/saga-rules.mjs";
 import * as Fronts from "./fronts.mjs";
 import {bring} from "./encounters.mjs";
-import {DAY} from "./terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 /** The first book of the chronicle in play (read when used: the chronicle registers after this file loads). */
 const book = () => S.FIRST_BOOK;

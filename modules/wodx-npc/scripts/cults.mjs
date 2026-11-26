@@ -20,7 +20,7 @@
 import * as C from "../../wodx-rules/npc/cult-rules.mjs";
 import * as DU from "../../wodx-rules/npc/duty-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 import {onPlayerHook} from "./hook-relay.mjs";
 // B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
 const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };

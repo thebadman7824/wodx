@@ -27,7 +27,7 @@ export async function run() {
   const player = game.users.find(u => !u.isGM);
   // adults in the world's own year, so the age floor never stands in the way of step 5
   // the year the age floor itself reads (the Chronicle's calendar), as gateage does
-  const now = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine().timeToDate(game.time.worldTime).year;
+  const now = (await import("/modules/wodx-rules/core/calendar.mjs")).getEngine().timeToDate(game.time.worldTime).year;
   // one at a time and by name: a batch create need not hand the documents back in the order asked
   const make = async d => { const a = await Actor.create(d); made.push(a); return a; };
   try {

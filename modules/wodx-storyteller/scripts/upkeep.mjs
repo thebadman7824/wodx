@@ -15,9 +15,9 @@ import * as U from "../../wodx-rules/storyteller/upkeep-rules.mjs";
 import * as CR from "../../wodx-rules/storyteller/contagion-rules.mjs";
 import * as W from "../../wodx-rules/storyteller/world-rules.mjs";
 import {MOD, SOCKET, esc, isActiveGM, setting, isPC, chron, log} from "./core.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 import * as Hunters from "./hunters.mjs";
 import * as Herds from "./herds.mjs";
 

@@ -209,7 +209,7 @@ export async function nightTick({force = false, actorId = null, sceneId = null, 
     } else ({actor, scene, token} = placeOf(thePlayer()));
     if ( !actor || !scene || !token ) return null;
     if ( all(game.combats).some(c => c.started && c.scene?.id === scene.id) ) return null;
-    const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
+    const cal = await import("../../wodx-rules/core/calendar.mjs");
     let lat = 50;
     try { lat = game.modules.get("wodx-chronicle")?.api?.place?.latitudeFor?.(scene) ?? game.settings.get("wodx-chronicle", "latitude"); } catch (e) { lat = 50; }
     const now = game.time.worldTime, toDusk = cal.secondsToNextDusk(now, lat), toDawn = cal.secondsToNextDawn(now, lat);

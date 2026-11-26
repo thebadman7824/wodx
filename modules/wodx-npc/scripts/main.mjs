@@ -63,7 +63,7 @@ import * as LEGACY from "./legacy.mjs";
 import * as PO from "../../wodx-rules/npc/politics-rules.mjs";
 import * as AR from "../../wodx-rules/npc/alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-npc";
 const VERSION = "0.112.2";

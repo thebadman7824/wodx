@@ -23,7 +23,7 @@ import {lawOf} from "../../wodx-rules/chronicle/law-rules.mjs";
 import {sweepSeats} from "../../wodx-rules/chronicle/law-regime-rules.mjs";
 import {influenceOf} from "./ventures.mjs";
 import * as Reach from "./reach.mjs";
-import {MONTH} from "../../wodx-chronicle/scripts/terms.mjs";
+import {MONTH} from "../../wodx-rules/core/terms.mjs";
 
 const T_CLIMB = `${MOD}.climb`, T_LEVER = `${MOD}.lever`;
 const now = () => game.time?.worldTime ?? 0;

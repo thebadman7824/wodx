@@ -62,7 +62,7 @@ not one per module (B8065):
    open branches keep working.
 2. **The held files**, moved the same way once the solo-fix design PR (2546) merges. It merged while PR 2539 waited
    for the train, so they moved in PR 2539 too (B8067): every rules file now lives in the package.
-3. **Retire the re-exports**: point every remaining import at the core and delete the Chronicle copies. Then fold the
+3. **Retire the re-exports** (done for terms and the calendar, B8068): point every remaining import at the core and delete the Chronicle copies. Then fold the
    49 module files the package still imports (book tables and helpers, the `outside` list) into the package, and move
    gates that only check pure rules to the harness, so they stop taking a Foundry lane.
 

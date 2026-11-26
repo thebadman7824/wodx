@@ -1,6 +1,6 @@
 import * as X from "../../wodx-rules/storyteller/codex-rules.mjs";
 import {MOD, esc, isPC} from "./core.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 /**

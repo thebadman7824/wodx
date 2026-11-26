@@ -22,7 +22,7 @@
 import * as LM from "./line-mend.mjs";
 import * as A from "../../wodx-rules/npc/carry-aftercare-rules.mjs";
 import * as SX from "../../wodx-rules/npc/secrets-rules.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 // B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
 const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };
 const IX = "wodx-interactables", ACT = "wodx-actions";

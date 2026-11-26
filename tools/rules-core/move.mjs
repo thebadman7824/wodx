@@ -57,10 +57,9 @@ const code = walk(abs("modules")).concat(walk(abs("tools")), walk(abs("registry"
 const SPEC = /((?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)["'])(\.{1,2}\/[^"'?]+)((?:\?[^"']*)?["'])/g;
 const where = new Map([...moves].map(([o, n]) => [o, n]));
 const newPathOf = r => where.get(r) ?? r;
-/** Chronicle's re-exports of the rules core: a moved file imports the core itself, so it stays inside the package. */
+/** A moved file that imports Chronicle's calendar for the engine imports the core instead, so it stays inside the package. */
+// (terms.mjs and calendar-math.mjs left Chronicle in B8068; its calendar.mjs keeps only the Foundry half)
 const SHIMS = new Map([
-  ["modules/wodx-chronicle/scripts/terms.mjs", "modules/wodx-rules/core/terms.mjs"],
-  ["modules/wodx-chronicle/scripts/calendar-math.mjs", "modules/wodx-rules/core/calendar-math.mjs"],
   ["modules/wodx-chronicle/scripts/calendar.mjs", "modules/wodx-rules/core/calendar.mjs"]
 ]);
 const specFrom = (fromFile, toRel) => {

@@ -81,18 +81,22 @@ test("the module folder is a library: nothing runs when Foundry loads it", () =>
   assert.deepEqual(m.scripts ?? [], []);
 });
 
-test("Chronicle's old paths still give every name the rules core has", async () => {
-  for ( const f of ["terms", "calendar-math", "calendar"] ) {
-    const core = await import(pathToFileURL(path.join(ROOT, PKG, "core", `${f}.mjs`)).href);
-    const old = await import(pathToFileURL(path.join(ROOT, "modules/wodx-chronicle/scripts", `${f}.mjs`)).href);
-    for ( const k of Object.keys(core) ) assert.equal(old[k], core[k], `${f}.mjs: ${k}`);
+test("B8068: Chronicle's old copies are gone, its calendar keeps only the Foundry half, and nothing imports the old paths", async () => {
+  for ( const f of ["terms", "calendar-math"] ) assert.equal(fs.existsSync(path.join(ROOT, "modules/wodx-chronicle/scripts", `${f}.mjs`)), false, f);
+  const src = fs.readFileSync(path.join(ROOT, "modules/wodx-chronicle/scripts/calendar.mjs"), "utf8");
+  assert.doesNotMatch(src, /export\s*\*/);
+  assert.match(src, /export function makeCalendarClass/);
+  assert.match(src, /export function makeCalendarConfig/);
+  const walk = d => fs.readdirSync(d, {withFileTypes: true}).flatMap(e => {
+    const p = path.join(d, e.name);
+    return e.isDirectory() ? (["node_modules", ".git"].includes(e.name) ? [] : walk(p)) : /\.m?js$/.test(e.name) ? [p] : [];
+  });
+  const old = [];
+  for ( const f of [...walk(path.join(ROOT, "modules")), ...walk(path.join(ROOT, "tools"))] ) {
+    const s = codeOnly(fs.readFileSync(f, "utf8"));
+    if ( /wodx-chronicle\/scripts\/(terms|calendar-math)\.mjs/.test(fs.readFileSync(f, "utf8").replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "")) ) old.push(path.relative(ROOT, f));
+    // a pure name taken from Chronicle's calendar must come from the core
+    if ( /from\s*["'][^"']*wodx-chronicle\/scripts\/calendar\.mjs["']/.test(fs.readFileSync(f, "utf8")) && !/makeCalendar(Class|Config)/.test(s) ) old.push(path.relative(ROOT, f));
   }
-  // one date engine: a reform set through Chronicle's path is the one the rules core reads
-  const chron = await import(pathToFileURL(path.join(ROOT, "modules/wodx-chronicle/scripts/calendar.mjs")).href);
-  const core = await import(pathToFileURL(path.join(ROOT, PKG, "core/calendar.mjs")).href);
-  const before = core.getEngine();
-  chron.setReform("britain-1752");
-  assert.notEqual(core.getEngine(), before);
-  assert.equal(core.getEngine(), chron.getEngine());
-  chron.setReform("bohemia-1584");
+  assert.deepEqual(old, [], "Import terms and the calendar from modules/wodx-rules/core (B8068).");
 });

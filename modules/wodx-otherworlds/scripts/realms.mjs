@@ -7,7 +7,7 @@ import {STATUS, applyLocally} from "./crossing.mjs";
 import {layersOf, tokenLayer} from "./twins.mjs";
 import * as RR from "../../wodx-rules/otherworlds/realms-rules.mjs";
 import {makeWay} from "./ways.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const num = v => Number(v) || 0;

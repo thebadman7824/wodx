@@ -13,9 +13,9 @@ import * as W from "../../wodx-rules/storyteller/world-rules.mjs";
 import * as Road from "../../wodx-rules/storyteller/road-rules.mjs";
 import * as Country from "../../wodx-rules/storyteller/country-rules.mjs";
 import * as MoneyRules from "../../wodx-rules/storyteller/money-rules.mjs";
-import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-rules/core/calendar.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;

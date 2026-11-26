@@ -12,7 +12,7 @@
  * Pure: no Foundry calls.
  */
 import { H, T, C, N, S, MV, K, P, A, HL, outcomesOf } from "./mage-da-effects.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 export const REF = "Dark Ages: Fae";
 /** B6857: a silenced tongue: every roll by voice is at difficulty 10 for an hour a success (house figure; the book says it will not work). */

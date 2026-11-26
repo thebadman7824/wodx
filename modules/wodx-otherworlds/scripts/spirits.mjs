@@ -1,7 +1,7 @@
 import {MODULE_ID} from "./ratings.mjs";
 import * as S from "../../wodx-rules/otherworlds/spirit-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 
 /**
  * WoDX Otherworlds 0.16.0: standing with the spirit courts (B1720-B1724). The rules are in spirit-rules.mjs.

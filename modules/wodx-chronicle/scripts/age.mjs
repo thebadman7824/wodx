@@ -4,7 +4,7 @@
  * A world-wide guard also takes a lover, spouse or troth tie off a sheet when either end is a minor, whatever made it.
  */
 import * as AR from "../../wodx-rules/chronicle/age-rules.mjs";
-import {getEngine} from "./calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 
 const yearOf = t => { try { return getEngine().timeToDate(Number(t) || 0).year; } catch (e) { return null; } };
 const actorOf = x => (x?.documentName === "Actor" ? x : x?.actor ?? (typeof x === "string" ? game.actors.get(x) ?? (x.includes(".") ? fromUuidSync(x) : null) : null));

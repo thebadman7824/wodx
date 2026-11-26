@@ -21,7 +21,7 @@ import * as AR from "../../wodx-rules/npc/alert-rules.mjs";
 import {isAnimal} from "../../wodx-rules/npc/animal-rules.mjs";
 import {SIDE_FACTS} from "../data/grammar/groups.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 export function build(ctx) {
   const {MOD, esc, isActiveGM, chron, savedProfile, talk, nameFor, sidesOf} = ctx;

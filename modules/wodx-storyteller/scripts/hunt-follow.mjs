@@ -22,7 +22,7 @@ import * as H from "../../wodx-rules/storyteller/hunters-rules.mjs";
 import * as RR from "../../wodx-rules/storyteller/remains-rules.mjs";
 import * as Between from "./between.mjs";
 import {MOD, esc, isActiveGM, chron, npc, gmIds, log} from "./core.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const all = c => (c ? [...(c.contents ?? c)] : []);

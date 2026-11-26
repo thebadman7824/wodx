@@ -9,7 +9,7 @@
 import {MODULE_ID, esc} from "./actor-data.mjs";
 import * as R from "../../wodx-rules/creation/first-night-rules.mjs";
 import {makePeople, lifepathOf} from "./lifepath.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 
 const api = id => game.modules.get(id)?.active ? game.modules.get(id).api : null;
 const chron = () => api("wodx-chronicle");

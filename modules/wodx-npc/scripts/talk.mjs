@@ -30,7 +30,7 @@ import * as RT from "../../wodx-rules/npc/region-talk-rules.mjs";
 import * as AR from "../../wodx-rules/npc/alert-rules.mjs";
 import * as F from "../../wodx-rules/npc/faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 export function build(ctx) {
   const {MOD, esc, isActiveGM, chron, savedProfile} = ctx;

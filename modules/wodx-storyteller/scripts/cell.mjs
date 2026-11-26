@@ -15,7 +15,7 @@
  */
 import * as R from "../../wodx-rules/storyteller/cell-rules.mjs";
 import {MOD, esc, setting, mutate, gmIds, isPC, chron} from "./core.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 import * as Builder from "./builder.mjs";
 
 const AX = "wodx-actions";

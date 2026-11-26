@@ -15,7 +15,7 @@
 import * as CR from "../../wodx-rules/storyteller/craft-rules.mjs";
 import {MOD, esc, isActiveGM, chron, whereNow} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const LIB = "wodx-library";
 const now = () => game.time?.worldTime ?? 0;

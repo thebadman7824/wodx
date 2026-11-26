@@ -7,7 +7,7 @@
  * A tag comes from the reviewed table (data/tags.json) when the power is in it, else from seedTag(), which reads
  * the power's own data: a difficulty set by the target, "passive", and words in its summary.
  */
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 export const INTENTS = {
   h: {key: "hostile", label: "a foe"},

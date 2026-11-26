@@ -17,9 +17,9 @@ import * as Markets from "./markets.mjs";
 import * as Rumours from "./rumours.mjs";
 import {living} from "./hardship.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, gmIds, setting, log, tripContext} from "./core.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 export const TYPE = `${MOD}.contagion`;
 const NPC = "wodx-npc", ACT = "wodx-actions";

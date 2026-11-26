@@ -73,7 +73,7 @@ async function runGate(K) {
     ok("4. state on screen", edges[0]?.id === "wound2" && /wsn-state-wound2/.test(screen) && /Badly hurt/.test(words), {edges, screen, words});
 
     const R2 = await import("/modules/wodx-rules/chronicle/reckoning-rules.mjs");
-    const C2 = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+    const C2 = await import("/modules/wodx-rules/core/calendar.mjs");
     const d = C2.describeTime(game.time.worldTime, game.settings.get("wodx-chronicle", "latitude"));
     const eraId = game.modules.get("wodx-chronicle").api?.eras?.activeEra?.()?.profile?.id ?? "";
     const told = R2.reckon(d, {eraId});

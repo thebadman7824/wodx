@@ -58,7 +58,7 @@ export async function run() {
       ok("1. the age floor and adoption are in the API", typeof chron().age?.minor === "function" && typeof npc().hearts?.adopt === "function" && newer(av, "3.64.0"), {cv, nv, av});
     });
     await step("2. who is a minor", async () => {
-      const now = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine().timeToDate(t0).year;
+      const now = (await import("/modules/wodx-rules/core/calendar.mjs")).getEngine().timeToDate(t0).year;
       R.notes.push({year: now});
       const docs = await Actor.createDocuments([
         {name: "Gate Age Adult Ana", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 30}, sex: "female"}}},
@@ -74,7 +74,7 @@ export async function run() {
       R.notes.push({created: docs.map(d => ({name: d.name, born: d.flags?.["wodx-creation"]?.chronology?.bornYear ?? null, role: d.flags?.["wodx-npc"]?.resident?.role ?? null, mark: d.flags?.["wodx-chronicle"]?.minor ?? null}))});
       made.push(adultA, adultB, teen, oldChilde, resChild, marked, plain);
       // Embraced 300 years ago at 15: the body stopped at 15
-      const engine = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine();
+      const engine = (await import("/modules/wodx-rules/core/calendar.mjs")).getEngine();
       const d = engine.timeToDate(t0);
       await oldChilde.update({"flags.wodx-creation.chronology.embraced": engine.dateToTime({...d, year: now - 300})});
       const m = a => chron().age.minor(a);

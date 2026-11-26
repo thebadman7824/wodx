@@ -18,7 +18,7 @@ import * as DC from "./fae-da-cantrips.js";
 import * as CA from "./c20-arts.js";
 import * as EF from "./effects.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
