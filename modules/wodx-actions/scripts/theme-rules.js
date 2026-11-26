@@ -335,6 +335,7 @@ export const DESC = {
     "rules:fae": "The changeling rules at a glance, with page references",
     "rules:orpheus": "The rules of the crucible at a glance, with page references",
     "api:orphHorror": "Orpheus: use a Horror (its roll, the Vitality put in, Spite's penalty, the ripple it makes)",
+    "api:orphStain": "Orpheus: call up a Stain (Spite points tapped, a die each against 7, its turns, its weapon or its effects)",
     "api:orphVitality": "Orpheus: Vitality back (rest, a Willpower point for three, sharing, tapping Spite)",
     "api:orphProject": "Orpheus: a skimmer's hours outside the body",
     "api:orphSetup": "Orpheus: the Shade, the Lament, the starting traits and the Horrors open to learn",

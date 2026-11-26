@@ -31,6 +31,7 @@ const DE = await import(A("scripts/demon-evocations.js"));
 const H = await import(A("scripts/hunter-rules.js"));
 const R = await import(A("scripts/reckoning-rules.js"));
 const O = await import(A("scripts/orpheus-rules.js"));
+const OS = await import(A("scripts/orpheus-stains.js"));
 const KA = await import(A("scripts/kote-arts.js"));
 const F = await import(A("scripts/fae-da-rules.js"));
 const MD = await import(A("scripts/mage-da-rules.js"));
@@ -201,6 +202,11 @@ for ( const [id, h] of Object.entries(O.HORRORS) ) {
   const fx = OH.HORROR_FX[id], res = fx ? OH.horrorResults(id, 3, 2, { name: h.label }) : [];
   add("Orpheus", `Horrors (${h.shade})`, h.label, { src: [h, fx], status: res.some(r => !["note", "st"].includes(r.out?.kind) && !r.st) ? "applies" : fx ? "card" : "roll", kw: kw?.keywords ?? [],
     page: fx ? `Orpheus ${fx.page}` : "Orpheus pp. 124, 190-193", how: fx ? "Horror window: the line for the Vitality put in, the usual pool, and the effects card" : "Vitality spend and roll; no effect" });
+}
+/* -- Orpheus: Stains (B7832, orpheus-stains.js), called up from Spite 4 */
+for ( const [id, st] of Object.entries(OS.STAINS) ) {
+  add("Orpheus", "Stains", st.label, { src: st, status: OS.applies(id) ? "applies" : "card", story: OS.applies(id) ? undefined : st.gain, kw: (st.fx ?? []).map(f => f.key),
+    page: `Orpheus ${st.page}`, how: `Call up a Stain: Spite tapped, a die each at 7; ${st.weapon ? "its weapon on the sheet" : st.fx?.length ? "its effects card" : "the card for the Storyteller"}` });
 }
 /* -- Kindred of the East: the Disciplines power by power (kote.js Spend Chi) */
 for ( const p of KA.POWERS ) {

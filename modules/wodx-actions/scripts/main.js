@@ -3753,7 +3753,7 @@ const API = { menu, action, clearRetries, retryRules: RTY, giveBlood, isVampire,
     mummyCast: withActor(a => ux().cast(a)), mummySekhem: withActor(a => ux().regain(a)), mummyBalance: withActor(a => ux().balance(a)), mummyOffense: withActor(a => ux().offense(a)),
     mummyResurrect: withActor(a => ux().resurrect(a)), mummyVeil: withActor(a => ux().veil(a)), mummySetup: withActor(a => ux().setup(a)), mummyInfo: a => ux().info(resolveActor(a)),
     mummyDaily: () => ux().daily(), mummyRules: UR, isMummy: a => UXD.isMummy(resolveActor(a)),
-    orphHorror: withActor(a => ox().horror(a)), orphVitality: withActor(a => ox().vitality(a)), orphHarm: withActor(a => ox().harm(a)), orphSpite: withActor(a => ox().spite(a)),
+    orphHorror: withActor(a => ox().horror(a)), orphStain: withActor(a => ox().stain(a)), orphVitality: withActor(a => ox().vitality(a)), orphHarm: withActor(a => ox().harm(a)), orphSpite: withActor(a => ox().spite(a)),
     orphProject: withActor(a => ox().project(a)), orphSetup: withActor(a => ox().setup(a)), orphInfo: a => ox().info(resolveActor(a)), orphRules: ORR, isOrpheus: a => OXD.isOrpheus(resolveActor(a)),
     shift: withActor(a => GX.isShifter(a) ? gx().shift(a) : pm().shift(a)), regen: (o = {}) => pm().regen(o.actor ?? resolveActor()),
     // Werewolf and Fera (Phase 6b)
@@ -3875,6 +3875,7 @@ Hooks.once("ready", async () => {
     const withChronicle = () => {
         chronicle()?.timed?.registerReverter?.("wodx-actions.quickening", revertQuickening);
         chronicle()?.timed?.registerReverter?.("wodx-actions.demonForm", (a, d) => DXD.revertForm(a, d));
+        chronicle()?.timed?.registerReverter?.("wodx-actions.stainEnd", (a, d) => ox().stainEnd(a, d)); // B7832
         // The inner voice's proposals (6d): approved in the queue, answered from a card
         (chronicle()?.registerApprovalHandler ?? game.modules.get("wodx-chronicle")?.api?.registerApprovalHandler)?.("wodx-voice", { label: "Inner voice", approve: entry => vx().onApproved(entry) });
         // Mage keyword results that wait for a yes (3.22.0)
