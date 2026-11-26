@@ -4,7 +4,8 @@
  * Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatem20rote.mjs?${Date.now()}`)).run()
  * It makes its own mage, and removes it; never moves the clock.
- *   1. Cast an Effect, A rote: Talons: Life reads 3, Shape is ticked, and the note names M20 pp. 609-610
+ *   1. Cast an Effect, A rote: Talons: Life reads 3, Shape is ticked, and the note names M20 pp. 609-610; How Do You DO
+ *      That?'s Chi Healing is offered too (B7837)
  *   2. Cast: a card for the casting, with the Arete roll
  * Result: Data/wodx-gate/gatem20rote-result.json.
  */
@@ -24,20 +25,20 @@ export async function run() {
     await G.step("1. Cast an Effect, A rote: Talons fills in Life 3, Shape, and the page", async () => {
       mage = await G.make(Actor, {name: "Gate Rote Mage", type: "Mage", ownership: {default: 3}});
       // set after creating: the create helper resets a new sheet's traits
-      await me().update({"system.spheres.life.value": 3, "system.spheres.matter.value": 2, "system.advantages.arete.permanent": 3,
+      await me().update({"system.spheres.life.value": 3, "system.spheres.matter.value": 2, "system.spheres.prime.value": 2, "system.advantages.arete.permanent": 3,
         "system.advantages.willpower.permanent": 5, "system.advantages.willpower.temporary": 5});
       // the trigger: the Cast window, as the mage's menu and sheet open it
       game.wodxActions.m20Cast({actor: me()});
       await waitFor(() => win()?.querySelector('select[name="kw-rote"]'), 30000);
       const sel = win().querySelector('select[name="kw-rote"]');
       const opt = [...sel.options].find(o => /^Talons \(M20/.test(o.textContent));
-      const offered = [...sel.options].map(o => o.textContent).filter(t => /\(M20 /.test(t));
+      const offered = [...sel.options].map(o => o.textContent).filter(t => /\((M20|HDYDT) /.test(t));
       sel.value = opt?.value ?? ""; sel.dispatchEvent(new Event("change", {bubbles: true}));
       await waitFor(() => win()?.querySelector('[name="kw-shape"]')?.checked, 15000);
       const life = win().querySelector('select[name="s-life"]')?.value;
       const shape = !!win().querySelector('[name="kw-shape"]')?.checked;
       const note = win().querySelector(".wodx-rote-note")?.textContent ?? "";
-      G.ok("1. Cast an Effect, A rote: Talons fills in Life 3, Shape, and the page", !!opt && life === "3" && shape && /M20 pp\. 609-610/.test(note) && !offered.some(t => /Lawn Chair/.test(t)),
+      G.ok("1. Cast an Effect, A rote: Talons fills in Life 3, Shape, and the page", !!opt && life === "3" && shape && /M20 pp\. 609-610/.test(note) && !offered.some(t => /Lawn Chair/.test(t)) && offered.includes("Chi Healing (HDYDT p. 65)"),
         {offered, life, shape, note: note.slice(0, 160)});
     });
 
@@ -45,10 +46,11 @@ export async function run() {
       const n0 = game.messages.contents.filter(m => (m.timestamp ?? 0) >= since).length;
       win().querySelector('button[data-action="ok"]')?.click();
       const card = () => game.messages.contents.filter(m => (m.timestamp ?? 0) >= since && /Gate Rote Mage/.test(`${m.speaker?.alias ?? ""} ${m.content ?? ""} ${m.flavor ?? ""}`)).at(-1);
-      await waitFor(() => !!card(), 60000);
+      await waitFor(() => !!card(), 120000); // a card save in the big lane world can take a minute
       const text = (card()?.content ?? "").replace(/<[^>]+>/g, " ");
       G.ok("2. Cast: a card for the casting, with the Arete roll", !!card() && /Arete|Life/.test(text),
-        {before: n0, card: text.replace(/\s+/g, " ").slice(0, 300)});
+        {before: n0, card: text.replace(/\s+/g, " ").slice(0, 300),
+          open: card() ? undefined : [...foundry.applications.instances.values()].filter(a => a.rendered).map(a => String(a.title ?? "")).slice(-5)});
     });
   } catch (e) {
     G.R.errors.push(`${e?.message ?? e}`);
