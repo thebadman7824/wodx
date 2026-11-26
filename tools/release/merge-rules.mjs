@@ -113,8 +113,9 @@ export function branchNotes(g, base, head) {
     let text = g.show(head, file);
     if ( text === null ) {
       // Gone at the head (merge-stamp removed it): the last commit on the branch that touched it removed it, so its
-      // first parent holds the note's last form.
-      const last = g.tryRun("rev-list", "-1", `${base}..${head}`, "--", file);
+      // first parent holds the note's last form. B8026: --full-history --no-merges, or a train batch (the stamped branch
+      // merged into a batch branch) hides that commit and the note reads as empty.
+      const last = g.tryRun("rev-list", "-1", "--full-history", "--no-merges", `${base}..${head}`, "--", file)?.trim();
       text = last ? g.show(`${last}^1`, file) : null;
     }
     out.push({file, module: m[1], frag: text === null ? null : parseFragment(text)});
