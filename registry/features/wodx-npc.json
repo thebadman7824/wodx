@@ -472,11 +472,13 @@
     },
     "shown": {
      "what": "lines of talk between NPCs over their tokens and in chat for those in earshot"
+    },
+    "gated": {
+     "gate": "tools/gate/gateoverheardwalk.mjs",
+     "step": "2. round the wall's end: the talk comes to the chat and the Overheard window"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
