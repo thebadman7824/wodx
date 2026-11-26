@@ -95,7 +95,7 @@ const unsetKey = path => {
 
 function registerSettings() {
   game.settings.register(MOD, "chaseAuto", {
-    name: "Chases run by themselves", hint: "A chase rolls a turn every few seconds on its own, and ends by itself: a catch opens a fight through WoDX Combat, and a quarry who gets away is gone. Anyone who flees a fight with foes close behind starts one: an NPC who runs, or a player character who breaks more than eight yards clear of the NPCs beside them. The Storyteller's window can still roll, undo and end it.",
+    name: "Chases run by themselves", hint: "A chase runs by itself and ends in a catch (a fight) or an escape. Fleeing a fight with foes close behind starts one.",
     scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "doorClick", {
@@ -107,7 +107,7 @@ function registerSettings() {
     scope: "world", config: true, type: Number, default: 1, range: {min: 0.5, max: 3, step: 0.5}
   });
   game.settings.register(MOD, "makePlain", {
-    name: "Hand over things with no item behind them", hint: "Taking from a container: a line that is only a name (everyday goods, a stock list's own words) becomes a simple item of that name. Off: those lines are left for the Storyteller to describe.",
+    name: "Hand over things with no item behind them", hint: "Something in a container that is only a name becomes a simple item of that name when taken. Off: the Storyteller describes it.",
     scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "advanceClock", {
@@ -119,11 +119,11 @@ function registerSettings() {
     scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "hazards", {
-    name: "Hazards hurt", hint: "A live hazard tile (fire, broken glass, a live wire) hurts a character who walks into it, and in combat one who starts a turn in it. Off: hazards can still be put out or cleared, but never hurt by themselves.",
+    name: "Hazards hurt", hint: "Fire, broken glass and live wires on the map hurt a character who walks into them.",
     scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "traitTriggers", {
-    name: "Flaws go off on the map", hint: "A character with Can't Cross Running Water, Garlic, Crosses, Light-Sensitive or a Phobia who walks into a tile or region named for it gets a card, and a player's move is held where it began when the flaw stops them.",
+    name: "Flaws go off on the map", hint: "A character with a flaw like Can't Cross Running Water or a Phobia is stopped at the place it names.",
     scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "noise", {

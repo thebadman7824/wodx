@@ -19,7 +19,7 @@ export function registerSpriteSettings() {
   game.settings.register(MOD, "sprites", {scope: "world", config: true, name: "Sprite tokens walk and turn",
     hint: "Tokens given a sprite face the way they move and step as they go. Off: they show the still figure.", type: Boolean, default: true});
   game.settings.register(MOD, "spriteLife", {scope: "world", config: true, name: "Figures live their routine on the map",
-    hint: "A character with a routine (WoDX NPC) sleeps lying down, sits at rest, works with the hands, kneels at prayer, drinks seated and carries a load on errands; beasts graze and lie down. They get up when they walk. Off: everyone stands.", type: Boolean, default: true});
+    hint: "NPC figures lie down to sleep, sit, kneel and carry loads as their routine goes.", type: Boolean, default: true});
 }
 const lifeOn = () => { try { return game.settings.get(MOD, "spriteLife") !== false; } catch (e) { return true; } };
 

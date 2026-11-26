@@ -669,7 +669,7 @@ Hooks.once("init", async () => {
   });
   game.settings.register(MOD, "sheetLook", {
     name: "Sheet look",
-    hint: "WoDX gives each line's sheets their own fonts, paper and section rules, in light and dark mode. The system's look brings back the fonts and banners that come with the World of Darkness system.",
+    hint: "Gives each line's sheets their own fonts and paper. The system's look brings back the World of Darkness system's own.",
     scope: "world", config: true, type: String, default: "wodx",
     choices: { wodx: "WoDX line skins", system: "The system's own look" },
     onChange: skinOn

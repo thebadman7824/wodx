@@ -265,7 +265,7 @@ function watchPlayer() {
 
 Hooks.once("init", () => {
   game.settings.register(MOD, "on", {name: R.NAME,
-    hint: "For one person playing alone, with a hidden browser in the Storyteller's seat. On: NPCs, routines, factions, fights, turns, dawn and dusk and the night's draw all act by themselves, every kind of approval is given on sight, and the seat answers or records whatever still waits for a Storyteller. Off puts back every value this changed. Never turn it on at a shared table.",
+    hint: "Play alone: NPCs, fights, turns and the night all run by themselves, with a hidden browser in the Storyteller's seat.",
     scope: "world", config: true, type: Boolean, default: false, onChange: onSwitch});
   game.settings.register(MOD, "wait", {name: "The seat waits this long (seconds)",
     hint: "How long a card or window may wait for a Storyteller before the seat takes the choice that goes ahead.",

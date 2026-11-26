@@ -58,7 +58,7 @@ function registerSettings() {
   world("sceneEffects", {name: "Rain, snow and fog on outdoor scenes", hint: "Uses Foundry's own weather effects. A scene the Storyteller gave its own weather is left alone.", type: Boolean, default: true});
   world("tellPlayers", {name: "Tell the players the weather each night", hint: "Post the night's weather in chat for everyone when the night turns.", type: Boolean, default: false});
   world("lightFromClock", {name: "Light from the clock", hint: "Out-of-doors scenes, and any scene ticked \"Follow the clock\" in the Atmosphere window, get their darkness from the sun, the moon and the clouds. Untick it on a scene to keep its own light.", type: Boolean, default: true});
-  world("music", {name: "Era music", hint: "When the era changes, stop the old era's music and start the new era's calm playlist; play the combat playlist while a fight runs. Only playlists set in the Atmosphere window are touched.",
+  world("music", {name: "Era music", hint: "Plays the era's music, and the combat playlist during a fight.",
     type: Boolean, default: true});
   world("ambience", {name: "Ambience for each scene", hint: "When a scene is shown to the players, play the era kit's loop for its kind of place and, out of doors, for the weather.", type: Boolean, default: true});
   world("kitRoot", {name: "Era kit folder", hint: "Where the kits' files are, in the Data folder: one folder per kit (dark-ages, victorian...), each with music, ambience and sounds inside.", type: String, default: "wodx-kits"});
@@ -77,7 +77,7 @@ function registerSettings() {
   world("frames", {name: "Token frames", hint: "A ring or a square in the era's material round each token (iron, gilt, brass, chrome, neon).",
     type: String, default: "characters", choices: K.FRAME_WHO, onChange: () => redrawFrames()});
   game.settings.register(MOD, "framesHere", {scope: "client", config: true, name: "Show token frames", hint: "Turn the era's token frames off on this computer only.", type: Boolean, default: true, onChange: () => redrawFrames()});
-  world("adaptive", {name: "Music follows the tension", hint: "The era music moves with the table: the combat playlist in a fight, the frenzy playlist (or combat) when a player's character frenzies, tension while one hides or stalks, and back to your chosen mood when it is quiet.",
+  world("adaptive", {name: "Music follows the tension", hint: "The music follows the moment: combat, frenzy, tension while sneaking, then back to your chosen mood.",
     type: Boolean, default: true, onChange: () => adaptSoon({force: true})});
   world("tension", {name: "Tension", hint: "Read the table, or hold one tension by hand until you set it back.", type: String, default: "auto",
     choices: {auto: "Read the table", ...AR.TENSION_LABELS}, onChange: () => adaptSoon({force: true})});

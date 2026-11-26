@@ -94,7 +94,7 @@ function wrap() {
 export function setup() {
   game.settings.register(MOD, "sheetRollMods", {
     name: "WoDX on the sheet's own rolls",
-    hint: "Clicking an Attribute or Ability on a sheet rolls with the merits and flaws, derangements, drink and drugs, powers and conditions WoDX Actions' rolls count, and the card names each one.",
+    hint: "Clicking a trait on the sheet rolls it with everything that changes the roll, and the card names each one.",
     scope: "world", config: true, type: Boolean, default: true
   });
   wrap();
