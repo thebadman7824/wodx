@@ -149,16 +149,16 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "
 function registerSettings() {
     game.settings.register(MOD, "powerEffects", {
         name: "Powers on the effects card",
-        hint: "A Discipline or Gift roll with successes puts the power's effect keywords on the effects card, which applies the plain ones with Undo and queues the rest. Needs the effect keywords to be on.",
+        hint: "A successful Discipline or Gift roll applies the power's effects, with Undo.",
         scope: "world", config: true, type: Boolean, default: true
     });
     TH.registerTraitSetting();
     const s = (key, name, hint, type, def) =>
         game.settings.register(MOD, key, { name, hint, scope: "world", config: true, type, default: def });
     game.settings.register(MOD, "flavorText", { name: "Flavor text on action cards",
-        hint: "Add one short line of description under the result of each action card, picked to fit what was attempted and how it went. Edit the lines in scripts/flavor.js.",
+        hint: "Adds one short line describing what happened to each action card.",
         scope: "world", config: true, type: String, default: "all", choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
-    game.settings.register(MOD, "consensusEra", { name: "Consensus by era", hint: "Before 1450 there is no coincidental or vulgar split; from 1450 to 1699 magick is casual or vain, with Fortune Dice (Sorcerers Crusade); from 1700 Mage 20th. The years are a house rule.",
+    game.settings.register(MOD, "consensusEra", { name: "Consensus by era", hint: "How magick works changes with the year: no split before 1450, the Sorcerers Crusade rules to 1699, Mage 20th after (house rule).",
         scope: "world", config: true, type: Boolean, default: true });
     game.settings.register(MOD, "realityZones", { name: "Reality Zones (Mage 20th)", hint: "Zone: a place's accepted styles decide what is coincidental. One world: one Consensus everywhere. Free: the Storyteller rules each time.",
         scope: "world", config: true, type: String, default: "world", choices: { zone: "The place decides", world: "One Consensus everywhere", free: "The Storyteller rules each time" } });
@@ -183,7 +183,7 @@ function registerSettings() {
     game.settings.register(MOD, "menuRecent", { scope: "client", config: false, type: Object, default: {} });
     // 3.43.0: the odds before a roll, on this computer
     game.settings.register(MOD, "showOdds", { name: "Show the odds before a roll", scope: "client", config: true, type: Boolean, default: true,
-        hint: "Roll windows show the chance of one success, of three or more and of a botch for the pool as set, with every modifier and where it comes from." });
+        hint: "Roll windows show the odds of success and of a botch, and what changes the pool." });
 }
 const setting = k => game.settings.get(MOD, k);
 

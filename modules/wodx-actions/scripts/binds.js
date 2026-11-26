@@ -100,7 +100,7 @@ async function answer(msg, allow) {
 }
 
 export function setup() {
-  game.settings.register(MOD, "bindingsHold", {name: "Bindings hold the token", hint: "While Hold or Possess binds a player's character, its token does not move for the player; Fear keeps it from going nearer the one feared; a command or an oath sends each move to the Storyteller to allow.",
+  game.settings.register(MOD, "bindingsHold", {name: "Bindings hold the token", hint: "A character held, possessed, afraid or under a command can't move freely: the Storyteller allows each move.",
     scope: "world", config: true, type: Boolean, default: true});
   Hooks.on("preUpdateToken", onPreUpdate);
   Hooks.on("renderChatMessageHTML", (msg, el) => {

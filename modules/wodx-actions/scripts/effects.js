@@ -1162,7 +1162,7 @@ export async function placeItem(msg, index, at = undefined) {
 export function setup() {
   BIND.setup();
   game.settings.register(MOD, "effectsApply", {
-    name: "Magic that applies itself", hint: "Mage 20th castings with effect keywords change health, Quintessence, timed effects, light, height and place on their own, with Undo; areas work on whoever enters; the rest goes to the approval queue. Automatic: on, except in the Live world.",
+    name: "Magic that applies itself", hint: "Mage castings apply their effects on their own, with Undo. What can't be applied goes to the Storyteller.",
     scope: "world", config: true, type: String, default: "auto", choices: {auto: "Automatic", on: "On", off: "Off"}
   });
   game.settings.register(MOD, "stRituals", {scope: "world", config: false, type: Array, default: []});
