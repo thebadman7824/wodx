@@ -224,7 +224,7 @@ Object.assign(SHEETS, {
       ["academics", "bureaucracy", "computer", "enigmas", "finance", "investigation", "law", "linguistics", "medicine", "occult", "politics", "science"]),
     advantages: [["backgrounds"], ["horrors"], ["stains"]],
     lower: [["defaultAbilities"], ["vitality", "willpower", "spite"], ["systemHealth", "experience"]],
-    page2: [["meritsFlaws", "otherTraits"], ["derangements", "combat"], ["gear", "description"]], buttons: ["orphHorror", "orphVitality", "orphSpite"]
+    page2: [["meritsFlaws", "otherTraits"], ["derangements", "combat"], ["gear", "description"]], buttons: ["orphHorror", "orphStain", "orphVitality", "orphSpite"]
   }
 });
 SHEETS.ghoul20.abilities = SHEETS.v20.abilities;

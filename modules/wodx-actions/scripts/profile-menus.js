@@ -200,7 +200,7 @@ MENUS.mummy = {
 MENUS.orpheus = {
     sections: [
         ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"]]],
-        ["The spook", [["api:orphHorror", "Use a Horror", "fa-ghost"], ["api:orphVitality", "Vitality (rest, share, tap)", "fa-heartbeat"], ["api:orphProject", "Projection (skimmers)", "fa-bed"], ["api:orphSetup", "Shade, Lament, Horrors", "fa-id-card"]]],
+        ["The spook", [["api:orphHorror", "Use a Horror", "fa-ghost"], ["api:orphStain", "Call up a Stain", "fa-biohazard"], ["api:orphVitality", "Vitality (rest, share, tap)", "fa-heartbeat"], ["api:orphProject", "Projection (skimmers)", "fa-bed"], ["api:orphSetup", "Shade, Lament, Horrors", "fa-id-card"]]],
         ["Danger", [["api:orphHarm", "Harm to the spook", "fa-skull"], ["api:orphSpite", "Spite", "fa-angry"], ["api:hazard", "Fire / fall", "fa-burn"], ["rules:orpheus", "Orpheus rules", "fa-book"]]],
         ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], ["api:clearTries", "Clear failed tries (GM)", "fa-redo"], WILL]]
     ]

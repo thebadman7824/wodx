@@ -1558,6 +1558,39 @@
    ]
   },
   {
+   "id": "actions.orpheus-stains",
+   "name": "Orpheus: the Stains, called up at will from Spite",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/orpheus-stains.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2590,
+     "decisions": "B7832"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/orpheus.js:stain"
+    },
+    "shown": {
+     "what": "the Stain window from the Orpheus menu and the sheet; its weapon on the sheet and its timed effect on the token while it shows"
+    },
+    "gated": {
+     "gate": "tools/gate/gatestainclaws.mjs",
+     "step": "1. Call up a Stain, Claws, two Spite: Claws (Stain) on the sheet"
+    }
+   },
+   "open": [
+    "book: Orpheus pp. 195-199; summaries read from the book text, not yet checked line by line"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2590
+   ]
+  },
+  {
    "id": "actions.infernal-pacts",
    "name": "Demonic pacts, infernal investments and the Supplicium",
    "module": "wodx-actions",

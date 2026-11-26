@@ -6,7 +6,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 45 | 0 | 1 |
+| wodx-actions | yes | 46 | 0 | 1 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 3 | 0 | 0 |
 | wodx-combat | yes | 16 | 0 | 0 |
@@ -65,6 +65,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Demonic pacts, infernal investments and the Supplicium (`actions.infernal-pacts`) |  | gated | 1 | gatedainfernal 1. the window records a pact and buys Armor |
 | Fomor powers and spirit Charms (`actions.fomor-charms`) |  | gated | 1 | gatefomor 6. Regeneration closes a lethal level each new round |
 | Mages of the later eras: Arete, Spheres, Paradox and the Quiet (`actions.m20`) |  | gated | 1 | gate6m countermagick: Arete at 7 |
+| Orpheus: the Stains, called up at will from Spite (`actions.orpheus-stains`) |  | gated | 1 | gatestainclaws 1. Call up a Stain, Claws, two Spite: Claws (Stain) on the sheet |
 | Orpheus: Vitality, Spite and the Horrors (`actions.orpheus`) |  | gated | 1 | gate6l a Willpower point for three Vitality |
 | The imbued of Hunter: The Reckoning (1999 on) (`actions.reckoning`) |  | gated |  | gatesecondsight 1. Spend 1 Conviction for second sight: the sheet's Conviction falls by one |
 | The infernal thrall of Dark Ages: Devil's Due: Vice, Resolve, Torment, sins, pacts, rites and Absolution (`actions.thrall`) |  | gated | 1 | gatethrall 2. a planned murder from the window: Conscience fails and a point of Torment |
