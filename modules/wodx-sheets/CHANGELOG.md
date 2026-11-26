@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.24.1 (Fixes from the first solo test (B8058): each condition on the in-play strip says what it does, on hover, on focus and to a screen reader (#2508))
 - 0.24.0 (The Road and the domain at a glance on the Bio tab (B7754))
 - 0.23.6 (The anachronism check's Live guard reads WoDX Chronicle's one Live-world list (B7564); a comment no longer names the first chronicle)
 - 0.23.5 (A sheet roll whose difficulty goes past 10 is rolled at 10 and needs one more success for each point past it (B7120): the general window hands the count to the system roller, and the roll card says "rolled at 10; 1 more success needed" instead of "difficulty held at 10")

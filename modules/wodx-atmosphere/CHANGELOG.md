@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.18.6 (Fixes from the first solo test (B8039): no heartbeat or hunger cue while the character is still being made, or while the blood pool has no size yet (#2473))
 - 0.18.5 (Comments no longer name the first chronicle (B7566))
 - 0.18.4 (Aging faces wait while the world is held (final audit, B6759). An era put in force during a hold (a gate, a flashback) no longer rewrites the portraits and face records of every character with an aging face. The faces catch up when the clock moves freely again; Final audit fix. The weather card listed these modifiers and no roll read them (B6796))
 - 0.18.3 (The module description no longer says maps change with the year as if WoDX drew them: places that age switch a scene to later pictures of its map that the Storyteller supplies, by the chronicle's year, and no map is generated in play (the map generators in tools/mapgen run outside the game) (B6669))

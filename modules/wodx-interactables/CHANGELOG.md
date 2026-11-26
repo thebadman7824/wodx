@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.56.2 (Fixes from the first solo test (B8049): a player lights only a light the character carries; the Storyteller may light any)
 - 0.56.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)
 - 0.56.0 (Echoes that fire from village life (Dark Ages: Fae p. 113): holy ground, carried goods and church bells set off the fae's own Echoes (B7871))
 - 0.55.1 (A weapon a player knocks out of someone's hand now lands where the blow sent it, with the Knocked away card. The message a player's client sends to the Storyteller had dropped the landing spot and the cause, so the weapon fell at its owner's feet under a Sets gear down card (B6990, issue 1814))

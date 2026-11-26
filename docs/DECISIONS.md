@@ -476,7 +476,7 @@ Next free block: B8060
 | B8000-B8009 | The New PC drives the merge train, the Main PC is its backup (used B8000) | tools |
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 | B8020-B8029 | Book overlap: reword the prose that matched source books, and a gate that keeps new book text out (used B8020-B8023) | Actions, Chronicle, Combat, Creation, Interactables, Library, NPC, Otherworlds, Storyteller, system fork, tools (books) |
-| B8030-B8059 | Fixes from the first solo test (25 Nov): getting into play (used B8030-B8033) | Solo, Rothenstein, tools (release, solo) |
+| B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16561,3 +16561,105 @@ Reverse: remove landing from the Rothenstein manifest; pickLanding then behaves 
 WoDX Solo. The new character's token has basic sight of 6 squares in the scene's own units (sightRange), set again when the token is placed at the way in, in place of range 0, which left a night map black (#2475). Lights, Auspex and Gifts still add to it through WoDX Senses. The walk checks the token's sight range and that the landing's map file loads on the player's client (#2476).
 
 Reverse: set SIGHT_SQUARES to 0.
+
+## B8034. Who they are comes after the book, and is written as it is chosen (2026-11-25)
+WoDX Creation. The wizard's Who they are page follows the book page and writes each field to the sheet as it changes, with the system's own lists for tribe, breed, auspice, kith and the like (#2474, #2489).
+
+Reverse: move the page back in the wizard's order and write on Finish only.
+
+## B8035. A solo arrival's sheet is unfinished until This character is ready (2026-11-25)
+WoDX Creation, WoDX Solo. The arrival marks its sheet; the wizard's Ready button sets the mark, and until then the panel, the clock and the menu wait. A new Cainite starts with a full pool, the owner's house rule of 25 November (#2501, #2473, #2479).
+
+Reverse: drop the ready mark from newCharacterData and unfinished's marked test.
+
+## B8036. A native language from the character's region (2026-11-25)
+WoDX Creation. The language comes from WoDX Chronicle's region for where the character is from, written through Chronicle's languages (#2489).
+
+Reverse: write the language straight to the sheet again.
+
+## B8037. A refresh mid-creation opens the wizard where it stopped (2026-11-25)
+WoDX Creation (#2479). Reverse: drop the reopen at ready.
+
+## B8038. While a character is being made, only the wizard, report, pause and stuck stay open (2026-11-25)
+WoDX Solo, WoDX Actions (#2501). Reverse: drop the making() guards.
+
+## B8039. No heartbeat or hunger cue for a pool with no size or a character being made (2026-11-25)
+WoDX Atmosphere, WoDX Senses (#2473). Reverse: give heartbeat its old default max of 10.
+
+## B8040. The Storyteller ticks a wizard step on their own client (2026-11-25)
+WoDX Creation (#2496). Reverse: tick on the player's client only.
+
+## B8041. A dot added keeps the page's place; the Gender word is a hint, then a label (2026-11-25)
+WoDX Creation (#2495). Reverse: re-render from the top.
+
+## B8042. With a target, the feed window reads the vessel from the target (2026-11-25)
+WoDX Actions. A player sees the vessel's kind and tags read-only; the Storyteller may change them (#2507).
+
+Reverse: drop fixedFields and the fixed test in feed.
+
+## B8043. A vessel drained dry rolls no Stamina (2026-11-25)
+WoDX Actions (#2493). Reverse: roll whenever there is risk.
+
+## B8044. Dead or unconscious on a vessel the player does not own is set by the Storyteller's computer (2026-11-25)
+WoDX Actions. Only those two statuses pass by socket (#2484). Reverse: drop the status request.
+
+## B8045. Hunting takes the hours chosen, 1 to 12, and in solo play the clock moves by them (2026-11-25)
+WoDX Actions, WoDX Solo (#2477). Reverse: set HUNT_MAX_HOURS and drop huntTime.
+
+## B8046. Give my blood to target (2026-11-25)
+WoDX Actions. From the Kindred menu, to the targeted mortal, ghoul or animal within 1.5 squares; it uses WoDX Creation's animals.feed, which spends the point and steps the Blood Oath (#2478).
+
+Reverse: remove api:giveBlood from the menu and the API.
+
+## B8047. The Road's name heads the track; a player reads the Road, the Storyteller sets it (2026-11-25)
+WoDX Actions. A Road writes path.label "custom" with its name; older sheets are fixed once by the active Storyteller (#2480, #2481).
+
+Reverse: drop syncRoadNames and showRoad.
+
+## B8048. The area outline is an area power's only (2026-11-25)
+WoDX Targeting (#2483). Reverse: clear only on a new area.
+
+## B8049. A player lights only a light the character carries (2026-11-25)
+WoDX Interactables (#2500). Reverse: drop the heldBy filter.
+
+## B8050. The Storyteller's card list: no dead controls, older cards pressable, and a Clear (2026-11-25)
+WoDX Solo (#2482). Reverse: drop stripCardControls, drawnButton and clearedAt.
+
+## B8051. Carry the fallen lifts the body with the character's own token first (2026-11-25)
+WoDX Solo (#2488). Reverse: ask a companion only, as before.
+
+## B8052. A fight's holds and marks end with it (2026-11-25)
+WoDX Combat (#2494). Reverse: drop clearFightMarks on deleteCombat.
+
+## B8053. Each character's drawn sprite goes on its tokens as they come (2026-11-25)
+WoDX Paperdoll. A look not yet drawn waits for the sprite batch, and the save says so (#2491).
+
+Reverse: drop the canvasReady and createToken dressing.
+
+## B8054. Sun and haven: plain lines and a haven picked where the character stands (2026-11-25)
+WoDX Actions (#2502). Reverse: restore the old window from history.
+
+## B8055. Make the arrest sends the watch, on free spots in the open (2026-11-25)
+WoDX Chronicle, WoDX Storyteller. The heat card's Make the arrest calls the Storyteller's lawCome, so the watch appear by the culprit and the culprit's players choose to go with them or resist; without WoDX Storyteller the arrest is made and told. Each answer, and Let it go, leaves a line (#2487).
+
+Reverse: have the button call arrest() again; set nearPoint back to three squares to the right.
+
+## B8056. A trip takes time in solo play and lands by the door; public places have people (2026-11-25)
+WoDX Storyteller, WoDX Solo, WoDX NPC. A trip's hours (at most a fortnight, in about 60 steps) pass on the world clock in solo play. A place with no landing spot is entered by the Way back to where the traveller came from, else any Way, else a door or a public room. In solo play a public place the Storyteller never set has passers-by (#2490).
+
+Reverse: drop the wodxTravelled listener, entranceSpot, and the soloOn default in crowdOf.
+
+## B8057. A player's drag cut short by a wall walks round it (2026-11-25)
+WoDX NPC. Off a fight, on the dragging player's own client, with the NPCs' path finder; no path, and the move goes as Foundry makes it. A client setting turns it off (#2492).
+
+Reverse: remove the preMoveToken hook.
+
+## B8058. The design requests from the solo test (2026-11-25)
+Aim at replaces Targeting when the target has parts (#2509). Each condition says what it does on the sheet, and a double-click on a token the player cannot open shows a look card with how hurt they look and their conditions (#2508). A time dial (#2510). A player may ask for a trait at once; the Storyteller's approval grants it with no study and it is never approved as a small spend; the learning window says how to find a teacher (#2506). A player's WoDX Actions menu keeps the actions that do not fit the character behind Show every action (#2504).
+
+Reverse: each is one change in its module, listed in docs/PENDING-REVIEW.md.
+
+## B8059. A lifepath may begin before the common era; the Elder Powers in WoDX's own words (2026-11-25)
+WoDX Creation, WoDX Actions. Birth and turn years go down to -4000 (minus is BCE) for lines other than mortals (#2505). The 167 placeholder entries in disciplines-daw.json (the Elder Powers and the Necromancy paths) have descriptions, rolls and costs in WoDX's own words (#2499).
+
+Reverse: set the year minimum back to 1100.
