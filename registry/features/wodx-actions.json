@@ -1622,6 +1622,38 @@
    "prs": []
   },
   {
+   "id": "actions.hunter-creed-edges",
+   "name": "Hunter: the creed books' edges, beside the core 35",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/reckoning-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7834"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/reckoning.js:useEdge"
+    },
+    "shown": {
+     "what": "Use an edge offers the creed books' edges; the card names the creed book and page"
+    },
+    "gated": {
+     "gate": "tools/gate/gatecreededge.mjs",
+     "step": "1. Use an edge, Protect: a Conviction spent, the card names Hunter Book: Defender p. 76"
+    }
+   },
+   "open": [
+    "book: Hunter Book: Innocent printed p. 81 missing from the scan (Innocence level 5 and the end of Bond)",
+    "Hermit and Wayward creeds: paths only, no starting Conviction in CREEDS"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
+  },
+  {
    "id": "actions.infernal-pacts",
    "name": "Demonic pacts, infernal investments and the Supplicium",
    "module": "wodx-actions",

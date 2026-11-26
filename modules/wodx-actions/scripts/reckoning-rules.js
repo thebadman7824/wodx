@@ -23,7 +23,15 @@ export const PATHS = {
     visionary: { label: "Visionary", virtue: "vision", creed: "visionary" },
     defense: { label: "Defense", virtue: "zeal", creed: "defender" },
     judgment: { label: "Judgment", virtue: "zeal", creed: "judge" },
-    vengeance: { label: "Vengeance", virtue: "zeal", creed: "avenger" }
+    vengeance: { label: "Vengeance", virtue: "zeal", creed: "avenger" },
+    // B7834: the two Vision creeds of the later creed books: their own paths (other creeds need Vision 4 and take a derangement for each)
+    hermit: { label: "Hermit", virtue: "vision", creed: "hermit", book: "hermit" },
+    deviance: { label: "Deviance", virtue: "vision", creed: "wayward", book: "wayward" }
+};
+/** B7834: the creed books whose new edges are listed (printed pages; the Wayward scan has none, so its PDF pages). */
+export const EDGE_BOOKS = {
+    avenger: "Hunter Book: Avenger", defender: "Hunter Book: Defender", hermit: "Hunter Book: Hermit", innocent: "Hunter Book: Innocent",
+    judge: "Hunter Book: Judge", martyr: "Hunter Book: Martyr", redeemer: "Hunter Book: Redeemer", wayward: "Hunter Book: Wayward"
 };
 
 /**
@@ -65,8 +73,49 @@ export const EDGES = [
     ["trail", "vengeance", 2, ["perception", "zeal"], 6, 0, 163, "A touch leaves a trail only hunters see: six hours a success."],
     ["smolder", "vengeance", 3, ["manipulation", "zeal"], 7, 0, 163, "A cloud of black smoke that blinds all senses but the hunter's; +10 cubic feet a Conviction spent."],
     ["surge", "vengeance", 4, null, null, 1, 163, "A pool of Zeal points to add to Strength, Dexterity and Stamina for the scene (at most 6); Conviction can't be risked on it."],
-    ["smite", "vengeance", 5, ["dexterity", "zeal"], 6, 1, 163, "Lightning: successes after the first add to Strength in a lethal pool; range Zeal yards."]
-].map(([id, path, level, roll, diff, conviction, p, e]) => ({ id, path, level, roll, diff, conviction, p, e, virtue: PATHS[path].virtue, name: id.replace(/^./, c => c.toUpperCase()) }));
+    ["smite", "vengeance", 5, ["dexterity", "zeal"], 6, 1, 163, "Lightning: successes after the first add to Strength in a lethal pool; range Zeal yards."],
+    /* B7834: the creed books' new edges, read from the page images (summaries in WoDX's own words); a ninth field names the book, a tenth the edge when two words */
+    ["impact", "vengeance", 1, ["dexterity", "athletics"], 6, 0, 71, "A thrown thing that can hurt (Strength + 1 or more) does +2, all lethal, and harms the immaterial; not bullets or arrows.", "avenger"],
+    ["museofflame", "vengeance", 2, ["perception", "zeal"], 5, 0, 71, "Looking into an open flame: it bends toward the nearest supernatural being within ten miles, ten minutes a success; 7 when it stirs by itself; once a scene.", "avenger", "Muse of Flame"],
+    ["fuel", "vengeance", 3, null, null, 0, 72, "Under real danger or duress, once a scene, trade a Willpower point for a Conviction point or back; reflexive.", "avenger"],
+    ["firewalk", "vengeance", 4, null, null, 1, 72, "An action: for the scene, the hunter's Stamina comes off whatever harm fire does to them.", "avenger"],
+    ["harpoon", "vengeance", 5, ["dexterity", "athletics"], 6, 2, 72, "A burning spear to Zeal yards: Strength + 2 lethal, and a tie for Zeal turns; breaking free is a Willpower contest at 6, and the prey rolls its own Strength as lethal on itself.", "avenger"],
+    ["alarm", "defense", 1, ["perception", "zeal"], 6, 0, 74, "Walk a perimeter (a room at 1-2 successes up to a city block at 9-10): monsters crossing it are felt, with their direction, for a day; +1 Conviction a day more, or to wake to it.", "defender"],
+    ["lock", "defense", 2, ["stamina", "zeal"], 6, 0, 75, "A touched door, window, safe or file is sealed to monsters for a day: they must beat the successes to break in.", "defender"],
+    ["guard", "defense", 3, ["perception", "zeal"], 6, 0, 75, "A touched person: the hunter feels when anything supernatural acts on them, and where they are; a day at 1-2 successes up to a month at 9-10.", "defender"],
+    ["protect", "defense", 4, null, null, 1, 76, "The hunter's Zeal becomes a pool of soak dice against bashing and lethal for the scene, spent as wished; once a scene.", "defender"],
+    ["blast", "defense", 5, null, null, 2, 76, "A ring of lightning to Zeal yards: a monster crossing it takes Zeal + Stamina lethal dice at 6, no attack roll; a turn and one a Conviction spent; nothing else that long; once a scene.", "defender"],
+    ["reach", "hermit", 1, ["perception", "vision"], 6, 0, 87, "The senses leave the body, ten minutes a success, within 30 yards a Vision point; the body is helpless meanwhile.", "hermit"],
+    ["send", "hermit", 2, ["intelligence", "vision"], "var", 0, 88, "A five-word message or a picture into a hunter's mind in sight: 7 for one with second sight on, 8 without, 9 a bystander; four successes, half a minute of talk.", "hermit"],
+    ["edict", "hermit", 3, ["manipulation", "vision"], 6, 0, 89, "Eyes meet: a supernatural being loses a Willpower point a success; a servant of monsters loses one, a worthy soul gains one; a hunter gains or loses a Conviction.", "hermit"],
+    ["transcend", "hermit", 4, ["stamina", "vision"], 8, 1, 90, "The spirit leaves the body, 15 minutes a success, travelling up to 1,000 miles an hour; Wits, Intelligence and Manipulation stand for Dexterity, Stamina and Strength.", "hermit"],
+    ["proclaim", "hermit", 5, ["", "vision"], "var", 2, 91, "Speaking in tongues to those in sight (6 for hunters and people, the highest Willpower among creatures): successes laid on creatures give a derangement for the scene, a day, or for good; once a day.", "hermit"],
+    ["foolsluck", "innocence", 1, ["wits", "mercy"], 8, 0, 78, "When life or the mission is truly at risk, a small lucky turn opens a way out (a roll it brings is at 10 less the successes); once a scene, the hunter only.", "innocent", "Fool's Luck"],
+    ["ease", "innocence", 2, ["manipulation", "mercy"], 6, 0, 79, "Three turns of talk, resisted by the subject's primary Virtue + 1 for each other Virtue of 5 or more: each success holds a derangement off for a scene; imbued only, once a day each.", "innocent"],
+    ["inspire", "innocence", 3, null, null, 0, 80, "A touch: spend the hunter's own Conviction for others (their second sight, their edges, a risk on their roll); for people, shelter from supernatural fear and control while touching; up to Mercy people.", "innocent"],
+    ["bond", "innocence", 4, ["charisma", "mercy"], 6, 0, 80, "With an imbued known a month, a touch and a turn: the hunter can sense how they fare; a day at 1-2 successes up to a month at 9-10.", "innocent"],
+    ["vigilance", "judgment", 1, null, null, 0, 76, "Less sleep by Zeal (six hours at 1-2 down to minutes at 10), a Willpower point a day used; failed rolls to react with Conviction may be rolled again.", "judge"],
+    ["anathema", "judgment", 2, ["strength", "zeal"], 6, 0, 77, "The Judgment sign on a person or place: a monster feeding there takes a bashing level a success; Zeal days, up to Zeal at once.", "judge"],
+    ["vow", "judgment", 3, ["charisma", "zeal"], "t:stamina+3", 1, 78, "A sworn pact sealed with the sign: if broken, the hunter knows and it burns a lethal level a success; a month a Zeal point.", "judge"],
+    ["confession", "judgment", 4, ["manipulation", "zeal"], "var", 1, 79, "Touch and one question (difficulty its Willpower, at most 9): the hunter speaks one sentence of the true answer as it knows it; once a scene each.", "judge"],
+    ["imprison", "judgment", 5, ["stamina", "zeal"], "t:stamina+3", 2, 79, "A gaze holds a creature in place an hour a success; attacked, it may break out with more successes on Willpower at 8.", "judge"],
+    ["project", "martyrdom", 1, ["appearance", "mercy"], 6, 0, 75, "A display of resolve: for the scene no monster in sight may attack or deal with the hunter unless it beats the successes on Willpower at 6.", "martyr"],
+    ["revelation", "martyrdom", 2, ["wits", "mercy"], 6, 1, 76, "Eye contact: a monster's feeling (1), intent (2), its reasons (3) or its plans (4+) at that moment; it may read the hunter back; once a scene each.", "martyr"],
+    ["inflict", "martyrdom", 3, null, null, 1, 77, "An action: for the scene, close and Melee harm done to the hunter is done to the attacker too, each soaking apart.", "martyr"],
+    ["ordeal", "martyrdom", 4, ["stamina", "mercy"], 6, 2, 77, "A touch: all of a person's or hunter's wounds pass to the hunter (too many kill the hunter); derangements too.", "martyr"],
+    ["expiate", "martyrdom", 5, null, null, 0, 77, "With 10 Conviction, three turns of touch and a Willpower contest at 6: won, Conviction falls to 4 and the monster loses its nature for good (not ghosts); then a die: 1-5 a derangement and +1 to all, 6-10 death.", "martyr"],
+    ["outreach", "redemption", 1, ["manipulation", "mercy"], 6, 0, 74, "Unarmed and calm, to one named monster: the hunter seems harmless for the scene (pleasant at 3); a weapon or aggression ends it.", "redeemer"],
+    ["insight", "redemption", 2, ["wits", "mercy"], 6, 0, 75, "An hour watching a creature: what it misses of being human, deeper with each success.", "redeemer"],
+    ["punish", "redemption", 3, ["wits", "mercy"], 6, 0, 75, "A touch: for hours equal to the successes the monster must beat them on Willpower at 8 to attack a person, or lose the action; up to Mercy at once.", "redeemer"],
+    ["abjure", "redemption", 4, ["appearance", "mercy"], 6, 1, 76, "For the scene each hostile monster in sight resists on Willpower at 6 or flees; once a scene.", "redeemer"],
+    ["shame", "redemption", 5, ["manipulation", "mercy"], 8, 2, 76, "Each hostile monster hearing resists on Willpower at 6: each success over it is a level it does to itself; once a scene.", "redeemer"],
+    ["impart", "deviance", 1, ["perception", "vision"], 6, 0, 84, "Each success opens another hunter's second sight for the scene, within five yards a Vision point; once a scene.", "wayward"],
+    ["forewarn", "deviance", 2, null, null, 0, 85, "A danger sense the Storyteller rolls (Wits + Vision at 7): a turn's warning a success, or the successes on the next initiative or defence roll.", "wayward"],
+    ["enrage", "deviance", 3, ["manipulation", "vision"], 6, 0, 86, "A hunter a success within Vision yards goes berserk unless they beat it on Willpower at 7: they attack the foe for that many turns with that many extra dice, then take unsoakable bashing.", "wayward"],
+    ["reap", "deviance", 4, ["perception", "vision"], 8, 1, 86, "Staring into a dead or undead subject's eyes: a question a success, answered truly as it knows; once a scene each.", "wayward"],
+    ["spiral", "deviance", 5, ["strength", "vision"], 8, 2, 87, "A whirlwind three yards across a success for the scene: lethal levels equal to the successes each turn to all in it, attacks on the hunter a die harder a success; once a scene.", "wayward"]
+].map(([id, path, level, roll, diff, conviction, p, e, book = "", label = ""]) => ({ id, path, level, roll, diff, conviction, p, e, book, virtue: PATHS[path].virtue,
+    name: label || id.replace(/^./, c => c.toUpperCase()), ref: book ? `${EDGE_BOOKS[book]} ${book === "wayward" ? "PDF p." : "p."} ${p}` : `Hunter: The Reckoning p. ${p}` }));
 
 export const edgeFor = name => EDGES.find(e => e.id === String(name ?? "").toLowerCase().replace(/[^a-z]/g, "")) ?? null;
 /** An edge's level can't pass its Virtue (p. 146: edges follow the Virtue points). */

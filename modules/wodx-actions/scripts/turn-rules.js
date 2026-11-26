@@ -53,6 +53,8 @@ export const EVERY_TURN = {
   // Too wide for the turn engine: the Storyteller runs them from the card each turn
   "call forth the herald of hell": {line: "Vampire (Dark Ages)", storyteller: true, page: "VtDA20 p. 211", text: "each turn, mortals who see the demon lose Willpower dots (the Storyteller runs it)"},
   "form of the storm": {line: "Vampire (Dark Ages)", each: {pool: {key: "bloodpool", points: -2, endIfEmpty: true}}, page: "VtDA20 p. 254", text: "two blood each turn keeps the storm; all inside take Serpentis bashing dice each turn (the Storyteller rolls for them)"},
+  // B7834: Spiral (Hunter Book: Wayward): a whirlwind three yards across a success, lethal levels equal to the successes each turn to all in it
+  "spiral": {line: "Hunter (HtR)", counter: {start: "successes", label: "lethal levels"}, area: {radius: "successes", per: 1.5}, each: {damage: {levels: "counter", type: "lethal", soak: true}}, page: "Hunter Book: Wayward PDF p. 87", text: "the whirlwind deals lethal levels equal to the successes each turn to everyone in it"},
   "the last dracul": {line: "Vampire (Dark Ages)", storyteller: true, page: "VtDA20 p. 270", text: "the dragon's Strength-based Intimidation each turn (the Storyteller rolls it)"}
 };
 
@@ -66,7 +68,8 @@ export function resolveRec(rec, ctx = {}) {
   const out = {...rec, byUuid: ctx.by ?? null, torment: n(ctx.torment) || null};
   if ( rec.rounds ) out.rounds = at(rec.rounds);
   if ( rec.counter ) out.counter = {...rec.counter, value: at(rec.counter.start)};
-  if ( rec.area ) out.area = {...rec.area, yards: at(rec.area.radius)};
+  // per: yards a step of the radius (Spiral: a yard and a half a success)
+  if ( rec.area ) out.area = {...rec.area, yards: at(rec.area.radius) * (Number(rec.area.per) || 1)};
   // Nothing to roll or apply each turn: the record only marks the effect (a burning touch, a lifted limit, shared wounds)
   out.passive = !rec.each && !rec.roll && !rec.strike && !rec.areaRoll;
   return out;
