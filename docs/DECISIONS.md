@@ -466,7 +466,7 @@ Next free block: B8150
 | B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7807) | Rothenstein, Chronicle, Otherworlds |
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
-| B7830-B7839 | Scorecard gap 9: the Ledger's due date shows on the sheet (used B7831-B7838) | NPC, Sheets |
+| B7830-B7839 | Scorecard gap 9: overheard talk gated, and a fix to its window (used B7831-B7839) | NPC |
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
 | B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
 | B7860-B7909 | Splat depth build: a Dark Ages mage's household and standing (desk item mage-household) (used B7860-B7909) | Actions, Chronicle |
@@ -16191,6 +16191,15 @@ is due is a story hook (show, don't tell); the card stays whispered.
 
 Reverse: drop the due flag from the Ledger edges in ties-rules.mjs (edges) and the wodx-tie-due span in
 extras-html.mjs (relationsHtml). For a Storyteller-only badge, show the span only when gm is true.
+
+## B7839. Cancel in the Overheard talk window leaves the scene as it was (2026-11-26)
+WoDX NPC. Pressing Cancel or closing the scene's Overheard talk window used to save the scene with overheard talk
+switched off, because the window's answer for Cancel is the button's name, not the form (#2618). Now Cancel and close
+change nothing. The new gate gateoverheardwalk drives the real trigger: a character's token walks up to two NPCs,
+first behind a wall that stops sound (nothing heard), then round its end (the exchange comes to the chat as an
+Overheard whisper, the window lists it as heard by that character, and Cancel leaves the switch on).
+
+Reverse: restore the old check `if ( !res || res.action === "cancel" ) return null;` in overheard.mjs open().
 
 ## B7840. Revenant families in every era (2026-11-23)
 WoDX Creation, revenant-rules.mjs. Twenty family lines, each with the years it lives in the chronicle and the reason. The eight V20 Dark Ages families (pp. 453-454: Basarab, Bratovich, Danislav, Grimaldi, Obertus, Szantovich, Vlaszy, Khavi) and the Krevcheski of Dark Ages: Vampire p. 289 use their Dark Ages write-up before 1837; the twelve V20 Ghouls and Revenants families take over from 1837, and those with no Dark Ages write-up use it in every year. The three "other families" of Ghouls and Revenants p. 113 (Marijava, Keskinen, Katayama) have no Disciplines in the book, so any may be taken at birth. Years the books do not give are house readings (listed in docs/PENDING-REVIEW.md): the Danislav, Vlaszy and Khavi end in 1493, the Basarab by 1700, the Krevcheski become the Ducheski in 1250, the Szantovich take the name Zantosa in 1494, the Servants of Anushin-Rawan begin in 1500, the Rossellini in 1550, the Oprichniki in 1565 (the oprichnina), the Katayama in 1950. The revenant window lists only the families alive in the chronicle's year; a birth keeps the family's mark (what its weakness does) on the sheet, and the Dark Ages Grimaldi hold 8 blood points.
