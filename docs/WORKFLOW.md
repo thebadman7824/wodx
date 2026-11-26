@@ -179,6 +179,12 @@ train with a comment saying why; fix it, push, and add the label again. Pull req
 to date or gated again while they wait, and the hourly sweep no longer merges main into open pull requests. The
 runner's status issue shows the line. `node tools/pcq/train.mjs` prints what the train would do now.
 
+**The push guard (B8130).** A clone's git refuses a push to a branch whose open pull request is labelled `merge-train`
+(tools/git-hooks/pre-push.mjs), since that push would take it out of the train. Take the label off, push, and add it
+again. review.mjs, claim.mjs and merge-stamp.mjs point the clone's `core.hooksPath` at tools/git-hooks the first time
+they run; `node tools/git-hooks/install.mjs` does it by hand. The train's own commits (trailer `Merge-Train: yes`) go
+through, `WODX_PUSH_GUARD=off` lets one push through, and a push goes through unchecked when GitHub cannot be asked.
+
 **Batches (B7445, Ben, 18 November 2026).** When the front needs main and a stamp anyway, the train takes up to two
 green pull requests behind it that change other files into one batch pull request ("Merge train batch: #a, #b"),
 stamped and gated once. Its merge puts each member's head on main, and GitHub shows each as merged. A red batch is

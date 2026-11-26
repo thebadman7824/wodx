@@ -207,6 +207,7 @@ function versionAt(ref, mod) {
 }
 
 async function main() {
+  (await import("../git-hooks/install.mjs")).installHooks(); // B8130: the merge-train push guard
   const args = new Set(process.argv.slice(2));
   const check = args.has("--check"), dry = args.has("--dry");
   if ( !args.has("--no-fetch") ) {
