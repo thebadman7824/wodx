@@ -466,7 +466,7 @@ Next free block: B8140
 | B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7807) | Rothenstein, Chronicle, Otherworlds |
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
-| B7830-B7839 | Scorecard gaps: Changing Breeds starting Traits, registry rows gated through the real clock (used B7831) | Creation |
+| B7830-B7839 | Scorecard gaps: Orpheus Stains called up at will (used B7831-B7832) | Actions, Sheets |
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
 | B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
 | B7860-B7909 | Splat depth build: a Dark Ages mage's household and standing (desk item mage-household) (used B7860-B7909) | Actions, Chronicle |
@@ -16088,6 +16088,22 @@ the row asks for the Storyteller. A Garou keeps the Garou tables. A Changing Bre
 Garou's (a house rule, in docs/PENDING-REVIEW.md).
 
 Reverse: remove FERA_STARTS, feraOf and the fera branch of the w20 case in derivedTraits.
+
+## B7832. Orpheus Stains are listed and called up at will (2026-11-26)
+WoDX Actions. The powers scorecard counted ten Orpheus powers, the ten Horrors; the twenty Stains of the core book
+(pp. 195-199) were only a name on the sheet. orpheus-stains.js lists them, each with its page, what shows, what it
+gives and what it costs, in short and in our own words. Call up a Stain (the Orpheus menu, and the Stains row and
+button on the sheet) follows p. 195: Spite 4 or more, Spite points tapped, a die a point at difficulty 7, a miss adds
+a Spite point and a botch two, and the Stain shows for a turn a point. While it shows, its Ward, Boost or Blessing goes
+on the effects card where the dice read it (a Boost held to named rolls is new in power-mods.js: Chameleon Skin's
+three Stealth dice), its night sight on the token, and its natural weapon on the sheet (Claws, Hawk's Beak, Dagger
+Tongue), taken off when the turns run out. Stains whose gain no roll can read (Leper, Martyred, Gossamer Webs and the
+like) are the Storyteller's from the card. House readings: Bristling Hide's one die of lethal is one lethal level,
+soaked as usual; Carapace's soak die from behind, Man-o'-War's halved bashing and Withered's extra bashing dice stay on
+the card; Dagger Tongue is a reaching Brawl attack.
+
+Reverse: remove orpheus-stains.js, the stain window in orpheus.js, orphStain and the stainEnd reverter in main.js, the
+menu and sheet entries, and the tagged Boost in power-mods.js.
 
 ## B7840. Revenant families in every era (2026-11-23)
 WoDX Creation, revenant-rules.mjs. Twenty family lines, each with the years it lives in the chronicle and the reason. The eight V20 Dark Ages families (pp. 453-454: Basarab, Bratovich, Danislav, Grimaldi, Obertus, Szantovich, Vlaszy, Khavi) and the Krevcheski of Dark Ages: Vampire p. 289 use their Dark Ages write-up before 1837; the twelve V20 Ghouls and Revenants families take over from 1837, and those with no Dark Ages write-up use it in every year. The three "other families" of Ghouls and Revenants p. 113 (Marijava, Keskinen, Katayama) have no Disciplines in the book, so any may be taken at birth. Years the books do not give are house readings (listed in docs/PENDING-REVIEW.md): the Danislav, Vlaszy and Khavi end in 1493, the Basarab by 1700, the Krevcheski become the Ducheski in 1250, the Szantovich take the name Zantosa in 1494, the Servants of Anushin-Rawan begin in 1500, the Rossellini in 1550, the Oprichniki in 1565 (the oprichnina), the Katayama in 1950. The revenant window lists only the families alive in the chronicle's year; a birth keeps the family's mark (what its weakness does) on the sheet, and the Dark Ages Grimaldi hold 8 blood points.

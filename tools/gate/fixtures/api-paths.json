@@ -1430,12 +1430,12 @@
    "isSkipping"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/main.js:3968",
-   "modules/wodx-actions/scripts/main.js:4009",
-   "modules/wodx-actions/scripts/main.js:4016",
-   "modules/wodx-actions/scripts/main.js:4018",
-   "modules/wodx-actions/scripts/main.js:4033",
-   "modules/wodx-actions/scripts/main.js:4037",
+   "modules/wodx-actions/scripts/main.js:3969",
+   "modules/wodx-actions/scripts/main.js:4010",
+   "modules/wodx-actions/scripts/main.js:4017",
+   "modules/wodx-actions/scripts/main.js:4019",
+   "modules/wodx-actions/scripts/main.js:4034",
+   "modules/wodx-actions/scripts/main.js:4038",
    "modules/wodx-actions/scripts/summons.js:507",
    "modules/wodx-atmosphere/scripts/main.mjs:237",
    "modules/wodx-atmosphere/scripts/main.mjs:473",
@@ -1783,8 +1783,8 @@
    "registerApprovalHandler"
   ],
   "uses": [
-   "modules/wodx-actions/scripts/main.js:3879",
-   "modules/wodx-actions/scripts/main.js:3879",
+   "modules/wodx-actions/scripts/main.js:3880",
+   "modules/wodx-actions/scripts/main.js:3880",
    "modules/wodx-actions/scripts/servant-actions.js:310",
    "modules/wodx-actions/scripts/social.js:348",
    "modules/wodx-creation/scripts/animal-stock.mjs:232",
@@ -2104,6 +2104,7 @@
    "modules/wodx-actions/scripts/mage-wonders.js:30",
    "modules/wodx-actions/scripts/main.js:3876",
    "modules/wodx-actions/scripts/main.js:3877",
+   "modules/wodx-actions/scripts/main.js:3878",
    "modules/wodx-actions/scripts/treasures.js:53"
   ]
  },
