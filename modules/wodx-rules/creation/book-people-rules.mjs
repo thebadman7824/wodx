@@ -4,7 +4,7 @@
  * ("Crafts" is the system's craft), else a Dark Ages Secondary Ability item (Archery, Commerce, Hearth Wisdom,
  * Legerdemain, Ride, Seneschal, Theology: WoDX Creation data/time.mjs).
  */
-import {PEOPLE, BOOK} from "../../wodx-creation/data/vtda-people.mjs";
+import {PEOPLE, BOOK} from "./data/vtda-people.mjs";
 
 export const keyOf = s => String(s ?? "").toLowerCase().replace(/[^a-z]/g, "");
 /** The book's name for an Ability, as the system keys it. */

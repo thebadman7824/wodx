@@ -2,7 +2,7 @@
  * decay (Otherworlds), and token frames (Atmosphere). Pure rules and the shipped tables. */
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import * as G from "../../modules/wodx-chronicle/scripts/gen-core.mjs";
+import * as G from "../../modules/wodx-rules/chronicle/gen-core.mjs";
 import * as N from "../../modules/wodx-rules/storyteller/night-rules.mjs";
 import {NIGHT_TABLES} from "../../modules/wodx-storyteller/data/night-tables.mjs";
 import * as J from "../../modules/wodx-rules/otherworlds/journey-rules.mjs";

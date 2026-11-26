@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {readFileSync} from "node:fs";
 import * as K from "../../modules/wodx-rules/actions/kindred-rules.js";
 import {FLOCKS} from "../../modules/wodx-rules/npc/road-flock-rules.mjs";
-import {ROAD_TO_PATH} from "../../modules/wodx-creation/data/advance.mjs";
+import {ROAD_TO_PATH} from "../../modules/wodx-rules/creation/data/advance.mjs";
 
 const ROADS = JSON.parse(readFileSync(new URL("../../modules/wodx-actions/data/roads-daw.json", import.meta.url), "utf8"));
 
@@ -42,7 +42,7 @@ test("sins from play on the Appendix B Roads follow their hierarchies", () => {
 
 // B7670-B7671: the Setite castes and the Malkavian Orders' rites (V20 Dark Ages pp. 444, 450)
 test("the Setite castes and the Malkavian rites", async () => {
-  const V = await import("../../modules/wodx-creation/data/vampire.mjs");
+  const V = await import("../../modules/wodx-rules/creation/data/vampire.mjs");
   const all = [...(V.BLOODLINES ?? []), ...(V.CLANS ?? [])];
   assert.deepEqual(all.find(x => x.id === "warriors-of-glycon")?.disciplines, ["Obfuscate", "Potence", "Serpentis"]);
   assert.deepEqual(all.find(x => x.id === "witches-of-echidna")?.disciplines, ["Animalism", "Presence", "Thaumaturgy"]);

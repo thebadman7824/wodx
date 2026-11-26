@@ -3,7 +3,7 @@ import "./win-paths.mjs";
 import {test} from "node:test";
 import assert from "node:assert/strict";
 
-const DAE = await import("../../modules/wodx-actions/scripts/mage-da-effects.js");
+const DAE = await import("../../modules/wodx-rules/actions/mage-da-effects.js");
 const FX = await import("../../modules/wodx-actions/scripts/fae-da.js");
 const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
 

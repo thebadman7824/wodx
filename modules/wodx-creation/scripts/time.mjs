@@ -4,7 +4,7 @@ import * as AG from "../../wodx-rules/creation/animal-ghoul-rules.mjs";
 import * as RR from "../../wodx-rules/creation/revenant-rules.mjs";
 import {ghoulBloodMax, ghoulBloodSource, ghoulRuleEra, V20_ERAS, bondStage} from "../../wodx-rules/creation/rules.mjs";
 import {setLineage, setChronology, writeLineageJournal} from "./lineage.mjs";
-import {MORTAL, GHOUL_AGING, BOND_FADE, TORPOR, BACKGROUND_REVIEW, ERA_SECONDARY, LINE_OF_TYPE, SECONDS_PER_MONTH} from "../data/time.mjs";
+import {MORTAL, GHOUL_AGING, BOND_FADE, TORPOR, BACKGROUND_REVIEW, ERA_SECONDARY, LINE_OF_TYPE, SECONDS_PER_MONTH} from "../../wodx-rules/creation/data/time.mjs";
 import {getEngine, describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {viewOf, switches as advanceSwitches, applyAdvance, snapshot, recordYears} from "./advance.mjs";
 import {propose} from "../../wodx-rules/creation/advance-rules.mjs";

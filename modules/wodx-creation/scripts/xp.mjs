@@ -4,7 +4,7 @@ import {dateLabel} from "./lineage.mjs";
 import * as Learn from "./learn.mjs";
 import {SOURCE_KINDS} from "../../wodx-rules/creation/learn-rules.mjs";
 import {LINE_XP} from "../../wodx-rules/creation/lines-xp-rules.mjs";
-import {XP} from "../data/vampire.mjs";
+import {XP} from "../../wodx-rules/creation/data/vampire.mjs";
 import {labelOf} from "./lines.mjs";
 import * as CP from "../../wodx-rules/creation/change-points-rules.mjs";
 import * as RF from "../../wodx-rules/actions/road-faith-rules.js";

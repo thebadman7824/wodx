@@ -6,7 +6,7 @@
  * pod.mjs runs the books as story chains (a run with `saga` set) and keeps the saga's own state in podState.saga =
  * {endings: {<book>: <ending>}, clocks: {<key>: n}, books: {<book>: "running"|"done"|"skipped"|"offered"}}.
  */
-import {SAGA, SAGA_CLOCKS, SAGA_ENDINGS, SAGA_PREFIX, FIRST_BOOK} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
+import {SAGA, SAGA_CLOCKS, SAGA_ENDINGS, SAGA_PREFIX, FIRST_BOOK} from "./chronicle-data.mjs";
 import {DAY} from "../core/terms.mjs";
 export {DAY};
 

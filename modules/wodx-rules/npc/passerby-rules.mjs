@@ -14,8 +14,8 @@
  * monk on the alms round in place of the friar, a coffee house guest in place of the tavern drunk, and the faith and
  * origin tags of the region's people.
  */
-import {PEOPLE_WORLD, tableFor, FAITH_TAG, PROTESTANT, SECULAR} from "../../wodx-npc/scripts/passerby-world.mjs";
-import {localTable, LOCAL_LOOKS} from "../../wodx-npc/scripts/passerby-local.mjs";
+import {PEOPLE_WORLD, tableFor, FAITH_TAG, PROTESTANT, SECULAR} from "./passerby-world.mjs";
+import {localTable, LOCAL_LOOKS} from "./passerby-local.mjs";
 import {sphereFor, mixFor} from "../chronicle/world-rules.mjs";
 import {faithFor} from "../chronicle/faith-rules.mjs";
 import {originFaith} from "./routine-rules.mjs";

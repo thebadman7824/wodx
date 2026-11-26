@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import {TEMPLATES, GROUPS, TIERS, ABILITY_2002} from "../../modules/wodx-creation/data/dasc-templates.mjs";
+import {TEMPLATES, GROUPS, TIERS, ABILITY_2002} from "../../modules/wodx-rules/creation/data/dasc-templates.mjs";
 import * as SC from "../../modules/wodx-rules/creation/supporting-cast-rules.mjs";
 import * as BR from "../../modules/wodx-rules/creation/book-people-rules.mjs";
 

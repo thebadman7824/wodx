@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const MOD = "wodx-storyteller";
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const {secondsToNextDusk} = await import(join(root, "modules/wodx-rules/core/calendar.mjs"));
 
 /* ---- the stand-in ---- */

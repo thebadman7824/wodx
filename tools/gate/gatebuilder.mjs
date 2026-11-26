@@ -34,7 +34,7 @@
 const MOD = "wodx-storyteller";
 const B = () => game.modules.get(MOD).api.builder;
 // The same module the builder imports, so a chronicle registered here is the one the builder reads
-const CD = () => import("/modules/wodx-chronicle/scripts/chronicle-data.mjs");
+const CD = () => import("/modules/wodx-rules/chronicle/chronicle-data.mjs");
 const FIX = "gate-builder-chronicle";
 /** The gate's own recipe: valid in shape, for a world that is never made. */
 const FIX_RECIPE = {id: FIX, version: 1, title: "Gate builder chronicle", world: "wodx-gate-builder-nowhere", homeland: "moravia",
@@ -54,7 +54,7 @@ export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 4).join(" | ")}); } };
-  const {isLiveWorld} = await import(`/modules/wodx-chronicle/scripts/live-worlds.mjs`);
+  const {isLiveWorld} = await import(`/modules/wodx-rules/chronicle/live-worlds.mjs`);
   if ( isLiveWorld(game.world) ) throw new Error("Never in a Live world.");
   const Rules = await import(`/modules/wodx-rules/storyteller/recipe-rules.mjs?${Date.now()}`);
   const C = await CD();

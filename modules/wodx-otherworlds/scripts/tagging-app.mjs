@@ -3,7 +3,7 @@ import {SETTLEMENTS, CHARTS, gauntletFor, suggestSettlement, battlemapParent} fr
 import {buildPenumbraPrototype} from "./prototype.mjs";
 import {clearCrossing} from "./crossing.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {current as chronicleInPlay} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
+import {current as chronicleInPlay} from "../../wodx-rules/chronicle/chronicle-data.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");

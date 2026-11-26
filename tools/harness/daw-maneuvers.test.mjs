@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import * as R from "../../modules/wodx-rules/combat/rules.js";
-import {outcomesOf} from "../../modules/wodx-actions/scripts/mage-da-effects.js";
+import {outcomesOf} from "../../modules/wodx-rules/actions/mage-da-effects.js";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 

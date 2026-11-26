@@ -7,14 +7,14 @@ import {dirname, join} from "node:path";
 /* The village peoples of the Missouri in the People generator (B4130 to B4133): own names and villages before 1800, family names after */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
-const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
+const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-rules/creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
 // Names made by pattern from the same people's recorded parts (B5600) count as the people's own
-const {PATTERNED} = await import(join(root, "modules/wodx-creation/data/people-patterned.mjs"));
+const {PATTERNED} = await import(join(root, "modules/wodx-rules/creation/data/people-patterned.mjs"));
 const made = (o, sex) => PATTERNED[o]?.[sex] ?? [];
-const MI = await import(join(root, "modules/wodx-creation/data/people-missouri.mjs"));
+const MI = await import(join(root, "modules/wodx-rules/creation/data/people-missouri.mjs"));
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const WEST = W.cultureOf("north-america-west");
 const people = (era, origin, n = 200) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("mo", origin + era, i),

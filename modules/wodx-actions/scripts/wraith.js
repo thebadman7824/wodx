@@ -26,7 +26,7 @@ import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import { DAY } from "../../wodx-rules/core/terms.mjs";
 import * as Local from "../../wodx-rules/chronicle/chronicle-local-rules.mjs";
-import { current as chronicleNow } from "../../wodx-chronicle/scripts/chronicle-data.mjs";
+import { current as chronicleNow } from "../../wodx-rules/chronicle/chronicle-data.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };

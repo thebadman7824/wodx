@@ -5,7 +5,7 @@
  * what the fittings the character has on do to one weapon, and atHand for the initiative a worn holster or scabbard
  * gives. The Use window sets, springs and disarms traps with the trap functions here.
  */
-import {ARMS, FITTINGS, CARRIERS, WARDS, TRAPS, KIT, AMMO} from "../../wodx-library/data/goods-arms.mjs";
+import {ARMS, FITTINGS, CARRIERS, WARDS, TRAPS, KIT, AMMO} from "./data/goods-arms.mjs";
 import * as TERMS from "../core/terms.mjs";
 
 export {ARMS, FITTINGS, CARRIERS, WARDS, TRAPS, KIT, AMMO};

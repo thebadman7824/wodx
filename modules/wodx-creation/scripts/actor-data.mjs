@@ -1,5 +1,5 @@
 import {findClan, clanDisciplines, generationRow, ghoulDisciplineCap, ghoulCanLearn, xpCost, traitMax, KINDS, lockedAtZero} from "../../wodx-rules/creation/rules.mjs";
-import {XP} from "../data/vampire.mjs";
+import {XP} from "../../wodx-rules/creation/data/vampire.mjs";
 import * as AG from "../../wodx-rules/creation/animal-ghoul-rules.mjs";
 import * as AS from "../../wodx-rules/creation/animal-stock-rules.mjs";
 import {learningFor} from "../../wodx-rules/creation/learn-rules.mjs";

@@ -80,7 +80,7 @@ export async function coinNamer(where) {
   if ( !game.modules.get("wodx-storyteller")?.active || !where?.money || where.year === null ) return null;
   try {
     const M = await import("../../wodx-rules/storyteller/money-rules.mjs");
-    const L = await import("../../wodx-library/data/goods-ways.mjs");
+    const L = await import("../../wodx-rules/library/data/goods-ways.mjs");
     const m = M.moneyFor(where.year, where.money);
     // A land that trades without coin has no coin of the place to find
     if ( m?.id === "barter" ) return () => null;

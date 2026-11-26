@@ -18,7 +18,7 @@
  * Umbraquake reach everyone within 10 yards; Blighted Touch resists at 6 and lasts three hours; Calcify lasts the
  * scene; Possession's time to take hold is shown and the hold itself lasts until the spirit is driven out.
  */
-import { T, N, S, C, outcomesOf } from "./mage-da-effects.js";
+import { T, N, S, C, outcomesOf } from "../../wodx-rules/actions/mage-da-effects.js";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 export const BOOK = "W20";

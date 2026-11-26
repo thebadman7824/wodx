@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import {DEMONS, GROUPS} from "../../modules/wodx-creation/data/dac-demons.mjs";
+import {DEMONS, GROUPS} from "../../modules/wodx-rules/creation/data/dac-demons.mjs";
 import * as R from "../../modules/wodx-rules/creation/dac-demons-rules.mjs";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
@@ -67,7 +67,7 @@ test("the Storyteller's window and the API", () => {
 
 /* B7702: the four monsters of the V20 Dark Ages Companion */
 test("the V20 Companion's four monsters: the book's numbers, the usual health, rules in the notes", async () => {
-  const {MONSTERS, BOOK} = await import("../../modules/wodx-creation/data/v20dac-monsters.mjs");
+  const {MONSTERS, BOOK} = await import("../../modules/wodx-rules/creation/data/v20dac-monsters.mjs");
   assert.equal(BOOK, "V20 DA Companion");
   assert.deepEqual(MONSTERS.map(m => [m.key, m.p]), [["black-dog", 35], ["fossegrim", 48], ["kallikantzaros", 66], ["pishacha", 97]]);
   assert.deepEqual(R.ALL.filter(d => d.book === BOOK).map(d => d.key), MONSTERS.map(m => m.key));
@@ -93,7 +93,7 @@ test("the V20 Companion's four monsters: the book's numbers, the usual health, r
 
 /* B7939: the fomori and monsters of Dark Ages: Werewolf pp. 186-189 */
 test("DA:W's four monsters: the book's numbers, Rage and Gnosis, fomor powers the fomor rules read, weapons and hide", async () => {
-  const {MONSTERS, BOOK} = await import("../../modules/wodx-creation/data/daw-monsters.mjs");
+  const {MONSTERS, BOOK} = await import("../../modules/wodx-rules/creation/data/daw-monsters.mjs");
   const FP = await import("../../modules/wodx-actions/scripts/fomor-powers.js");
   assert.equal(BOOK, "Dark Ages: Werewolf");
   assert.deepEqual(MONSTERS.map(m => [m.key, m.p]), [["aughisky", 186], ["lazarite", 186], ["skull-pig", 187], ["fir-bolg", 188]]);

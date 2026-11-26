@@ -6,7 +6,7 @@
  * the caster's permanent Glamour (gt turns, gm minutes, g5m five minutes, g30m half hours, gh hours, gd days).
  * dice: a function of {willpower, glamour} and successes for attacks that roll damage dice. Pure: no Foundry calls.
  */
-import { H, T, C, N, S, MV, HL, outcomesOf } from "./mage-da-effects.js";
+import { H, T, C, N, S, MV, HL, outcomesOf } from "../../wodx-rules/actions/mage-da-effects.js";
 import * as PK from "./power-keywords.js";
 import {DAY} from "../../wodx-rules/core/terms.mjs";
 

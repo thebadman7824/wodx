@@ -5,7 +5,7 @@ import * as D from "../../modules/wodx-rules/creation/lifepath-drill-rules.mjs";
 import * as R from "../../modules/wodx-rules/creation/lifepath-rules.mjs";
 import {buildScenes} from "../../modules/wodx-rules/creation/first-night-prelude-rules.mjs";
 import {WORLD_REGIONS} from "../../modules/wodx-rules/chronicle/world-rules.mjs";
-import {MERITS_FLAWS, BACKGROUNDS} from "../../modules/wodx-chronicle/data/trait-effects.mjs";
+import {MERITS_FLAWS, BACKGROUNDS} from "../../modules/wodx-rules/chronicle/data/trait-effects.mjs";
 
 /* WoDX Creation: the drill-down lifepath (the owner, 13 November 2026): continent, region, origin, childhood, teens, adult chapters. */
 
@@ -371,8 +371,8 @@ test("no gendered words and no option id twice in a step", () => {
 });
 
 test("dated content: every region of the world has origins and marks of its own years", async () => {
-  const {LOCAL_EVENTS} = await import("../../modules/wodx-creation/data/lifepath-local-events.mjs");
-  const {CONTINENTS} = await import("../../modules/wodx-creation/data/lifepath-drill.mjs");
+  const {LOCAL_EVENTS} = await import("../../modules/wodx-rules/creation/data/lifepath-local-events.mjs");
+  const {CONTINENTS} = await import("../../modules/wodx-rules/creation/data/lifepath-drill.mjs");
   const ids = CONTINENTS.flatMap(c => c[1]).filter(id => !D.landOf(id)?.off);
   assert.equal(ids.length, 45);
   const words = /\b(he|she|him|her|his|hers|son|daughter|mother|father|wife|wives|husband|brother|sister|boy|girl|man|woman|men|women)\b/i;
@@ -433,7 +433,7 @@ test("beyond Earth: orbit, the Moon and Mars open only in the future age and fro
 });
 
 test("the years after the change: each line has its own ways, drawn first", async () => {
-  const {SINCE_LINES} = await import("../../modules/wodx-creation/data/lifepath-since-lines.mjs");
+  const {SINCE_LINES} = await import("../../modules/wodx-rules/creation/data/lifepath-since-lines.mjs");
   const lines = Object.keys(R.LINES).filter(k => k !== "mortal");
   assert.deepEqual(Object.keys(SINCE_LINES).sort(), lines.sort(), "every line that changes has a list");
   const words = /\b(he|she|him|her|his|hers|son|daughter|mother|father|wife|husband|brother|sister|boy|girl|man|woman|men|women|lord|lady)\b/i;

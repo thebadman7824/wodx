@@ -4,7 +4,7 @@
  * difficulty and Sekhem cost the book gives (a table or a target's Willpower is noted in the text), fx (what it does),
  * lasts, and an effects-card spec (mage-da-effects.js helpers). Pure: no Foundry calls.
  */
-import { H, T, C, N, S, MV, HL, K, P, A, outcomesOf } from "./mage-da-effects.js";
+import { H, T, C, N, S, MV, HL, K, P, A, outcomesOf } from "../../wodx-rules/actions/mage-da-effects.js";
 import { tableLasts } from "./c20-arts.js";
 import * as PK from "./power-keywords.js";
 

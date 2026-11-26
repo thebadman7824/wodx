@@ -10,7 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const AR = await import(join(root, "modules/wodx-rules/npc/alert-rules.mjs"));
 const F = await import(join(root, "modules/wodx-rules/npc/faction-rules.mjs"));
 const W = await import(join(root, "modules/wodx-rules/storyteller/world-rules.mjs"));
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const streamFor = key => G.stream("test-seed", key);
 
 const ev = (o = {}) => ({kind: "force", scene: "keep", place: "Scene.keep", at: 1000, noise: "loud", who: "Scene.keep.Token.t1", whoName: "Anna",

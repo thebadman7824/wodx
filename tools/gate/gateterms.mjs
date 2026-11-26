@@ -114,11 +114,11 @@ export async function run() {
     await G.step("9. the other modules read the same words", async () => {
       const M = p => import(`/modules/${p}?${Date.now()}`).catch(() => null);
       const [tg, cr, se, cra, sh, pd, so, intr] = await Promise.all([M("wodx-targeting/scripts/target-rules.mjs"),
-        M("wodx-rules/interactables/carry-rules.mjs"), M("wodx-rules/senses/senses-rules.mjs"), M("wodx-creation/data/advance.mjs"),
+        M("wodx-rules/interactables/carry-rules.mjs"), M("wodx-rules/senses/senses-rules.mjs"), M("wodx-rules/creation/data/advance.mjs"),
         M("wodx-rules/sheets/extras-rules.mjs"), M("wodx-rules/paperdoll/doll-rules.mjs"), M("wodx-rules/solo/solo-rules.mjs"),
         M("wodx-rules/interactables/fill-rules.mjs")]);
       const [talk, know, deeds] = await Promise.all([M("wodx-rules/npc/talk-rules.mjs"), M("wodx-rules/library/know-rules.mjs"),
-        M("wodx-storyteller/scripts/battle-deeds.mjs")]);
+        M("wodx-rules/storyteller/battle-deeds.mjs")]);
       const got = {
         targeting: tg?.shapeFromText?.("a 10-meter radius")?.size,
         carry: cr?.toUnits?.(10, "m"),

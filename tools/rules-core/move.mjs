@@ -14,6 +14,13 @@
  *     and `/modules/${MOD}/scripts/x-rules.mjs` where MOD is a const naming the module in that file) is rewritten;
  *   - the moved files come off notMoved, and any file outside the package that a moved file imports goes on outside.
  * --dry prints the plan and changes nothing. Run the harness after it: anything the rewrite missed fails there.
+ *
+ *   node tools/rules-core/move.mjs --outside [--dry]
+ *
+ * B8069: moves every file the package still imports from outside it (the outside list and all they import in turn)
+ * into the package, keeping its path under the module: modules/wodx-rules/creation/data/people.mjs goes to
+ * modules/wodx-rules/creation/data/people.mjs, and modules/wodx-rules/npc/talk-grammar.mjs to
+ * modules/wodx-rules/npc/talk-grammar.mjs. The outside list is then empty.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -23,7 +30,8 @@ import {fileURLToPath} from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const BASELINE = path.join(ROOT, "tools/harness/rules-core-baseline.json");
 const args = process.argv.slice(2);
-const mod = args.find(a => !a.startsWith("--") && !args[args.indexOf(a) - 1]?.startsWith("--hold"));
+const outsideMode = args.includes("--outside");
+const mod = outsideMode ? "wodx-outside" : args.find(a => !a.startsWith("--") && !args[args.indexOf(a) - 1]?.startsWith("--hold"));
 const dry = args.includes("--dry");
 const holdArg = args[args.indexOf("--hold") + 1];
 const hold = new Set(args.includes("--hold") && holdArg ? holdArg.split(",").map(s => s.trim()) : []);
@@ -44,7 +52,17 @@ const walk = d => fs.readdirSync(d, {withFileTypes: true}).flatMap(e => {
 const base = JSON.parse(fs.readFileSync(BASELINE, "utf8"));
 const short = mod.replace(/^wodx-/, "");
 const moves = new Map();   // old repo path -> new repo path
-for ( const r of base.notMoved ) {
+if ( outsideMode ) {
+  const {closure} = await import("../harness/rules-core.mjs");
+  for ( const f of closure(base.outside.map(abs)) ) {
+    const r = rel(f);
+    if ( r.startsWith("modules/wodx-rules/") ) continue;
+    const [, m, ...tail] = r.split("/");
+    const t = tail[0] === "scripts" ? tail.slice(1) : tail;
+    moves.set(r, `modules/wodx-rules/${m.replace(/^wodx-/, "")}/${t.join("/")}`);
+  }
+}
+for ( const r of outsideMode ? [] : base.notMoved ) {
   if ( !r.startsWith(`modules/${mod}/`) ) continue;
   if ( hold.has(path.basename(r)) ) continue;
   moves.set(r, `modules/wodx-rules/${short}/${path.basename(r)}`);
@@ -106,7 +124,7 @@ if ( dry ) process.exit(0);
 
 // write the rewrites at the old paths first, then move, so git sees a rename with the edits
 for ( const [f, out] of edits ) fs.writeFileSync(f, out);
-fs.mkdirSync(abs(`modules/wodx-rules/${short}`), {recursive: true});
+for ( const n of moves.values() ) fs.mkdirSync(path.dirname(abs(n)), {recursive: true});
 for ( const [o, n] of moves ) execFileSync("git", ["mv", o, n], {cwd: ROOT});
 
 // the baseline: moved files off notMoved, the outside files they need on outside

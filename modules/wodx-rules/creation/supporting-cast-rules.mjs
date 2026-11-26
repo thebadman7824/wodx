@@ -8,7 +8,7 @@
  * which are all Potence for a ghoul and all clan Disciplines for a Cainite, so the book's "at least half" holds). The
  * Storyteller can move dots on the sheet after.
  */
-import {TEMPLATES, TIERS, BASE, ABILITY_2002, SHORT} from "../../wodx-creation/data/dasc-templates.mjs";
+import {TEMPLATES, TIERS, BASE, ABILITY_2002, SHORT} from "./data/dasc-templates.mjs";
 import {findClan, clanDisciplines} from "./rules.mjs";
 
 export const byKey = key => TEMPLATES.find(t => t.key === key) ?? null;

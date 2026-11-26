@@ -15,7 +15,7 @@
  * Voices are shelved (B2750): text only, no sound.
  */
 import * as OR from "../../wodx-rules/npc/overheard-rules.mjs";
-import * as G from "./talk-grammar.mjs";
+import * as G from "../../wodx-rules/npc/talk-grammar.mjs";
 import * as TK from "../../wodx-rules/npc/talk-rules.mjs";
 import * as AR from "../../wodx-rules/npc/alert-rules.mjs";
 import {isAnimal} from "../../wodx-rules/npc/animal-rules.mjs";

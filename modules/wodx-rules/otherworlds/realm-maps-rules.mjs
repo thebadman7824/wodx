@@ -8,8 +8,8 @@
  *
  * generate() gives the model (cells, walls, regions, labels); svg() draws it, top-down and at night. No Foundry here.
  */
-import {stream, between, pick, shuffled} from "../../wodx-chronicle/scripts/gen-core.mjs";
-import {REALM_LAYOUTS} from "../../wodx-otherworlds/scripts/realm-layouts.mjs";
+import {stream, between, pick, shuffled} from "../chronicle/gen-core.mjs";
+import {REALM_LAYOUTS} from "./realm-layouts.mjs";
 
 export const VERSION = 1;
 /** Cell kinds. Walkable: ground, path, growth, hazard, shallow. */

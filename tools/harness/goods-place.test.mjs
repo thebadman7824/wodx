@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import * as GP from "../../modules/wodx-rules/storyteller/goods-place-rules.mjs";
 import * as N from "../../modules/wodx-rules/storyteller/market-news-rules.mjs";
 import {GOODS} from "../../modules/wodx-library/data/goods.mjs";
-import {inUseAt} from "../../modules/wodx-library/data/goods-ways.mjs";
+import {inUseAt} from "../../modules/wodx-rules/library/data/goods-ways.mjs";
 
 const at = (region, way) => ({region, way, inUse: (g, y) => inUseAt(g, y, {way, region})});
 const named = n => GOODS.find(g => g.name === n);

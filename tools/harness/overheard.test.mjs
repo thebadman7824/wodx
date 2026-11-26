@@ -10,13 +10,13 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const O = await imp("modules/wodx-rules/npc/overheard-rules.mjs");
-const G = await imp("modules/wodx-npc/scripts/talk-grammar.mjs");
+const G = await imp("modules/wodx-rules/npc/talk-grammar.mjs");
 const STOCK = await imp("modules/wodx-npc/data/stock-talk.mjs");
 const MORE = await imp("modules/wodx-npc/data/stock-talk-more.mjs");
 const {HOUSE} = await imp("modules/wodx-npc/data/grammar/house.mjs");
 const GR = await imp("modules/wodx-npc/data/grammar/groups.mjs");
-const {OVERHEARD} = await imp("modules/wodx-npc/data/grammar/overheard.mjs");
-const {TIMES} = await imp("modules/wodx-npc/data/grammar/overheard-times.mjs");
+const {OVERHEARD} = await imp("modules/wodx-rules/npc/data/grammar/overheard.mjs");
+const {TIMES} = await imp("modules/wodx-rules/npc/data/grammar/overheard-times.mjs");
 const W = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
 
 const grammar = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE, GR.GROUPS_GRAMMAR, OVERHEARD);

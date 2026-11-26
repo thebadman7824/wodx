@@ -7,7 +7,7 @@ import {dirname, join} from "node:path";
 /* An installed table its module no longer ships stands aside, so the tables that replaced it are drawn (B4720) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const hash = results => G.hash128(JSON.stringify(results.map(r => [r.text, r.weight ?? 1]))).join("-");
 // A world Roll Table as Foundry holds it: the flag and the results
 const table = (flag, results) => ({name: flag.id, results, getFlag: () => flag});

@@ -5,9 +5,9 @@
  * B7939: the four fomori and monsters of Dark Ages: Werewolf, with their powers, weapons and hide, in a third folder.
  */
 import {MODULE_ID, esc, disciplineItem} from "./actor-data.mjs";
-import {GROUPS} from "../data/dac-demons.mjs";
-import {MONSTERS} from "../data/v20dac-monsters.mjs";
-import {MONSTERS as DAW_MONSTERS} from "../data/daw-monsters.mjs";
+import {GROUPS} from "../../wodx-rules/creation/data/dac-demons.mjs";
+import {MONSTERS} from "../../wodx-rules/creation/data/v20dac-monsters.mjs";
+import {MONSTERS as DAW_MONSTERS} from "../../wodx-rules/creation/data/daw-monsters.mjs";
 import * as DR from "../../wodx-rules/creation/dac-demons-rules.mjs";
 import {keyOf} from "../../wodx-rules/creation/book-people-rules.mjs";
 

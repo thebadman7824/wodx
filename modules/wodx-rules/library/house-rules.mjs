@@ -3,7 +3,7 @@
  * roadKit(items): what a character carries for the road, read by WoDX Storyteller's hardship and WoDX Interactables'
  * chase: {cold, heat, saddle, bridle, urge, names: {cold, heat, saddle, bridle, urge}}.
  */
-import {WARM, SHADE, TACK} from "../../wodx-library/data/goods-house.mjs";
+import {WARM, SHADE, TACK} from "./data/goods-house.mjs";
 
 const bare = s => String(s ?? "").toLowerCase().replace(/\s*\(\d+\)\s*$/, "").trim();
 const WARM_SET = new Set(WARM), SHADE_SET = new Set(SHADE);

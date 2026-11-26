@@ -12,7 +12,7 @@ import {wraithStart, angstFrom, caul, awakenStart, SPHERES} from "../../wodx-rul
 import * as SR from "../../wodx-rules/creation/states-rules.mjs";
 import * as RR from "../../wodx-rules/creation/revenant-rules.mjs";
 import {yearNow, swearOath} from "./revenant.mjs";
-import {GHOUL} from "../data/vampire.mjs";
+import {GHOUL} from "../../wodx-rules/creation/data/vampire.mjs";
 
 const COPY = ["player", "nature", "demeanor", "concept", "appearance", "background", "roleplaytip", "derangement", "notes", "gear", "money", "traits"];
 const BG = "wod.types.background";

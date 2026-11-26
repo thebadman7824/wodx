@@ -5,7 +5,7 @@
  * Mechanics only, in our own words. Page refs: "pdf" pages unless marked printed. V20 first, then V20 Dark Ages.
  * Rows marked house: true go past what the books say (the owner's notes on the desk, or a gap the book check found).
  */
-import {DAY, LUNAR_MONTH_DAYS, WEEK} from "../../wodx-rules/core/terms.mjs";
+import {DAY, LUNAR_MONTH_DAYS, WEEK} from "../../core/terms.mjs";
 export {DAY, WEEK};
 
 /**

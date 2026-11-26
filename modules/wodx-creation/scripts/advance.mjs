@@ -6,7 +6,7 @@
 import {MODULE_ID, lineOf, chronology, generationOf} from "./actor-data.mjs";
 import {setChronology} from "./lineage.mjs";
 import {propose, PATH_LABEL} from "../../wodx-rules/creation/advance-rules.mjs";
-import {SWITCHES, DRIFT} from "../data/advance.mjs";
+import {SWITCHES, DRIFT} from "../../wodx-rules/creation/data/advance.mjs";
 import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 import {writeLogPage} from "./xp.mjs";
 import * as TERMS from "../../wodx-rules/core/terms.mjs";

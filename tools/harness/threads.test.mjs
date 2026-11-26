@@ -158,7 +158,7 @@ test("threads: a locked storyline waits, and Session Zero lines cut tagged cards
 });
 
 test("threads: the chronicle in play adds its own cards to the deck, and only then (Chronicle Packs Desk b2)", async () => {
-  const CD = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/chronicle-data.mjs")));
+  const CD = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/chronicle-data.mjs")));
   const {PACK} = await import(pathToFileURL(join(root, "modules/wodx-rothenstein/scripts/register.mjs")));
   const own = await PACK.cards();
   assert.equal(own.length, 23);

@@ -1141,8 +1141,8 @@
    "files": [
     "modules/wodx-actions/scripts/mage-da.js",
     "modules/wodx-rules/actions/mage-da-rules.js",
-    "modules/wodx-actions/scripts/mage-da-grimoire.js",
-    "modules/wodx-actions/scripts/mage-da-effects.js",
+    "modules/wodx-rules/actions/mage-da-grimoire.js",
+    "modules/wodx-rules/actions/mage-da-effects.js",
     "modules/wodx-rules/actions/consensus-rules.js"
    ],
    "steps": {

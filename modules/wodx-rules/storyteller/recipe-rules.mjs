@@ -6,7 +6,7 @@
  * builder.mjs runs the steps in Foundry; tools/gate/carryexport.mjs uses classify() to write the inventory.
  */
 
-import {LIVE_WORLDS} from "../../wodx-chronicle/scripts/live-worlds.mjs";
+import {LIVE_WORLDS} from "../chronicle/live-worlds.mjs";
 import {thrallFlag} from "../actions/thrall-rules.js";
 
 export const RECIPE_VERSION = 1;

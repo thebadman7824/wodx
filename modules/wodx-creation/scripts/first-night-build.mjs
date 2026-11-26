@@ -9,7 +9,7 @@
 import {esc} from "./actor-data.mjs";
 import {TOTALS, checkCreation} from "../../wodx-rules/creation/totals-rules.mjs";
 import {totalsView, CreationCheckApp} from "./totals-check.mjs";
-import {defaultLine} from "../data/creation-totals.mjs";
+import {defaultLine} from "../../wodx-rules/creation/data/creation-totals.mjs";
 import * as R from "../../wodx-rules/creation/first-night-rules.mjs";
 import * as B from "../../wodx-rules/creation/first-night-build-rules.mjs";
 

@@ -7,9 +7,9 @@
  * tasks; everyday dishes need no roll when the cook's pool is at least the difficulty (the owner, 2026-11-12). Goals, waits,
  * batches, dots and strength are house rules (B947-B952).
  */
-import {GROUPS, KITS, KIT_WORKSHOP, FAMILIES, BOOKS, METHODS, WORDS, RAW, FACTORY, FACTORY_PRINTER, PART_CHOICES, SALVAGE, NOT_APART, APART_TOOLS, APART_QUALITIES} from "../../wodx-library/data/recipes.mjs";
+import {GROUPS, KITS, KIT_WORKSHOP, FAMILIES, BOOKS, METHODS, WORDS, RAW, FACTORY, FACTORY_PRINTER, PART_CHOICES, SALVAGE, NOT_APART, APART_TOOLS, APART_QUALITIES} from "./data/recipes.mjs";
 import {substanceOf} from "./use-rules.mjs";
-import {inUseAt} from "../../wodx-library/data/goods-ways.mjs";
+import {inUseAt} from "./data/goods-ways.mjs";
 import * as TERMS from "../core/terms.mjs";
 import {DAY} from "../core/terms.mjs";
 

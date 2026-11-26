@@ -12,10 +12,10 @@
  */
 
 import {WORLD_REGIONS, regionOf, hasPeopleIn, mixFor, DEFAULT_REGION} from "../chronicle/world-rules.mjs";
-import {LOCAL_EVENTS} from "../../wodx-creation/data/lifepath-local-events.mjs";
-import {SINCE_LINES} from "../../wodx-creation/data/lifepath-since-lines.mjs";
+import {LOCAL_EVENTS} from "./data/lifepath-local-events.mjs";
+import {SINCE_LINES} from "./data/lifepath-since-lines.mjs";
 import {OFFWORLD, OFFWORLD_AGE, OFFWORLD_NOT, SINCE, SINCE_MIN, CONTINENTS, ORIGINS, HOME, CMARK, TPATH, TMARK, CALL, AMARK, LOCAL, CHAPTERS, ARRIVALS, COMING_OF_AGE, REGION_COMING_OF_AGE,
-  PEOPLE_LABELS} from "../../wodx-creation/data/lifepath-drill.mjs";
+  PEOPLE_LABELS} from "./data/lifepath-drill.mjs";
 
 export {CONTINENTS, CHAPTERS, ARRIVALS};
 export const VERSION = 1;

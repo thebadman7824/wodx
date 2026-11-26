@@ -12,9 +12,9 @@
  *  - B7939: the fomori and monsters of Dark Ages: Werewolf (pp. 186-189) have no blood: they carry Rage and Gnosis
  *    where the book rates them, their fomor powers, natural weapons and hide (powers, weapons, armor), made by dac-demons.mjs.
  */
-import {DEMONS, BOOK} from "../../wodx-creation/data/dac-demons.mjs";
-import {MONSTERS, BOOK as MONSTER_BOOK} from "../../wodx-creation/data/v20dac-monsters.mjs";
-import {MONSTERS as DAW_MONSTERS, BOOK as DAW_BOOK} from "../../wodx-creation/data/daw-monsters.mjs";
+import {DEMONS, BOOK} from "./data/dac-demons.mjs";
+import {MONSTERS, BOOK as MONSTER_BOOK} from "./data/v20dac-monsters.mjs";
+import {MONSTERS as DAW_MONSTERS, BOOK as DAW_BOOK} from "./data/daw-monsters.mjs";
 import {planOf} from "./book-people-rules.mjs";
 import {HEALTH_LEVELS} from "../core/terms.mjs";
 

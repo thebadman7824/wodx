@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import {test} from "node:test";
 import * as WR from "../../modules/wodx-rules/chronicle/world-rules.mjs";
 import * as PR from "../../modules/wodx-rules/npc/passerby-rules.mjs";
-import * as PW from "../../modules/wodx-npc/scripts/passerby-world.mjs";
+import * as PW from "../../modules/wodx-rules/npc/passerby-world.mjs";
 import * as RS from "../../modules/wodx-rules/npc/resident-rules.mjs";
-import {PEOPLE_TABLES, TRADE_SHEETS} from "../../modules/wodx-creation/data/people.mjs";
-import {tradesFor} from "../../modules/wodx-creation/data/people-trades-world.mjs";
-import {resolveTable} from "../../modules/wodx-chronicle/scripts/gen-core.mjs";
+import {PEOPLE_TABLES, TRADE_SHEETS} from "../../modules/wodx-rules/creation/data/people.mjs";
+import {tradesFor} from "../../modules/wodx-rules/creation/data/people-trades-world.mjs";
+import {resolveTable} from "../../modules/wodx-rules/chronicle/gen-core.mjs";
 
 /* Passers-by, residents, clergy and trades by region (Chronicle 0.51.0, NPC 0.51.0, Creation 0.23.0; B2670 to B2673) */
 

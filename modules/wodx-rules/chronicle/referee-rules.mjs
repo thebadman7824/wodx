@@ -9,7 +9,7 @@
  *   testFor(c, ctx)    what the referee works out from the two sheets: a verdict and, where the books give one, a roll
  *   referee(q, ctx)    both together: [{case, test}]
  */
-import {CASES, POWERS, LINES} from "../../wodx-chronicle/data/crossover.mjs";
+import {CASES, POWERS, LINES} from "./data/crossover.mjs";
 import * as TERMS from "../core/terms.mjs";
 
 export {CASES, POWERS, LINES};

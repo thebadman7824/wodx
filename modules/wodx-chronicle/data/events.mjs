@@ -5,7 +5,7 @@
  * start switched off. `dateNote` says where a book gives no exact date and WoDX picked one (a house rule).
  * Pages: "pdf" is the PDF page, "p." the printed page.
  */
-import {canon} from "./canon/index.mjs";
+import {canon} from "../../wodx-rules/chronicle/data/canon/index.mjs";
 export default {
   version: 1,
   events: [

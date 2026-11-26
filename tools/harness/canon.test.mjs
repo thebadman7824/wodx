@@ -12,11 +12,11 @@ import fs from "node:fs";
 import path from "node:path";
 import {execFileSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {CANON, canon, canonSpan} from "../../modules/wodx-chronicle/data/canon/index.mjs";
+import {CANON, canon, canonSpan} from "../../modules/wodx-rules/chronicle/data/canon/index.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const LIST = path.join(root, "tools/harness/canon-copies.json");
-const SKIP = /^modules\/wodx-chronicle\/data\/canon\/|^modules\/wodx-library\/data\/encyclopedia\/|\/lang\/|\/packs\/|node_modules\//;
+const SKIP = /^modules\/wodx-rules\/chronicle\/data\/canon\/|^modules\/wodx-library\/data\/encyclopedia\/|\/lang\/|\/packs\/|node_modules\//;
 const YEAR = /\b(1[0-9]{3}|20[0-9]{2})\b/g;
 const AFTER = 60, BEFORE = 90;
 
@@ -79,7 +79,7 @@ test("every canon fact is well formed and checked against a book", () => {
 
 test("no hand-typed year disagrees with the canon", () => {
   const wrong = scan().filter(r => r.wrong.length).map(r => `${r.file}:${r.line} ${r.fact} ${r.wrong.join(", ")} (canon ${canonSpan(r.fact)})`);
-  assert.deepEqual(wrong, [], "read canon(\"<id>\") from modules/wodx-chronicle/data/canon/index.mjs instead of typing the year");
+  assert.deepEqual(wrong, [], "read canon(\"<id>\") from modules/wodx-rules/chronicle/data/canon/index.mjs instead of typing the year");
 });
 
 test("copies of canon years only shrink (tools/harness/canon-copies.json)", () => {

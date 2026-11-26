@@ -8,7 +8,7 @@
  *                 the log and the world hold), and relics, fetishes and talismans with a suggested rating.
  * Everything here is a prompt for the Storyteller. The tables are WoDX's, kept as Roll Tables the Storyteller edits.
  */
-import * as G from "../../wodx-chronicle/scripts/gen-core.mjs";
+import * as G from "../chronicle/gen-core.mjs";
 
 /** The parts of the night, by the hour (0 to 24). */
 export function partOfNight(hours) {

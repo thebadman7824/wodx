@@ -5,7 +5,7 @@
  * State: {revealed: {<n>: {at, variant, chapter}}, last: <world time of the last reveal>}.
  * Context: {now, played: [chapter keys played], force}.
  */
-import {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK, TWIST_GAP} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
+import {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK, TWIST_GAP} from "./chronicle-data.mjs";
 import {DAY} from "../core/terms.mjs";
 export {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK, TWIST_GAP};
 

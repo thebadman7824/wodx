@@ -30,7 +30,7 @@ export async function run() {
     const PW = await import("/modules/wodx-actions/scripts/power-effects.js");
     const PM = await import("/modules/wodx-actions/scripts/power-mods.js");
     const MH = await import("/modules/wodx-actions/scripts/mummy-hekau.js");
-    const DAE = await import("/modules/wodx-actions/scripts/mage-da-effects.js");
+    const DAE = await import("/modules/wodx-rules/actions/mage-da-effects.js");
     await G.step("1. the api", async () => {
       G.ok("1. the api", typeof A?.powerMods?.of === "function" && typeof A?.powerMods?.spend === "function" && typeof A?.effects?.apply === "function");
     });
