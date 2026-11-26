@@ -18,7 +18,7 @@ import * as LP from "../../wodx-rules/creation/lifepath-rules.mjs";
 import {lifepathOf, makePeople} from "./lifepath.mjs";
 import {TOTALS} from "../../wodx-rules/creation/totals-rules.mjs";
 import {defaultLine} from "../data/creation-totals.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 
 const {ApplicationV2, DialogV2} = foundry.applications.api;
 const api = id => game.modules.get(id)?.active ? game.modules.get(id).api : null;

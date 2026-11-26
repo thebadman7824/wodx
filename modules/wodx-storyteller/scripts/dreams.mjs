@@ -1,9 +1,9 @@
 import * as D from "../../wodx-rules/storyteller/dreams-rules.mjs";
 import {MOD, esc, chron, isActiveGM, setting, mutate} from "./core.mjs";
-import {getEngine, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine, describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 /**
  * Dreams and visions you write: scheduled by the Storyteller, released by the clock as a journal that only the

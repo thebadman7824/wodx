@@ -104,7 +104,7 @@ export async function run() {
             ok("Using the Art lists the fellowship's Pillar levels with a search box", box && /Detect magic/.test(seen ?? "") && /Primus 1/.test(seen ?? "") && /Brooch of Scrying/.test(seen ?? "") && !/Galdrar 1/.test(seen ?? ""), { box });
         });
         await step("the Moon's offering at night: a calf gives 3, or 4 under a full moon", async () => {
-            const cal = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+            const cal = await import("/modules/wodx-rules/core/calendar.mjs");
             const lat = game.settings.get("wodx-chronicle", "latitude");
             let t = time0, d = cal.describeTime(t, lat);
             for (let k = 0; k < 30 && !d.isNight; k++) { t += 3600; d = cal.describeTime(t, lat); }

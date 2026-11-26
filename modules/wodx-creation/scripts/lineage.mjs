@@ -1,6 +1,6 @@
 import {MODULE_ID, esc, lineOf, lineage, chronology, generationOf, clanNameOf} from "./actor-data.mjs";
 import {bondStage} from "../../wodx-rules/creation/rules.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 
 /**
  * Lineage: who made whom. Stored on each actor in flags["wodx-creation"]:

@@ -18,7 +18,7 @@ import { aim, castIntent } from "./aim.js";
 import * as C from "../../wodx-rules/actions/consensus-rules.js";
 import * as EF from "./effects.js";
 import * as TH from "./trait-hooks.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };

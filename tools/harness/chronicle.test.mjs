@@ -10,7 +10,7 @@ const mock = installMock({dataRoot: root});
 // fetch paths are "/modules/wodx-chronicle/..." → <repo>/modules/wodx-chronicle/...
 
 await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
-const {getEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar.mjs"));
+const {getEngine} = await import(join(root, "modules/wodx-rules/core/calendar.mjs"));
 const {ClockApp} = await import(join(root, "modules/wodx-chronicle/scripts/clock-app.mjs"));
 const {HouseRulesApp} = await import(join(root, "modules/wodx-chronicle/scripts/house-rules-app.mjs"));
 const M = "wodx-chronicle";

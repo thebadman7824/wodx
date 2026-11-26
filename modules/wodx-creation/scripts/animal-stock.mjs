@@ -12,7 +12,7 @@ import * as AG from "../../wodx-rules/creation/animal-ghoul-rules.mjs";
 import * as AS from "../../wodx-rules/creation/animal-stock-rules.mjs";
 import {makeGhoul} from "./change-of-state.mjs";
 import {setLineage} from "./lineage.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 
 export const RETAINER_TYPE = "wodx-animal-retainer";
 const SOCKET = `module.${MODULE_ID}`;

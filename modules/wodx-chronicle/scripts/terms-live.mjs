@@ -2,7 +2,7 @@
  * WoDX shared terms in play (B6180-B6199): the pure terms (terms.mjs) plus what needs the running game. Every module
  * reaches it as game.modules.get("wodx-chronicle").api.terms.
  */
-import * as T from "./terms.mjs";
+import * as T from "../../wodx-rules/core/terms.mjs";
 import {setting} from "./util.mjs";
 import {placeOf} from "./place.mjs";
 import {placeTime} from "../../wodx-rules/chronicle/place-rules.mjs";

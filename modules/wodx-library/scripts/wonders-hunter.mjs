@@ -13,7 +13,7 @@
  */
 import * as H from "../data/wonders-hunter.mjs";
 import {registerLine} from "./wonder-registry.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const WILL = "system.advantages.willpower.temporary";

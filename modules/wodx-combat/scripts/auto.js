@@ -2,7 +2,7 @@
  * WoDX Combat — the pure parts of the automatic options (3.4.0): facing, counting this round's actions and defenses,
  * the Fortitude soak policy, and when a resource is worth spending. No Foundry calls here, so the harness can test it.
  */
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 /**
  * Which side of the target the attacker stands on, from the target token's rotation (Foundry: 0 = the art upright,

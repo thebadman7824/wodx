@@ -6,7 +6,7 @@ import {ratingsOf, ratingFrom} from "../../wodx-rules/chronicle/when-rules.mjs";
 import * as STANDING from "./standing.mjs";
 import * as KIN from "./kin.mjs";
 import * as BONDS from "./bonds.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 /**

@@ -27,8 +27,8 @@ import * as POACH from "../../wodx-rules/npc/poach-rules.mjs";
 import * as FLOCK from "../../wodx-rules/npc/road-flock-rules.mjs";
 import * as Media from "../../wodx-rules/chronicle/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 import {current as chronicleInPlay} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
 
 export const TYPE = "wodx-npc.faction";

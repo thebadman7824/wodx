@@ -1,5 +1,5 @@
 import {MODULE_ID, esc, isActiveGM, setting, setSetting, log} from "./util.mjs";
-import {getEngine} from "./calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "./search.mjs";
 import * as events from "./events.mjs";
 import * as L from "../../wodx-rules/chronicle/legends-rules.mjs";

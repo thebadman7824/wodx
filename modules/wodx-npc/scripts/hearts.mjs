@@ -16,9 +16,9 @@
 import * as H from "../../wodx-rules/npc/hearts-rules.mjs";
 import * as LR from "../../wodx-rules/npc/lines-rules.mjs";
 import * as LM from "./line-mend.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-npc";
 const st = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);

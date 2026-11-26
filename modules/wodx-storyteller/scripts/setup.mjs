@@ -96,7 +96,7 @@ export async function runSetup(opts = {}) {
     try { await game.settings.set("wodx-atmosphere", "climate", opts.climate); done.push("climate"); } catch (e) { /* off */ }
   }
   let dateLabel = "";
-  calMod ??= await import("../../wodx-chronicle/scripts/calendar.mjs").catch(() => null);
+  calMod ??= await import("../../wodx-rules/core/calendar.mjs").catch(() => null);
   // B6948: the opening year is kept even when the clock is not set, so feud law and the like read the chronicle's year
   if ( Number(year) ) { try { await game.settings.set("wodx-chronicle", "openingYear", Number(year)); } catch (e) { /* Chronicle off */ } }
   if ( opts.setDate !== false ) {
@@ -153,7 +153,7 @@ const cal0 = () => calMod;
 /** The wizard. */
 export async function openSetup() {
   if ( !game.user.isGM ) return null;
-  calMod ??= await import("../../wodx-chronicle/scripts/calendar.mjs").catch(() => null);
+  calMod ??= await import("../../wodx-rules/core/calendar.mjs").catch(() => null);
   const prev = game.settings.get(MOD, "setup") ?? {};
   let now = null;
   try { now = calMod?.getEngine?.().timeToDate(game.time.worldTime); } catch (e) { now = null; }

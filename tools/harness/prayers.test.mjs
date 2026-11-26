@@ -9,7 +9,7 @@ const R = await import(join(root, "modules/wodx-rules/npc/routine-rules.mjs"));
 const PR = await import(join(root, "modules/wodx-rules/npc/passerby-rules.mjs"));
 const F = await import(join(root, "modules/wodx-rules/chronicle/faith-rules.mjs"));
 const SR = await import(join(root, "modules/wodx-rules/senses/senses-rules.mjs"));
-const {DateEngine, sunTimes, formatHours} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
+const {DateEngine, sunTimes, formatHours} = await import(join(root, "modules/wodx-rules/core/calendar-math.mjs"));
 
 /* WoDX NPC 0.50.0 (B2660 to B2662): the five daily prayers, Ramadan's nights and houses of worship of every faith. */
 

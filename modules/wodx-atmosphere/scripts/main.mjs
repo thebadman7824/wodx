@@ -21,13 +21,13 @@ import * as PR from "../../wodx-rules/atmosphere/print-rules.mjs";
 import * as OR from "../../wodx-rules/atmosphere/opening-rules.mjs";
 import {reckon} from "../../wodx-rules/chronicle/reckoning-rules.mjs";
 import {countOf} from "../../wodx-rules/chronicle/local-reckoning-rules.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Mood from "./mood.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.18.8";
+const VERSION = "0.18.9";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -1217,7 +1217,7 @@ Hooks.once("init", () => {
 
 /** Load the calendar and publish the API (at ready; the harness calls it by itself). */
 export async function prime() {
-  try { CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
+  try { CAL ??= await import("../../wodx-rules/core/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
   const api = {version: VERSION, open: () => AtmosphereApp.open(), mood: {ruleAt: Mood.ruleAt, rule: Mood.moodRule}, opening: {show: scene => { lastCard = null; openingCard(scene); }, rules: OR},
     weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), rollEffects: weatherRollSource, climate, isOutdoor, followsClock,
       moonHidden: () => !!now()?.moonHidden, post: (d = now(), {gm = true} = {}) => d ? postWeather(d, {gm}) : null, history: W.eraShift},

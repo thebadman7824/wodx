@@ -1,6 +1,6 @@
 import {MODULE_ID, fetchJSON, isActiveGM, rule, setting, setSetting, log, esc} from "./util.mjs";
 import {mergeProfiles, resolveEra, interludeSpans, LINES, eraAbilitiesOf, eraAbilityList, followAbilities} from "./era-resolve.mjs";
-import {getEngine, describeTime} from "./calendar.mjs";
+import {getEngine, describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {writeChronicleRules} from "./journals.mjs";
 import * as approvals from "./approvals.mjs";
 

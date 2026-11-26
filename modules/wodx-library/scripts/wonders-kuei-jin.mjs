@@ -14,7 +14,7 @@
  */
 import * as K from "../data/wonders-kuei-jin.mjs";
 import {registerLine} from "./wonder-registry.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const low = s => String(s ?? "").toLowerCase();

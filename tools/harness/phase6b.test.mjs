@@ -401,7 +401,7 @@ test("spending Rage for actions: the cap holds and the Dark Ages penalty is note
 
 test("nightfall gives moon Rage once a night: all of it under the auspice's moon; Fera with their own rules are left alone (B40)", async () => {
   reset();
-  const cal = await import(join(root, "modules/wodx-chronicle/scripts/calendar.mjs"));
+  const cal = await import(join(root, "modules/wodx-rules/core/calendar.mjs"));
   const lat = game.settings.get("wodx-chronicle", "latitude");
   let t = game.time.worldTime;
   for ( let i = 0; i < 24 * 60; i++, t += 3600 ) { const d = cal.describeTime(t, lat); if ( d.isNight && d.moon.index === 4 ) break; }

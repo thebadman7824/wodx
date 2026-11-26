@@ -38,8 +38,8 @@
  *   place?: {light: {color, bright, dim, label}}  the Storyteller's computer sets a light on the map where the user stands (B6102)}
  * A transfer power gets a reverse button of its own (`<id>~back`) when `back` is set: {label}.
  */
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 export const FLAG = "wonder";
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);

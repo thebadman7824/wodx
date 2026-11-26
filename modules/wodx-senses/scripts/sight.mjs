@@ -7,7 +7,7 @@ import * as S from "../../wodx-rules/senses/sight-rules.mjs";
 import {detectProfile} from "../../wodx-actions/scripts/profiles.js";
 import * as O from "../../wodx-rules/senses/otherworld-sight-rules.mjs";
 import * as OW from "./otherworld-sight.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-senses";
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };

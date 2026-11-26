@@ -1,6 +1,6 @@
 /**
  * The shared terms guard (B6193). WoDX keeps one meaning for the words every module uses in
- * modules/wodx-chronicle/scripts/terms.mjs (time units, the turn, the night, dice, health levels, distance, eras, lines,
+ * modules/wodx-rules/core/terms.mjs (time units, the turn, the night, dice, health levels, distance, eras, lines,
  * player and Storyteller characters). This scan finds a module that writes its own copy again.
  *
  *   node tools/harness/terms-guard.mjs              list what each rule finds now

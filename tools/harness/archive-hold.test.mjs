@@ -17,7 +17,7 @@ await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
 await import(join(root, "modules/wodx-creation/scripts/main.mjs"));
 game.modules.set(M, {});
 const api = () => game.modules.get(M).api;
-const {getEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar.mjs"));
+const {getEngine} = await import(join(root, "modules/wodx-rules/core/calendar.mjs"));
 const at = y => getEngine().dateToTime({year: y, month: 3, day: 1, hour: 21});
 
 /* A world compendium, as Foundry's CompendiumCollection behaves for what the archive uses */

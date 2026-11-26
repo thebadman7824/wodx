@@ -17,7 +17,7 @@
  *
  * The deed table, the posts and the pick are house rules; the rolls follow the usual V20 Attribute + Ability.
  */
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const str = (v, max = 120) => String(v ?? "").trim().slice(0, max);

@@ -39,7 +39,7 @@ async function runGate(K) {
   const npc = game.modules.get("wodx-npc");
   const t0 = game.time.worldTime;
   const saved = {held: !!api?.isHeld?.(), rule: game.settings.get(M, "rule.feastFast")};
-  const {getEngine} = await import(`/modules/${M}/scripts/calendar.mjs`);
+  const {getEngine} = await import(`/modules/wodx-rules/core/calendar.mjs`);
   const at = (y, m, d, h = 22) => getEngine().dateToTime({year: y, month: m, day: d, hour: h});
   try {
     const mod = game.modules.get(M);

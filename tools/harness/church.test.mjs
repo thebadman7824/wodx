@@ -10,7 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const C = await import(join(root, "modules/wodx-rules/chronicle/church-rules.mjs"));
 const RR = await import(join(root, "modules/wodx-rules/npc/routine-rules.mjs"));
 const F = await import(join(root, "modules/wodx-rules/npc/faction-rules.mjs"));
-const {DateEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
+const {DateEngine} = await import(join(root, "modules/wodx-rules/core/calendar-math.mjs"));
 
 const engine = new DateEngine({epoch: [1197, 1, 1], reform: "bohemia-1584"});
 const date = (y, m, d) => engine.timeToDate(engine.dateToTime({year: y, month: m, day: d, hour: 22, minute: 0}));

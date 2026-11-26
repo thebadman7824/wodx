@@ -36,7 +36,7 @@ export async function run() {
   const back = canvas.scene;
   const api = () => game.modules.get(M)?.api?.net;
   const ch = () => game.modules.get(CH)?.api;
-  const {YEAR} = await import("/modules/wodx-chronicle/scripts/terms.mjs");
+  const {YEAR} = await import("/modules/wodx-rules/core/terms.mjs");
   const toYear = async y => setTime(game.time.worldTime + Math.round((y - ch().eras.currentYear()) * YEAR));
   const startTime = game.time.worldTime;
   const startBranch = game.settings.get(CH, "rule.futureBranch");

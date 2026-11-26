@@ -14,7 +14,7 @@
 import * as W from "../../wodx-rules/actions/mage-wonders-rules.js";
 import * as M from "../../wodx-rules/actions/mage-da-rules.js";
 import * as P from "./profiles.js";
-import {DAY, HOUR, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY, HOUR, WEEK} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const REF = W.REF;

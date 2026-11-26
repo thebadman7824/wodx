@@ -15,7 +15,7 @@ game.combat = null;
 
 const DS = await import(join(root, "modules/wodx-rules/actions/daysleep-rules.js"));
 const DSX = await import(join(root, "modules/wodx-actions/scripts/daysleep.js"));
-const cal = await import(join(root, "modules/wodx-chronicle/scripts/calendar.mjs"));
+const cal = await import(join(root, "modules/wodx-rules/core/calendar.mjs"));
 
 /* ---------------- Pure rules ---------------- */
 

@@ -15,7 +15,7 @@
  *   broken by the vassal is their word broken (the Roads that count it ask).
  */
 import * as D from "../../wodx-rules/actions/domain-da-rules.js";
-import { DAY } from "../../wodx-chronicle/scripts/terms.mjs";
+import { DAY } from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
@@ -29,7 +29,7 @@ const ASPECT = new Set(D.ASPECT_KEYS);
 
 export function build(ctx) {
     const { dialog, notify, logEvent, sinPrompt } = ctx;
-    const clockNow = ctx.clockNow ?? (async () => { try { const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
+    const clockNow = ctx.clockNow ?? (async () => { try { const cal = await import("../../wodx-rules/core/calendar.mjs");
         return cal.describeTime(game.time.worldTime, game.settings.get("wodx-chronicle", "latitude")); } catch (e) { return { dateLabel: "" }; } });
     const bgItem = (actor, name) => actor?.items?.find(i => i.type === "Feature" && String(i.system?.type ?? "").includes("background") && i.name.trim().toLowerCase().startsWith(name.toLowerCase())) ?? null;
     const bg = (actor, name) => n(bgItem(actor, name)?.system?.value);

@@ -1,6 +1,6 @@
 import {MODULE_ID, esc, rule} from "./util.mjs";
 import {HOUSE_RULES} from "./settings.mjs";
-import {REFORMS} from "./calendar-math.mjs";
+import {REFORMS} from "../../wodx-rules/core/calendar-math.mjs";
 import {conditionsHTML} from "./conditions.mjs";
 import {eventsHTML, load as loadEvents} from "./events.mjs";
 

@@ -139,7 +139,7 @@ await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
 await import(join(root, "modules/wodx-creation/scripts/main.mjs"));
 game.modules.set(M, {});
 const api = () => game.modules.get(M).api;
-const {getEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar.mjs"));
+const {getEngine} = await import(join(root, "modules/wodx-rules/core/calendar.mjs"));
 const at = (year, month = 1, day = 1) => getEngine().dateToTime({year, month, day, hour: 21, minute: 0});
 
 test("ready (Pass the Years)", async () => {

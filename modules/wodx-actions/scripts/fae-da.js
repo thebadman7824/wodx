@@ -27,7 +27,7 @@ import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as E from "../../wodx-rules/actions/effects-rules.js";
 import * as PW from "./power-effects.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -152,8 +152,8 @@ export function build(ctx) {
     async function clockNow() {
         if (ctx.clockNow) return ctx.clockNow();
         try {
-            const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
-            const cm = await import("../../wodx-chronicle/scripts/calendar-math.mjs");
+            const cal = await import("../../wodx-rules/core/calendar.mjs");
+            const cm = await import("../../wodx-rules/core/calendar-math.mjs");
             const lat = game.settings.get("wodx-chronicle", "latitude");
             const t = cal.describeTime(game.time.worldTime, lat);
             const g = cm.jdnToGregorian(t.jdn);

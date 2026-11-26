@@ -16,7 +16,7 @@
  * ambush's first blow).
  */
 import * as S from "../../wodx-rules/combat/start-rules.js";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-combat";
 const SOCKET = `module.${MOD}`;

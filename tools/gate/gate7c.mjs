@@ -247,7 +247,7 @@ export async function run() {
   if ( !T ) return save(R, "gate7c-result.json");
 
   // The next Monday after today whose Monday, Tuesday and Wednesday, and the Wednesday after, are not feast days
-  const engine = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine();
+  const engine = (await import("/modules/wodx-rules/core/calendar.mjs")).getEngine();
   await RT().loadCalendar();
   const describe = RT().describer();
   const today = engine.timeToDate(startTime);

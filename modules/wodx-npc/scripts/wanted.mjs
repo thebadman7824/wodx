@@ -17,7 +17,7 @@ import * as GR from "../../wodx-rules/npc/grudge-rules.mjs";
 import * as FW from "../../wodx-rules/npc/follow-rules.mjs";
 import * as MR from "../../wodx-rules/npc/mortal-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 export function build(ctx) {
   const {MOD, esc, gmIds, isActiveGM, chron, routines, profileFor, attitude, servesOf, isPasserby, isAnimal = () => false} = ctx;

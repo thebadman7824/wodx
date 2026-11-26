@@ -13,7 +13,7 @@
  */
 import * as M from "../../wodx-rules/actions/mage-da-rules.js";
 import { stOutcomes, KEYWORDS } from "../../wodx-rules/actions/effects-rules.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 

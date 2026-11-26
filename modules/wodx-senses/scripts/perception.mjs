@@ -6,7 +6,7 @@ import * as P from "../../wodx-rules/senses/perception-rules.mjs";
 import * as Q from "../../wodx-rules/senses/quiet-rules.mjs";
 import {quietOn} from "./quiet.mjs";
 import {resource, detectProfile} from "../../wodx-actions/scripts/profiles.js";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-senses";
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };

@@ -5,7 +5,7 @@
  *   extra()    the Storyteller's own feasts (setting "feasts") and the chronicle's holy days, for WoDX NPC's routines
  */
 import {MODULE_ID, rule, setting} from "./util.mjs";
-import {describeTime} from "./calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import * as R from "../../wodx-rules/chronicle/church-rules.mjs";
 import * as F from "../../wodx-rules/chronicle/faith-rules.mjs";
 import * as place from "./place.mjs";

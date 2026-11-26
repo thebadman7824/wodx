@@ -2,9 +2,9 @@ import {MODULE_ID, esc, lineOf, lineage, chronology, disciplinesOf} from "./acto
 import {planSkip, applyPlan, yearOf} from "./time.mjs";
 import {giveVitae} from "./change-of-state.mjs";
 import {setChronology} from "./lineage.mjs";
-import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {getEngine} from "../../wodx-rules/core/calendar.mjs";
 import {bondStage} from "../../wodx-rules/creation/rules.mjs";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 /**
  * The Phase 4 gate: 1197 to 2025 in steps, accepting each plan as proposed, then checking that nothing was lost

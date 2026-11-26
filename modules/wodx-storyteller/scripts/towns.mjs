@@ -24,7 +24,7 @@ import * as Markets from "./markets.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Battles from "./battles.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, gmIds, setting, log} from "./core.mjs";
-import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import {WORLD_REGIONS} from "../../wodx-rules/chronicle/world-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

@@ -337,7 +337,7 @@ export async function run() {
     });
 
     await G.step("11. dawn on the clock is the sun's rising for WoDX Actions, to the second", async () => {
-      const cal = await import(`/modules/wodx-chronicle/scripts/calendar.mjs?${Date.now()}`);
+      const cal = await import(`/modules/wodx-rules/core/calendar.mjs?${Date.now()}`);
       const lat = game.settings.get(C_ID, "latitude");
       // the clock's own To dawn (the Chronicle Clock's button moves the clock this far), held so nothing else reacts
       await set(C_ID, "hold", true);

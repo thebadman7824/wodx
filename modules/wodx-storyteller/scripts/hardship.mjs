@@ -12,7 +12,7 @@ import * as H from "../../wodx-rules/storyteller/hardship-rules.mjs";
 import * as TownLooks from "./town-looks.mjs";
 import {MOD, esc, isActiveGM, setting, isPC, chron} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);

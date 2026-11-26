@@ -26,7 +26,7 @@ export async function run() {
       const [vamp] = await G.make(Actor, [{name: "Gate Calendar Hunter", type: "Vampire"}]);
       await G.tokens(scene, [{actor: vamp, x: 2, y: 2, actorLink: true}]);
       // the clock's own move, to eleven at night, when the curfew bell has rung
-      const cal = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+      const cal = await import("/modules/wodx-rules/core/calendar.mjs");
       const lat = (() => { try { return game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return 50; } })();
       const hour = Number(cal.describeTime(game.time.worldTime, lat)?.hour ?? 23);
       const move = (((23 - Math.floor(hour)) % 24) + 24) % 24;

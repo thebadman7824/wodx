@@ -25,7 +25,7 @@ import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
-import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -40,7 +40,7 @@ const rotePage = r => r.book === "G" ? `${GREF} p. ${r.page}` : `p. ${r.page}`;
 /** The Chronicle clock's date now: {month, day, weekday, moon, isNight}; null without the Chronicle. */
 async function clockNow() {
     try {
-        const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
+        const cal = await import("../../wodx-rules/core/calendar.mjs");
         const lat = game.settings.get("wodx-chronicle", "latitude");
         return cal.describeTime(game.time.worldTime, lat);
     } catch (e) { return null; }
