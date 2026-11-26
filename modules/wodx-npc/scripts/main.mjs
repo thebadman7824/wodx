@@ -1280,7 +1280,7 @@ function lookAt(tok) {
 /** A double-click that would do nothing (no right to open the sheet) shows the look card instead. */
 function installLook() {
   const T = CONFIG.Token?.objectClass;
-  if ( !T?.prototype?._onClickLeft2 || T.prototype._wodxLook ) return;
+  if ( !T?.prototype?._onClickLeft2 || T.prototype._wodxLookCard ) return;
   const base = T.prototype._onClickLeft2;
   // Foundry lets a double-click through only to a user who may view the token's actor; a player may look at anyone
   const view = T.prototype._canView;
@@ -1293,7 +1293,7 @@ function installLook() {
     if ( !game.user.isGM && actor && !actor.testUserPermission?.(game.user, "LIMITED") ) { lookAt(this); return; }
     return base.call(this, event);
   };
-  T.prototype._wodxLook = true;
+  T.prototype._wodxLookCard = true;
 }
 // Before the first scene is drawn: a token's mouse handler keeps the methods it found when it was drawn
 Hooks.once("setup", installLook);

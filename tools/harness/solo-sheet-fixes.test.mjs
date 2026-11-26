@@ -192,3 +192,9 @@ test("#2499: the Elder Powers' each-turn rules run on the turn engine (V20 Dark 
   assert.deepEqual(TR.stepOf(dark, {successes: 1}), []);
   assert.match(src("modules/wodx-actions/scripts/turns.js"), /const levels = step\.levels === "counter" \? n\(rec\.counter\?\.value\)/);
 });
+
+test("#2508: the look card's install mark doesn't clash with Chronicle's token looks (token._wodxLook)", () => {
+  const N = src("modules/wodx-npc/scripts/main.mjs");
+  assert.doesNotMatch(N, /prototype\._wodxLook\b/, "a mark on Token.prototype named _wodxLook made every token's look state the boolean true");
+  assert.match(src("modules/wodx-chronicle/scripts/token-looks.mjs"), /token\._wodxLook \?\? \(token\._wodxLook = /);
+});
