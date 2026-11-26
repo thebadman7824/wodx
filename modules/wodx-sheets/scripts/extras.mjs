@@ -789,6 +789,15 @@ export function setup() {
   installHistory();
   installChanges();
   Hooks.once("ready", installSocket);
+  // B7838: a Ledger change (an entry come due, kept or paid) redraws the open sheets of the people it names, so the Due badge shows
+  Hooks.on("updateSetting", setting => {
+    if ( setting?.key !== "wodx-storyteller.ledger" ) return;
+    let entries = [];
+    try { entries = game.settings.get("wodx-storyteller", "ledger")?.entries ?? []; } catch (e) { return; }
+    const ids = new Set(entries.flatMap(e => [e?.from?.id, e?.to?.id]).filter(Boolean));
+    const apps = [...Object.values(ui.windows ?? {}), ...(foundry.applications?.instances?.values?.() ?? [])];
+    for ( const app of new Set(apps) ) if ( app?.rendered && app.actor && ids.has(app.actor.id) ) app.render(false);
+  });
   // Header buttons on every WoDX sheet
   Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {
     if ( !sheet.constructor?.name?.startsWith?.("Wodx") ) return;

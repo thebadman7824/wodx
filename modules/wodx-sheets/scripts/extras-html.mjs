@@ -139,7 +139,7 @@ export function relationsHtml(rows = [], { editable = true, gm = false, roles = 
     const ring = couples && editable && ["lover", "troth", "friend", "ally", "contact", "patron", "other"].includes(r.kind) && String(r.uuid ?? "").startsWith("Actor.")
       ? ` <a class="wodx-act" data-act="tie-propose" title="Propose marriage"><i class="fa-solid fa-ring"></i></a>` : "";
     return `<div class="wodx-tie" data-search-item data-uuid="${esc(r.hand ?? r.uuid ?? "")}" data-open-uuid="${esc(r.uuid ?? "")}">
-    <span class="wodx-tie-role">${role}</span>${name}${marks}${meta ? ` <span class="wodx-quiet">${esc(meta)}</span>` : ""} ${tools}${couple}${ring}${r.rule ? `<div class="wodx-quiet wodx-tie-rule">${esc(r.rule)}</div>` : ""}</div>`;
+    <span class="wodx-tie-role">${role}</span>${name}${marks}${r.due ? ` <span class="wodx-tie-due" title="Come due: settle it in the Ledger">Due</span>` : ""}${meta ? ` <span class="wodx-quiet">${esc(meta)}</span>` : ""} ${tools}${couple}${ring}${r.rule ? `<div class="wodx-quiet wodx-tie-rule">${esc(r.rule)}</div>` : ""}</div>`;
   };
   const list = groups.size ? [...groups].map(([g, rs]) => `<div class="wodx-tie-group"><div class="wodx-tie-head">${esc(g)}</div>${rs.map(row).join("")}</div>`).join("")
     : `<div class="wodx-quiet">No relationships yet. Drag a character, a scene or a journal entry here.</div>`;
