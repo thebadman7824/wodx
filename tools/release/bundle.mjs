@@ -7,7 +7,8 @@
  * stay where they are. A file another package imports (for example wodx-chronicle/scripts/calendar.mjs) is kept
  * out of every bundle and loaded from its own path, so each such file still has one copy in the browser.
  *
- * Run it on a copy (a deploy folder), never on the repo. --check bundles into memory and reports sizes only.
+ * Run it on a copy (a deploy folder), never on the repo. --check bundles into memory and reports sizes only; --list
+ * also names every file kept out of the bundles.
  * Undo: put each module.json back from the repo (or delete the folder and deploy again).
  */
 import { createRequire } from "node:module";
@@ -61,29 +62,39 @@ export function sharedFiles(files) {
     }
     edges.set(f, out);
   }
-  // which modules reach each rules core file, through rules core files only
-  const reach = new Map();
-  for ( const f of files ) {
-    if ( pkgOf(f) === RULES_PKG ) continue;
-    const from = pkgOf(f), queue = (edges.get(f) ?? []).filter(t => pkgOf(t) === RULES_PKG);
-    while ( queue.length ) {
-      const t = queue.pop();
-      const set = reach.get(t) ?? new Set();
-      if ( set.has(from) ) continue;
-      set.add(from);
-      reach.set(t, set);
-      for ( const n of edges.get(t) ?? [] ) if ( pkgOf(n) === RULES_PKG ) queue.push(n);
+  // which modules reach each rules core file, through rules core files only. A file loaded from its own path (one in
+  // `shared`) counts as a reacher of its own, so what it imports is never also copied into a bundle. Repeat until
+  // nothing new is shared, since a newly shared rules core file passes that on to the files it imports.
+  let owner, grew = true;
+  while ( grew ) {
+    grew = false;
+    const reach = new Map();
+    for ( const f of files ) {
+      const raw = shared.has(f);
+      if ( pkgOf(f) === RULES_PKG && !raw ) continue;
+      const from = raw ? `raw:${f}` : pkgOf(f), queue = (edges.get(f) ?? []).filter(t => pkgOf(t) === RULES_PKG);
+      while ( queue.length ) {
+        const t = queue.pop();
+        const set = reach.get(t) ?? new Set();
+        if ( set.has(from) ) continue;
+        set.add(from);
+        reach.set(t, set);
+        if ( !shared.has(t) ) for ( const n of edges.get(t) ?? [] ) if ( pkgOf(n) === RULES_PKG ) queue.push(n);
+      }
     }
-  }
-  const owner = new Map();
-  for ( const [f, set] of reach ) {
-    if ( set.size === 1 ) owner.set(f, [...set][0]);
-    else shared.add(f);
-  }
-  // a module file a rules core file imports is shared unless that rules file is bundled into the same module
-  for ( const [f, out] of edges ) {
-    if ( pkgOf(f) !== RULES_PKG ) continue;
-    for ( const to of out ) if ( pkgOf(to) && pkgOf(to) !== RULES_PKG && owner.get(f) !== pkgOf(to) ) shared.add(to);
+    owner = new Map();
+    for ( const [f, set] of reach ) {
+      const only = [...set][0];
+      if ( set.size === 1 && !only.startsWith("raw:") ) owner.set(f, only);
+      else if ( !shared.has(f) ) { shared.add(f); grew = true; }
+    }
+    // a module file a rules core file imports is shared unless that rules file is bundled into the same module
+    for ( const [f, out] of edges ) {
+      if ( pkgOf(f) !== RULES_PKG ) continue;
+      for ( const to of out ) {
+        if ( pkgOf(to) && pkgOf(to) !== RULES_PKG && owner.get(f) !== pkgOf(to) && !shared.has(to) ) { shared.add(to); grew = true; }
+      }
+    }
   }
   return {shared, owner};
 }
@@ -136,5 +147,6 @@ for ( const m of mods ) {
 }
 for ( const r of report ) console.log(`${r.module}: ${r.inputs} files, ${r.srcKB} KB -> ${r.outKB} KB in ${r.files} file(s), ${r.startKB} KB at start`);
 console.log(`Kept out of bundles (imported across packages): ${shared.size} file(s).`);
+if ( args.includes("--list") ) for ( const f of [...shared].map(x => relative(root, x).split(sep).join("/")).sort() ) console.log(`  ${f}`);
 const tot = report.reduce((a, r) => [a[0] + r.srcKB, a[1] + r.outKB, a[2] + r.startKB], [0, 0, 0]);
 console.log(`Total: ${tot[0]} KB of source -> ${tot[1]} KB, ${tot[2]} KB loaded at start.${check ? " (check only, nothing written)" : ""}`);
