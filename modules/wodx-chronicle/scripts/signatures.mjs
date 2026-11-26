@@ -41,27 +41,27 @@ const clanNames = a => { const s = a?.system ?? {}; return [a?.flags?.["wodx-act
 
 export function registerSignatureSettings() {
   game.settings.register(MODULE_ID, "sigVampire", {
-    name: "Clan features (Vampire)", hint: "Each clan's own feature: the Toreador's Muse, the Setite's Corruption ledger, the Brujah's Cause, the Gangrel's marks, the Malkavian's glimpses, the Tzimisce's soil, the Lasombra's empty frame, the Ravnos vice, the Caitiff's odd gifts, the Nosferatu's secrets, the Tremere Pyramid, the Ventrue's influence, Assamite contracts, the Giovanni's bound dead, the bloodlines and Laibon legacies, ghouls and revenant families. Off by default.",
+    name: "Clan features (Vampire)", hint: "Turns on each clan's own feature, like the Toreador's Muse or the Brujah's Cause.",
     scope: "world", config: true, type: Boolean, default: false
   });
   game.settings.register(MODULE_ID, "sigWerewolf", {
-    name: "Tribe, auspice and breed features (Werewolf)", hint: "Each tribe's, auspice's and breed's own feature, stacked: the Black Fury's guarded place, the Child of Gaia's truce, the Shadow Lord's leverage, the Silver Fang's madness, the Stargazer's sky, the Galliard's and Fianna's tales, the Philodox's ruling, the Ahroun first into battle, the metis deformity, Kinfolk, the lost tribes and the other Changing Breeds and the Beast Courts. Off by default.",
+    name: "Tribe, auspice and breed features (Werewolf)", hint: "Turns on each tribe's, auspice's and breed's own feature.",
     scope: "world", config: true, type: Boolean, default: false
   });
   game.settings.register(MODULE_ID, "sigMage", {
-    name: "Tradition, Craft and Convention features (Mage)", hint: "Each group's own feature, with the old names of each age: the Akashic dawn, Euthanatos mercy and Jhor, Hermetic certamen and the Houses, the Watchers of the New World Order, Syndicate leverage, Taftani djinn, the Sisters' oaths, the Celestial Masters' charts, the Nephandi's corruption and the rest. Off by default.",
+    name: "Tradition, Craft and Convention features (Mage)", hint: "Turns on each mage group's own feature, with the names it had in each age.",
     scope: "world", config: true, type: Boolean, default: false
   });
   game.settings.register(MODULE_ID, "sigChangeling", {
-    name: "Kith, seeming and court features (Changeling)", hint: "Each kith's, seeming's, court's and sidhe House's own feature, stacked: the Satyr's and Clurichaun's revels, the Pooka's lies, the Selkie's coat, troll and sidhe oaths, the court that holds power by the season, the Inanimae, Nunnehi, Thallain and Hsien. Off by default.",
+    name: "Kith, seeming and court features (Changeling)", hint: "Turns on each kith's, seeming's, court's and House's own feature.",
     scope: "world", config: true, type: Boolean, default: false
   });
   game.settings.register(MODULE_ID, "sigAuto", {
-    name: "Features give their points by themselves", hint: "A feature's Willpower, Rage, Glamour, Renown or Chi, a boon or a breach record is given as soon as it is earned, with Undo on the card, instead of a button for the Storyteller (through the approval queue when no Storyteller is connected).",
+    name: "Features give their points by themselves", hint: "Points and records a feature earns are given at once, with Undo, instead of waiting for the Storyteller.",
     scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MODULE_ID, "sigWraith", {
-    name: "Guild and legion features (Wraith)", hint: "Each Guild's, legion's and faction's own feature, picked in the feature window, with the legion suggested by the manner of death: the Oracles' riddles, the Pardoners' confessions, the Emerald luck, the Penitent ear, the Grim Legion's fighting and the rest. Off by default.",
+    name: "Guild and legion features (Wraith)", hint: "Turns on each Guild's, legion's and faction's own feature for wraiths.",
     scope: "world", config: true, type: Boolean, default: false
   });
   const SMALL_HINTS = {hunter: "Each creed's own feature (the imbued from 1999), mortal hunters to 1998, the Inquisition, the Arcanum and the agencies.",

@@ -187,7 +187,7 @@ function onChange(a) {
   go?.catch?.(e => console.error(`${MODULE_ID} | roads`, e));
 }
 export function registerRoadSettings() {
-  game.settings.register(MODULE_ID, "podRoads", {name: "Transcendence, the Road Back and Redemption", hint: "The long roads out for wraiths (the Eight Truths), the Kuei-jin (bodhisattva and arhat by Dharma) and demons (Torment 0). The Storyteller approves each end; leaving the chronicle fades the character from the map.", scope: "world", config: true, type: Boolean, default: true});
+  game.settings.register(MODULE_ID, "podRoads", {name: "Transcendence, the Road Back and Redemption", hint: "The final roads out of the game for wraiths, Kuei-jin and demons. The Storyteller approves each end.", scope: "world", config: true, type: Boolean, default: true});
 }
 export function registerRoadHooks() {
   const actor = id => game.actors.get(id);

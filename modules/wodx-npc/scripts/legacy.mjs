@@ -35,7 +35,7 @@ const lineOf = a => api()?.hearts?.lineOf?.(a) ?? "mortal";
 
 export function registerSettings() {
   game.settings.register(MOD, "sceneIdeas", {scope: "world", config: true, type: Boolean, default: true,
-    name: "Scene ideas from ties", hint: "Once a game week, the Storyteller gets one approval card of scenes the ties suggest: boons called in, hostages, feuds boiling over, families objecting, descendants asking questions."});
+    name: "Scene ideas from ties", hint: "Once a game week, the Storyteller gets scenes the characters' ties suggest: debts called in, feuds, family trouble."});
   game.settings.register(MOD, "sceneIdeasWeek", {scope: "world", config: false, type: Number, default: -1});
 }
 const on = k => { try { return !!game.settings.get(MOD, k); } catch (e) { return false; } };

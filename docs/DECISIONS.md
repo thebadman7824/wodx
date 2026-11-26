@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B8140
+Next free block: B8150
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -482,6 +482,7 @@ Next free block: B8140
 | B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
 | B8120-B8129 | Inventory desk picks: starting kit, NPC things at first meeting, drop and pick up with icons (used B8120-B8122) | Creation, Actions, Interactables, Sheets |
 | B8130-B8139 | Fewer merge train ejects: push guard, review-list fragments, conflicts the train settles, label on green (used B8130-B8134) | tools (git hooks, release, pcq) |
+| B8140-B8149 | Solo test fixes part 4: what fits, region lifepath, plain settings, NPC pace, 1197 clothing (used B8140-B8144) | Actions, Creation, Combat, NPC, Library, Chronicle, Senses, Sheets, Solo, Storyteller and others (setting hints) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16958,3 +16959,28 @@ the hook because merge-stamp set core.hooksPath in the runner's clone.
 
 Reverse: drop `--no-verify` from the pushes in tools/pcq/train.mjs and `--first-parent` from newMessages in
 tools/git-hooks/pre-push.mjs.
+
+## B8140. Menus show what fits (2026-11-26)
+WoDX Actions. The quick check menu leaves out a check the character could not make: a check with a first year (computer use from 1950) is hidden before it, and the exorcism and domain checks show only for a character whose traits fit them. The Storyteller still sees every check. Desk pick d2504, issue #2504.
+
+Reverse: drop the fitsYear filter in quickCheck and the two FITS rows.
+
+## B8141. A lifepath fits the character's land (2026-11-26)
+WoDX Creation. A lifepath option tied to Moravia or a Czech place is hidden when the character has a region flag for another land. Options with no region show everywhere. Desk pick d2505b, issue #2505.
+
+Reverse: let optionShown return true for every option.
+
+## B8142. Setting hints in one plain line (2026-11-26)
+All modules. About 110 long setting hints are cut to one plain line that says what the setting does; the detail stays in the docs. Desk pick d2503, part of issue #2503 (action and card texts follow).
+
+Reverse: restore the old hint texts from git history.
+
+## B8143. NPCs move a believable distance, in and out of a fight (2026-11-26)
+WoDX Combat and NPC. In a fight, the Storyteller's drag of an NPC stops at the running speed, as a player's does; holding Alt moves it further. Out of a fight, a routine walk covers what the walking pace (V20 Dark Ages p. 333, 7 yards a turn) reaches in the seconds the clock moved, a turn being three seconds (p. 343), and goes on at the next tick. A reaction (an alarm, a call, walking up to someone, a chase) goes three turns at a run, as running away already did. The owner picked "both" on 26 Nov. Issue #2485.
+
+Reverse: pass no yards to walkTo and walkToRegion, and drop the gmHand check in the movement limit.
+
+## B8144. The clothes of 1197 Central Europe (2026-11-26)
+WoDX Library and Creation. 22 garments the goods list lacked: braies, a coif, leg wraps, a dyed tunic, the bliaut, a corded mantle, a ring brooch, a shoulder hood, felt and straw hats, the pointed Jewish hat, ankle and riding boots, a fur-lined over-tunic, a sheepskin coat, a linen veil, a silk headband, Slavic temple rings, a tablet-woven belt, hose garters, an alb and a work smock. Each carries station, style and material tags and WoDX's own description. Before 1800 a starting kit picks the period's own clothes before the loosely dated borrowed list. The owner's Tags desk note, 26 Nov.
+
+Reverse: remove the 22 rows and the year preference in suggestKit.

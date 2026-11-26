@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.112.0 (NPC pace out of a fight (B8143, #2485): routine walks cover what the walking pace reaches in the time the clock moved (V20 Dark Ages p. 333 and p. 343) and pick up the rest at the next tick; alarms, calls and walking up to someone go three turns at a run. Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.111.0 (Relationships: a Ledger entry come due marks its tie (B7838))
 - 0.110.0 (The look card shows what the looking character knows of them (B8094))
 - 0.109.2 (A character the NPC has fought now counts as met in the Storyteller's "How they regard the characters" on the NPC's Relationships tab, so "Fought them" shows after a fight with a stranger; before, it still said the NPC had met no player's character (#2567))

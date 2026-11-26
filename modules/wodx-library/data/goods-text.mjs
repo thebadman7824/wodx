@@ -225,6 +225,28 @@ a hide cloak | A cloak of tanned animal hide, fur side in, tied at the throat wi
 a folded wool cloak | A wool cloak with a pin at the shoulder, used as a blanket at night.
 a linen shift | A plain linen undergarment, worn next to the skin.
 a coarse wool tunic | A knee-length tunic of rough undyed wool, belted at the waist. It is everyday wear for peasants and townsfolk.
+a pair of linen braies | Loose linen underdrawers tied at the waist with a cord. The legs are tucked into the hose or left to hang to the knee.
+a linen coif | A close linen cap that covers the ears and ties under the chin. It is worn under a hat or a hood, or on its own at work.
+a pair of wool leg wraps | Long strips of wool wound from ankle to knee over the hose. Country folk keep their shins warm and dry with them.
+a dyed wool tunic | A tunic of good, close-woven wool dyed a strong colour, with a band of braid at the neck and the cuffs.
+a laced bliaut | A long, fitted gown laced tight at the sides, with sleeves that widen into hanging cuffs. It is the court fashion of the day, for those who never work in their clothes.
+a long mantle with a cord | A half-circle cloak of fine cloth, often lined in a second colour, held across the chest by a cord between two clasps.
+a bronze ring brooch | A flat ring of bronze with a pin across it, pushed through the cloth to close a cloak or the slit at the neck of a shift.
+a wool shoulder hood | A wool hood joined to a short cape over the shoulders. It keeps the rain off on the road and comes down indoors.
+a brimmed felt hat | A hat of pressed wool felt with a round crown and a brim against sun and rain. Travellers and pilgrims wear them.
+a broad straw hat | A wide hat of plaited straw for long harvest days in the open fields.
+a pointed Jewish hat | A tall cone of a hat with a knob or a short spike at the top. Jewish men in the lands of the Empire wear it by their own custom.
+a pair of ankle boots | Turned leather boots that close over the ankle with a toggle or a thong. They hold up better than shoes on a muddy road.
+a pair of tall riding boots | Soft leather boots that reach the knee, cut for the saddle. Few who go everywhere on foot can afford them.
+a fur-lined over-tunic | A loose wool over-tunic lined with squirrel or marten, warm enough for a stone hall in winter.
+a sheepskin coat | A long, heavy coat of tanned sheepskin worn with the fleece inside. In a hard winter half the village wears one.
+a linen veil | A length of linen draped over the hair and the shoulders. Married women cover their hair with one out of doors.
+a silk headband | A narrow band of silk, sometimes worked with gold thread, worn round the brow to hold a veil in place.
+a pair of temple rings | Two silver rings with one end beaten into an S-shaped loop, hung at the temples from a band or worked into the hair. Slavic women have worn them for generations.
+a tablet-woven belt | A narrow belt woven on cards in a close pattern of colours, with a metal tip at one end.
+a pair of hose garters | Two cloth ties that hold woollen hose up below the knee.
+a linen alb | A long white linen robe that a priest wears under the vestments at Mass.
+a hemp work smock | A loose smock of rough hemp cloth, pulled on over the clothes for dirty work.
 a pair of woollen hose | A pair of woollen leggings, tied to the belt with laces.
 a hood with a long tail | A hood with a short cape and a long tail hanging down the back.
 a pair of leather shoes | A pair of shoes of turned leather, sewn inside out and reversed. They wear through in a season.

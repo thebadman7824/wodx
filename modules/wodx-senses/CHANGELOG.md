@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.15.8 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.15.7 (The api tells other modules whether a point is indoors, for WoDX Solo's sight in the dark (B8096))
 - 0.15.6 (Fixes from the first solo test (B8039): a solo arrival's sheet not yet marked ready counts as still being made for the senses' cues (#2473))
 - 0.15.5 (Final audit fixes. Sense Wyrm used to read only the fomor mark, so a person tainted by Otherworlds' Wyrm corruption showed nothing, even though the corruption card says Sense Wyrm finds them. Correspondence sight read the old single destination of a Teleport Token region, so it missed every WoDX way, which keeps a set of destinations (B6790, B6791))

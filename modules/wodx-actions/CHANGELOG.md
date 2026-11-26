@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.132.0 (Show what fits (B8140, #2504): the quick check menu leaves out checks the character could not make in this year, and the exorcism and domain checks only show for a character with the trait. Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 3.131.0 (Mage 20th: How Do You DO That?'s named feats and techniques as Cast window presets, with their page (B7837))
 - 3.130.0 (Mage 20th: the core book's rotes, Adjustments and Procedures as Cast window presets, with their page (B7836))
 - 3.129.0 (The NPC menu asks WoDX Creation to fill an NPC who carries nothing (B8121); Action priority (B8097): feeding, being fed from and trading take a character up, and a lesser action waits until it ends)

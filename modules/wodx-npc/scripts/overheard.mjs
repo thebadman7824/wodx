@@ -32,7 +32,7 @@ export function build(ctx) {
 
   function registerSettings() {
     game.settings.register(MOD, "overheard", {name: "NPCs talk among themselves (overheard)",
-      hint: "Two NPCs standing together now and then say a line each: a rumour, talk of the times, a price at the market, the watch, a faction, a feast, the weather, work, in words of the place and the year. A character in earshot gets it as a whisper. Off for a scene in the Overheard talk window.",
+      hint: "NPCs standing together now and then talk, and a character close enough overhears.",
       scope: "world", config: true, type: Boolean, default: false});
     game.settings.register(MOD, "overheardEarshot", {name: "Overheard talk: earshot, in squares", hint: "How far from either speaker a character can stand and still hear them.",
       scope: "world", config: true, type: Number, default: OR.DEFAULTS.earshot, range: {min: 1, max: 12, step: 1}});

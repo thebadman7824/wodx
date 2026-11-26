@@ -669,7 +669,7 @@ Hooks.once("init", async () => {
   });
   game.settings.register(MOD, "sheetLook", {
     name: "Sheet look",
-    hint: "WoDX gives each line's sheets their own fonts, paper and section rules, in light and dark mode. The system's look brings back the fonts and banners that come with the World of Darkness system.",
+    hint: "Gives each line's sheets their own fonts and paper. The system's look brings back the World of Darkness system's own.",
     scope: "world", config: true, type: String, default: "wodx",
     choices: { wodx: "WoDX line skins", system: "The system's own look" },
     onChange: skinOn
@@ -685,6 +685,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.26.0", extras: X, rules: SR, sheetFor, viewFor, skins: { loaded: SK.loaded, linesOf: SK.linesOf, load: SK.load, report: SK.report }, sheetRollMods: SROLL.modsFor,
+  game.modules.get(MOD).api = { version: "0.26.1", extras: X, rules: SR, sheetFor, viewFor, skins: { loaded: SK.loaded, linesOf: SK.linesOf, load: SK.load, report: SK.report }, sheetRollMods: SROLL.modsFor,
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything, bringForward: AN.bringForward, undoForward: AN.undoForward } };
 });

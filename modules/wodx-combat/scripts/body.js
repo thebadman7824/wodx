@@ -178,10 +178,10 @@ async function clearWound(actor, part) { await actor.setFlag(MOD, "wounds", B.cl
 
 export function setupBody() {
   game.settings.register(MOD, "hitLocations", {name: "Hit locations (house rule)",
-    hint: "Every attack lands on a part of the body: the attacker may aim at a part (the book's aimed-attack difficulty for its size) or the blow lands at random by size. A heavy blow to a limb or eye offers the Storyteller a maiming. Parts have no health of their own.",
+    hint: "Each hit lands on a part of the body, aimed or at random, and a heavy blow can maim.",
     scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "bodyGear", {name: "Gear comes off in shapes that cannot use it (house rule)",
-    hint: "When a character takes a shape without hands, weapons in hand drop; in a shape that cannot wear armor, armor comes off. Dedicated items stay. Each change posts an Undo card.",
+    hint: "A character who changes into a shape without hands drops what they hold, and armor that no longer fits comes off.",
     scope: "world", config: true, type: Boolean, default: true});
   const later = actor => setTimeout(() => checkShape(actor).catch(e => console.warn("WoDX Combat | body", e)), 50);
   Hooks.on("wodxFormChanged", actor => later(actor));

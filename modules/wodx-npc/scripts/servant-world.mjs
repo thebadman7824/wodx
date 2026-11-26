@@ -30,7 +30,7 @@ const card = (title, html, flags = {}) => ChatMessage.create({speaker: {alias: "
   content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><b>${esc(title)}</b></p>${html}</div></div>`});
 
 export function registerSettings() {
-  game.settings.register(MOD, "npcKeepers", {name: "NPC masters keep servants", hint: "Once a month of world time, NPC vampires, mages, Garou, demons, wraiths, mummies, Kuei-jin and changelings keep servants the way their line does in that era, from the unbound mortals near them. The Storyteller gets a card and can undo it.",
+  game.settings.register(MOD, "npcKeepers", {name: "NPC masters keep servants", hint: "Each month, supernatural NPCs take servants from the mortals near them, as their kind does in that era.",
     scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "keeperTurn", {scope: "world", config: false, type: Number, default: 0});
 }

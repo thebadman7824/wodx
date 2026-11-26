@@ -263,7 +263,7 @@ const soon = () => { clearTimeout(timer); timer = setTimeout(() => check().catch
 
 export function setup() {
   game.settings.register(MOD, "anachronism", {
-    name: "Anachronism check", hint: "When the clock jumps a year or more, or the era changes, tell the Storyteller which possessions of the player characters, and which things on the maps, are out of their time. Automatic: on, except in the Live world.",
+    name: "Anachronism check", hint: "When time jumps or the era changes, tells the Storyteller which things are out of their time.",
     scope: "world", config: true, type: String, default: "auto", choices: {auto: "Automatic", on: "On", off: "Off"}
   });
   game.settings.register(MOD, "anachronismAt", {scope: "world", config: false, type: Object, default: {}});
