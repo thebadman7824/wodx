@@ -476,7 +476,7 @@ Next free block: B8110
 | B7980-B7989 | gates: gatemarketgoods scenes by name, gate7b runner back at its start before the path steps (used B7980-B7981) | tools (gates) |
 | B8000-B8009 | The New PC drives the merge train, the Main PC is its backup (used B8000) | tools |
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
-| B8020-B8029 | Book overlap: the matches the daily gate found after the late Wraith OCR (used B8020-B8024) | Actions, Library, Otherworlds, tools (books) |
+| B8020-B8029 | Book overlap: the matches from the first full check against all 1,644 books (used B8020-B8025) | Actions, Chronicle, Creation, Library, Storyteller, docs, tools (books) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
 | B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
 <!-- decision-index:end -->
@@ -16587,6 +16587,11 @@ Reverse: take the Book overlap step out of tools/quality-check.sh and switch off
 All modules. The first daily overlap gate run (26 Nov, main 06d57d9) found 4 distinct runs against Wraith books whose text arrived after B8020: three prose lines (realm-places.mjs, arcanoi-gw.json, wr20.json) are now in WoDX's own words, and the fourth is the title of a novel (in world-history.mjs and four era-timelines research files), so its hash goes on the allowlist (B8022).
 
 Reverse: revert the commit; remove the hash noted "novel title" from tools/books/overlap-allow.json.
+
+## B8025. Matches from the full 1,644-book check are reworded or allowlisted (2026-11-26)
+All modules. The Secondary PC ran the overlap gate against every oWoD book (26 Nov, main 06d57d9) and found 52 distinct runs. 4 were already fixed by B8024. 32 were prose and are now in WoDX's own words, in 35 files (including the encyclopedia, Gift and power data, rules scripts, docs/DECISIONS.md and the era-timelines research files). 16 were names, trait or Ability lists, a stat line and two cost tables, so their hashes go on the allowlist (B8022), each noted with B8025.
+
+Reverse: revert the commit; remove the hashes noted B8025 from tools/books/overlap-allow.json.
 
 ## B8030. Report a problem sits outside the panel's fold (2026-11-25)
 WoDX Solo. The solo panel draws Report a problem as its own button under the main one, not in the folded More part, so a player who meets a fault can press it at once (#2467). The fold's summary no longer lists it.
