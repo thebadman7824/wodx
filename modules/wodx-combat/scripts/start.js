@@ -31,7 +31,7 @@ const recent = new Map();
 export function registerStartSettings() {
     game.settings.register(MOD, "fightStart", {
         name: "Start fights by themselves",
-        hint: "When a hostile NPC sees a character, guards on alarm see an intruder, a Reaction region's response is Fight, someone frenzies, an attack is made outside a fight, or a door or region outcome says fight. Suggest whispers you a card with Start the fight; Auto starts it with Undo. Light-touch mode keeps it at Suggest.",
+        hint: "Starts a fight, or offers to, when an enemy spots a character, an attack is made, or someone frenzies.",
         scope: "world", config: true, type: String, default: "suggest", choices: S.MODES
     });
     game.settings.register(MOD, "fightSightYards", {

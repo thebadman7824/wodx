@@ -499,7 +499,7 @@ export function setupMovement(deps) {
   D = deps;
   game.settings.register(D.MOD, "movementModes", {
     name: "Flying, swimming, climbing and other ways of moving",
-    hint: "Fly, Through walls and Into the ground only for those with a power or form that grants it; speeds for each way of moving in a fight, the mount's own pace for whoever holds the reins; deep and shallow water regions (name a region \"WoDX: Deep water\", a river or a lake), with breath and drowning in a fight; a fall when flight ends in the air; Earth Meld hides the token; height counts in range and reach; worn armor and a burden slow a swimmer, and gear past half of what Strength lifts slows a dodge and stealth on land (past all of it, half speed). Most speeds are house rules.",
+    hint: "Each way of moving (walk, swim, fly, climb, ride) has its own speed and needs the power or skill for it. Deep water can drown, and a heavy load slows.",
     scope: "world", config: true, type: Boolean, default: true
   });
   try { configureActions(); } catch (e) { console.warn("WoDX | movement actions", e); }
