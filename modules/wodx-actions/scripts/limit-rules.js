@@ -45,7 +45,7 @@ export const LIMITS = [
   {disc: "dementation", per: "night", target: true, page: "VtDA p. 213", why: "each level of Dementation works once a night on one victim"},
   {name: "unburden-the-bestial-soul", per: "night", target: true, onFail: true, page: "VtDA p. 261", why: "after a failed try the Salubri cannot try again on that soul until the next night"},
   {name: "compel-soul", per: "night", target: true, onFail: true, family: "necromancy", page: "VtDA p. 287",
-    why: "a ghost that beats Compel Soul is safe from all the vampire's Necromancy for the rest of the night"},
+    why: "a ghost that beats Compel Soul cannot be touched by any of that vampire's Necromancy until the night ends"},
   {name: "strength-of-will", per: "scene", page: "W20 p. 172; WtDA p. 127", why: "Strength of Will works once a scene"},
   {name: "fair-fortune", per: "scene", page: "W20 p. 179", why: "Fair Fortune works once a scene"},
   {name: "might-of-thor", per: "scene", page: "W20 p. 181; WtDA p. 133", why: "Might of Thor works once a scene"},
