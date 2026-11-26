@@ -222,7 +222,7 @@ async function onSocket(p) {
 export function setupVehicles(deps) {
   D = deps;
   game.settings.register(D.MOD, "vehicleCombat", {
-    name: "Fighting in and around vehicles (Durability, ramming)",
+    name: "Fighting in and around vehicles",
     hint: "People inside a closed vehicle are shielded from attacks, vehicles can be wrecked, and the driver can ram.",
     scope: "world", config: true, type: Boolean, default: true
   });

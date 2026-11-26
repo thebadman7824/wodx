@@ -30,9 +30,9 @@ const card = (title, body) => `<div class="wodx-card wodx-crossing"><h3>${esc(ti
 const diceLine = d => d.length ? `<span class="wodx-quiet">(${d.join(", ")})</span>` : "";
 
 export function registerRealmSettings() {
-  game.settings.register(MODULE_ID, "avatarStorm", {name: "The Avatar Storm", hint: "By the date follows the chronicle's dated events (the Avatar Storm fires in 1999 on the classic branch). M20 calls the Storm optional.",
+  game.settings.register(MODULE_ID, "avatarStorm", {name: "The Avatar Storm", hint: "By the date: the Storm comes when the chronicle reaches it (1999). Or set it raging, fading, or as if it never happened.",
     scope: "world", config: true, type: String, choices: RR.STORM_MODES, default: "auto"});
-  game.settings.register(MODULE_ID, "layerSound", {name: "Sound of the other worlds", hint: "Plays a world's sound loop on this computer when your token is in the Penumbra, Shadowlands, Dreaming or Net. WoDX ships no loops yet: nothing plays until penumbra.ogg, shadowlands.ogg, dreaming.ogg or net.ogg is put in that folder.",
+  game.settings.register(MODULE_ID, "layerSound", {name: "Sound of the other worlds", hint: "Plays a sound loop on this computer when your token is in another world. WoDX ships no loops yet: nothing plays until penumbra.ogg, shadowlands.ogg, dreaming.ogg or net.ogg is added.",
     scope: "client", config: true, type: Boolean, default: true, onChange: () => layerSoundSoon()});
   game.settings.register(MODULE_ID, "layerVolume", {name: "Volume of the other worlds", scope: "client", config: true, type: Number, range: {min: 0, max: 1, step: 0.05}, default: 0.4, onChange: () => layerSoundSoon(true)});
   game.settings.register(MODULE_ID, "layerRoot", {name: "Folder of the other worlds' loops", hint: "In the Data folder: penumbra.ogg, shadowlands.ogg, dreaming.ogg and net.ogg. A missing file plays nothing.",
