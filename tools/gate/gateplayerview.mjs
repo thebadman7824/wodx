@@ -186,7 +186,9 @@ async function runGate(K) {
     nw?.querySelector("button[data-i]")?.click(); await sleep(2000);
     const cards = game.messages.contents.slice(before);
     ok("17. what can I do now", onBarFull && onBarBeg && moment1 === "scene" && labels1.includes("Look around") && stuckN === 3 && cards.length === 1,
-      {onBarFull, onBarBeg, moment1, labels1, stuckN, cards: cards.length});
+      // B7983: name each card, so an extra one (nightly 2565 saw 2) says where it came from
+      {onBarFull, onBarBeg, moment1, labels1, stuckN, cards: cards.length, which: cards.map(m => ({alias: m.speaker?.alias ?? null, flavor: String(m.flavor ?? "").slice(0, 60),
+        text: String(m.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 100), roll: !!m.rolls?.length, flags: Object.keys(m.flags ?? {})}))});
     for ( const m of cards ) await m.delete();
     let fight = null;
     try {

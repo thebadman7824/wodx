@@ -480,11 +480,13 @@
     },
     "shown": {
      "what": "a trade window from With this person with the prices, haggling and the goods moving between sheets"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetradebuy.mjs",
+     "step": "1. Buy from them, then Deal: the good moves to the character's sheet and the price changes purses"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -763,11 +765,13 @@
     },
     "shown": {
      "what": "the summoned being's token on the map with its time left, gone when it ends"
+    },
+    "gated": {
+     "gate": "tools/gate/gatesummontime.mjs",
+     "step": "1. called for an hour: on the canvas, then gone once the clock passes it"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -1033,11 +1037,13 @@
     },
     "shown": {
      "what": "edges in the action window with Conviction spent and risked on the card"
+    },
+    "gated": {
+     "gate": "tools/gate/gatesecondsight.mjs",
+     "step": "1. Spend 1 Conviction for second sight: the sheet's Conviction falls by one"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker, or no gate covers it)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -1555,6 +1561,70 @@
     22,
     1023
    ]
+  },
+  {
+   "id": "actions.orpheus-stains",
+   "name": "Orpheus: the Stains, called up at will from Spite",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/orpheus-stains.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2590,
+     "decisions": "B7832"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/orpheus.js:stain"
+    },
+    "shown": {
+     "what": "the Stain window from the Orpheus menu and the sheet; its weapon on the sheet and its timed effect on the token while it shows"
+    },
+    "gated": {
+     "gate": "tools/gate/gatestainclaws.mjs",
+     "step": "1. Call up a Stain, Claws, two Spite: Claws (Stain) on the sheet"
+    }
+   },
+   "open": [
+    "book: Orpheus pp. 195-199; summaries read from the book text, not yet checked line by line"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": [
+    2590
+   ]
+  },
+  {
+   "id": "actions.orpheus-spectres",
+   "name": "Orpheus: a Spectre's Thorns and Horrors, from Spite tapped",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/orpheus-spectres.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7833"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/orpheus.js:spectre"
+    },
+    "shown": {
+     "what": "the Spectre window from the Orpheus menu; its Thorn on the sheet and a scene-long Horror as a timed effect on the token"
+    },
+    "gated": {
+     "gate": "tools/gate/gatespectrethorn.mjs",
+     "step": "1. Thorn: Claws, Use it: Claws (Thorn) on the sheet"
+    }
+   },
+   "open": [
+    "book: Orpheus pp. 267-269; summaries read from the book text, not yet checked line by line"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
   },
   {
    "id": "actions.infernal-pacts",

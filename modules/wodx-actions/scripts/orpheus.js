@@ -8,6 +8,8 @@
  *   Harm           wounds to a spook's Vitality (a skimmer's body takes bashing instead); zero Vitality and Willpower
  *   Spite          where it stands against the starting Vitality; points from cruelty; a tether severed
  *   Projection     a skimmer's hours outside the body
+ *   A Stain        called up at will from Spite 4 (B7832): Spite points tapped, a die each against 7, the turns it shows,
+ *                  its Ward, Boost or Blessing on the effects card, its natural weapon on the sheet while it lasts
  *
  * Built by main.js with its helpers (ctx). Pure rules: orpheus-rules.js.
  */
@@ -19,6 +21,8 @@ import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as OH from "./orpheus-horrors.js";
+import * as OS from "./orpheus-stains.js";
+import * as OX from "./orpheus-spectres.js";
 import * as EF from "./effects.js";
 
 const MOD = "wodx-actions";
@@ -203,6 +207,124 @@ export function build(ctx) {
             return post(actor, `${actor.name} is hurt`, body + `<div class="vta-note">${esc(cap(O.visibility(info(actor).vitality.now).text))}.</div><div class="wodx-quiet">${REF} pp. 122, 189–192, 237</div>`);
         });
     }
+    /* -- a Stain (B7832) --------------------------------------------------- */
+    /** Take a Stain's natural weapon off the sheet when it fades (the reverter WoDX Chronicle calls). */
+    async function stainEnd(actor, { weaponIds = [] } = {}) {
+        if (!actor?.isOwner) return;
+        const gone = weaponIds.filter(id => actor.items.get(id));
+        if (gone.length) await actor.deleteEmbeddedDocuments("Item", gone);
+    }
+    async function stain(actor) {
+        const i = info(actor);
+        const own = i.stains.map(it => ({ it, key: OS.stainOf(it.name) })).filter(x => x.key);
+        const list = own.length ? own.map(x => [x.key, x.it.name]) : Object.entries(OS.STAINS).map(([k, s]) => [k, s.label]);
+        const content = `<form><p>${line(i)}. ${OS.canCall(i.spite, 1).ok ? "A Stain shows for a turn for each Spite point tapped; each point rolls a die at 7, and a miss adds Spite." : esc(cap(OS.canCall(i.spite, 1).why)) + "."}</p>
+          <div class="form-group"><label>Stain</label><select name="s">${list.map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
+          <div class="form-group"><label>Spite points tapped</label><input type="number" name="p" min="1" max="10" value="1"/></div>
+          <div class="wodx-stain-info vta-note"></div></form>`;
+        const describe = root => {
+            const s = OS.STAINS[root.querySelector("[name=s]")?.value];
+            const box = root.querySelector(".wodx-stain-info");
+            if (box) box.innerHTML = s ? `<b>${esc(s.label)}</b>: ${esc(s.look)}. Gains: ${esc(s.gain)}. Costs: ${esc(s.cost)}. <span class="wodx-quiet">(${REF} ${s.page})</span>` : "";
+        };
+        return dialog(`A Stain: ${actor.name}`, content, "Call it up", async fd => {
+            const key = fd.s, s = OS.STAINS[key], pts = Math.max(1, Math.min(10, n(fd.p)));
+            const ok = OS.canCall(info(actor).spite, pts);
+            if (!s) return null;
+            if (!ok.ok) { notify(`${actor.name}: ${ok.why}.`); return null; }
+            const r = await rollPool(pts, OS.TAP_DIFF);
+            const tap = OS.tapResult((r.roll?.dice?.[0]?.results ?? []).map(x => x.result));
+            const sp = info(actor).spite;
+            let points = sp.points + tap.spite, rating = sp.rating, up = 0;
+            while (points >= 10) { points -= 10; rating += 1; up += 1; }
+            if (tap.spite) await updateActor(actor, { "system.advantages.spite.temporary": points, "system.advantages.spite.permanent": Math.min(10, rating) });
+            let body = rollBlock(`${pts} Spite tapped for ${esc(s.label)}`, r);
+            body += `<div class="vta-big good">${esc(s.label)} shows for ${tap.turns} turn${tap.turns === 1 ? "" : "s"}: ${esc(s.look)}.</div>`;
+            body += `<div class="vta-sec">Gains: ${esc(s.gain)}. Costs: ${esc(s.cost)}.</div>`;
+            body += `<div class="vta-res ${tap.spite ? "bad" : "good"}">${tap.spite ? `+${tap.spite} Spite (${tap.failed} missed${tap.botched ? `, ${tap.botched} botched` : ""}): Spite ${Math.min(10, rating)} (${points} points)${up ? `, ten points make a rating (+${up})` : ""}` : "No Spite added"}.</div>`;
+            // the natural weapon goes on the sheet while it shows, the effects onto the effects card
+            const wd = OS.stainWeapon(key);
+            const made = wd ? await actor.createEmbeddedDocuments("Item", [wd]) : [];
+            const weaponIds = made.map(x => x.id);
+            if (made.length) body += `<div class="vta-res good">${esc(wd.name)} on the sheet while it shows.</div>`;
+            // a turn a point: rounds of the fight, or three seconds a turn of the clock outside one (a turn is three seconds, as elsewhere in WoDX)
+            const T = game.modules.get("wodx-chronicle")?.api ?? null;
+            const lasts = game.combat?.started ? { kind: "rounds", rounds: tap.turns } : { kind: "time", seconds: 3 * tap.turns };
+            try {
+                await T?.applyTimed?.(actor, { name: `Stain: ${s.label}`, img: "icons/svg/blood.svg", description: `${s.look}; ${s.gain}`, duration: lasts,
+                    key: `wodx-orpheus-stain-${key}`, source: `${REF} ${s.page}`, ...(weaponIds.length ? { revert: { key: "wodx-actions.stainEnd", data: { weaponIds } } } : {}) });
+            } catch (e) { console.warn(`${MOD} | stain`, e); body += `<div class="vta-note">Take the Stain off by hand when its turns run out.</div>`; }
+            let fxItems = [];
+            const res = OS.stainResults(key, tap.turns, { name: s.label });
+            if (res.length && EF.isOn()) {
+                const pp = EF.planOf(actor, res, 1, { name: s.label, line: "Orpheus" });
+                body += pp.html;
+                fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+            } else if (!OS.applies(key)) body += `<div class="vta-note">The Storyteller runs what it does from this card.</div>`;
+            body += `<div class="wodx-quiet">${REF} ${s.page}; p. 195</div>`;
+            return post(actor, `${actor.name}: ${s.label}`, body, [r.roll].filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
+        }, { width: 520, render: root => { describe(root); root.querySelector("[name=s]")?.addEventListener("change", () => describe(root)); } });
+    }
+    /* -- a Spectre's arsenal: a Horror from Spite tapped, or a Thorn on the sheet (B7833) -- */
+    async function spectre(actor) {
+        const i = info(actor), sk = `s${LIM.sceneNo()}`, f = flag(actor);
+        const tapped = f.spectreScene === sk ? n(f.spectreTapped) : 0;
+        const opts = [...Object.entries(OX.HORRORS).map(([k, h]) => [`h:${k}`, `Horror: ${h.label}`]), ...Object.entries(OX.THORNS).map(([k, t]) => [`t:${k}`, `Thorn: ${t.label}`])];
+        const content = `<form><p>${esc(actor.name)}: Spite ${i.spite.rating}, ${tapped} tapped this scene; Willpower ${i.willpower.temp}. A Spectre taps its Spite rating and never spends it; past its rating in a scene, each Willpower point buys three more.</p>
+          <div class="form-group"><label>Power</label><select name="w">${opts.map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
+          <div class="form-group"><label>Spite tapped (Horrors)</label><input type="number" name="p" min="0" max="10" value="1"/></div>
+          <div class="form-group"><label>Carapace kind</label><select name="c">${Object.entries(OX.CARAPACE).map(([k, c]) => `<option value="${k}"${k === "scales" ? " selected" : ""}>${esc(c.label)} (+${c.soak} soak)</option>`).join("")}</select></div>
+          <div class="wodx-spectre-info vta-note"></div></form>`;
+        const describe = root => {
+            const [kind, key] = String(root.querySelector("[name=w]")?.value ?? "").split(":");
+            const box = root.querySelector(".wodx-spectre-info");
+            if (!box) return;
+            if (kind === "t") { const t = OX.THORNS[key]; box.innerHTML = t ? `<b>${esc(t.label)}</b>: ${esc(t.text)}. <span class="wodx-quiet">(${REF} ${t.page})</span>` : ""; return; }
+            const h = OX.HORRORS[key], k = n(root.querySelector("[name=p]")?.value);
+            box.innerHTML = h ? `<b>${esc(h.label)}</b> at ${k} Spite: ${esc(OX.horrorLine(key, k))}${h.note ? ` (${esc(h.note)})` : ""}. Lasts ${esc(h.lasts)}. <span class="wodx-quiet">(${REF} ${h.page})</span>` : "";
+        };
+        return dialog(`A Spectre: ${actor.name}`, content, "Use it", async fd => {
+            const [kind, key] = String(fd.w ?? "").split(":");
+            let body = "", fxItems = [];
+            if (kind === "t") {
+                const t = OX.THORNS[key];
+                if (!t) return null;
+                const data = OX.thornItem(key, { kind: fd.c });
+                const had = data && actor.items.find(x => x.getFlag(MOD, "thorn") === key);
+                if (had) await had.delete();
+                const made = data ? await actor.createEmbeddedDocuments("Item", [data]) : [];
+                body = `<div class="vta-big">${esc(t.label)}: ${esc(t.text)}.</div>`
+                    + (made.length ? `<div class="vta-res good">${esc(data.name)} on the sheet.</div>` : `<div class="vta-note">The Storyteller runs it from this card.</div>`)
+                    + `<div class="wodx-quiet">${REF} ${t.page}</div>`;
+                return post(actor, `${actor.name}: ${t.label}`, body, []);
+            }
+            const h = OX.HORRORS[key];
+            if (!h) return null;
+            const rg = OX.tapRange(key), k = Math.max(rg.min, Math.min(rg.max, n(fd.p)));
+            const now = info(actor), plan = OX.tapPlan(now.spite.rating, tapped, k, now.willpower.temp);
+            if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            if (plan.willpower) await updateActor(actor, { "system.advantages.willpower.temporary": now.willpower.temp - plan.willpower });
+            await saveFlag(actor, { spectreScene: sk, spectreTapped: tapped + k });
+            body = `<div class="vta-big bad">${esc(h.label)}, ${k} Spite tapped: ${esc(OX.horrorLine(key, k))}.</div>`;
+            if (h.note) body += `<div class="vta-sec">${esc(cap(h.note))}.</div>`;
+            body += `<div class="vta-res">Spite ${now.spite.rating} stays; ${tapped + k} tapped this scene${plan.willpower ? `, ${plan.willpower} Willpower spent to go past the rating` : ""}. Lasts ${esc(h.lasts)}.</div>`;
+            if (h.lasts === "the scene") {
+                const T = game.modules.get("wodx-chronicle")?.api ?? null;
+                try {
+                    await T?.applyTimed?.(actor, { name: `Horror: ${h.label}`, img: "icons/svg/terror.svg", description: OX.horrorLine(key, k), duration: { kind: "scene" },
+                        key: `wodx-orpheus-spectre-${key}`, source: `${REF} ${h.page}` });
+                } catch (e) { console.warn(`${MOD} | spectre`, e); body += `<div class="vta-note">Take the Horror off by hand at the end of the scene.</div>`; }
+            }
+            const res = OX.horrorResults(key, k, { name: h.label });
+            if (res.length && EF.isOn()) {
+                const pp = EF.planOf(actor, res, 1, { name: h.label, line: "Orpheus" });
+                body += pp.html;
+                fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+            } else if (!OX.applies(key)) body += `<div class="vta-note">The Storyteller runs what it does from this card.</div>`;
+            body += `<div class="wodx-quiet">${REF} ${h.page}; p. 267</div>`;
+            return post(actor, `${actor.name}: ${h.label}`, body, [], fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
+        }, { width: 540, render: root => { describe(root); for ( const x of root.querySelectorAll("[name=w], [name=p]") ) { x.addEventListener("change", () => describe(root)); x.addEventListener("input", () => describe(root)); } } });
+    }
     async function spite(actor) {
         const i = info(actor);
         const content = `<form><p>${line(i)}. ${esc(cap(i.state.text))}. Stains may be called up at will from Spite 4.</p>
@@ -300,5 +422,5 @@ export function build(ctx) {
             keywords: NPW.keysOf(OH.horrorResults(key, v, 3, { name: it.name })) })).filter(p => p.keywords.length);
     }
 
-    return { powersFor, restAll, info, horror, vitality, harm, spite, project, setup, isOrpheus, rules: O };
+    return { powersFor, restAll, info, horror, stain, stainEnd, spectre, vitality, harm, spite, project, setup, isOrpheus, rules: O, stains: OS, spectres: OX };
 }

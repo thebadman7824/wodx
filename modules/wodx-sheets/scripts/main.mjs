@@ -162,7 +162,7 @@ function block(key, a) {
     case "apocalypticForm": return { kind: "list", title: "Apocalyptic Form", lines: itemsOf(a, i => i.type === "Trait" && isType(/types\.apocalypticform$/)(i)).map(i => ({ text: i.name, bold: i.system?.ishightorment ? "High Torment:" : "" })), empty: "None yet.", roll: "demonForm", rollLabel: "Take the form" };
     case "hekau": return { kind: "items", title: "Hekau", roll: "mummyCast", rows: fixedRows(a, ["amulets", "alchemy", "celestial", "effigy", "necromancy", "nomenclature"].map(k => [UR.HEKAU[k].label, new RegExp(k.replace(/s$/, ""), "i")]), i => i.type === "Power" && isType(/types\.hekau$/)(i)), empty: "" };
     case "horrors": return { kind: "items", title: "Horrors", roll: "orphHorror", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.horror$/)(i))), empty: "None yet." };
-    case "stains": return { kind: "items", title: "Stains", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.stain$/)(i))), empty: "None." };
+    case "stains": return { kind: "items", title: "Stains", roll: "orphStain", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.stain$/)(i))), empty: "None." };
     case "defaultAbilities": return { kind: "list", title: "Default Abilities", lines: SR.ORPHEUS_DEFAULTS.map(([t, p]) => ({ text: `${t} (${p})` })), empty: "" };
     case "rites": return { kind: "items", title: "Rites", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.(rite|ritual)$/)(i)), false), empty: "None." };
     case "combat": {
@@ -252,7 +252,7 @@ const BUTTONS = {
   demonEvoke: ["fa-fire-alt", "Evoke"], demonForm: ["fa-feather-alt", "Apocalyptic form"], demonReap: ["fa-hand-holding", "Reap Faith"],
   mummyCast: ["fa-ankh", "Hekau"], mummySekhem: ["fa-sun", "Sekhem"], mummyBalance: ["fa-balance-scale", "Balance"],
   kotFeed: ["fa-tint", "Feed on Chi"], kotSpend: ["fa-yin-yang", "Spend Chi"], kotDharma: ["fa-dharmachakra", "Dharma roll"],
-  orphHorror: ["fa-skull", "A Horror"], orphVitality: ["fa-heartbeat", "Vitality"], orphSpite: ["fa-bolt", "Spite"]
+  orphHorror: ["fa-skull", "A Horror"], orphVitality: ["fa-heartbeat", "Vitality"], orphSpite: ["fa-bolt", "Spite"], orphStain: ["fa-biohazard", "A Stain"]
 };
 
 function header(def, a) {
@@ -685,6 +685,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.24.1", extras: X, rules: SR, sheetFor, viewFor, skins: { loaded: SK.loaded, linesOf: SK.linesOf, load: SK.load, report: SK.report }, sheetRollMods: SROLL.modsFor,
+  game.modules.get(MOD).api = { version: "0.24.2", extras: X, rules: SR, sheetFor, viewFor, skins: { loaded: SK.loaded, linesOf: SK.linesOf, load: SK.load, report: SK.report }, sheetRollMods: SROLL.modsFor,
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything, bringForward: AN.bringForward, undoForward: AN.undoForward } };
 });

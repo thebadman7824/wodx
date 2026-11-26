@@ -576,11 +576,13 @@
     },
     "shown": {
      "what": "one Storyteller card naming each character's things and each map thing out of its time, with Keep it and Show me"
+    },
+    "gated": {
+     "gate": "tools/gate/gatekeepanachronism.mjs",
+     "step": "1. Keep it on the card: the sheet's out-of-its-time warning goes"
     }
    },
-   "open": [
-    "gated: every gateanachronism step is a direct call (tools/registry/strength.mjs); no step drives a real clock jump to the card"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [

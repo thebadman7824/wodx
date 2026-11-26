@@ -6,19 +6,19 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 45 | 0 | 4 |
+| wodx-actions | yes | 47 | 0 | 1 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 3 | 0 | 0 |
 | wodx-combat | yes | 16 | 0 | 0 |
 | wodx-creation | yes | 23 | 0 | 1 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
-| wodx-npc | yes | 34 | 0 | 15 |
+| wodx-npc | yes | 34 | 0 | 5 |
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
 | wodx-senses | not yet | 0 | 0 | 0 |
-| wodx-sheets | yes | 20 | 0 | 1 |
+| wodx-sheets | yes | 20 | 0 | 0 |
 | wodx-solo | not yet | 0 | 0 | 0 |
 | wodx-storyteller | not yet | 4 | 0 | 1 |
 | wodx-targeting | not yet | 0 | 0 | 0 |
@@ -44,13 +44,13 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Powers that act each turn while they hold (`actions.timed-powers`) | core | gated |  | gatetimedpowers 1. a Heart Claw takes a lethal level on the bearer's next turn |
 | Rituals and path magic: Thaumaturgy, Necromancy and Koldunic sorcery on the effects card (`actions.rituals-paths`) | core | gated | 1 | gaterituals 2b. a Ward is armour on a weapon blow's soak too |
 | Sins against the Road: the hierarchy of sins, Conscience rolls and the loss of a Road dot (`actions.road-sins`) | core | gated | 2 | gatedasins 1. a lie told through the action window takes a Conscience dot |
-| Summoned beings and the rules every summoning lives by (`actions.summons`) | core | shown | 1 |  |
+| Summoned beings and the rules every summoning lives by (`actions.summons`) | core | gated |  | gatesummontime 1. called for an hour: on the canvas, then gone once the clock passes it |
 | The action window, the profile menus and the WoDX card (`actions.action-window`) | core | gated | 3 | gate6e a card: header, roll, what changed with pips |
 | The actions that make servants: enchantment, oaths, bonds (`actions.servant-actions`) | core | gated |  | gateenchant 1. Enchant from the changeling's Actions menu spends Glamour and binds the mortal |
 | The ghosts of V20 Dark Ages: Passion as blood, manifesting (`actions.ghosts-da`) | core | gated | 1 | gateghostmanifest 1. Manifest from the ghost's Actions menu spends Passion and sets Strength |
 | The odds of a roll before it is made (`actions.odds`) | core | book |  | gatetable odds in the Action window |
 | The sun: where it stands, wall shadows, and damage in sunlight regions (`actions.sunlight`) | core | gated | 1 | gatedaysleep 6. burned in the sun, the marker shows |
-| Trade with one NPC: buy, sell and barter at the prices of the time and place (`actions.trade`) | core | shown | 1 |  |
+| Trade with one NPC: buy, sell and barter at the prices of the time and place (`actions.trade`) | core | gated |  | gatetradebuy 1. Buy from them, then Deal: the good moves to the character's sheet and the price changes purses |
 | Trying again: a failed task tried again is one harder each time (`actions.retry`) | core | gated | 1 | gateretrywindow 1. a failed roll tried again in the action window is one harder |
 | Using a Discipline from the V20 Dark Ages library (`actions.disciplines`) | core | gated | 3 | gatedapowers 2. Creatio Ignis 3 works Campfire at difficulty 6 |
 | Walking a Road as a faith with people in it: rank, Mentor, the Moment of Truth, changing Roads (`actions.road-faith`) | core | gated | 1 | gatedaroad 4. a change of Road to the Road of the Beast |
@@ -65,8 +65,10 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Demonic pacts, infernal investments and the Supplicium (`actions.infernal-pacts`) |  | gated | 1 | gatedainfernal 1. the window records a pact and buys Armor |
 | Fomor powers and spirit Charms (`actions.fomor-charms`) |  | gated | 1 | gatefomor 6. Regeneration closes a lethal level each new round |
 | Mages of the later eras: Arete, Spheres, Paradox and the Quiet (`actions.m20`) |  | gated | 1 | gate6m countermagick: Arete at 7 |
+| Orpheus: a Spectre's Thorns and Horrors, from Spite tapped (`actions.orpheus-spectres`) |  | gated | 1 | gatespectrethorn 1. Thorn: Claws, Use it: Claws (Thorn) on the sheet |
+| Orpheus: the Stains, called up at will from Spite (`actions.orpheus-stains`) |  | gated | 1 | gatestainclaws 1. Call up a Stain, Claws, two Spite: Claws (Stain) on the sheet |
 | Orpheus: Vitality, Spite and the Horrors (`actions.orpheus`) |  | gated | 1 | gate6l a Willpower point for three Vitality |
-| The imbued of Hunter: The Reckoning (1999 on) (`actions.reckoning`) |  | shown | 1 |  |
+| The imbued of Hunter: The Reckoning (1999 on) (`actions.reckoning`) |  | gated |  | gatesecondsight 1. Spend 1 Conviction for second sight: the sheet's Conviction falls by one |
 | The infernal thrall of Dark Ages: Devil's Due: Vice, Resolve, Torment, sins, pacts, rites and Absolution (`actions.thrall`) |  | gated | 1 | gatethrall 2. a planned murder from the window: Conscience fails and a point of Torment |
 | The inner voice: the Beast, the Shadow, Rage and the Impulse played by someone (`actions.voice`) |  | parked |  | gate6d a whisper reaches only the character, the voice and the Storyteller |
 | The Kuei-jin: Chi, Dharma, the P'o and their Disciplines (`actions.kote`) |  | gated | 1 | gate6j Dharma 3 allows one Chi a turn |
@@ -137,19 +139,19 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | --- | --- | --- | --- | --- |
 | A domain someone else wants: poaching, its signs and tracking the poacher (`npc.poaching`) | core | gated | 1 | gatedadomain 3. the holder tracks the poacher: Perception + Investigation at 4, and finds it |
 | A Road's followers in a town as a small Kindred faction (`npc.road-flock`) | core | gated | 1 | gatedaflock 1. the Storyteller gathers the Luminaries of the scene from the Road window |
-| Alarms: a place raised to alarm and how NPCs answer what happens on the map (`npc.alerts`) | core | shown | 1 |  |
+| Alarms: a place raised to alarm and how NPCs answer what happens on the map (`npc.alerts`) | core | gated |  | gatealarmbell 1. walking into an alarm trigger: on alarm, the Alert zone's lamp lit |
 | An NPC uses its own powers in a fight, and holds back obvious ones while mortals watch (`npc.auto-powers`) | core | book |  | gatetruthnpc 5. Auto: an NPC whose best option is a power uses it on its own turn |
 | Bonds from the books as relationships, with what each one does: the blood bond, the Vinculum, Fetters (`npc.bonds`) | core | gated | 1 | gatebonds 7. sheet |
 | Courtship, marriage and the law, children, households and loved ones as a weak spot (`npc.hearts`) | core | gated |  | gatewedding 1. Approve on the wedding card marries them, shown as Spouse on the Relationships tab |
-| Cults and congregations that gather around a character (`npc.cults`) | core | shown | 1 |  |
+| Cults and congregations that gather around a character (`npc.cults`) | core | gated |  | gategatheringgift 1. Hold a gathering: the founder's Faith rises by the cult's Followers |
 | Faces you have met: a stranger's token shows a description until you learn the name (`npc.faces`) | core | shown | 1 |  |
 | Factions and domains: members, places held, faction turns, founding, politics and war (`npc.factions`) | core | shown | 1 |  |
 | Fear: a Kindred NPC shies from fire in a fight (`npc.fear`) | core | gated | 1 | gate7b fear: a Kindred NPC shies from a torch in the hero's hand |
 | Followers who take orders: one window for a character's followers, orders and day jobs (`npc.followers`) | core | book |  | gatefollowers3 3. quick order |
-| Footpads, burglars and highwaymen on the prowl pick a mark and demand money (`npc.prowl`) | core | shown | 1 |  |
-| How each NPC regards each character, and why (`npc.attitude`) | core | shown | 1 |  |
+| Footpads, burglars and highwaymen on the prowl pick a mark and demand money (`npc.prowl`) | core | gated |  | gateprowlmark 1. 23:00: the footpad closes in on the lone character, with a card to pay, talk or fight |
+| How each NPC regards each character, and why (`npc.attitude`) | core | gated |  | gatefoughtregard 1. the fight ends: the NPC's regard names the character with Fought them |
 | Natural rivalries between kinds of NPC, and NPCs who start a fight by themselves (`npc.rivalry`) | core | book |  | gaterivals start the fight |
-| NPC archetypes: animals, criminals, combatants, townsfolk and supernatural NPCs by line (`npc.archetypes`) | core | shown | 1 |  |
+| NPC archetypes: animals, criminals, combatants, townsfolk and supernatural NPCs by line (`npc.archetypes`) | core | gated |  | gatearchetypehours 1. 10:00 on a weekday: the cutpurse stands in the market |
 | NPC combat tactics: each NPC weighs what it could do on its turn and plans the best (`npc.tactics`) | core | book | 1 | gate7b an NPC's turn: a plan whispered to the Storyteller, best first, each with its reason |
 | NPC memory and grudges, and a description of a culprit that spreads and fades (`npc.memory-wanted`) | core | shown | 1 |  |
 | NPCs of every line refill their own pools the way their book says (`npc.line-refill`) | core | gated |  | gatenpcrefill 1. a changeling NPC's Sanctuary refills Glamour at the new night |
@@ -158,17 +160,17 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Passers-by and animals on the map, by age and the world's ways of life, and the crowd as a resource (`npc.passersby`) | core | book |  | gateworldways 7. local looks |
 | Places, routines on the clock, duties and what an NPC does after its first reaction (`npc.routines`) | core | book |  | gateduties 7. the duty moves the token on the clock |
 | Pregnancy and birth by century and place, child sheets and growing up (`npc.family`) | core | gated |  | gatebirth 1. the clock passing the due date brings the birth and the child's sheet |
-| Relationships and lineage read from both ends, secrets and hooks (`npc.ties-secrets`) | core | shown | 1 |  |
-| Residents of generated towns and settlements (`npc.residents`) | core | shown | 1 |  |
+| Relationships and lineage read from both ends, secrets and hooks (`npc.ties-secrets`) | core | gated |  | gatetiehide 1. the eye button hides a tie: marked for the Storyteller, gone from a player's view |
+| Residents of generated towns and settlements (`npc.residents`) | core | gated |  | gatemakeresidents 1. Make them, then the clock: the residents stand in their buildings on the canvas |
 | Standing by community, with news of a deed travelling at the era's speed; social rank and feuds (`npc.standing`) | core | book |  | gatetruthnpc 11. untying a prisoner is a deed: standing in the town rises |
 | The faith calendar and the hunt: feast days, fasts and curfews change the hunt (`npc.hunt-calendar`) | core | gated | 1 | gatehuntcalendar 1. the hunt window's calendar step is in the hunt's difficulty |
 | The topic menu: walk up to someone and pick a topic, and the talk generator for unwritten answers (`npc.talk`) | core | book |  | gatetalk the window |
-| Trust, betrayal, boons in every line, blackmail and hidden loyalties (`npc.trust`) | core | shown | 2 |  |
+| Trust, betrayal, boons in every line, blackmail and hidden loyalties (`npc.trust`) | core | gated | 1 | gateboonkept 1. Kept or paid in the Ledger window: the holder's Relationships tab reads Inclined to trust |
 | What comes after: the law, wounds tended, after the Kiss, mourning, carried home, mended by its own power (`npc.aftercare`) | core | gated | 1 | gateaftercare 3. after the Kiss |
-| Family lines that outlive the character, and ties after a jump in time (`npc.kin`) |  | shown | 1 |  |
+| Family lines that outlive the character, and ties after a jump in time (`npc.kin`) |  | gated |  | gatekinbring 1. Bring into play in the tree: the member's own sheet opens |
 | Off-screen lives of supernatural NPCs across a jump in time (`npc.fates`) |  | shown | 1 |  |
 | Past lives, lines of teaching, the web of every tie and scene ideas from ties (`npc.legacy`) |  | gated |  | gatementorgone 1. the Move button on the teacher's death card puts the Mentor points on another Background |
-| Who holds a place, shown on its scene (`npc.faction-looks`) |  | shown | 1 |  |
+| Who holds a place, shown on its scene (`npc.faction-looks`) |  | gated |  | gatefactionend 1. End in the Factions window: the banners leave the canvas |
 
 ## wodx-sheets
 
@@ -193,7 +195,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | History with Undo for this session's edits, and Print (`sheets.history-print`) |  | gated |  | gatehistoryundo 1. Undo in the sheet's History window puts Strength back |
 | Road and domain strip: the Road, Mentor, domain and oaths at a glance on the Bio tab (`sheets.standing-strip`) |  | gated |  | gatestandingstrip 1. the Bio tab's strip shows the sheet's Road and opens the Road window |
 | Sheet tools: the title bar's buttons and window controls in one menu (`sheets.sheet-tools`) |  | book |  | gateplayerextras 8. sheet tools |
-| The anachronism check: when the clock jumps, possessions and map things out of their time go on one card (`sheets.anachronism-check`) |  | shown | 1 |  |
+| The anachronism check: when the clock jumps, possessions and map things out of their time go on one card (`sheets.anachronism-check`) |  | gated |  | gatekeepanachronism 1. Keep it on the card: the sheet's out-of-its-time warning goes |
 
 ## wodx-storyteller
 
