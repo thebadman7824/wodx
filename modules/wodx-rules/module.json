@@ -2,7 +2,7 @@
   "id": "wodx-rules",
   "title": "WoDX Rules",
   "description": "World of Darkness Expanded: the rules core. The game's rules as plain code with no Foundry calls, shared by every WoDX module: time and dice terms, the calendar and, as they move in, each module's rules files. Nothing runs when it loads; the other modules import its files. Install it with the other WoDX modules; it does not need switching on. Private use only; not for distribution or sale.",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "authors": [{"name": "WoDX Project (private)"}],
   "compatibility": {"minimum": "14", "verified": "14.369"},
   "esmodules": [],
