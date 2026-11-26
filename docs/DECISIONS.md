@@ -466,7 +466,7 @@ Next free block: B8140
 | B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7807) | Rothenstein, Chronicle, Otherworlds |
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
-| B7830-B7839 | Scorecard gaps: Orpheus Stains called up at will (used B7831-B7832) | Actions, Sheets |
+| B7830-B7839 | Scorecard gaps: the Orpheus Spectral arsenal (used B7831-B7833) | Actions |
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
 | B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
 | B7860-B7909 | Splat depth build: a Dark Ages mage's household and standing (desk item mage-household) (used B7860-B7909) | Actions, Chronicle |
@@ -16104,6 +16104,21 @@ the card; Dagger Tongue is a reaching Brawl attack.
 
 Reverse: remove orpheus-stains.js, the stain window in orpheus.js, orphStain and the stainEnd reverter in main.js, the
 menu and sheet entries, and the tagged Boost in power-mods.js.
+
+## B7833. A Spectre's Thorns and Horrors are listed and used (2026-11-26)
+WoDX Actions. Orpheus gives Spectres their own arsenal (pp. 267-269), and WoDX had none of it. orpheus-spectres.js
+lists the five Thorns (Carapace, Claws, Envelop, Maw, Tentacles) and the eight Spectral Horrors (Chill, Flicker, Flit,
+Hive-Mind, Immolate, Manifest, Rend, Virus), each with its page and a line for each amount of Spite, in short and in
+our own words. A Spectre's Horror or Thorn (the Orpheus menu) follows p. 267: a Spectre taps its Spite rating and never
+spends it; in a scene it taps no more than its rating, and each Willpower point spent buys three more. A Thorn a roll
+reads goes on the sheet: Carapace as armour by kind (Hide 1, Scales 3, Chitin 5), Claws as Strength + 1 lethal, Maw as
+Strength + 2 lethal. Chill puts bashing harm on the effects card for each one near, a level a Spite; Immolate burns
+whoever touches it for one level more than the Spite tapped (the book's example) and makes its own Stealth harder, for
+the scene. House readings: Chill's area is the Spectre's permanent Willpower in yards, soaked as usual; Flicker, Flit,
+Hive-Mind, Manifest, Rend, Virus, Envelop and Tentacles are the Storyteller's from the card, since no roll knows who
+aims at whom across the Shroud; Immolate's Stealth difficulty is the Spectre's own.
+
+Reverse: remove orpheus-spectres.js, the spectre window in orpheus.js, orphSpectre in main.js and the menu entry.
 
 ## B7840. Revenant families in every era (2026-11-23)
 WoDX Creation, revenant-rules.mjs. Twenty family lines, each with the years it lives in the chronicle and the reason. The eight V20 Dark Ages families (pp. 453-454: Basarab, Bratovich, Danislav, Grimaldi, Obertus, Szantovich, Vlaszy, Khavi) and the Krevcheski of Dark Ages: Vampire p. 289 use their Dark Ages write-up before 1837; the twelve V20 Ghouls and Revenants families take over from 1837, and those with no Dark Ages write-up use it in every year. The three "other families" of Ghouls and Revenants p. 113 (Marijava, Keskinen, Katayama) have no Disciplines in the book, so any may be taken at birth. Years the books do not give are house readings (listed in docs/PENDING-REVIEW.md): the Danislav, Vlaszy and Khavi end in 1493, the Basarab by 1700, the Krevcheski become the Ducheski in 1250, the Szantovich take the name Zantosa in 1494, the Servants of Anushin-Rawan begin in 1500, the Rossellini in 1550, the Oprichniki in 1565 (the oprichnina), the Katayama in 1950. The revenant window lists only the families alive in the chronicle's year; a birth keeps the family's mark (what its weakness does) on the sheet, and the Dark Ages Grimaldi hold 8 blood points.
