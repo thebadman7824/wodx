@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.26.2 (This module's rules files moved to the rules core, modules/wodx-rules/sheets (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 0.26.1 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.26.0 (Relationships: a Due badge for a Ledger entry come due (B7838))
 - 0.25.0 (Drop and Pick up on the sheet (B8122), the owner's desk pick inv3)
