@@ -17,7 +17,7 @@ const all = c => c?.contents ?? [...(c?.values?.() ?? c ?? [])];
 
 export function registerSpendSettings() {
   game.settings.register(MOD, "timeApart", {name: "Work done apart goes on the character's own time",
-    hint: "A long roll, an interaction, a fight or a journey by characters on another scene from the main group moves their own time instead of the world clock. Convene lines everyone up later.",
+    hint: "Characters on another scene from the group keep their own time, and Convene lines everyone up later.",
     scope: "world", config: true, type: Boolean, default: true});
 }
 

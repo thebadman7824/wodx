@@ -188,7 +188,7 @@ async function finished({actor: a, task: t} = {}) {
 /* ---- B5970: NPCs make their own ---- */
 
 export function registerWonderSettings() {
-  game.settings.register(MOD, "npcMakers", {name: "Wonders: NPCs make their own", hint: "Once a month of world time, a few NPCs who know the rites start making a fetish, talen, talisman or other item of their line as a long task (only for lines whose crafting switch is on). The finished item goes on their sheet, and the Storyteller gets a card.",
+  game.settings.register(MOD, "npcMakers", {name: "Wonders: NPCs make their own", hint: "NPCs who know the rites make magical items over time, and the Storyteller is told.",
     scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "npcMakersLast", {scope: "world", config: false, type: Number, default: 0});
 }

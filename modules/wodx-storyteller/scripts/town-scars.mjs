@@ -10,7 +10,7 @@ import {MOD, chron, isActiveGM, setting} from "./core.mjs";
 const scars = () => chron()?.scars ?? null;
 
 export function registerTownScarSettings() {
-  game.settings.register(MOD, "townScars", {name: "Disasters leave lasting damage on the map", hint: "A town's fire, flood, storm, earthquake, battle, sack or riot burns, floods or wrecks buildings on that town's scenes: darkened rooms, burst doors, broken walls, lights out and rubble. The town rebuilds a little each week; the town card's Undo puts the map back.",
+  game.settings.register(MOD, "townScars", {name: "Disasters leave lasting damage on the map", hint: "A town's disasters damage its buildings on the map, and the town rebuilds week by week.",
     scope: "world", config: true, type: Boolean, default: true});
 }
 

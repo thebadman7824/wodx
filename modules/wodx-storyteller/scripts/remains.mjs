@@ -20,7 +20,7 @@ const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0
 const remainsOf = tok => (tok?.flags?.[MOD]?.remains ? R.normRemains(tok.flags[MOD].remains, now()) : null);
 
 export function registerRemainsSettings() {
-  game.settings.register(MOD, "remains", {name: "Bodies left behind (house rule)", hint: "An NPC marked dead stays as a body that rots as game time passes. When a player's character comes upon it, you get what the era's authorities could learn from it, and a fresh body adds heat to the hunting ground.",
+  game.settings.register(MOD, "remains", {name: "Bodies left behind (house rule)", hint: "A dead NPC leaves a body that rots over time, and what the authorities can learn from it.",
     scope: "world", config: true, type: Boolean, default: false});
 }
 

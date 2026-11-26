@@ -36,7 +36,7 @@ const on = () => setting("hunterPressure") !== false;
 const follow = () => game.modules.get(MOD)?.api?.hunters?.follow ?? null;
 
 export function registerHunterSettings() {
-  game.settings.register(MOD, "hunterPressure", {name: "Hunters across the region (house rule)", hint: "Hot hunting grounds, breaches with witnesses, descriptions going round and a failing Veil raise the pressure of the era's hunters on the whole region. They watch, keep files on culprits, follow them to other lands and at the worst move against them. Storyteller cards and the approval queue only.",
+  game.settings.register(MOD, "hunterPressure", {name: "Hunters across the region (house rule)", hint: "Careless feeding and Masquerade breaches raise how hard the era's hunters look, and at the worst they strike.",
     scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "hunterState", {scope: "world", config: false, type: Object, default: {}});
 }
