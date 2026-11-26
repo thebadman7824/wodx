@@ -6,6 +6,7 @@
  * Wounds are the health-track index (0 unhurt, 1 Bruised … 6 Crippled, 7 Incapacitated).
  */
 import * as TK from "./talk-rules.mjs";
+import {TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
 import {ANIMAL_TEMPLATES, ANIMALS} from "./animal-rules.mjs";
 import {MORTAL_TEMPLATES, MORTALS} from "./mortal-rules.mjs";
 import {SUPERNATURAL_TEMPLATES, pickSupernatural} from "./supernatural-rules.mjs";
@@ -323,7 +324,6 @@ export function trimPath(path, budget, cost = squareCost) {
  * walk. A reaction (an alarm, a call, a challenge, a chase) covers three turns at a run, as running away already does.
  * null seconds means no time is known: the walk is not cut.
  */
-export const TURN_SECONDS = 3;
 export const REACT_TURNS = 3;
 export function walkReach(walkYards, seconds) {
   if ( seconds == null || !Number.isFinite(Number(seconds)) ) return null;
