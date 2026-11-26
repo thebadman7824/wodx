@@ -135,9 +135,13 @@ export function jobResult(body = "") {
  * differs at the head both from that earlier commit and from main (version stamps ignored by norm). show(ref, file)
  * gives the text or null. An empty answer means only main moved, so the earlier run still speaks for the branch's code.
  */
-export function ownChanges(names, show, {prior, head, main = "origin/main", norm = x => x} = {}) {
+export function ownChanges(names, show, {prior, head, main = "origin/main", norm = x => x, first = false} = {}) {
   const n = t => t === null ? null : norm(t);
-  return names.filter(f => { const h = n(show(head, f)); return h !== n(show(prior, f)) && h !== n(show(main, f)); });
+  const own = f => { const h = n(show(head, f)); return h !== n(show(prior, f)) && h !== n(show(main, f)); };
+  // B8066: first stops at the first own change. A pull request of a thousand files would otherwise run three git
+  // shows a file (minutes on Windows) only to learn that the list is not empty.
+  if ( first ) { const f = names.find(own); return f ? [f] : []; }
+  return names.filter(own);
 }
 
 function ownerToken() {
@@ -148,9 +152,17 @@ function ownerToken() {
 }
 
 async function api(token, method, p, body) {
-  const r = await fetch(`https://api.github.com/repos/${REPO}${p}`, {method,
+  const go = () => fetch(`https://api.github.com/repos/${REPO}${p}`, {method,
     headers: {Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json", "User-Agent": "wodx-pr-gates"},
     body: body ? JSON.stringify(body) : undefined});
+  // B8066: a network fault (a kept-alive socket the server closed while git work held the script) is tried once more,
+  // and the fault names the request so the log says which one failed
+  let r;
+  try { r = await go(); }
+  catch(e) {
+    await new Promise(res => setTimeout(res, 3000));
+    try { r = await go(); } catch(e2) { throw new Error(`${method} ${p}: ${e2.message}${e2.cause?.code ? ` (${e2.cause.code})` : ""}`); }
+  }
   if ( !r.ok ) throw new Error(`${method} ${p}: ${r.status} ${(await r.text()).slice(0, 200)}`);
   return r.status === 204 ? null : r.json();
 }
@@ -188,7 +200,7 @@ async function sinceRun(owner, pr, head, commits) {
     const mr = path.join(ROOT, "tools", "release", "merge-rules.mjs");
     if ( fs.existsSync(mr) ) { try { norm = (await import(pathToFileURL(mr).href)).normalise ?? norm; } catch {} }
     const show = (ref, f) => { try { return git("show", `${ref}:${f}`); } catch { return null; } };
-    const own = ownChanges(names, show, {prior: sha, head, norm});
+    const own = ownChanges(names, show, {prior: sha, head, norm, first: true});
     return own.length ? null : {number: i.number, sha, failing: res.failing};
   }
   return null;
