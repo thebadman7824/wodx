@@ -9,8 +9,8 @@ import { join, dirname } from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const F = await load("modules/wodx-otherworlds/scripts/fading-rules.mjs");
-const J = await load("modules/wodx-otherworlds/scripts/journey-rules.mjs");
+const F = await load("modules/wodx-rules/otherworlds/fading-rules.mjs");
+const J = await load("modules/wodx-rules/otherworlds/journey-rules.mjs");
 
 test("turning to spirit rises a step a lunar month and bites", () => {
   assert.equal(F.stepOf(0), 1);

@@ -2,8 +2,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import * as A from "../../modules/wodx-npc/scripts/carry-aftercare-rules.mjs";
-import {CONTAINERS} from "../../modules/wodx-interactables/scripts/interact-rules.mjs";
+import * as A from "../../modules/wodx-rules/npc/carry-aftercare-rules.mjs";
+import {CONTAINERS} from "../../modules/wodx-rules/interactables/interact-rules.mjs";
 
 const seq = (...v) => { let i = 0; return () => v[i++ % v.length]; };
 const die = d => (d - 1) / 10 + 0.01; // rand value that rolls d

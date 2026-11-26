@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const C = await imp("modules/wodx-storyteller/scripts/caern-rules.mjs");
-const P = await imp("modules/wodx-storyteller/scripts/power-rules.mjs");
+const C = await imp("modules/wodx-rules/storyteller/caern-rules.mjs");
+const P = await imp("modules/wodx-rules/storyteller/power-rules.mjs");
 const M = C.MONTH, D = C.DAY;
 /** Dice that always land on one face: 0.95 is a 10, 0.0 is a 1, 0.45 is a 5. */
 const always = v => () => v;
@@ -130,7 +130,7 @@ test("caerns sit on the places-of-power register and run on its clock", () => {
 test("the wiring: window acts, api, editor; plain words players may read", () => {
   const p = src("modules/wodx-storyteller/scripts/power.mjs");
   for ( const re of [/action: "caern", label: "New caern"/, /caern: \{moot: holdMoot/, /system\.advantages\.gnosis\.temporary/, /api\?\.drift/, /C\.officesFor\(y\)/] ) assert.match(p, re);
-  const shown = (p + src("modules/wodx-storyteller/scripts/caern-rules.mjs")).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+  const shown = (p + src("modules/wodx-rules/storyteller/caern-rules.mjs")).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
   assert.doesNotMatch(shown, /B3[24]\d\d|house rule/i);
   assert.doesNotMatch(shown, /—/);
   assert.doesNotMatch(shown, /\b(he|she|him|her|his|hers)\b/);
@@ -138,7 +138,7 @@ test("the wiring: window acts, api, editor; plain words players may read", () =>
 
 // B7864: Dark Ages septs and Moon Bridges read DA:W pp. 169-170 to 1449, W20 after
 test("B7864: Moon Bridges and sept offices follow the Dark Ages book in Dark Ages years", async () => {
-  const C = await import("../../modules/wodx-storyteller/scripts/caern-rules.mjs");
+  const C = await import("../../modules/wodx-rules/storyteller/caern-rules.mjs");
   assert.deepEqual([1, 2, 3, 4, 5].map(l => C.bridgeMilesFor(l, 1202)), [1000, 2000, 3000, 4000, 5000]);
   assert.deepEqual([1, 2, 3, 4, 5].map(l => C.bridgeMilesFor(l, 1600)), [1000, 2000, 3000, 6000, 10000]);
   assert.equal(C.bridgeBook(1202), "DA:W p. 169");

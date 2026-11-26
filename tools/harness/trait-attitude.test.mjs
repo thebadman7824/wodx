@@ -8,8 +8,8 @@ import {dirname, join} from "node:path";
 /* Trait effects step 5 (Chronicle 0.20.0, NPC 0.19.0, Actions 3.34.0): first-meeting seeds, Sway and Fear on NPCs */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const T = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/trait-rules.mjs")));
-const AT = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/attitude-rules.mjs")));
+const T = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/trait-rules.mjs")));
+const AT = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/attitude-rules.mjs")));
 const PW = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/power-effects.js")));
 const src = p => readFileSync(join(root, p), "utf8");
 const feat = (name, kind = "merit") => ({id: name, name, kind, value: 1});

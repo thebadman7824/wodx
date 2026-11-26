@@ -11,8 +11,8 @@
  *   lasts          reach (the p. 103 ladder by successes), scene, night (to the next dawn), turns, days or weeks per
  *                  success (per), or seconds
  */
-import * as M from "./mage-da-rules.js";
-import { stOutcomes, KEYWORDS } from "./effects-rules.js";
+import * as M from "../../wodx-rules/actions/mage-da-rules.js";
+import { stOutcomes, KEYWORDS } from "../../wodx-rules/actions/effects-rules.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };

@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as T from "../../modules/wodx-chronicle/scripts/trait-rules.mjs";
+import * as T from "../../modules/wodx-rules/chronicle/trait-rules.mjs";
 import {BACKGROUNDS, PROMPTS, ATTITUDE} from "../../modules/wodx-chronicle/data/trait-effects.mjs";
 
 /* Backgrounds nothing read get a card or an attitude seed (B3920) */

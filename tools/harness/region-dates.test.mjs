@@ -7,12 +7,12 @@ import {dirname, join} from "node:path";
 /* News, travel and the week by world region (Chronicle 0.50.0, Storyteller 0.57.0, NPC 0.49.0; B2570 to B2572) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
-const M = await import(join(root, "modules/wodx-chronicle/scripts/media-rules.mjs"));
-const F = await import(join(root, "modules/wodx-chronicle/scripts/faith-rules.mjs"));
-const Road = await import(join(root, "modules/wodx-storyteller/scripts/road-rules.mjs"));
-const R = await import(join(root, "modules/wodx-npc/scripts/routine-rules.mjs"));
-const RS = await import(join(root, "modules/wodx-npc/scripts/resident-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
+const M = await import(join(root, "modules/wodx-rules/chronicle/media-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/chronicle/faith-rules.mjs"));
+const Road = await import(join(root, "modules/wodx-rules/storyteller/road-rules.mjs"));
+const R = await import(join(root, "modules/wodx-rules/npc/routine-rules.mjs"));
+const RS = await import(join(root, "modules/wodx-rules/npc/resident-rules.mjs"));
 
 const REGIONS = Object.keys(W.WORLD_REGIONS);
 const MEDIA_IDS = ["print", "papers", "radio", "television", "internet"];

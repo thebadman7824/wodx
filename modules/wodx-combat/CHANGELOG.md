@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.52.2 (This module's rules files moved to the rules core, modules/wodx-rules/combat (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 3.52.1 (NPC drags (B8143, #2485): the Storyteller's drag of an NPC in a fight keeps to the running speed; hold Alt to move one further. Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 3.52.0 (Aim at is the one control: a part of them or an item they hold; Targeting is dropped (B8090))
 - 3.51.2 (Fixes from the first solo test (B8052, B8058): a fight's holds and marks end with it, and Aim at replaces Targeting in the attack window when the target has parts to aim at (#2509))

@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as CR from "../../modules/wodx-npc/scripts/crowd-rules.mjs";
-import * as PR from "../../modules/wodx-npc/scripts/passerby-rules.mjs";
+import * as CR from "../../modules/wodx-rules/npc/crowd-rules.mjs";
+import * as PR from "../../modules/wodx-rules/npc/passerby-rules.mjs";
 
 /* The crowd as a resource (WoDX NPC 0.40.0, Actions 3.52.0, B2220 to B2226) */
 

@@ -9,13 +9,13 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
-const R = await load("modules/wodx-storyteller/scripts/reach-rules.mjs");
-const I = await load("modules/wodx-storyteller/scripts/institution-rules.mjs");
-const K = await load("modules/wodx-storyteller/scripts/kits-rules.mjs");
-const TR = await load("modules/wodx-storyteller/scripts/town-rules.mjs");
-const P = await load("modules/wodx-storyteller/scripts/projects-rules.mjs");
-const LH = await load("modules/wodx-chronicle/scripts/law-heat-rules.mjs");
-const LR = await load("modules/wodx-storyteller/scripts/ledger-rules.mjs");
+const R = await load("modules/wodx-rules/storyteller/reach-rules.mjs");
+const I = await load("modules/wodx-rules/storyteller/institution-rules.mjs");
+const K = await load("modules/wodx-rules/storyteller/kits-rules.mjs");
+const TR = await load("modules/wodx-rules/storyteller/town-rules.mjs");
+const P = await load("modules/wodx-rules/storyteller/projects-rules.mjs");
+const LH = await load("modules/wodx-rules/chronicle/law-heat-rules.mjs");
+const LR = await load("modules/wodx-rules/storyteller/ledger-rules.mjs");
 const src = p => readFileSync(join(root, p), "utf8");
 
 test("every institution lever does something, for and against", () => {
@@ -83,7 +83,7 @@ test("the Veil's lowest bands act: Failing and Torn match the ledger's bands", (
   assert.ok(R.veilMoves("failing").breachHeat > 0);
   assert.equal(R.veilMoves("torn").weeklyAlarm, true);
   assert.equal(R.veilMoves("torn").rumourSpeed, 2);
-  assert.ok(!/the Storyteller decides what that means/.test(src("modules/wodx-storyteller/scripts/ledger-rules.mjs")));
+  assert.ok(!/the Storyteller decides what that means/.test(src("modules/wodx-rules/storyteller/ledger-rules.mjs")));
 });
 
 test("every Threads of Fate write-back on the cards has moves", async () => {

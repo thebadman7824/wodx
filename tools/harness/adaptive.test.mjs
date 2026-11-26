@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as AR from "../../modules/wodx-atmosphere/scripts/adaptive-rules.mjs";
-import * as K from "../../modules/wodx-atmosphere/scripts/kits-rules.mjs";
+import * as AR from "../../modules/wodx-rules/atmosphere/adaptive-rules.mjs";
+import * as K from "../../modules/wodx-rules/atmosphere/kits-rules.mjs";
 
 /* WoDX Atmosphere 0.8.0: adaptive sound. */
 test("the tension: frenzy beats combat beats the hunt beats quiet; a tension held by hand wins", () => {

@@ -8,8 +8,8 @@ import {dirname, join} from "node:path";
 // Servants and Bonds Desk, step two (B5112-B5119): Conditioning, Enchantment, oaths that cost, pacts, names, Thralls, consorts.
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const R = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/servant-actions-rules.js")));
-const DR = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/demon-rules.js")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/servant-actions-rules.js")));
+const DR = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/demon-rules.js")));
 
 test("Enchantment loses a point a day and ends; the Parted Mists last and need more than one changeling", () => {
   assert.deepEqual(R.enchantLeft({glamour: 3, day: 10}, 11), {glamour: 2, ended: false});

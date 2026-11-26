@@ -72,7 +72,7 @@ async function runGate(K) {
     } finally { await game.user.update({character: was?.id ?? null}); S.perception.refreshScreen(); }
     ok("4. state on screen", edges[0]?.id === "wound2" && /wsn-state-wound2/.test(screen) && /Badly hurt/.test(words), {edges, screen, words});
 
-    const R2 = await import("/modules/wodx-chronicle/scripts/reckoning-rules.mjs");
+    const R2 = await import("/modules/wodx-rules/chronicle/reckoning-rules.mjs");
     const C2 = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
     const d = C2.describeTime(game.time.worldTime, game.settings.get("wodx-chronicle", "latitude"));
     const eraId = game.modules.get("wodx-chronicle").api?.eras?.activeEra?.()?.profile?.id ?? "";
@@ -95,7 +95,7 @@ async function runGate(K) {
     ok("7. opening card", shown && !document.getElementById("watmo-opening"), {shown});
 
     await other.update({"flags.wodx-npc.metBy": [actor.id], "flags.wodx-npc.stranger": "A hooded rider"});
-    const FR = await import("/modules/wodx-npc/scripts/faces-rules.mjs");
+    const FR = await import("/modules/wodx-rules/npc/faces-rules.mjs");
     const f = other.flags["wodx-npc"];
     ok("8. faces", FR.metList(f).includes(actor.id) && FR.nameFor({name: other.name, flags: f, mine: ["nobody"]}) === "A hooded rider"
       && FR.nameFor({name: other.name, flags: f, mine: [actor.id]}) === other.name, {flags: f});

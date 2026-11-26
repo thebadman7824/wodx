@@ -4,8 +4,8 @@
  * a roll and a card. Supernatural pregnancies add story hooks to the Storyteller's card only. Nothing is ever shown
  * of conception, and nothing sexual is ever described. Both parents must be adults (Chronicle's age floor, B3210).
  */
-import * as F from "./family-rules.mjs";
-import * as H from "./hearts-rules.mjs";
+import * as F from "../../wodx-rules/npc/family-rules.mjs";
+import * as H from "../../wodx-rules/npc/hearts-rules.mjs";
 import * as HEARTS from "./hearts.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {DAY, YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
@@ -218,7 +218,7 @@ export async function growthPlan(aLike, toYear) {
   const rand = F.seeded(`${sheet.seed}:${to}`);
   let scene = null;
   try {
-    const LP = await import("../../wodx-creation/scripts/lifepath-rules.mjs");
+    const LP = await import("../../wodx-rules/creation/lifepath-rules.mjs");
     const stage = to >= 13 || from >= 12 ? "youth" : "birth";
     const path = LP.newPath({line: "mortal", birthYear: born, seed: sheet.seed});
     const flags = LP.flagsOf(path);

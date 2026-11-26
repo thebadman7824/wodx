@@ -6,7 +6,7 @@
  * lit one down as the clock moves, and tells the owner when it burns low and when it goes out (or the weather puts it
  * out out of doors). The token's own light is put back when it goes out.
  */
-import * as C from "./carry-rules.mjs";
+import * as C from "../../wodx-rules/interactables/carry-rules.mjs";
 
 const MOD = "wodx-interactables";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);

@@ -1,7 +1,7 @@
 import {MODULE_ID, esc, lineOf, lineage, isAnimal, animalKindOf, allyOf, generationOf, clanOf, clanNameOf, disciplinesOf, disciplineItem, vampireEra, eraProfile, keepLifepath} from "./actor-data.mjs";
-import {childeGeneration, clanDisciplines, findClan, generationRow, ghoulBloodMax, bondStage, clansOpen} from "./rules.mjs";
+import {childeGeneration, clanDisciplines, findClan, generationRow, ghoulBloodMax, bondStage, clansOpen} from "../../wodx-rules/creation/rules.mjs";
 import {CLANS, EMBRACE, GHOUL} from "../data/vampire.mjs";
-import * as AG from "./animal-ghoul-rules.mjs";
+import * as AG from "../../wodx-rules/creation/animal-ghoul-rules.mjs";
 import {setAlly} from "./apps.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {setLineage, setChronology, recordDrink, writeLineageJournal, dateLabel, ordinal, handOver} from "./lineage.mjs";

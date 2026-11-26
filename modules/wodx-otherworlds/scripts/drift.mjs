@@ -3,7 +3,7 @@
  * Scene flag wodx-otherworlds.drift {value, log}. placeOf() adds it to the Gauntlet. A supernatural desecration or
  * fire on the map (wodxMapEvent) proposes +1 through the approval queue; the Storyteller moves the rest by hand.
  */
-import * as D from "./drift-rules.mjs";
+import * as D from "../../wodx-rules/otherworlds/drift-rules.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";

@@ -7,8 +7,8 @@ import {dirname, join} from "node:path";
 /* B6931: each faith has a founding year from history and is not kept before it (the desk's faith-eras ruling). */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const F = await import(join(root, "modules/wodx-chronicle/scripts/faith-rules.mjs"));
-const L = await import(join(root, "modules/wodx-chronicle/scripts/local-reckoning-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/chronicle/faith-rules.mjs"));
+const L = await import(join(root, "modules/wodx-rules/chronicle/local-reckoning-rules.mjs"));
 const {gregorianToJDN, julianToJDN} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs")).catch(() => ({}));
 
 test("every faith but a count of their own has a founding year and a source note", () => {

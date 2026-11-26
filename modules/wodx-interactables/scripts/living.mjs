@@ -6,7 +6,7 @@
  * hides or repaints it. Nothing is done while WoDX Chronicle holds the world. A Storyteller can force a look with
  * api.living.sync({force: true}).
  */
-import * as L from "./living-rules.mjs";
+import * as L from "../../wodx-rules/interactables/living-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";

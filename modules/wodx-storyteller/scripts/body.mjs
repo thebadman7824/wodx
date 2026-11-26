@@ -6,7 +6,7 @@
  *   to Appearance is applied to the sheet at once and taken back by Undo on the card or by removing the change. The
  *   owner sees the list on their sheet. WoDX Paperdoll can read the changes that show, by part.
  */
-import * as B from "./body-rules.mjs";
+import * as B from "../../wodx-rules/storyteller/body-rules.mjs";
 import {MOD, esc} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

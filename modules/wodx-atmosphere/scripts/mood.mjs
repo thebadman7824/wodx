@@ -1,4 +1,4 @@
-import {MOODS, CUES} from "./kits-rules.mjs";
+import {MOODS, CUES} from "../../wodx-rules/atmosphere/kits-rules.mjs";
 
 /**
  * WoDX Atmosphere 0.11.0: a part of a map with its own mood. A "WoDX: Mood" region changes the music while a player's

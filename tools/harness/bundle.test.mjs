@@ -31,5 +31,8 @@ test("release bundle: every module bundles, links and keeps cross-package files 
     // A file another package imports is loaded from its own path, not copied into a bundle
     const act = readFileSync(join(tmp, "modules/wodx-actions/scripts/main.bundle.js"), "utf8");
     assert.match(act, /\.\.\/\.\.\/wodx-chronicle\/scripts\/search\.mjs/);
+    // B8063: the rules core's shared files (terms, the date engine) load from their own path, one copy for every module
+    const listed = execFileSync(process.execPath, [join(root, "tools/release/bundle.mjs"), tmp, "--check", "--list"], {encoding: "utf8"});
+    for ( const f of ["terms", "calendar"] ) assert.match(listed, new RegExp(`modules/wodx-rules/core/${f}\\.mjs`));
   } finally { rmSync(tmp, {recursive: true, force: true}); }
 });

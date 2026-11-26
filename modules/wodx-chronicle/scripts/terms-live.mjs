@@ -5,7 +5,7 @@
 import * as T from "./terms.mjs";
 import {setting} from "./util.mjs";
 import {placeOf} from "./place.mjs";
-import {placeTime} from "./place-rules.mjs";
+import {placeTime} from "../../wodx-rules/chronicle/place-rules.mjs";
 
 /** Seconds a turn takes at this table: WoDX Combat's house rule when it is set, else the books' three (B6191). */
 export function turnSeconds() {

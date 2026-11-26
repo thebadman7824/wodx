@@ -4,11 +4,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as L from "../../modules/wodx-storyteller/scripts/letters-rules.mjs";
-import * as WM from "../../modules/wodx-storyteller/scripts/world-map-rules.mjs";
-import * as D from "../../modules/wodx-storyteller/scripts/discovery-rules.mjs";
-import {WORLD_REGIONS} from "../../modules/wodx-chronicle/scripts/world-rules.mjs";
-import {mediaYear} from "../../modules/wodx-chronicle/scripts/media-rules.mjs";
+import * as L from "../../modules/wodx-rules/storyteller/letters-rules.mjs";
+import * as WM from "../../modules/wodx-rules/storyteller/world-map-rules.mjs";
+import * as D from "../../modules/wodx-rules/storyteller/discovery-rules.mjs";
+import {WORLD_REGIONS} from "../../modules/wodx-rules/chronicle/world-rules.mjs";
+import {mediaYear} from "../../modules/wodx-rules/chronicle/media-rules.mjs";
 
 const D1 = 86400;
 const go = (how, from, to, year, extra = {}) => {

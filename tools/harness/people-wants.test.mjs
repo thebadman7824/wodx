@@ -1,11 +1,11 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as PR from "../../modules/wodx-creation/scripts/people-rules.mjs";
-import * as SX from "../../modules/wodx-npc/scripts/secrets-rules.mjs";
-import * as TK from "../../modules/wodx-npc/scripts/talk-rules.mjs";
-import * as L from "../../modules/wodx-library/scripts/look-rules.mjs";
-import {normMarks} from "../../modules/wodx-npc/scripts/wanted-rules.mjs";
+import * as PR from "../../modules/wodx-rules/creation/people-rules.mjs";
+import * as SX from "../../modules/wodx-rules/npc/secrets-rules.mjs";
+import * as TK from "../../modules/wodx-rules/npc/talk-rules.mjs";
+import * as L from "../../modules/wodx-rules/library/look-rules.mjs";
+import {normMarks} from "../../modules/wodx-rules/npc/wanted-rules.mjs";
 
 /* A made person's want, secret and look as things the game reads (B3925) */
 

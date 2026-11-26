@@ -9,9 +9,9 @@ import {dirname, join} from "node:path";
  * The pure parts: what one level of healing costs, the rising heal under it, and the waking hour of Early Riser.
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/rules.js")).href);
-const K = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/kindred-rules.js")).href);
-const DS = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/daysleep-rules.js")).href);
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/rules.js")).href);
+const K = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/kindred-rules.js")).href);
+const DS = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/daysleep-rules.js")).href);
 const TH = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/trait-hooks.js")).href);
 
 test("Slow Healing: two blood a level of bashing or lethal (V20 p. 483)", () => {

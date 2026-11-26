@@ -1,6 +1,6 @@
 /** Shows the Storyteller which WoDX build the server runs: a line in the Settings sidebar,
  * one in the console, and a warning when the packages come from different commits. */
-import {parseStamp, summarise} from "./release-rules.mjs";
+import {parseStamp, summarise} from "../../wodx-rules/chronicle/release-rules.mjs";
 
 let summary = null;
 

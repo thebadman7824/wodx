@@ -7,7 +7,7 @@ import {readFileSync} from "node:fs";
 
 /* WoDX Actions B4820-B4829: the rules summoned beings live by, and the books' specs for every summoning power */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const SR = await import(join(root, "modules/wodx-actions/scripts/summon-rules.js"));
+const SR = await import(join(root, "modules/wodx-rules/actions/summon-rules.js"));
 const SS = await import(join(root, "modules/wodx-actions/scripts/summon-specs.js"));
 const src = p => readFileSync(join(root, p), "utf8");
 
@@ -119,7 +119,7 @@ test("the effects card gives a Summon its rules and the Foundry side places, tim
 });
 
 test("each-turn rules: lasting harm, the books' every-turn powers, and the steps one turn runs (B4832)", async () => {
-  const TR = await import(join(root, "modules/wodx-actions/scripts/turn-rules.js"));
+  const TR = await import(join(root, "modules/wodx-rules/actions/turn-rules.js"));
   assert.equal(TR.lastingHarm({lasting: 1}), null);
   const h = TR.lastingHarm({lasting: 3, type: "aggravated"});
   assert.equal(h.rounds, 2);
@@ -173,7 +173,7 @@ test("powers tagged as summonings that call nothing work through their own keywo
 });
 
 test("the fourteen each-turn powers from the desk (B4838-B4849)", async () => {
-  const TR = await import(join(root, "modules/wodx-actions/scripts/turn-rules.js"));
+  const TR = await import(join(root, "modules/wodx-rules/actions/turn-rules.js"));
   const want = [["Summon the Simple Form", "Vampire (V20)"], ["Clenched Jaw", "Werewolf (W20)"], ["Scabwalker Curse", "Werewolf (W20)"], ["One Fights as Many", "Mage (Dark Ages)"],
     ["Bitter Fruit", "Mage (Dark Ages)"], ["••••• Tripping the Ire", "Changeling (C20)"], ["••••• Ride the Flames", "Demon (DtF)"], ["••• Command the Wind", "Demon (DtF)"],
     ["••••• Cyclone", "Demon (DtF)"], ["• Earth Meld", "Demon (DtF)"], ["••••• Invoke the Storm", "Demon (DtF)"], ["•••• Naming the Body's Destruction", "Mummy (2nd)"],
@@ -202,7 +202,7 @@ test("the fourteen each-turn powers from the desk (B4838-B4849)", async () => {
   assert.deepEqual(SR.payFor({pool: "quintessence", per: 1}, 4, 2), {count: 2, paid: 2});
   assert.equal(SS.SPECS["mage-dark-ages|one-fights-as-many"].extra, true);
   const sm = src("modules/wodx-actions/scripts/summons.js"), tu = src("modules/wodx-actions/scripts/turns.js"), fx = src("modules/wodx-actions/scripts/effects.js");
-  assert.match(sm, /import \* as E from "\.\/effects-rules\.js"/);
+  assert.match(sm, /import \* as E from "\.\.\/\.\.\/wodx-rules\/actions\/effects-rules\.js"/);
   for ( const needle of ["export async function shareWounds", "SR.payFor("] ) assert.ok(sm.includes(needle), needle);
   for ( const needle of ["wodxAttackRolled", "wodx-turn-skip", "export async function onHealed", "export const noBloodCap", "strikes("] ) assert.ok(tu.includes(needle), needle);
   for ( const needle of ["TR.resolveRec(", "TURN.onHealed(", "touchHarm", "onBreak", "everyEffect", "?.extra"] ) assert.ok(fx.includes(needle), needle);

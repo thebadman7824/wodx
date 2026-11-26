@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const W = await import(join(root, "modules/wodx-storyteller/scripts/way-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/storyteller/way-rules.mjs"));
 
 test("every kind of way has a label and words", () => {
   for ( const k of W.WAY_ORDER ) assert.ok(W.WAY_KINDS[k].label && W.WAY_KINDS[k].words, k);
@@ -94,7 +94,7 @@ test("doors on one street stand apart along the south edge", () => {
 });
 test("the Rothenstein recipe's doors are each named once and pass the recipe check", async () => {
   const {ROTHENSTEIN} = await import(join(root, "modules/wodx-rothenstein/data/recipe.mjs"));
-  const R = await import(join(root, "modules/wodx-storyteller/scripts/recipe-rules.mjs"));
+  const R = await import(join(root, "modules/wodx-rules/storyteller/recipe-rules.mjs"));
   assert.ok(ROTHENSTEIN.doors.length >= 30);
   assert.deepEqual(R.validate(ROTHENSTEIN).filter(m => /door/.test(m)), []);
   assert.deepEqual(R.validate({...ROTHENSTEIN, doors: [{inside: "A", street: "B"}, {inside: "A", street: "C"}, {inside: "X"}]}).filter(m => /door/i.test(m)).length, 2);

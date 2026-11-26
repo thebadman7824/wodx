@@ -6,7 +6,7 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const G = await import(join(root, "modules/wodx-library/data/goods.mjs"));
-const K = await import(join(root, "modules/wodx-creation/scripts/kit-rules.mjs"));
+const K = await import(join(root, "modules/wodx-rules/creation/kit-rules.mjs"));
 const moravia = g => G.inUseAt(g, 1197, {region: "moravia", way: "latin"});
 const NEW = ["a pair of linen braies", "a linen coif", "a pair of wool leg wraps", "a dyed wool tunic", "a laced bliaut",
   "a long mantle with a cord", "a bronze ring brooch", "a wool shoulder hood", "a brimmed felt hat", "a broad straw hat",

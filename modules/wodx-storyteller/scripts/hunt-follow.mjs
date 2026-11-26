@@ -17,9 +17,9 @@
  *   Token flags  wodx-storyteller.reach {kind, target, region, watchUntil, until, day} on the hunters' own tokens;
  *                wodx-storyteller.proof {to, by, at} and remains.morgue {at, claimed} on bodies (hidden, never deleted).
  */
-import * as HF from "./hunt-follow-rules.mjs";
-import * as H from "./hunters-rules.mjs";
-import * as RR from "./remains-rules.mjs";
+import * as HF from "../../wodx-rules/storyteller/hunt-follow-rules.mjs";
+import * as H from "../../wodx-rules/storyteller/hunters-rules.mjs";
+import * as RR from "../../wodx-rules/storyteller/remains-rules.mjs";
 import * as Between from "./between.mjs";
 import {MOD, esc, isActiveGM, chron, npc, gmIds, log} from "./core.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";

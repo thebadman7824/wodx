@@ -6,7 +6,7 @@
 
 import * as LIM from "./limits.js";
 import * as TH from "./trait-hooks.js";
-import * as K from "./reckoning-rules.js";
+import * as K from "../../wodx-rules/actions/reckoning-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";

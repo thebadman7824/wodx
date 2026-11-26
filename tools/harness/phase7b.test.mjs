@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* Phase 7b: NPC profiles and combat tactics (WoDX NPC 0.1.0) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const NR = await import(join(root, "modules/wodx-npc/scripts/npc-rules.mjs"));
+const NR = await import(join(root, "modules/wodx-rules/npc/npc-rules.mjs"));
 
 const foe = (o = {}) => ({id: "pc1", name: "Ilse", visible: true, distance: 2, reach: true, hurtMe: 0, wounds: 0, supernatural: true, fearSources: [], attackDice: 6, ...o});
 const top = (p, st) => NR.scoreOptions(NR.profileOf({template: p}), st)[0];

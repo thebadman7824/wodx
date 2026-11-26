@@ -8,7 +8,7 @@
  *   - stock draws, gathered over a moment so a dawn's restocking makes one card, whisper the Storyteller a card naming
  *     each container and what came in.
  */
-import * as H from "./hook-rules.mjs";
+import * as H from "../../wodx-rules/interactables/hook-rules.mjs";
 
 const MOD = "wodx-interactables";
 const chron = () => game.modules.get("wodx-chronicle")?.api;

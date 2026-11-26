@@ -1,10 +1,10 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as C from "../../modules/wodx-interactables/scripts/cover-rules.mjs";
-import * as R from "../../modules/wodx-interactables/scripts/interact-rules.mjs";
-import * as S from "../../modules/wodx-interactables/scripts/state-rules.mjs";
-import {parseSidecar} from "../../modules/wodx-interactables/scripts/adopt-rules.mjs";
+import * as C from "../../modules/wodx-rules/interactables/cover-rules.mjs";
+import * as R from "../../modules/wodx-rules/interactables/interact-rules.mjs";
+import * as S from "../../modules/wodx-rules/interactables/state-rules.mjs";
+import {parseSidecar} from "../../modules/wodx-rules/interactables/adopt-rules.mjs";
 
 /* B4671 to B4673: cover on the map, and a table tipped over. */
 const G = 100;

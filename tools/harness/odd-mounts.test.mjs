@@ -9,9 +9,9 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)).href);
-const IR = await imp("modules/wodx-interactables/scripts/interact-rules.mjs");
-const C = await imp("modules/wodx-interactables/scripts/chase-rules.mjs");
-const MT = await imp("modules/wodx-combat/scripts/mounted-rules.js");
+const IR = await imp("modules/wodx-rules/interactables/interact-rules.mjs");
+const C = await imp("modules/wodx-rules/interactables/chase-rules.mjs");
+const MT = await imp("modules/wodx-rules/combat/mounted-rules.js");
 const ch = (abilities = {}, {year = 1990, kind = "mortal"} = {}) => ({actorId: "a1", year, kind, dexterity: 3, abilities});
 const opts = (kind, c) => IR.optionsFor(IR.describeMount({mount: true, mountKind: kind}), c);
 

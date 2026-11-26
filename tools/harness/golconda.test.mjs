@@ -7,10 +7,10 @@ import {dirname, join} from "node:path";
 /* The owner's Golconda Desk (B5090-B5099): losing it, trait caps, powers beyond it, the road, the aura, the sun, the Jyhad */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const KR = await import(join(root, "modules/wodx-actions/scripts/kindred-rules.js"));
-const CR = await import(join(root, "modules/wodx-creation/scripts/rules.mjs"));
-const SR = await import(join(root, "modules/wodx-senses/scripts/sight-rules.mjs"));
-const RV = await import(join(root, "modules/wodx-npc/scripts/rivalry-rules.mjs"));
+const KR = await import(join(root, "modules/wodx-rules/actions/kindred-rules.js"));
+const CR = await import(join(root, "modules/wodx-rules/creation/rules.mjs"));
+const SR = await import(join(root, "modules/wodx-rules/senses/sight-rules.mjs"));
+const RV = await import(join(root, "modules/wodx-rules/npc/rivalry-rules.mjs"));
 
 const saint = {flags: {"wodx-actions": {golconda: true}}};
 

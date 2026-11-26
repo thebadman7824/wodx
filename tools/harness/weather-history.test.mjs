@@ -1,8 +1,8 @@
 // WoDX Atmosphere 0.17.0: the climate's history by part of the world (B5950-B5955).
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import * as W from "../../modules/wodx-atmosphere/scripts/weather-rules.mjs";
-import {WORLD_REGIONS} from "../../modules/wodx-chronicle/scripts/world-rules.mjs";
+import * as W from "../../modules/wodx-rules/atmosphere/weather-rules.mjs";
+import {WORLD_REGIONS} from "../../modules/wodx-rules/chronicle/world-rules.mjs";
 import {gregorianToJDN} from "../../modules/wodx-chronicle/scripts/calendar-math.mjs";
 
 const at = (region) => ({region, climate: WORLD_REGIONS[region].climate});

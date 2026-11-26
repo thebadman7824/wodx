@@ -478,6 +478,7 @@ Next free block: B8180
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 | B8020-B8029 | Merge rules: release notes of a stamped branch are read inside a train batch (used B8020-B8026) | tools (release) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
+| B8060-B8089 | Rules core: one Foundry-free rules package (used B8060-B8067) | Rules, Chronicle, Actions, Atmosphere, Combat, Creation, Interactables, Library, NPC, Otherworlds, Paperdoll, Senses, Sheets, Solo, Storyteller |
 | B8090-B8099 | Solo test desk picks: action priority, item tags, lifespan, dark interiors, teachers, time dial (used B8090-B8098) | Actions, Chronicle, Combat, Creation, Library, NPC, Senses, Solo |
 | B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
 | B8120-B8129 | Inventory desk picks: starting kit, NPC things at first meeting, drop and pick up with icons (used B8120-B8122) | Creation, Actions, Interactables, Sheets |
@@ -16849,6 +16850,78 @@ Reverse: each is one change in its module, listed in docs/PENDING-REVIEW.md.
 WoDX Creation, WoDX Actions. Birth and turn years go down to -4000 (minus is BCE) for lines other than mortals (#2505). The 167 placeholder entries in disciplines-daw.json (the Elder Powers and the Necromancy paths) have descriptions, rolls and costs in WoDX's own words (#2499).
 
 Reverse: set the year minimum back to 1100.
+
+## B8060. The rules core is a library module, modules/wodx-rules (2026-11-26)
+WoDX Rules. Every rules file moves into one folder that Foundry serves as a module with no scripts, so the modules
+reach it with the `../../wodx-rules/...` paths they already use for each other and the harness loads it in plain Node.
+Folders follow the module a file came from (core/, npc/, storyteller/ ...), file names unchanged. No module lists it
+under relationships.requires: that would make the gate map run every gate on any rules change and ask each world to
+switch a new module on; an installed module's files load while it is off. Plan: docs/RULES-CORE.md.
+
+Reverse: move the files back with git mv and drop the folder.
+
+## B8061. The guard: no Foundry in the rules, and the package only grows (2026-11-26)
+WoDX Rules. tools/harness/rules-core.test.mjs fails a file in the package, or in any rules file's reach, that names a
+Foundry global (comments and strings left out); a package file that will not load in plain Node with Foundry's
+globals set to throw; an import from outside the package not on the `outside` list; and a rules file outside the
+package not on `notMoved` or `stay`. The lists in tools/harness/rules-core-baseline.json only shrink. One file is
+known to name Foundry, Storyteller's sept-rules.mjs (an optional randomID with a fallback); it is fixed when Storyteller
+moves.
+
+Reverse: delete the test and its baseline.
+
+## B8062. Terms and the calendar move first; Chronicle keeps re-exports (2026-11-26)
+WoDX Rules, WoDX Chronicle. terms.mjs and calendar-math.mjs move to core/ whole; calendar.mjs splits, its date engine
+and clock reading to core/calendar.mjs and only makeCalendarClass and makeCalendarConfig (which read foundry.data
+inside init) left in Chronicle. Chronicle's three files re-export the core, so the hundreds of existing imports and
+open branches keep working, and one date engine is shared (a reform set through either path is the same engine).
+tools/rules-core/move.mjs moves a module's rules files later, with git mv and every path rewritten.
+
+Reverse: move the files back and drop the re-exports.
+
+## B8063. Bundling: a rules core file belongs to the one module that uses it (2026-11-26)
+Release bundler. A file imported across packages stays out of every bundle so the browser has one copy. A rules core
+file reached by only one module, directly or through other rules core files, is bundled into that module, which is
+what happened before it moved; one reached by two or more stays out, as before. So moving files into the package
+leaves loading on slow machines as it was (bundle.mjs --check totals in each PR).
+
+Reverse: drop the owner map in tools/release/bundle.mjs sharedFiles.
+
+## B8064. Not moved: WoDX Targeting and WoDX Voices (2026-11-26)
+WoDX Rules. Targeting is dropped (solo-test design desk, item 2509) and Voices is shelved (B7134), so their two rules
+files stay in place, listed under `stay`.
+
+Reverse: take them off `stay` and run the move for that module.
+
+## B8065. All the rules files move in one step; held files after the solo-fix work (2026-11-26)
+WoDX Rules and every module with rules files. Moving one module per pull request would have cost a full PC gate run
+each, and the move is mechanical, so tools/rules-core/move.mjs moved 347 rules files from 14 modules in one change.
+Seven files the solo-fix design PR is editing stay where they are until it merges (Chronicle time-dial-rules, Combat
+rules.js, Creation learn-, lifepath- and wizard-rules, Interactables loose-rules, Solo solo-rules). Storyteller's
+sept-rules.mjs makes its own 16-character ids instead of asking Foundry, so nothing in the rules core names Foundry.
+The bundler now loads 65 more files on their own: each was reached both by a bundle and by a file loaded on its own,
+so before this it was in the browser twice (two copies of any state it kept). The download grows by about 2 percent.
+
+Reverse: run the move back (git mv each file to its module's scripts folder and rewrite the imports).
+
+## B8066. The PC gate queue copes with a very large pull request (2026-11-26)
+Tools (tools/pcq/pr-gates.mjs, upkeep). The queue job failed twice on this pull request with "fetch failed" after one to
+two minutes, while other pull requests queued in seconds. The likely cause: its check of whether only main moved since the last run read
+three versions of each of the 1,251 changed files with git, holding the script for minutes, and the next GitHub call
+then failed (the log did not name the call). The check now stops at the first file the branch changed itself (all it needs to know), and a network
+fault on a GitHub call is tried once more after three seconds, naming the call if it fails again.
+
+Reverse: drop first: true in sinceRun and the retry in api().
+
+## B8067. The held files move in the same pull request (2026-11-26)
+WoDX Rules, Actions, Chronicle, Combat, Creation, Interactables, Solo. The solo-fix design PR (2546) merged while this
+pull request waited for the merge train, so the seven files it had edited (Chronicle time-dial-rules, Combat rules.js,
+Creation learn-, lifepath- and wizard-rules, Interactables loose-rules, Solo solo-rules) and its two new rules files
+(Actions busy-rules.js, Creation kit-rules.mjs) moved here with tools/rules-core/move.mjs, not in a pull request of
+their own. Every rules file is now in the package; notMoved is empty. The move tool also takes a moved file off the
+outside list.
+
+Reverse: git mv the nine files back and list them on notMoved.
 
 ## B8090. Aim at is the one control; Targeting is gone (2026-11-26)
 WoDX Combat. Aim at lists the target's parts and, in its own group, an item they hold: a large one like a shield or sword, a small one like a knife, a tiny one like a ring, at the sizes the book gives (V20 Dark Ages p. 346). A blow aimed at an item lands on it, and the Storyteller says what it does. The separate Targeting list is dropped, the owner's desk pick of 25 November (#2509).

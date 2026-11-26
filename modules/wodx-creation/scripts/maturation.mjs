@@ -7,9 +7,9 @@
  *   The Maturation window (holder or Storyteller): spend them on traits already held, one dot a trait a period, and
  *   try to raise Backgrounds with the book's roll.
  */
-import * as M from "./maturation-rules.mjs";
+import * as M from "../../wodx-rules/creation/maturation-rules.mjs";
 import {MODULE_ID, esc, clanOf, vampireEra, disciplinesOf} from "./actor-data.mjs";
-import {clanDisciplines} from "./rules.mjs";
+import {clanDisciplines} from "../../wodx-rules/creation/rules.mjs";
 import {awakeBefore, viewOf} from "./advance.mjs";
 import {successes} from "../../wodx-chronicle/scripts/terms.mjs";
 

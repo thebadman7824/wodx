@@ -10,7 +10,7 @@
  * B7130: on land, gear past half of what Strength lifts adds 1 to a dodge and stealth, and past all of it halves the
  * pace; a burden set by hand wins over the weight.
  */
-import * as MV from "./movement-rules.js";
+import * as MV from "../../wodx-rules/combat/movement-rules.js";
 
 let D = null;
 export const on = () => { try { return !D.off() && game.settings.get(D.MOD, "movementModes"); } catch (e) { return false; } };

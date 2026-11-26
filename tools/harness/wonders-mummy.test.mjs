@@ -11,7 +11,7 @@ const M = await imp("modules/wodx-library/data/wonders-mummy.mjs");
 const R = await imp("modules/wodx-library/scripts/wonder-registry.mjs");
 const MK = await imp("modules/wodx-library/scripts/wonders-mummy.mjs");
 const P = await imp("modules/wodx-library/scripts/wonder-powers.mjs");
-const T = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const T = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 const kit = MK.mummyKit;
 
 const hk = (id, name, v) => ({id, type: "Power", name, system: {type: "wod.types.hekau", value: v}});

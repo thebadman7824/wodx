@@ -9,10 +9,10 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));
-const K = await imp("modules/wodx-npc/scripts/kin-rules.mjs");
-const TR = await imp("modules/wodx-npc/scripts/ties-rules.mjs");
-const WR = await imp("modules/wodx-storyteller/scripts/will-rules.mjs");
-const WORLD = await imp("modules/wodx-chronicle/scripts/world-rules.mjs");
+const K = await imp("modules/wodx-rules/npc/kin-rules.mjs");
+const TR = await imp("modules/wodx-rules/npc/ties-rules.mjs");
+const WR = await imp("modules/wodx-rules/storyteller/will-rules.mjs");
+const WORLD = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
 
 const start = (id = "t", members = []) => K.newLine({id, founder: {id: "a", name: "Jan Novák"}, family: "Novák", year: 1240, founderBorn: 1215, members});
 const namer = ({sex}) => (sex === "female" ? "Anna" : "Petr");

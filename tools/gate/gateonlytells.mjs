@@ -44,7 +44,7 @@ export async function run() {
       G.ok("3. a pack form Trait carries the bonus its text names", b.some(x => x.type === "ability_diff" && x.settingtype === "wod.abilities.dodge" && Number(x.value) === -2), {bonuslist: b});
     });
     await G.step("4. a switched-on Mirage makes attacks on the bearer harder", async () => {
-      const R = await import("/modules/wodx-combat/scripts/rules.js");
+      const R = await import("/modules/wodx-rules/combat/rules.js");
       const [m] = await demon.createEmbeddedDocuments("Item", [{name: "Mirage", type: "Trait", system: {type: "wod.types.apocalypticform", isactive: true}}]);
       const sh = close => R.shieldFor({shields: R.formDefences(demon.items), close}).attackDiff;
       const ranged = sh(false), close = sh(true);

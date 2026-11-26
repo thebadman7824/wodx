@@ -18,12 +18,12 @@
  *   Stored   world setting wodx-storyteller.reachState {patrols: {actorId: day}}
  *   Hooks in wodxLawStage (WoDX Chronicle), wodxArrest is called by Chronicle's arrest
  */
-import * as R from "./reach-rules.mjs";
-import * as K from "./kits-rules.mjs";
+import * as R from "../../wodx-rules/storyteller/reach-rules.mjs";
+import * as K from "../../wodx-rules/storyteller/kits-rules.mjs";
 import * as Between from "./between.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Money from "./money.mjs";
-import * as MR from "./money-rules.mjs";
+import * as MR from "../../wodx-rules/storyteller/money-rules.mjs";
 import {MOD, SOCKET, esc, chron, npc, isActiveGM, isPC, gmIds, setting, log} from "./core.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";

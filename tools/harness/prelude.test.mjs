@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as P from "../../modules/wodx-storyteller/scripts/prelude-rules.mjs";
+import * as P from "../../modules/wodx-rules/storyteller/prelude-rules.mjs";
 
 /* WoDX Storyteller 0.9.0: prelude and Embrace scene templates. */
 test("every line in the list has a template with all three parts", () => {

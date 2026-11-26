@@ -7,9 +7,9 @@ import {dirname, join} from "node:path";
 /* Responsive maps, the world's side: marks and repairs (WoDX NPC), wrongs against a faction, and map beats and log lines (WoDX Storyteller). Pure rules. */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const AR = await import(join(root, "modules/wodx-npc/scripts/alert-rules.mjs"));
-const F = await import(join(root, "modules/wodx-npc/scripts/faction-rules.mjs"));
-const W = await import(join(root, "modules/wodx-storyteller/scripts/world-rules.mjs"));
+const AR = await import(join(root, "modules/wodx-rules/npc/alert-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/npc/faction-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/storyteller/world-rules.mjs"));
 const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
 const streamFor = key => G.stream("test-seed", key);
 

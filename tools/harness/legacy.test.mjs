@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));
-const LR = await imp("modules/wodx-npc/scripts/legacy-rules.mjs");
-const TR = await imp("modules/wodx-npc/scripts/ties-rules.mjs");
+const LR = await imp("modules/wodx-rules/npc/legacy-rules.mjs");
+const TR = await imp("modules/wodx-rules/npc/ties-rules.mjs");
 const DAY = 86400;
 
 test("past lives: a tie to an undying person or a later family line, hidden until recalled, then shown to the one who recalled it", () => {

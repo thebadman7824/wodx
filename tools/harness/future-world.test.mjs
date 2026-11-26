@@ -8,8 +8,8 @@ import fs from "node:fs";
 import {parse} from "../wofd/build-future-world.mjs";
 import FW from "../../modules/wodx-chronicle/data/future-world.mjs";
 import FUTURE from "../../modules/wodx-chronicle/data/future-events.mjs";
-import * as R from "../../modules/wodx-chronicle/scripts/events-rules.mjs";
-import * as W from "../../modules/wodx-chronicle/scripts/world-rules.mjs";
+import * as R from "../../modules/wodx-rules/chronicle/events-rules.mjs";
+import * as W from "../../modules/wodx-rules/chronicle/world-rules.mjs";
 
 const SRC = new URL("../../docs/research/era-timelines/r3/future-darkness.txt", import.meta.url);
 

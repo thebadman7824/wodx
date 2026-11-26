@@ -8,10 +8,10 @@ import {dirname, join} from "node:path";
 // WoDX Storyteller: every line gets its own equivalent of the Kindred-only tools (B6320-B6326).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
-const D = await imp("modules/wodx-storyteller/scripts/dashboard-rules.mjs");
-const U = await imp("modules/wodx-storyteller/scripts/upkeep-rules.mjs");
-const B = await imp("modules/wodx-storyteller/scripts/battle-rules.mjs");
-const P = await imp("modules/wodx-storyteller/scripts/prelude-rules.mjs");
+const D = await imp("modules/wodx-rules/storyteller/dashboard-rules.mjs");
+const U = await imp("modules/wodx-rules/storyteller/upkeep-rules.mjs");
+const B = await imp("modules/wodx-rules/storyteller/battle-rules.mjs");
+const P = await imp("modules/wodx-rules/storyteller/prelude-rules.mjs");
 
 test("the dashboard shows each line's own pools, and the lowest leads", () => {
   const kj = D.partyRow({name: "K", type: "Vampire", system: {settings: {variant: "kindredeast"}, advantages: {yangchi: {permanent: 6, temporary: 1}, yinchi: {permanent: 3, temporary: 3}, bloodpool: {temporary: 0, max: 10}}}});

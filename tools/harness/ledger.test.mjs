@@ -6,7 +6,7 @@ import {dirname, join} from "node:path";
 
 /* The ledger (WoDX Storyteller 0.2.0): rules, then the runtime on a small stand-in for Foundry */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const L = await import(join(root, "modules/wodx-storyteller/scripts/ledger-rules.mjs"));
+const L = await import(join(root, "modules/wodx-rules/storyteller/ledger-rules.mjs"));
 const DAY = 86400;
 
 test("entries: kinds, boon sizes and status are cleaned", () => {

@@ -13,7 +13,7 @@
  *   off the map  where the place is on another scene, or there is none, the carrier walks to the map's edge and both
  *             leave it (the tokens are hidden, the body's token keeps flags.wodx-npc.carriedOff)
  */
-import * as G from "./carry-goal-rules.mjs";
+import * as G from "../../wodx-rules/npc/carry-goal-rules.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 // B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
 const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };

@@ -48,7 +48,7 @@ export async function run() {
   const G = gate("gateplains");
   if ( G.notLive() ) return "gateplains never runs in the Live world";
   try {
-    const R = await import(`/modules/${CR}/scripts/people-rules.mjs`);
+    const R = await import(`/modules/wodx-rules/creation/people-rules.mjs`);
     const draw = (era, origin, n, salt) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:${salt}:${origin}`, i),
       tables: gen().lookup({...gen().context(), era, culture: WEST}), origin, sex: i % 2 ? "female" : "male"}));
 

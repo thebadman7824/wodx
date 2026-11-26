@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* WoDX Sheets 0.4: the later eras, from each line's printed sheet */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const SR = await import(join(root, "modules/wodx-sheets/scripts/sheet-rules.mjs"));
+const SR = await import(join(root, "modules/wodx-rules/sheets/sheet-rules.mjs"));
 const main = readFileSync(join(root, "modules/wodx-sheets/scripts/main.mjs"), "utf8");
 const actions = readFileSync(join(root, "modules/wodx-actions/scripts/main.js"), "utf8");
 const block = readFileSync(join(root, "modules/wodx-sheets/templates/block.hbs"), "utf8");

@@ -7,9 +7,9 @@
  * trouble. Followers on the scene being viewed get the everyday orders as buttons; "Give an order" opens the full
  * order window with the follower and the master already picked. A player sees their own characters' followers only.
  */
-import * as FR from "./followers-rules.mjs";
+import * as FR from "../../wodx-rules/npc/followers-rules.mjs";
 import * as SV from "./servants.mjs";
-import * as SR from "./servant-rules.mjs";
+import * as SR from "../../wodx-rules/npc/servant-rules.mjs";
 import * as SW from "./servant-world.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

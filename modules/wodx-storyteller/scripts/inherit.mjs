@@ -5,8 +5,8 @@
  * Ancestors, or a mage heir with Past Lives or Avatar, gets the dead as a past self in WoDX NPC, so a recall can reach
  * them. Money the law divides stays with the estate card (wills.mjs). Rules in inherit-rules.mjs.
  */
-import * as IR from "./inherit-rules.mjs";
-import * as L from "./ledger-rules.mjs";
+import * as IR from "../../wodx-rules/storyteller/inherit-rules.mjs";
+import * as L from "../../wodx-rules/storyteller/ledger-rules.mjs";
 import * as Wills from "./wills.mjs";
 import * as Led from "./ledger.mjs";
 import * as Money from "./money.mjs";

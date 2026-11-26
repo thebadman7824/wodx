@@ -4,11 +4,11 @@
  */
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import * as WL from "../../modules/wodx-storyteller/scripts/war-lands-rules.mjs";
-import * as B from "../../modules/wodx-storyteller/scripts/battle-rules.mjs";
-import * as SW from "../../modules/wodx-storyteller/scripts/siege-works-rules.mjs";
-import * as N from "../../modules/wodx-storyteller/scripts/naval-rules.mjs";
-import * as W from "../../modules/wodx-chronicle/scripts/world-rules.mjs";
+import * as WL from "../../modules/wodx-rules/storyteller/war-lands-rules.mjs";
+import * as B from "../../modules/wodx-rules/storyteller/battle-rules.mjs";
+import * as SW from "../../modules/wodx-rules/storyteller/siege-works-rules.mjs";
+import * as N from "../../modules/wodx-rules/storyteller/naval-rules.mjs";
+import * as W from "../../modules/wodx-rules/chronicle/world-rules.mjs";
 
 const REGIONS = new Set(Object.keys(W.WORLD_REGIONS));
 

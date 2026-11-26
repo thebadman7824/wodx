@@ -13,9 +13,9 @@
  *   Once a month of game time (and after a skip), the Storyteller gets one card: how each character lives now,
  *   the coin of the day, and whose way of living drops within the month. Runs on the active Storyteller's client.
  */
-import * as R from "./money-rules.mjs";
-import * as MK from "./market-rules.mjs";
-import * as GP from "./goods-place-rules.mjs";
+import * as R from "../../wodx-rules/storyteller/money-rules.mjs";
+import * as MK from "../../wodx-rules/storyteller/market-rules.mjs";
+import * as GP from "../../wodx-rules/storyteller/goods-place-rules.mjs";
 import {MOD, esc, isActiveGM, setting, isPC, chron, log} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Own from "./owners.mjs";

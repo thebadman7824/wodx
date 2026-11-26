@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const I = await imp("modules/wodx-storyteller/scripts/institution-rules.mjs");
-const R = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const I = await imp("modules/wodx-rules/storyteller/institution-rules.mjs");
+const R = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 
 test("institutions: what a town has depends on its year and size", () => {
   assert.deepEqual(I.kindsFor(1200, 500).sort(), ["council", "watch", "worship"]);
@@ -92,7 +92,7 @@ test("institutions: climbing is a downtime project, and the press and pulpit sta
 });
 
 test("institutions: offices of the law and the state follow the law of the land (B3604)", async () => {
-  const L = await imp("modules/wodx-chronicle/scripts/law-rules.mjs");
+  const L = await imp("modules/wodx-rules/chronicle/law-rules.mjs");
   const ctx = (region, year, people = 20000) => { const l = L.lawOf(region, year); return {year, people, law: l.family, order: l.order}; };
   const k = (region, year, people) => { const c = ctx(region, year, people); return I.kindsFor(c.year, c.people, c.order); };
   assert.ok(k("moravia", 1300).includes("court") && k("moravia", 1300).includes("ruler") && k("moravia", 1300).includes("tax"));

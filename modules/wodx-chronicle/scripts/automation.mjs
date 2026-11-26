@@ -11,7 +11,7 @@
  * Runs on the active Storyteller's client only.
  */
 import {MODULE_ID, esc, isActiveGM, setting, setSetting} from "./util.mjs";
-import * as AR from "./automation-rules.mjs";
+import * as AR from "../../wodx-rules/chronicle/automation-rules.mjs";
 import * as approvals from "./approvals.mjs";
 
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);

@@ -6,7 +6,7 @@
  *   Deathsight and Lifesight: a roll, and what the ghost sees.
  *   The Storyteller makes the book's sample ghost, the Masked Trickster.
  */
-import * as G from "./ghost-da-rules.js";
+import * as G from "../../wodx-rules/actions/ghost-da-rules.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };

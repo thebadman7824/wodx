@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const T = await import(join(root, "modules/wodx-chronicle/scripts/twist-rules.mjs"));
+const T = await import(join(root, "modules/wodx-rules/chronicle/twist-rules.mjs"));
 const DAY = 86400;
 
 test("the web holds together: 24 twists, six chains, the pairs and the order name real twists", () => {

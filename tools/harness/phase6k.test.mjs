@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* Phase 6k: the Reborn (WoDX Actions 3.10.0, Mummy: The Resurrection) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const M = await import(join(root, "modules/wodx-actions/scripts/mummy-rules.js"));
+const M = await import(join(root, "modules/wodx-rules/actions/mummy-rules.js"));
 
 test("six Amenti, their soul parts and paths; six paths of Hekau (p. 56, Chapters Two and Four)", () => {
   assert.equal(Object.keys(M.AMENTI).length, 6);
@@ -70,7 +70,7 @@ test("wiring: the Mummy menu and API; gender-neutral text (B48)", () => {
   for ( const k of ["mummyCast", "mummySekhem", "mummyBalance", "mummyOffense", "mummyResurrect", "mummyVeil", "mummySetup"] ) assert.match(main, new RegExp(`${k}: withActor`));
   assert.match(readFileSync(join(root, "modules/wodx-actions/scripts/profile-menus.js"), "utf8"), /MENUS\.mummy = /);
   const words = /\b(he|she|him|her|his|hers|himself|herself)\b/i;
-  for ( const f of ["mummy.js", "mummy-rules.js"] ) {
+  for ( const f of ["mummy.js", "../../wodx-rules/actions/mummy-rules.js"] ) {
     const src = readFileSync(join(root, "modules/wodx-actions/scripts", f), "utf8");
     for ( const s of src.match(/`[^`]*`|"[^"\n]*"/g) ?? [] ) assert.ok(!words.test(s), `${f}: ${s.slice(0, 80)}`);
   }

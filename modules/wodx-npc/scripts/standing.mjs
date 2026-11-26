@@ -11,7 +11,7 @@
  *             heirs and descendants inherit the grudge; live feuds are rivalry rows, so the rivalry check and the
  *             fight starter take them up
  */
-import * as SR from "./standing-rules.mjs";
+import * as SR from "../../wodx-rules/npc/standing-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 
 const MOD = "wodx-npc";

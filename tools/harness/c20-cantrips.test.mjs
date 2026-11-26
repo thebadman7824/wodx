@@ -7,9 +7,9 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const C = await import("../../modules/wodx-actions/scripts/c20-rules.js");
+const C = await import("../../modules/wodx-rules/actions/c20-rules.js");
 const CA = await import("../../modules/wodx-actions/scripts/c20-arts.js");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
 
 test("five named cantrips for each of the eighteen Arts, each with text, duration, type and a known keyword (B3744)", () => {
   for ( const art of Object.keys(C.ARTS) ) assert.deepEqual(CA.cantripsOf(art).map(c => c.level), [1, 2, 3, 4, 5], art);

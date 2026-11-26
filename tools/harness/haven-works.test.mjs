@@ -1,9 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import * as W from "../../modules/wodx-storyteller/scripts/haven-works-rules.mjs";
-import * as H from "../../modules/wodx-storyteller/scripts/haven-rules.mjs";
-import * as P from "../../modules/wodx-storyteller/scripts/projects-rules.mjs";
-import * as R from "../../modules/wodx-storyteller/scripts/tasks-rules.mjs";
+import * as W from "../../modules/wodx-rules/storyteller/haven-works-rules.mjs";
+import * as H from "../../modules/wodx-rules/storyteller/haven-rules.mjs";
+import * as P from "../../modules/wodx-rules/storyteller/projects-rules.mjs";
+import * as R from "../../modules/wodx-rules/storyteller/tasks-rules.mjs";
 
 test("haven works: the upgrade list follows the year, the way of life and the owner's kind", () => {
   const keys = o => W.upgradesFor(o).map(u => u.key);

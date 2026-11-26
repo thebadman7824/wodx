@@ -24,7 +24,7 @@ export async function run() {
   const before = new Set(game.messages.map(m => m.id));
   const scenes = [];
   try {
-    const GP = await import(`/modules/${ST}/scripts/goods-place-rules.mjs`);
+    const GP = await import(`/modules/wodx-rules/storyteller/goods-place-rules.mjs`);
     const {GOODS} = await import(`/modules/wodx-library/data/goods.mjs`);
     const W = await import(`/modules/wodx-library/data/goods-ways.mjs`);
     // B7980: a batch create does not keep its order (kit rule 1); nightly job 2448 priced Kyoto on the Moravian scene and
@@ -86,7 +86,7 @@ export async function run() {
       G.ok("5. a caravan names goods of Japan", /\(/.test(line), {line});
     });
     await G.step("6. plague at home moves the markets once", async () => {
-      const R = await import(`/modules/${CH}/scripts/events-rules.mjs`);
+      const R = await import(`/modules/wodx-rules/chronicle/events-rules.mjs`);
       const part = R.partOf(ch().world.homeland());
       const cards = () => game.messages.filter(m => !before.has(m.id) && m.flags?.[ST]?.marketNews?.world === "plague");
       const ev = n => ({id: `wh-${year}-wodx-gate-plague-${n}`, year, name: "WoDX gate: a plague", summary: "A sickness spreads.", region: part, tags: ["plague"]});

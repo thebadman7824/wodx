@@ -12,11 +12,11 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const load = p => import(pathToFileURL(join(root, p)));
-const MV = await load("modules/wodx-combat/scripts/movement-rules.js");
-const C = await load("modules/wodx-interactables/scripts/chase-rules.mjs");
-const IR = await load("modules/wodx-interactables/scripts/interact-rules.mjs");
-const SR = await load("modules/wodx-senses/scripts/senses-rules.mjs");
-const RR = await load("modules/wodx-npc/scripts/routine-rules.mjs");
+const MV = await load("modules/wodx-rules/combat/movement-rules.js");
+const C = await load("modules/wodx-rules/interactables/chase-rules.mjs");
+const IR = await load("modules/wodx-rules/interactables/interact-rules.mjs");
+const SR = await load("modules/wodx-rules/senses/senses-rules.mjs");
+const RR = await load("modules/wodx-rules/npc/routine-rules.mjs");
 
 /* ---------------- riding outside a chase ---------------- */
 
@@ -220,7 +220,7 @@ test("the wiring: Interactables tells the ride, Combat reads it for moves, stanc
 });
 
 test("the three runtime files still load without Foundry's globals in their top level imports", async () => {
-  for ( const f of ["modules/wodx-combat/scripts/movement-rules.js", "modules/wodx-interactables/scripts/chase-rules.mjs", "modules/wodx-senses/scripts/senses-rules.mjs"] )
+  for ( const f of ["modules/wodx-rules/combat/movement-rules.js", "modules/wodx-rules/interactables/chase-rules.mjs", "modules/wodx-rules/senses/senses-rules.mjs"] )
     assert.ok(await load(f), f);
 });
 

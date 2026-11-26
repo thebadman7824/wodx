@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.15.9 (This module's rules files moved to the rules core, modules/wodx-rules/senses (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 0.15.8 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.15.7 (The api tells other modules whether a point is indoors, for WoDX Solo's sight in the dark (B8096))
 - 0.15.6 (Fixes from the first solo test (B8039): a solo arrival's sheet not yet marked ready counts as still being made for the senses' cues (#2473))

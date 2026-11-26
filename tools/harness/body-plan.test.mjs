@@ -1,9 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import * as B from "../../modules/wodx-combat/scripts/body-rules.js";
+import * as B from "../../modules/wodx-rules/combat/body-rules.js";
 import { bodyHtml } from "../../modules/wodx-sheets/scripts/body-html.mjs";
-import * as SB from "../../modules/wodx-storyteller/scripts/body-rules.mjs";
-import { powersFor } from "../../modules/wodx-senses/scripts/senses-rules.mjs";
+import * as SB from "../../modules/wodx-rules/storyteller/body-rules.mjs";
+import { powersFor } from "../../modules/wodx-rules/senses/senses-rules.mjs";
 
 test("a person has two hands, wears armor, speaks, and no natural weapons", () => {
   const b = B.bodyOf({});

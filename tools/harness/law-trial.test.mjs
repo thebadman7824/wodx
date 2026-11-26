@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const T = await imp("modules/wodx-chronicle/scripts/law-trial-rules.mjs");
-const L = await imp("modules/wodx-chronicle/scripts/law-rules.mjs");
+const T = await imp("modules/wodx-rules/chronicle/law-trial-rules.mjs");
+const L = await imp("modules/wodx-rules/chronicle/law-rules.mjs");
 
 test("trials: the land's law decides the form", () => {
   assert.ok(T.formsFor(L.lawOf("moravia", 1197)).includes("ordeal"));

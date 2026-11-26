@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/remains-rules.mjs")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/remains-rules.mjs")));
 
 test("a vessel drained dry within the day is a body drained of blood", () => {
   assert.equal(R.causeAtDeath({vesselBlood: {value: 0, at: 1000}}, 1000 + 3600), "drained");

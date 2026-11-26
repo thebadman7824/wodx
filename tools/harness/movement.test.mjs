@@ -10,9 +10,9 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const MV = await import(pathToFileURL(join(root, "modules/wodx-combat/scripts/movement-rules.js")));
-const CK = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/checks-rules.js")));
-const AR = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/rules.js")));
+const MV = await import(pathToFileURL(join(root, "modules/wodx-rules/combat/movement-rules.js")));
+const CK = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/checks-rules.js")));
+const AR = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/rules.js")));
 
 test("Rise and wing and bat forms give flight; leaps, wall walks and the Coward's Flight do not", () => {
   assert.equal(MV.abilities([{name: "Risen", key: "wodx-effect-rise"}]).fly, true);

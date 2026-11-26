@@ -12,7 +12,7 @@
  *   Never while the game is paused (the X-card pauses it), while damage waits to be applied, while the token is moving,
  *   or while an approval raised this turn waits.
  */
-import * as CR from "./conductor-rules.js";
+import * as CR from "../../wodx-rules/combat/conductor-rules.js";
 
 const MOD = "wodx-combat";
 const SOCKET = `module.${MOD}`;

@@ -8,8 +8,8 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)).href);
-const IR = await imp("modules/wodx-interactables/scripts/interact-rules.mjs");
-const AR = await imp("modules/wodx-sheets/scripts/anachronism-rules.mjs");
+const IR = await imp("modules/wodx-rules/interactables/interact-rules.mjs");
+const AR = await imp("modules/wodx-rules/sheets/anachronism-rules.mjs");
 const G = await imp("modules/wodx-library/data/goods.mjs");
 
 const spanOk = (p, y) => (!Number.isFinite(p.from) || y >= p.from) && (!Number.isFinite(p.until) || y <= p.until);

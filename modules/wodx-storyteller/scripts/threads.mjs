@@ -18,9 +18,9 @@
  *            through their own controls. The slot frees for the next week.
  */
 import * as Reach from "./reach.mjs";
-import * as T from "./threads-rules.mjs";
+import * as T from "../../wodx-rules/storyteller/threads-rules.mjs";
 import * as Signals from "./signals.mjs";
-import * as SR from "./signals-rules.mjs";
+import * as SR from "../../wodx-rules/storyteller/signals-rules.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, setting, mutate} from "./core.mjs";
 import {getLinesVeils} from "../../wodx-chronicle/scripts/journals.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";

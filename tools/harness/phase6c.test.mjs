@@ -51,8 +51,8 @@ function actor(name, {type = "Mortal", wp = [5, 5], attrs = {}, abilities = {}, 
   return a;
 }
 
-const WR = await import(join(root, "modules/wodx-actions/scripts/wraith-rules.js"));
-const HR = await import(join(root, "modules/wodx-actions/scripts/hunter-rules.js"));
+const WR = await import(join(root, "modules/wodx-rules/actions/wraith-rules.js"));
+const HR = await import(join(root, "modules/wodx-rules/actions/hunter-rules.js"));
 const ARC = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/arcanoi-w20.json"), "utf8"));
 const WD = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/wraith-w20.json"), "utf8"));
 
@@ -443,7 +443,7 @@ test("ghouls outside the Dark Ages: overfeeding past the pool plus Stamina calls
 
 /* ---------------- Hunter: The Reckoning ---------------- */
 
-const KR2 = await import(join(root, "modules/wodx-actions/scripts/reckoning-rules.js"));
+const KR2 = await import(join(root, "modules/wodx-rules/actions/reckoning-rules.js"));
 const RX = await import(join(root, "modules/wodx-actions/scripts/reckoning.js"));
 
 test("the imbued: creeds, 35 edges in seven paths, edge levels follow the Virtue, risking, cashing in, derangements", () => {

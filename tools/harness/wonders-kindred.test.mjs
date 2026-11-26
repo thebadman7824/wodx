@@ -11,7 +11,7 @@ const K = await imp("modules/wodx-library/data/wonders-kindred.mjs");
 const R = await imp("modules/wodx-library/scripts/wonder-registry.mjs");
 const KK = await imp("modules/wodx-library/scripts/wonders-kindred.mjs");
 const P = await imp("modules/wodx-library/scripts/wonder-powers.mjs");
-const T = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const T = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 const kit = KK.kindredKit;
 
 const actor = (o = {}) => ({name: "Ilse", system: {advantages: {bloodpool: {temporary: 12}, willpower: {temporary: 5}}, abilities: {occult: {value: 3}}, attributes: {wits: {value: 3, total: 3}}},

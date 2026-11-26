@@ -26,7 +26,7 @@ export async function run() {
     const PE = await import("/modules/wodx-actions/scripts/path-effects.js");
     const DC = await import("/modules/wodx-actions/scripts/fae-da-cantrips.js");
     const DE = await import("/modules/wodx-actions/scripts/demon-evocations.js");
-    const H = await import("/modules/wodx-actions/scripts/hunter-rules.js");
+    const H = await import("/modules/wodx-rules/actions/hunter-rules.js");
     const B = await import("/modules/wodx-actions/scripts/binds.js");
     await G.step("0. the api", async () => {
       G.ok("0. the api", typeof A?.effects?.apply === "function" && typeof A?.effects?.powerPlan === "function" && typeof A?.useFetish === "function");

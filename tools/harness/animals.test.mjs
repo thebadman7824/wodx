@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as AN from "../../modules/wodx-npc/scripts/animal-rules.mjs";
-import * as NR from "../../modules/wodx-npc/scripts/npc-rules.mjs";
-import * as R from "../../modules/wodx-npc/scripts/routine-rules.mjs";
+import * as AN from "../../modules/wodx-rules/npc/animal-rules.mjs";
+import * as NR from "../../modules/wodx-rules/npc/npc-rules.mjs";
+import * as R from "../../modules/wodx-rules/npc/routine-rules.mjs";
 
 /* Animal archetypes (WoDX NPC 0.21.0, B1000 to B1004) */
 

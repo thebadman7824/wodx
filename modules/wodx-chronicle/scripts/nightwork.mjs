@@ -22,7 +22,7 @@
  */
 import {MODULE_ID, esc, setting, setSetting} from "./util.mjs";
 import {searchBox} from "./search.mjs";
-import * as R from "./nightwork-rules.mjs";
+import * as R from "../../wodx-rules/chronicle/nightwork-rules.mjs";
 import {currentYear} from "./eras.mjs";
 import {addHandTool} from "./hand-tool.mjs";
 

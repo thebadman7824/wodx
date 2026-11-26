@@ -13,7 +13,7 @@
  *   sides     a hidden loyalty, flags["wodx-npc"].trueSide; it is a secret tie to the faction's leader, and the
  *             powers that can find it are listed for the Storyteller
  */
-import * as TRR from "./trust-rules.mjs";
+import * as TRR from "../../wodx-rules/npc/trust-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";

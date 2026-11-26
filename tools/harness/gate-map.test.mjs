@@ -98,3 +98,14 @@ test("B7444: run-gate --touched takes tier 1, --wide the older list", () => {
   const src = fs.readFileSync(new URL("../lanes/run-gate.mjs", import.meta.url), "utf8");
   assert.match(src, /args\.includes\("--wide"\) \? gatesFor\(t\.modules, t\.gates, gateMap\(gateRoot\)\) : tier1\(paths, \{root: gateRoot\}\)/);
 });
+
+test("B8065: a rules core file runs the gates of the module it came from (core/ is Chronicle's)", () => {
+  assert.equal(G.ownerOf("modules/wodx-rules/npc/feud-rules.mjs", ids), "wodx-npc");
+  assert.equal(G.ownerOf("modules/wodx-rules/core/terms.mjs", ids), "wodx-chronicle");
+  assert.equal(G.ownerOf("modules/wodx-rules/module.json", ids), "wodx-rules");
+  assert.equal(G.ownerOf("modules/wodx-npc/scripts/feud.mjs", ids), "wodx-npc");
+  assert.equal(G.ownerOf("docs/RULES-CORE.md", ids), null);
+  const npcGates = G.tier1(["modules/wodx-npc/scripts/feud.mjs"]);
+  assert.deepEqual(G.tier1(["modules/wodx-rules/npc/feud-rules.mjs"]), npcGates);
+  assert.ok(G.touched(["modules/wodx-rules/core/terms.mjs"]).modules.includes("wodx-npc"), "a core change reaches the modules that load it");
+});

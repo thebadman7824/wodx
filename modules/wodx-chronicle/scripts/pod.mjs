@@ -1,17 +1,17 @@
 import {MODULE_ID, esc, isActiveGM, rule, podTurn} from "./util.mjs";
 import {propose, registerHandler} from "./approvals.mjs";
 import {currentYear} from "./eras.mjs";
-import * as P from "./pod-rules.mjs";
-import * as TW from "./twist-rules.mjs";
+import * as P from "../../wodx-rules/chronicle/pod-rules.mjs";
+import * as TW from "../../wodx-rules/chronicle/twist-rules.mjs";
 import * as Fronts from "./fronts.mjs";
 import * as Encounters from "./encounters.mjs";
 import * as Reveals from "./reveals.mjs";
-import {watched} from "./signature-rules.mjs";
+import {watched} from "../../wodx-rules/chronicle/signature-rules.mjs";
 import {isQuiet} from "./quiet.mjs";
 import * as Roads from "./roads.mjs";
 import {DAY} from "./terms.mjs";
 import {current as chronicleInPlay, chronicles, settleInPlay} from "./chronicle-data.mjs";
-import * as CL from "./close-rules.mjs";
+import * as CL from "../../wodx-rules/chronicle/close-rules.mjs";
 import {describeTime} from "./calendar.mjs";
 import {record as nightRecord} from "./nightwork.mjs";
 /** The saga's name for cards and windows: the chronicle in play names it (Chronicle Packs Desk d2). */

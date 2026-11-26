@@ -7,7 +7,7 @@
  * Future Darkness article), and every ten points take a dot of Humanity (Gnosis for a shapeshifter). A card tells
  * the table what it took. RealSkinn gives some of the cost back.
  */
-import * as G from "./gear-rules.mjs";
+import * as G from "../../wodx-rules/library/gear-rules.mjs";
 
 const MOD = G.MOD;
 const fxOf = item => item?.flags?.[MOD]?.fx ?? null;

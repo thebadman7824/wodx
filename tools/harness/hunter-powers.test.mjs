@@ -7,10 +7,10 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const R = await import("../../modules/wodx-actions/scripts/reckoning-rules.js");
-const H = await import("../../modules/wodx-actions/scripts/hunter-rules.js");
+const R = await import("../../modules/wodx-rules/actions/reckoning-rules.js");
+const H = await import("../../modules/wodx-rules/actions/hunter-rules.js");
 const PK = await import("../../modules/wodx-actions/scripts/power-keywords.js");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
 const src = f => fs.readFileSync(path.join(root, "modules/wodx-actions/scripts", f), "utf8");
 
 test("every HtR edge has keywords under path-id, and Use an edge posts them (B3749)", () => {

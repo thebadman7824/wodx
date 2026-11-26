@@ -12,16 +12,16 @@
  * which draws them again only when they change.
  * World setting townLooks (on by default).
  */
-import * as L from "./town-look-rules.mjs";
-import * as MK from "./market-rules.mjs";
+import * as L from "../../wodx-rules/storyteller/town-look-rules.mjs";
+import * as MK from "../../wodx-rules/storyteller/market-rules.mjs";
 import * as Markets from "./markets.mjs";
-import * as CR from "./contagion-rules.mjs";
+import * as CR from "../../wodx-rules/storyteller/contagion-rules.mjs";
 import * as Hunters from "./hunters.mjs";
-import * as TR from "./town-rules.mjs";
+import * as TR from "../../wodx-rules/storyteller/town-rules.mjs";
 import * as Battles from "./battles.mjs";
 import * as Towns from "./towns.mjs";
 import {MOD, chron, isActiveGM, setting} from "./core.mjs";
-import {partOf} from "../../wodx-chronicle/scripts/events-rules.mjs";
+import {partOf} from "../../wodx-rules/chronicle/events-rules.mjs";
 
 const all = c => (c ? [...(c.contents ?? c)] : []);
 const now = () => game.time?.worldTime ?? 0;

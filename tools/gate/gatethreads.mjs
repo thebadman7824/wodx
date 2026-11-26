@@ -124,7 +124,7 @@ export async function run() {
       ok("6 window", html.includes("Threads from the past"), {});
     });
 
-    const P = await import(`/modules/${CR}/scripts/first-night-prelude-rules.mjs`);
+    const P = await import(`/modules/wodx-rules/creation/first-night-prelude-rules.mjs`);
     await step("7 guest fit", async () => {
       const f = P.guestFit(1995, {line: "vampire", birthYear: 1170, turnYear: 1197}), n = P.guestFit(1150, {line: "vampire", birthYear: 1170, turnYear: 1197});
       ok("7 guest fit", f.ok && f.as === "elder" && !n.ok, {elder: f, unborn: n});

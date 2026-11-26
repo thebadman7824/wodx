@@ -4,7 +4,7 @@ import "./win-paths.mjs";
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as R from "../../modules/wodx-combat/scripts/rules.js";
+import * as R from "../../modules/wodx-rules/combat/rules.js";
 
 const read = p => readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 const fight = round => ({id: "c1", round});

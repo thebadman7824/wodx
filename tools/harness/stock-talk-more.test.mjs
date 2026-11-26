@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const TK = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/talk-rules.mjs")));
+const TK = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/talk-rules.mjs")));
 const S = await import(pathToFileURL(join(root, "modules/wodx-npc/data/stock-talk.mjs")));
 const M = await import(pathToFileURL(join(root, "modules/wodx-npc/data/stock-talk-more.mjs")));
 

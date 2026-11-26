@@ -7,9 +7,9 @@ import {dirname, join} from "node:path";
 /* "With this person" (Actions 3.20.0), the NPC attitude track (NPC 0.11.0) and the new "Only when" tests (Chronicle 0.15.0) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const SR = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/social-rules.js")));
-const AT = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/attitude-rules.mjs")));
-const W = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/when-rules.mjs")));
+const SR = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/social-rules.js")));
+const AT = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/attitude-rules.mjs")));
+const W = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/when-rules.mjs")));
 
 test("first meeting takes the household's standing, else a faction's, else Unknown", () => {
   const st = {"the kessler farm": 2, "kessler": 2, "the watch": -1};

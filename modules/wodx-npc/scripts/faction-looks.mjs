@@ -6,7 +6,7 @@
  * when it is there, else plain locked drawings, and draws nothing new when nothing changed). A place that changes
  * hands swaps its banner; a secret faction shows none. World setting factionBanners (on by default).
  */
-import * as R from "./faction-look-rules.mjs";
+import * as R from "../../wodx-rules/npc/faction-look-rules.mjs";
 
 const MOD = "wodx-npc";
 const isActiveGM = () => !!game.user?.isGM && (game.users?.activeGM ? game.users.activeGM.id === game.user.id : true);

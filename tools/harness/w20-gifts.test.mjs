@@ -7,7 +7,7 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const G = await import("../../modules/wodx-actions/scripts/garou-rules.js");
+const G = await import("../../modules/wodx-rules/actions/garou-rules.js");
 const PK = await import("../../modules/wodx-actions/scripts/power-keywords.js");
 const J = f => JSON.parse(fs.readFileSync(path.join(root, "modules/wodx-actions/data", f), "utf8")).gifts;
 const DA = J("gifts-daw.json"), W20 = J("gifts-w20.json");

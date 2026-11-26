@@ -6,8 +6,8 @@ import {dirname, join} from "node:path";
 
 // WoDX NPC 0.25.0: politics inside a faction (courts, dioceses, baronies).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const F = await import(join(root, "modules/wodx-npc/scripts/faction-rules.mjs"));
-const PO = await import(join(root, "modules/wodx-npc/scripts/politics-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/npc/faction-rules.mjs"));
+const PO = await import(join(root, "modules/wodx-rules/npc/politics-rules.mjs"));
 
 const stream = (seed = 7) => { let x = seed >>> 0; return () => { x = (x * 1664525 + 1013904223) >>> 0; return x / 4294967296; }; };
 const keyed = salt => k => { let h = salt; for ( const ch of k ) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return stream(h); };
@@ -381,7 +381,7 @@ test("a faction keeps its region, cleaned, and every court region is a world reg
   assert.equal(F.normFaction({id: "a", region: "egypt"}).region, "egypt");
   assert.equal(F.normFaction({id: "a", region: "Egypt; drop"}).region, "");
   assert.equal(F.normFaction({id: "a"}).region, "");
-  const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
+  const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
   for ( const [r, key] of [...Object.entries(PO.REGION_COURTS), ...Object.entries(PO.REGION_SHIFTERS), ...Object.entries(PO.REGION_MAGES)] ) {
     assert.ok(W.WORLD_REGIONS[r], `${r} is a world region`);
     assert.ok(PO.POLITIES[key], `${key} is a polity`);
@@ -502,7 +502,7 @@ test("the Nagah and the Mokolé by name, ahead of the regional default", () => {
 });
 
 test("every region named by the new tables is a world region", async () => {
-  const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
+  const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
   for ( const r of [...PO.NO_KINDRED_COURT, ...PO.NUNNEHI_LANDS, ...Object.keys(PO.SETTLER_SHIFTERS)] ) assert.ok(W.WORLD_REGIONS[r], r);
 });
 
@@ -547,7 +547,7 @@ test("the Hsien in East Asia and the land's own fae in the Pacific and Siberia b
 });
 
 test("the Hsien and land-fae tables name world regions", async () => {
-  const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
+  const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
   for ( const r of [...PO.HSIEN_LANDS, ...PO.LAND_FAE_LANDS] ) assert.ok(W.WORLD_REGIONS[r], r);
 });
 

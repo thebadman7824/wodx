@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as WR from "../../modules/wodx-otherworlds/scripts/ways-rules.mjs";
+import * as WR from "../../modules/wodx-rules/otherworlds/ways-rules.mjs";
 
 /* WoDX Otherworlds 0.6.0: ways and realms. */
 test("each kind of way sits on its layer, and a realm scene end is always the realm's own level", () => {

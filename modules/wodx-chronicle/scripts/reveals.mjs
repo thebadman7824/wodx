@@ -14,9 +14,9 @@
  * State in podState.saga.reveals. Storyteller only.
  */
 import {MODULE_ID, esc, isActiveGM, podTurn} from "./util.mjs";
-import * as RR from "./reveal-rules.mjs";
-import * as F from "./front-rules.mjs";
-import * as S from "./saga-rules.mjs";
+import * as RR from "../../wodx-rules/chronicle/reveal-rules.mjs";
+import * as F from "../../wodx-rules/chronicle/front-rules.mjs";
+import * as S from "../../wodx-rules/chronicle/saga-rules.mjs";
 import * as Fronts from "./fronts.mjs";
 import {bring} from "./encounters.mjs";
 import {DAY} from "./terms.mjs";

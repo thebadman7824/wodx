@@ -70,7 +70,7 @@ export async function run() {
     await foundry.applications.instances.get("wodx-solo-panel")?.close();
     ok("3. solo panel", /What happens next/.test(next) && more >= 6, {next, more});
 
-    const CR = await import(`/modules/wodx-interactables/scripts/case-rules.mjs?${Date.now()}`);
+    const CR = await import(`/modules/wodx-rules/interactables/case-rules.mjs?${Date.now()}`);
     const cards = CR.starterBoard().cards.map(c => c.title);
     await game.modules.get("wodx-paperdoll")?.api?.figure?.open?.(actor); await sleep(1500);
     const fig = [...foundry.applications.instances.values()].find(a => el(a)?.classList?.contains("wodx-figure-app"));

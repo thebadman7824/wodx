@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 /* Black powder (WoDX Combat 3.24.0, B2712 to B2714): old locks misfire, wet powder will not fire, a match goes out */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const PW = await import(join(root, "modules/wodx-combat/scripts/powder-rules.js"));
+const PW = await import(join(root, "modules/wodx-rules/combat/powder-rules.js"));
 const gun = (name, year, desc = "") => PW.gunLock({name, ranged: true, desc}, year);
 const rain = PW.wetness({tags: ["rain"]}), storm = PW.wetness({tags: ["rain", "downpour"]}), dry = PW.wetness({tags: []});
 

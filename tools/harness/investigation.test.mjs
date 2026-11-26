@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import * as I from "../../modules/wodx-interactables/scripts/investigation-rules.mjs";
-import * as C from "../../modules/wodx-interactables/scripts/case-rules.mjs";
+import * as I from "../../modules/wodx-rules/interactables/investigation-rules.mjs";
+import * as C from "../../modules/wodx-rules/interactables/case-rules.mjs";
 
 function board() {
   let b = C.emptyBoard();

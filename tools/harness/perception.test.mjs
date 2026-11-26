@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 /* WoDX Senses 0.3.0: the screen in frenzy and Rötschreck, scent trails, the unseen */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const P = await import(pathToFileURL(join(root, "modules/wodx-senses/scripts/perception-rules.mjs")));
+const P = await import(pathToFileURL(join(root, "modules/wodx-rules/senses/perception-rules.mjs")));
 
 test("the screen: frenzy is a red edge, Rötschreck drains the colour and wins over frenzy", () => {
   assert.equal(P.screenFor({}), null);

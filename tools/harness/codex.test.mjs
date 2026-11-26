@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as X from "../../modules/wodx-storyteller/scripts/codex-rules.mjs";
+import * as X from "../../modules/wodx-rules/storyteller/codex-rules.mjs";
 
 /* WoDX Storyteller 0.7.0: a player codex. */
 test("a revealed page becomes a codex page with the date it was learned", () => {

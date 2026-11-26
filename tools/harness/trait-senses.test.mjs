@@ -8,8 +8,8 @@ import {dirname, join} from "node:path";
 /* Trait effects step 3 (Chronicle 0.19.0, Senses 0.6.0): merits and flaws on the senses, signs others sense, the Veil keyword */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const T = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/trait-rules.mjs")));
-const S = await import(pathToFileURL(join(root, "modules/wodx-senses/scripts/senses-rules.mjs")));
+const T = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/trait-rules.mjs")));
+const S = await import(pathToFileURL(join(root, "modules/wodx-rules/senses/senses-rules.mjs")));
 const src = p => readFileSync(join(root, p), "utf8");
 const feat = (name, kind = "merit") => ({id: name, name, kind, value: 1});
 

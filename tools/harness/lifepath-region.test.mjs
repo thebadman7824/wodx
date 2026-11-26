@@ -5,7 +5,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(join(root, "modules/wodx-creation/scripts/lifepath-rules.mjs"));
+const R = await import(join(root, "modules/wodx-rules/creation/lifepath-rules.mjs"));
 
 const at = region => new Set(["line:mortal", ...(region ? [`region:${region}`] : [])]);
 

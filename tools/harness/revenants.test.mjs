@@ -3,8 +3,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as RR from "../../modules/wodx-creation/scripts/revenant-rules.mjs";
-import {FAMILIES} from "../../modules/wodx-creation/scripts/states-rules.mjs";
+import * as RR from "../../modules/wodx-rules/creation/revenant-rules.mjs";
+import {FAMILIES} from "../../modules/wodx-rules/creation/states-rules.mjs";
 import {SPLATS} from "../../modules/wodx-creation/data/lifepaths-splats.mjs";
 
 const src = f => readFileSync(new URL(`../../modules/${f}`, import.meta.url), "utf8");
@@ -110,7 +110,7 @@ test("the wiring: birth, the weakness window, the night, the sun, silver, aging 
   const time = src("wodx-creation/scripts/time.mjs");
   assert.match(time, /case "revenantAges":/);
   assert.match(time, /RR\.ageOver\(/);
-  assert.match(src("wodx-npc/scripts/supernatural-rules.mjs"), /basarab\|danislav\|vlaszy\|khavi/);
+  assert.match(src("wodx-rules/npc/supernatural-rules.mjs"), /basarab\|danislav\|vlaszy\|khavi/);
   // every select in the new windows is marked fixed
   for ( const f of ["wodx-creation/scripts/revenant.mjs"] ) for ( const m of src(f).matchAll(/<select name="[^"]+"([^>]*)>/g) ) assert.match(m[1], /data-fixed/, f);
 });

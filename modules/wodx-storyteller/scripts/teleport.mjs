@@ -6,7 +6,7 @@
  * Where each one lands is worked out in teleport-rules.mjs. Each token is snapped to the grid unless the scene is
  * gridless. Elevation and level stay as they are.
  */
-import * as R from "./teleport-rules.mjs";
+import * as R from "../../wodx-rules/storyteller/teleport-rules.mjs";
 import {MOD} from "./core.mjs";
 
 const note = (kind, text) => ui.notifications?.[kind]?.(text);

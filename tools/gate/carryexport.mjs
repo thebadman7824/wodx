@@ -24,7 +24,7 @@ async function upload(name, data) {
 
 export async function run({source = game.world.id} = {}) {
   if ( game.world.id === "rothenstein-live" ) throw new Error("Never in the Live Version world.");
-  const R = await import(`/modules/wodx-storyteller/scripts/recipe-rules.mjs?${Date.now()}`);
+  const R = await import(`/modules/wodx-rules/storyteller/recipe-rules.mjs?${Date.now()}`);
   const entries = [];
   const keep = {};
   const keptFolders = new Set();

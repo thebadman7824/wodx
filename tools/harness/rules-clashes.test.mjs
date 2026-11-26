@@ -12,7 +12,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const {default: T} = await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/rules-clashes.mjs")).href);
 const {render} = await import(pathToFileURL(join(root, "tools/clashes/render.mjs")).href);
-const R = await import(pathToFileURL(join(root, "modules/wodx-combat/scripts/rules.js")).href);
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/combat/rules.js")).href);
 // B6243: a decision more than a month old is in docs/archive/decisions-<month>.md
 const {allDecisionsText} = await import(pathToFileURL(join(root, "tools/docs/archive-decisions.mjs")).href);
 const decisions = allDecisionsText(root);
@@ -68,7 +68,7 @@ test("demons and mummies soak by their own books (DtF pp. 171, 247; MtR p. 136)"
 });
 
 test("WoDX Actions soaks with the one Combat copy: a Garou falling soaks lethal", async () => {
-  const A = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/core-rules.js")).href);
+  const A = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/core-rules.js")).href);
   assert.equal(A.soakPool, R.soakPool);
   assert.equal(A.soakPool({profile: "lupine", damageType: "lethal", stamina: 4}).dice, 4);
 });

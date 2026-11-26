@@ -7,8 +7,8 @@
  */
 import * as ACT from "./acts.js";
 import * as BIND from "./binds.js";
-import * as E from "./effects-rules.js";
-import * as KRG from "./kindred-rules.js";
+import * as E from "../../wodx-rules/actions/effects-rules.js";
+import * as KRG from "../../wodx-rules/actions/kindred-rules.js";
 import * as DAE from "./mage-da-effects.js";
 import * as PE from "./path-effects.js";
 import * as PW from "./power-effects.js";
@@ -16,10 +16,10 @@ import * as PM from "./power-mods.js";
 import * as DL from "./discipline-looks.js";
 import * as W from "./world-effects.js";
 import * as SUM from "./summons.js";
-import * as SR from "./summon-rules.js";
-import * as TR from "./turn-rules.js";
+import * as SR from "../../wodx-rules/actions/summon-rules.js";
+import * as TR from "../../wodx-rules/actions/turn-rules.js";
 import * as TURN from "./turns.js";
-import * as HR from "./hunter-rules.js";
+import * as HR from "../../wodx-rules/actions/hunter-rules.js";
 import * as LIM from "./limits.js";
 import { ask, detectProfile } from "./profiles.js";
 import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
@@ -1276,7 +1276,7 @@ export async function resistItem(msg, i) {
   const roll = new Roll(`${dice}d10`);
   await roll.evaluate();
   const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
-  const {countSuccesses} = await import("./core-rules.js");
+  const {countSuccesses} = await import("../../wodx-rules/actions/core-rules.js");
   const res = countSuccesses(faces, n(R.diff));
   const won = res.successes > 0;
   const what = item.key === "hold" ? (won ? "breaks free" : "cannot break free this turn") : won ? `throws off ${item.out.label}` : `cannot throw off ${item.out.label}`;

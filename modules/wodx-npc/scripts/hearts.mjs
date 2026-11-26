@@ -13,8 +13,8 @@
  *   weak spot when someone close is hurt, taken or dies, the one who loves them gets a card with the book's checks;
  *             setting "Cards for loved ones", on by default
  */
-import * as H from "./hearts-rules.mjs";
-import * as LR from "./lines-rules.mjs";
+import * as H from "../../wodx-rules/npc/hearts-rules.mjs";
+import * as LR from "../../wodx-rules/npc/lines-rules.mjs";
 import * as LM from "./line-mend.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
@@ -370,7 +370,7 @@ async function markFrenzy(who, kind = "berserk", {thrall = false} = {}) {
 async function rageRoll(who) {
   const A = actApi(), GX = A?.garouRules;
   if ( !GX?.info || !GX.moonNow ) return null;
-  const G = await import("../../wodx-actions/scripts/garou-rules.js");
+  const G = await import("../../wodx-rules/actions/garou-rules.js");
   const i = GX.info(who), D = GX.data?.()?.garou ?? {}, b = GX.basis?.() ?? "w20";
   if ( i.fera && i.fera.rage === false ) return null;
   const dice = i.rage.perm;

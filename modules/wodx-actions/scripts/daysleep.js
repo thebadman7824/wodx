@@ -12,7 +12,7 @@
  *
  * Rolls for a Storyteller character go to the Storyteller only. Pure rules: daysleep-rules.js.
  */
-import * as DS from "./daysleep-rules.js";
+import * as DS from "../../wodx-rules/actions/daysleep-rules.js";
 import * as P from "./profiles.js";
 import * as TH from "./trait-hooks.js";
 

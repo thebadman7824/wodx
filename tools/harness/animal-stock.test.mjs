@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as AG from "../../modules/wodx-creation/scripts/animal-ghoul-rules.mjs";
-import * as AS from "../../modules/wodx-creation/scripts/animal-stock-rules.mjs";
-import * as O from "../../modules/wodx-npc/scripts/order-rules.mjs";
+import * as AG from "../../modules/wodx-rules/creation/animal-ghoul-rules.mjs";
+import * as AS from "../../modules/wodx-rules/creation/animal-stock-rules.mjs";
+import * as O from "../../modules/wodx-rules/npc/order-rules.mjs";
 
 /* Ghouled animals, step three (B5058 to B5064) */
 

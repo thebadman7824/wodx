@@ -6,8 +6,8 @@
  *   it (one roll per interval passed, at most 60 at a time) and posts one card per character to its owners and the
  *   Storyteller, with Undo. Nothing runs on players' clients beyond the window.
  */
-import * as R from "./tasks-rules.mjs";
-import * as P from "./projects-rules.mjs";
+import * as R from "../../wodx-rules/storyteller/tasks-rules.mjs";
+import * as P from "../../wodx-rules/storyteller/projects-rules.mjs";
 import {MOD, esc, isActiveGM, setting, isPC, chron, log, npc} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Own from "./owners.mjs";

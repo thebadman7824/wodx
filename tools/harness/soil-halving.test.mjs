@@ -9,8 +9,8 @@ import {join, dirname} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
-const S = await load("modules/wodx-chronicle/scripts/signature-rules.mjs");
-const T = await load("modules/wodx-chronicle/scripts/trait-rules.mjs");
+const S = await load("modules/wodx-rules/chronicle/signature-rules.mjs");
+const T = await load("modules/wodx-rules/chronicle/trait-rules.mjs");
 const M = await load("system/worldofdarkness/module/scripts/wodx-roll-mods.js");
 const read = p => readFileSync(join(root, p), "utf8");
 

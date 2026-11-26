@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* Phase 6e: the WoDX look (B51) — WoDX Actions 3.6.0 and WoDX Chronicle 0.3.0 */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const TR = await import(join(root, "modules/wodx-actions/scripts/theme-rules.js"));
+const TR = await import(join(root, "modules/wodx-rules/actions/theme-rules.js"));
 const {MENUS} = await import(join(root, "modules/wodx-actions/scripts/profile-menus.js")).catch(() => ({MENUS: null}));
 const RESMOD = await import(join(root, "modules/wodx-actions/scripts/profiles.js"));
 const {RES} = RESMOD;

@@ -2,8 +2,8 @@ import "../../modules/wodx-rothenstein/scripts/register.mjs"; // the story engin
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as S from "../../modules/wodx-chronicle/scripts/saga-rules.mjs";
-import * as P from "../../modules/wodx-chronicle/scripts/pod-rules.mjs";
+import * as S from "../../modules/wodx-rules/chronicle/saga-rules.mjs";
+import * as P from "../../modules/wodx-rules/chronicle/pod-rules.mjs";
 
 /* The Rothenstein saga over years and ages (B3660-B3669) */
 
@@ -140,7 +140,7 @@ test("the saga's words: no gendered pronouns, no long dashes, real people offsta
 });
 
 test("saga steps that change the town name a change the towns know (B3670)", async () => {
-  const TR = await import("../../modules/wodx-storyteller/scripts/town-rules.mjs");
+  const TR = await import("../../modules/wodx-rules/storyteller/town-rules.mjs");
   assert.deepEqual([...S.TOWN_KINDS].sort(), Object.keys(TR.SAGA_TOWN).sort());
   const kinds = S.SAGA.books.flatMap(b => b.steps.map(x => x.town).filter(Boolean));
   assert.ok(kinds.length >= 15 && kinds.includes("flood") && kinds.includes("expulsion"));

@@ -9,7 +9,7 @@ import { join, dirname } from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const R = await load("modules/wodx-interactables/scripts/interact-rules.mjs");
+const R = await load("modules/wodx-rules/interactables/interact-rules.mjs");
 
 test("a heavy blow cripples at once; lost for good stays a button", () => {
   const b = src("modules/wodx-combat/scripts/body.js");

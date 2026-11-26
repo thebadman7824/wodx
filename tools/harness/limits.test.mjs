@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const L = await import(join(root, "modules/wodx-actions/scripts/limit-rules.js"));
+const L = await import(join(root, "modules/wodx-rules/actions/limit-rules.js"));
 const DAY = 86400;
 
 test("a once-a-scene Gift is refused until the scene count moves", () => {

@@ -34,6 +34,21 @@ export function moduleIds(root = ROOT) {
   return fs.readdirSync(path.join(root, "modules")).filter(d => fs.existsSync(path.join(root, "modules", d, "module.json"))).sort();
 }
 
+/**
+ * The module a changed path belongs to. A file in the rules core (modules/wodx-rules/<module>/, docs/RULES-CORE.md)
+ * belongs to the module it came from, so a rules change runs that module's gates as it did before the move; the core's
+ * own folder (core/: terms, the calendar) belongs to Chronicle, which held it.
+ */
+export function ownerOf(p, ids) {
+  const r = /^modules\/wodx-rules\/([a-z-]+)\//.exec(p);
+  if ( r ) {
+    const from = r[1] === "core" ? "wodx-chronicle" : `wodx-${r[1]}`;
+    if ( ids.includes(from) ) return from;
+  }
+  const m = /^modules\/(wodx-[a-z-]+)\//.exec(p);
+  return m && ids.includes(m[1]) ? m[1] : null;
+}
+
 /** Short names as the gates write them in prose ("WoDX NPC", "WoDX Storyteller"). */
 const shortName = id => id.replace(/^wodx-/, "");
 
@@ -95,7 +110,8 @@ export function requirers(root = ROOT) {
 /** Script files of every module, with the files each one loads (relative imports and other modules' paths). */
 export function importGraph(root = ROOT) {
   const files = {};
-  for ( const id of moduleIds(root) ) for ( const f of walk(path.join(root, "modules", id, "scripts")) ) {
+  const dirs = moduleIds(root).map(id => path.join(root, "modules", id, id === "wodx-rules" ? "" : "scripts"));
+  for ( const d of dirs ) for ( const f of walk(d) ) {
     const src = fs.readFileSync(f, "utf8"), deps = new Set();
     for ( const m of src.matchAll(/(?:from\s*|import\s*\(\s*|import\s+)["'`]([^"'`]+\.m?js)["'`]/g) ) {
       const spec = m[1];
@@ -115,8 +131,8 @@ export function importGraph(root = ROOT) {
 export function touched(paths, {root = ROOT, direct = false} = {}) {
   const ids = moduleIds(root), mods = new Set(), gates = new Set(), changed = [];
   for ( const p of paths.map(p => p.replace(/\\/g, "/")) ) {
-    const m = /^modules\/(wodx-[a-z]+)\//.exec(p);
-    if ( m && ids.includes(m[1]) ) { mods.add(m[1]); if ( /\.m?js$/.test(p) ) changed.push(p); }
+    const own = ownerOf(p, ids);
+    if ( own ) { mods.add(own); if ( /\.m?js$/.test(p) ) changed.push(p); }
     else if ( p.startsWith("system/") ) ids.forEach(i => mods.add(i));
     else if ( /^tools\/gate\/(gate[\w-]*)\.mjs$/.test(p) ) gates.add(/^tools\/gate\/(gate[\w-]*)\.mjs$/.exec(p)[1]);
   }
@@ -126,7 +142,7 @@ export function touched(paths, {root = ROOT, direct = false} = {}) {
     for ( const [f, deps] of Object.entries(g) ) for ( const d of deps ) (users[d] ??= []).push(f);
     const seen = new Set(changed), queue = [...changed];
     while ( queue.length ) for ( const u of users[queue.shift()] ?? [] ) if ( !seen.has(u) ) { seen.add(u); queue.push(u); }
-    for ( const f of seen ) mods.add(/^modules\/(wodx-[a-z]+)\//.exec(f)[1]);
+    for ( const f of seen ) { const o = ownerOf(f, ids); if ( o ) mods.add(o); }
   }
   if ( !direct ) {
     const req = requirers(root), queue = [...owners];
@@ -177,8 +193,8 @@ export const CROSS_GATES = ["gate-interact", "gateapipaths", "gatetruthactions",
 export function tier1(paths, {root = ROOT, map = gateMap(root)} = {}) {
   const ids = moduleIds(root), own = new Set(), changedGates = new Set();
   for ( const p of paths.map(p => p.replace(/\\/g, "/")) ) {
-    const m = /^modules\/(wodx-[a-z]+)\//.exec(p);
-    if ( m && ids.includes(m[1]) ) own.add(m[1]);
+    const o = ownerOf(p, ids);
+    if ( o ) own.add(o);
     else if ( p.startsWith("system/") ) ids.forEach(i => own.add(i));
     else if ( /^tools\/gate\/(gate[\w-]*)\.mjs$/.test(p) ) changedGates.add(/^tools\/gate\/(gate[\w-]*)\.mjs$/.exec(p)[1]);
   }

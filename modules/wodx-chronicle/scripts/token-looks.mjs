@@ -8,7 +8,7 @@
  * Each player's effects level (client setting wodx-chronicle.fxLevel, when WoDX Chronicle's shared looks set it up)
  * is obeyed: Light drops the movement, Off shows nothing.
  */
-import * as R from "./token-look-rules.mjs";
+import * as R from "../../wodx-rules/chronicle/token-look-rules.mjs";
 import {MODULE_ID} from "./util.mjs";
 import {STATUS_PREFIX} from "./conditions.mjs";
 

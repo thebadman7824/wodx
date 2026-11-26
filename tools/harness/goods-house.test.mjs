@@ -9,7 +9,7 @@ const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 
 /* The no-effect audit, household things and tack on the road (B3905) */
-const R = await imp("modules/wodx-library/scripts/house-rules.mjs");
+const R = await imp("modules/wodx-rules/library/house-rules.mjs");
 const D = await imp("modules/wodx-library/data/goods-house.mjs");
 const G = await imp("modules/wodx-library/data/goods.mjs");
 

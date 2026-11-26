@@ -9,8 +9,8 @@ import {join, dirname} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
-const S = await load("modules/wodx-chronicle/scripts/signature-rules.mjs");
-const T = await load("modules/wodx-chronicle/scripts/trait-rules.mjs");
+const S = await load("modules/wodx-rules/chronicle/signature-rules.mjs");
+const T = await load("modules/wodx-rules/chronicle/trait-rules.mjs");
 const M = await load("system/worldofdarkness/module/scripts/wodx-roll-mods.js");
 const read = p => readFileSync(join(root, p), "utf8");
 const row = k => S.faeRows({kith: [k]})[0];
@@ -45,7 +45,7 @@ test("B6924: the system's roller turns botching off for a no-botch roll, from a 
 });
 
 test("B6924: WoDX Sheets and WoDX Actions carry it to their rolls", () => {
-  assert.match(read("modules/wodx-sheets/scripts/sheet-roll-rules.mjs"), /noBotch/);
+  assert.match(read("modules/wodx-rules/sheets/sheet-roll-rules.mjs"), /noBotch/);
   const main = read("modules/wodx-actions/scripts/main.js");
   assert.match(main, /canBotch: !built\.noBotch/);
 });

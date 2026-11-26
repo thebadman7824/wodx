@@ -12,7 +12,7 @@ const load = p => import(pathToFileURL(join(root, p)));
 const read = p => readFileSync(join(root, p), "utf8");
 
 test("B7120: WoDX Sheets passes the count from the general window and names it", async () => {
-  const RR = await load("modules/wodx-sheets/scripts/sheet-roll-rules.mjs");
+  const RR = await load("modules/wodx-rules/sheets/sheet-roll-rules.mjs");
   const a = RR.applyTo({bonus: 0, difficulty: 8}, {dice: 0, diff: 3});
   assert.equal(a.difficulty, 10);
   assert.equal(a.over, 1);

@@ -21,7 +21,7 @@ await import(join(root, "modules/wodx-storyteller/scripts/main.mjs"));
 game.modules.set("wodx-chronicle", {active: true});
 game.modules.set("wodx-storyteller", {active: true});
 const ST = () => game.modules.get("wodx-storyteller").api;
-const W = await import(join(root, "modules/wodx-storyteller/scripts/haven-works-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/storyteller/haven-works-rules.mjs"));
 const deeds = [];
 let anna, scene;
 

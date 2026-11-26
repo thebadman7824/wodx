@@ -5,7 +5,7 @@
  */
 import {MODULE_ID, isActiveGM, log} from "./util.mjs";
 import * as G from "./gen-core.mjs";
-import * as WR from "./world-rules.mjs";
+import * as WR from "../../wodx-rules/chronicle/world-rules.mjs";
 
 const SOURCES = new Map(); // source -> [table definitions]
 let cache = null;          // {defs: [...]} built from the world's Roll Tables and the shipped data

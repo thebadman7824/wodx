@@ -11,8 +11,8 @@ const imp = p => import(pathToFileURL(join(root, p)));
 const stream = (seed = 7) => { let x = seed >>> 0; return () => { x = (x * 1664525 + 1013904223) >>> 0; return x / 4294967296; }; };
 
 test("B6905: a seat titled with \"an\" (Voice of an auspice) names the bloc that fills it", async () => {
-  const F = await imp("modules/wodx-npc/scripts/faction-rules.mjs");
-  const PO = await imp("modules/wodx-npc/scripts/politics-rules.mjs");
+  const F = await imp("modules/wodx-rules/npc/faction-rules.mjs");
+  const PO = await imp("modules/wodx-rules/npc/politics-rules.mjs");
   const info = {e: {name: "Eldest", tribe: "Kamakshi", rank: 4}, k: {name: "Kali", tribe: "Kartikeya", rank: 2}, n: {name: "Naga", tribe: "Kamsa", rank: 1}};
   const f = F.normFaction({id: "nest", name: "The nest", kind: "garou", leader: "e", members: ["e", "k", "n"], politics: {offices: {eldest: ["e"]}, inner: 3}});
   let said = [];

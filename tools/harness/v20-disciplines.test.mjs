@@ -7,7 +7,7 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const K = await import("../../modules/wodx-actions/scripts/kindred-rules.js");
+const K = await import("../../modules/wodx-rules/actions/kindred-rules.js");
 const PK = await import("../../modules/wodx-actions/scripts/power-keywords.js");
 const J = f => JSON.parse(fs.readFileSync(path.join(root, "modules/wodx-actions/data", f), "utf8")).powers;
 const DA = J("disciplines-daw.json"), V20 = J("disciplines-v20.json");

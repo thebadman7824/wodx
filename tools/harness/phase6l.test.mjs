@@ -8,8 +8,8 @@ import {readFileSync} from "node:fs";
 /* Phase 6l: the crucible (WoDX Actions 3.10.0, Orpheus) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const O = await import(join(root, "modules/wodx-actions/scripts/orpheus-rules.js"));
-const V = await import(join(root, "modules/wodx-actions/scripts/voice-rules.js"));
+const O = await import(join(root, "modules/wodx-rules/actions/orpheus-rules.js"));
+const V = await import(join(root, "modules/wodx-rules/actions/voice-rules.js"));
 
 test("five Shades and their bases; four Laments; ten Horrors and their prerequisites (pp. 122–124)", () => {
   assert.equal(Object.keys(O.SHADES).length, 5);
@@ -76,7 +76,7 @@ test("wiring: the Orpheus menu by the sheet's variant, the API; gender-neutral t
   for ( const k of ["orphHorror", "orphVitality", "orphHarm", "orphSpite", "orphProject", "orphSetup"] ) assert.match(main, new RegExp(`${k}: withActor`));
   assert.match(readFileSync(join(root, "modules/wodx-actions/scripts/profile-menus.js"), "utf8"), /kind === "mortal" && ctx\.isOrpheus\?\.\(actor\)\) \? MENUS\.orpheus/);
   const words = /\b(he|she|him|her|his|hers|himself|herself)\b/i;
-  for ( const f of ["orpheus.js", "orpheus-rules.js"] ) {
+  for ( const f of ["orpheus.js", "../../wodx-rules/actions/orpheus-rules.js"] ) {
     const src = readFileSync(join(root, "modules/wodx-actions/scripts", f), "utf8");
     for ( const s of src.match(/`[^`]*`|"[^"\n]*"/g) ?? [] ) assert.ok(!words.test(s), `${f}: ${s.slice(0, 80)}`);
   }

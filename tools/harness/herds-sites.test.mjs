@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const H = await imp("modules/wodx-storyteller/scripts/herd-rules.mjs");
-const S = await imp("modules/wodx-storyteller/scripts/site-rules.mjs");
+const H = await imp("modules/wodx-rules/storyteller/herd-rules.mjs");
+const S = await imp("modules/wodx-rules/storyteller/site-rules.mjs");
 const M = H.MONTH;
 
 test("the classes of vessel follow the age and the land's faith", () => {

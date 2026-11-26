@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const H = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/haul-rules.mjs")));
-const A = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/rules.js")));
+const H = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/haul-rules.mjs")));
+const A = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/rules.js")));
 
 test("the chart is the one WoDX Actions keeps (VtDA20 p. 335)", () => {
   for ( const [l, , kg] of A.LIFTING ) assert.equal(H.liftKg(l), kg, `Strength ${l}`);

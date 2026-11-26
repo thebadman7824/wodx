@@ -11,11 +11,11 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const H = await imp("modules/wodx-storyteller/scripts/hardship-rules.mjs");
-const RM = await imp("modules/wodx-storyteller/scripts/remains-rules.mjs");
-const F = await imp("modules/wodx-npc/scripts/faction-rules.mjs");
-const TK = await imp("modules/wodx-npc/scripts/talk-rules.mjs");
-const IR = await imp("modules/wodx-interactables/scripts/interact-rules.mjs");
+const H = await imp("modules/wodx-rules/storyteller/hardship-rules.mjs");
+const RM = await imp("modules/wodx-rules/storyteller/remains-rules.mjs");
+const F = await imp("modules/wodx-rules/npc/faction-rules.mjs");
+const TK = await imp("modules/wodx-rules/npc/talk-rules.mjs");
+const IR = await imp("modules/wodx-rules/interactables/interact-rules.mjs");
 
 test("hardship: Atmosphere's day sets how harsh it is (M20 p. 435: below freezing or above 49°C)", () => {
   assert.equal(H.severityFromDay(null), "none");
@@ -65,7 +65,7 @@ test("bodies: what each era learns", () => {
   assert.ok(!RM.heatDue({heated: true}, "fresh"));
   assert.ok(!RM.heatDue({}, "bones"));
   assert.ok(!RM.heatDue({cause: "sickness"}, "fresh"));
-  const U = src("modules/wodx-storyteller/scripts/upkeep-rules.mjs");
+  const U = src("modules/wodx-rules/storyteller/upkeep-rules.mjs");
   assert.match(U, /body: 2/);
   const m = src("modules/wodx-storyteller/scripts/main.mjs");
   assert.match(m, /remains: \{open: Remains\.remainsDialog/);

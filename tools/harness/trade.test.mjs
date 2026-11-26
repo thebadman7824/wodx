@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import * as TR from "../../modules/wodx-actions/scripts/trade-rules.js";
-import * as SR from "../../modules/wodx-actions/scripts/social-rules.js";
+import * as TR from "../../modules/wodx-rules/actions/trade-rules.js";
+import * as SR from "../../modules/wodx-rules/actions/social-rules.js";
 
 const src = p => readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 

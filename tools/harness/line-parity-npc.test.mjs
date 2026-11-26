@@ -7,15 +7,15 @@ import {dirname, join} from "node:path";
 // WoDX NPC: every line gets its own equivalent of the Kindred-only tools (B6310-B6318).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
-const LR = await imp("modules/wodx-npc/scripts/lines-rules.mjs");
-const AC = await imp("modules/wodx-npc/scripts/aftercare-rules.mjs");
-const H = await imp("modules/wodx-npc/scripts/hearts-rules.mjs");
-const F = await imp("modules/wodx-npc/scripts/fates-rules.mjs");
-const SW = await imp("modules/wodx-npc/scripts/servant-world-rules.mjs");
-const SR = await imp("modules/wodx-npc/scripts/servant-rules.mjs");
-const RS = await imp("modules/wodx-npc/scripts/resident-rules.mjs");
-const DU = await imp("modules/wodx-npc/scripts/duty-rules.mjs");
-const TRR = await imp("modules/wodx-npc/scripts/trust-rules.mjs");
+const LR = await imp("modules/wodx-rules/npc/lines-rules.mjs");
+const AC = await imp("modules/wodx-rules/npc/aftercare-rules.mjs");
+const H = await imp("modules/wodx-rules/npc/hearts-rules.mjs");
+const F = await imp("modules/wodx-rules/npc/fates-rules.mjs");
+const SW = await imp("modules/wodx-rules/npc/servant-world-rules.mjs");
+const SR = await imp("modules/wodx-rules/npc/servant-rules.mjs");
+const RS = await imp("modules/wodx-rules/npc/resident-rules.mjs");
+const DU = await imp("modules/wodx-rules/npc/duty-rules.mjs");
+const TRR = await imp("modules/wodx-rules/npc/trust-rules.mjs");
 
 test("one key per line: a Kuei-jin is never Kindred, a Fera never a mortal", () => {
   assert.equal(LR.lineKey({type: "Vampire", system: {settings: {variant: "kindredeast"}}}), "kuei-jin");
@@ -101,7 +101,7 @@ test("Fates, servants, households and duties follow the right line", () => {
 });
 
 // B6319: NPCs of every line refill their own pools
-const RF = await imp("modules/wodx-npc/scripts/line-refill-rules.mjs");
+const RF = await imp("modules/wodx-rules/npc/line-refill-rules.mjs");
 const {readFileSync} = await import("node:fs");
 
 test("refills: lines WoDX Actions rolls daily are marked once, the others are rolled here by their books", () => {
@@ -155,7 +155,7 @@ test("wiring: the refill runs on the clock and the NPC api keeps every entry aft
 });
 
 test("B6452: looking someone over rolls the viewer's line's sense for a hidden loyalty", async () => {
-  const T = await imp("modules/wodx-npc/scripts/trust-rules.mjs");
+  const T = await imp("modules/wodx-rules/npc/trust-rules.mjs");
   const wr = T.pickSense(T.sensesFor("wraith"), {powers: {}});
   assert.equal(wr.power, "Lifesight", "a wraith's own sense before plain Empathy");
   assert.equal(T.senseResult(wr, 2), "hint"); assert.equal(T.senseResult(wr, 3), "found"); assert.equal(T.senseResult(wr, 0), "none");
@@ -176,8 +176,8 @@ test("B6452: looking someone over rolls the viewer's line's sense for a hidden l
 });
 
 test("B6453: the Rage and fire soul rolls the loved-one checks use, as the books set them", async () => {
-  const G = await import("../../modules/wodx-actions/scripts/garou-rules.js");
-  const K = await import("../../modules/wodx-actions/scripts/kote-rules.js");
+  const G = await import("../../modules/wodx-rules/actions/garou-rules.js");
+  const K = await import("../../modules/wodx-rules/actions/kote-rules.js");
   // W20 p. 262: new moon 8 down to full 4, one less for the auspice's moon or in Crinos
   assert.equal(G.rageDifficulty({b: "w20", phaseIndex: 0, auspice: "philodox", form: "homid"}), 8);
   assert.equal(G.rageDifficulty({b: "w20", phaseIndex: 4, auspice: "philodox", form: "homid"}), 4);

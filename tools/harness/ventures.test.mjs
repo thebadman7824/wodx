@@ -9,9 +9,9 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const VR = await imp("modules/wodx-storyteller/scripts/venture-rules.mjs");
-const M = await imp("modules/wodx-storyteller/scripts/money-rules.mjs");
-const WR = await imp("modules/wodx-chronicle/scripts/world-rules.mjs");
+const VR = await imp("modules/wodx-rules/storyteller/venture-rules.mjs");
+const M = await imp("modules/wodx-rules/storyteller/money-rules.mjs");
+const WR = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
 const never = () => 0.99, always = () => 0;
 const open = (over = {}) => VR.openVenture({id: "v1", actor: "a1", name: "Ilse", market: "brno", kind: "house", goods: "", amount: 10000, now: 0, year: 1250, ...over});
 

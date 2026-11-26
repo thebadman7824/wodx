@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 /* The Inheritance step (B3530 to B3533): heir choices, what passes, ties, and how the heir's line remembers the dead. */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const IR = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/inherit-rules.mjs")).href);
+const IR = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/inherit-rules.mjs")).href);
 const tpl = JSON.parse(readFileSync(join(root, "system/worldofdarkness/template.json"), "utf8"));
 
 test("heirs are offered best first and never twice, the dead never", () => {

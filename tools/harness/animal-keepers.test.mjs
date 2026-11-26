@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as AG from "../../modules/wodx-creation/scripts/animal-ghoul-rules.mjs";
-import * as AK from "../../modules/wodx-creation/scripts/animal-keepers-rules.mjs";
+import * as AG from "../../modules/wodx-rules/creation/animal-ghoul-rules.mjs";
+import * as AK from "../../modules/wodx-rules/creation/animal-keepers-rules.mjs";
 
 /* Ghouled animals, step four (B5130 to B5137) */
 

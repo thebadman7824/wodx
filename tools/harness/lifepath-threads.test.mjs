@@ -3,10 +3,10 @@ import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as LP from "../../modules/wodx-creation/scripts/lifepath-rules.mjs";
-import * as T from "../../modules/wodx-creation/scripts/lifepath-threads-rules.mjs";
-import * as FP from "../../modules/wodx-creation/scripts/first-night-prelude-rules.mjs";
-import * as P from "../../modules/wodx-chronicle/scripts/pod-rules.mjs";
+import * as LP from "../../modules/wodx-rules/creation/lifepath-rules.mjs";
+import * as T from "../../modules/wodx-rules/creation/lifepath-threads-rules.mjs";
+import * as FP from "../../modules/wodx-rules/creation/first-night-prelude-rules.mjs";
+import * as P from "../../modules/wodx-rules/chronicle/pod-rules.mjs";
 
 /* Creation 0.14.0 + Chronicle 0.44.0: lifepath threads as story chains (desk cr2) and a guest in a prelude (desk bf1) */
 

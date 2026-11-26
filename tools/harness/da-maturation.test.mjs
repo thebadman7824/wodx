@@ -1,11 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import * as M from "../../modules/wodx-creation/scripts/maturation-rules.mjs";
-import {propose} from "../../modules/wodx-creation/scripts/advance-rules.mjs";
+import * as M from "../../modules/wodx-rules/creation/maturation-rules.mjs";
+import {propose} from "../../modules/wodx-rules/creation/advance-rules.mjs";
 import {SWITCHES} from "../../modules/wodx-creation/data/advance.mjs";
 import * as PM from "../../modules/wodx-actions/scripts/profile-menus.js";
-import * as TR from "../../modules/wodx-actions/scripts/theme-rules.js";
+import * as TR from "../../modules/wodx-rules/actions/theme-rules.js";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 const fixed = (successes, botch = false) => () => ({successes, botch});
@@ -70,7 +70,7 @@ test("raising Backgrounds: a roll at the Background's difficulty, Generation ref
 /* Pass the Years offers maturation in place of the house experience for a Dark Ages Cainite */
 test("Pass the Years: maturation stands in for experience and the fade, for Dark Ages vampires only", () => {
   assert.equal(SWITCHES.maturation, "yearsMaturation");
-  assert.match(src("modules/wodx-chronicle/data/house-rules.mjs"), /"id": "yearsMaturation"/);
+  assert.match(src("modules/wodx-rules/chronicle/house-rules.mjs"), /"id": "yearsMaturation"/);
   const v = {line: "vampire", awakeBefore: 50, backgrounds: [{id: "b1", name: "Allies", value: 3}], road: {key: "humanity", rating: 7}};
   const da = {id: "dark-ages"};
   const ctx = {fromYear: 1197, toYear: 1297, years: 100, awakeYears: 100, fromEra: da, toEra: da, switches: {maturation: true, xp: true}};
@@ -96,7 +96,7 @@ test("the Maturation window is on the Kindred menu and wired to WoDX Creation", 
 /* B7691: elder Cainites, Dark Ages Storytellers Companion (2002) printed p. 76 */
 test("elder creation: the book's totals, the Road less 2, two dice of blood", async () => {
   const {TOTALS} = await import("../../modules/wodx-creation/data/creation-totals.mjs");
-  const D = await import("../../modules/wodx-creation/scripts/derived-rules.mjs");
+  const D = await import("../../modules/wodx-rules/creation/derived-rules.mjs");
   const e = TOTALS.daelder;
   assert.deepEqual([e.attributes, e.abilities, e.backgrounds, e.powers[0].dots, e.virtues, e.freebies], [[10, 7, 5], [20, 12, 8], 15, 10, 7, 30]);
   assert.equal(e.costs.road, 1);
@@ -109,8 +109,8 @@ test("elder creation: the book's totals, the Road less 2, two dice of blood", as
 
 /* B7690: the Road of Night, Dark Ages Storytellers Companion (2002) pp. 28-30 */
 test("the Road of Night: found by name, ten sins, a parish and the Path of Night after the Dark Ages", async () => {
-  const K = await import("../../modules/wodx-actions/scripts/kindred-rules.js");
-  const {FLOCKS} = await import("../../modules/wodx-npc/scripts/road-flock-rules.mjs");
+  const K = await import("../../modules/wodx-rules/actions/kindred-rules.js");
+  const {FLOCKS} = await import("../../modules/wodx-rules/npc/road-flock-rules.mjs");
   const {ROAD_TO_PATH} = await import("../../modules/wodx-creation/data/advance.mjs");
   const ROADS = JSON.parse(src("modules/wodx-actions/data/roads-daw.json"));
   for ( const name of ["Road of Night", "Via Noctis", "Redeemers"] ) assert.equal(K.roadFor(ROADS, name).key, "night", name);
@@ -136,5 +136,5 @@ test("the Sleep of Ages past 500 years and the Thirst of Caine's stages", () => 
   assert.equal(M.thirstRoll("none", 5, 1, fixed(0, true)).stage, "addicted");
   assert.equal(M.thirstRoll("none", 5, 1, fixed(1)).diff, 2);
   assert.equal(M.thirstRoll("none", 5, 0, fixed(0)).stage, "none");
-  assert.match(src("modules/wodx-chronicle/data/house-rules.mjs"), /"id": "yearsThirstOfCaine",[\s\S]*?"default": false/);
+  assert.match(src("modules/wodx-rules/chronicle/house-rules.mjs"), /"id": "yearsThirstOfCaine",[\s\S]*?"default": false/);
 });

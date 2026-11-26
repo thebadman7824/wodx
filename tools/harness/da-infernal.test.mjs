@@ -1,9 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import * as I from "../../modules/wodx-actions/scripts/infernal-rules.js";
-import * as B from "../../modules/wodx-combat/scripts/body-rules.js";
-import * as TR from "../../modules/wodx-actions/scripts/theme-rules.js";
+import * as I from "../../modules/wodx-rules/actions/infernal-rules.js";
+import * as B from "../../modules/wodx-rules/combat/body-rules.js";
+import * as TR from "../../modules/wodx-rules/actions/theme-rules.js";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 const pact = (rating, spent = []) => ({ id: "p", rating, spent });

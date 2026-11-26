@@ -94,14 +94,14 @@ test("dice: V20 difficulty 2 to 10, a 10 always hits, 1s cancel, botch with no h
 test("every dice count in WoDX agrees with the shared one", async () => {
   const M = p => import(path.join(ROOT, "modules", p));
   const counts = [
-    [await M("wodx-combat/scripts/rules.js"), m => (f, d) => m.countSuccesses(f, d).successes],
-    [await M("wodx-chronicle/scripts/referee-rules.mjs"), m => (f, d) => m.successes(f, d).successes],
-    [await M("wodx-npc/scripts/faction-rules.mjs"), m => (f, d) => m.successes(f, d).net],
-    [await M("wodx-library/scripts/arms-rules.mjs"), m => (f, d) => m.countSuccesses(f, d).successes],
-    [await M("wodx-library/scripts/examine-rules.mjs"), m => (f, d) => m.countSuccesses(f, d).successes],
+    [await M("wodx-rules/combat/rules.js"), m => (f, d) => m.countSuccesses(f, d).successes],
+    [await M("wodx-rules/chronicle/referee-rules.mjs"), m => (f, d) => m.successes(f, d).successes],
+    [await M("wodx-rules/npc/faction-rules.mjs"), m => (f, d) => m.successes(f, d).net],
+    [await M("wodx-rules/library/arms-rules.mjs"), m => (f, d) => m.countSuccesses(f, d).successes],
+    [await M("wodx-rules/library/examine-rules.mjs"), m => (f, d) => m.countSuccesses(f, d).successes],
     [await M("wodx-library/scripts/wonder-powers.mjs"), m => (f, d) => m.countSuccesses(f, d).successes],
-    [await M("wodx-library/scripts/recipe-rules.mjs"), m => (f, d) => m.successes(f, d).successes],
-    [await M("wodx-otherworlds/scripts/rules.mjs"), m => (f, d) => m.countRoll(f, d).net]
+    [await M("wodx-rules/library/recipe-rules.mjs"), m => (f, d) => m.successes(f, d).successes],
+    [await M("wodx-rules/otherworlds/rules.mjs"), m => (f, d) => m.countRoll(f, d).net]
   ].map(([m, fn]) => fn(m));
   const rolls = [[[10, 1, 6], 6], [[1, 3], 6], [[1, 6], 6], [[10], 12], [[2, 2], 1], [[7, 8, 9], 8], [[10, 10, 1], 11]];
   for ( const [f, d] of rolls ) for ( const c of counts ) assert.equal(c(f, d), T.successes(f, d).successes, `${f} at ${d}`);

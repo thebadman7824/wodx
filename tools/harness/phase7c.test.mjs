@@ -7,8 +7,8 @@ import {dirname, join} from "node:path";
 /* Phase 7c: routines, places and reactions (WoDX NPC 0.2.0), the pure rules */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(join(root, "modules/wodx-npc/scripts/routine-rules.mjs"));
-const NR = await import(join(root, "modules/wodx-npc/scripts/npc-rules.mjs"));
+const R = await import(join(root, "modules/wodx-rules/npc/routine-rules.mjs"));
+const NR = await import(join(root, "modules/wodx-rules/npc/npc-rules.mjs"));
 const {DateEngine, sunTimes} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
 
 // Rothenstein's clock: 1197 epoch, Bohemia's reform, latitude 50

@@ -5,7 +5,7 @@
  * A pile is a tile with no picture: flags.wodx-interactables = {container: true, kind: "pile", pile: true, items:
  * [names], loose: [{name, data (the item as it was)}], taken}. Each client draws its heap on a layer of its own.
  */
-import * as L from "./loose-rules.mjs";
+import * as L from "../../wodx-rules/interactables/loose-rules.mjs";
 
 const MOD = "wodx-interactables", SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;

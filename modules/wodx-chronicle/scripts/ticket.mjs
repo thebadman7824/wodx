@@ -7,8 +7,8 @@
  * while a ruling waits" pauses the game until the ticket is decided. Rules in ticket-rules.mjs.
  */
 import {MODULE_ID, esc, emit, isActiveGM, rule} from "./util.mjs";
-import * as T from "./ticket-rules.mjs";
-import * as R from "./referee-rules.mjs";
+import * as T from "../../wodx-rules/chronicle/ticket-rules.mjs";
+import * as R from "../../wodx-rules/chronicle/referee-rules.mjs";
 import * as referee from "./referee.mjs";
 import * as approvals from "./approvals.mjs";
 import * as eras from "./eras.mjs";

@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
    change the world once the Storyteller approves them */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const E = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/effects-rules.js")));
+const E = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/effects-rules.js")));
 const src = p => readFileSync(join(root, p), "utf8");
 const got = {ok: true, strength: 4, duration: 1, targets: 0};
 

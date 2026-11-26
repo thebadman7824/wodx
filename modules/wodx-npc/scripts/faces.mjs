@@ -6,7 +6,7 @@
  * and to write the description. From 0.33.0 (B1382) chat messages and the combat tracker use the description too, for
  * the NPCs on the scene or in the fight; sheets are not changed.
  */
-import * as F from "./faces-rules.mjs";
+import * as F from "../../wodx-rules/npc/faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 

@@ -4,11 +4,11 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const read = p => readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
-const T = await import("../../modules/wodx-actions/scripts/totem-rules.js");
+const T = await import("../../modules/wodx-rules/actions/totem-rules.js");
 const DATA = JSON.parse(read("modules/wodx-actions/data/rules/werewolf/totems-w20.json"));
 const row = k => DATA.rows.find(r => r.key === k);
 // The tags a roll of the general window can carry (Chronicle trait-rules rollTags) plus the Attribute and Ability keys
-const TAGS = new Set([...read("modules/wodx-chronicle/scripts/trait-rules.mjs").matchAll(/"([a-z]+)"/g)].map(m => m[1]));
+const TAGS = new Set([...read("modules/wodx-rules/chronicle/trait-rules.mjs").matchAll(/"([a-z]+)"/g)].map(m => m[1]));
 
 test("B7082: the table is sound: 21 totems, every row read by a reader, no unknown trait", () => {
   assert.deepEqual(T.problems(DATA), []);
@@ -83,7 +83,7 @@ test("B7082: the totem window is on the Werewolf menu and the data loads", () =>
   const garou = read("modules/wodx-actions/scripts/garou.js");
   assert.match(garou, /fetchData\("rules\/werewolf\/totems-w20"\)/);
   assert.match(read("modules/wodx-actions/scripts/profile-menus.js"), /"api:packTotem", "Pack totem"/);
-  assert.match(read("modules/wodx-actions/scripts/theme-rules.js"), /"api:packTotem": "/);
+  assert.match(read("modules/wodx-rules/actions/theme-rules.js"), /"api:packTotem": "/);
   assert.match(read("modules/wodx-actions/scripts/main.js"), /packTotem: withActor\(a => gx\(\)\.packTotem\(a\)\)/);
 });
 

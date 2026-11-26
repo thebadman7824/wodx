@@ -7,8 +7,8 @@
  * or brings up to date, the journals and the group actor in setup-rules.mjs's plan, each found again by its flag so a
  * second run never makes a copy. "Show me first" lists the plan without changing anything.
  */
-import * as S from "./setup-rules.mjs";
-import * as MR from "./money-rules.mjs";
+import * as S from "../../wodx-rules/storyteller/setup-rules.mjs";
+import * as MR from "../../wodx-rules/storyteller/money-rules.mjs";
 import {MOD} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

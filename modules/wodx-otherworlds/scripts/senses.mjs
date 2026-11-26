@@ -1,5 +1,5 @@
 import {MODULE_ID} from "./ratings.mjs";
-import {countRoll} from "./rules.mjs";
+import {countRoll} from "../../wodx-rules/otherworlds/rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 /**

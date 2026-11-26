@@ -13,7 +13,7 @@
  *   scene flag wodx-solo.card      the country map town id the card scene stands for
  *   drawing flag wodx-solo.card    true on the card drawing
  */
-import * as K from "./card-rules.mjs";
+import * as K from "../../wodx-rules/solo/card-rules.mjs";
 import {addAsks, addActions, placeOf, tell, ask} from "./panel.mjs";
 import {nightTick} from "./world.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -85,7 +85,7 @@ async function cardFor(town, actor, scene) {
   try {
     const A = game.modules.get("wodx-atmosphere");
     const now = A?.active ? A.api?.weather?.now?.(scene) : null;
-    if ( now ) weather = (await import("../../wodx-atmosphere/scripts/weather-rules.mjs")).describe(now);
+    if ( now ) weather = (await import("../../wodx-rules/atmosphere/weather-rules.mjs")).describe(now);
   } catch (e) { weather = null; }
   let land = null;
   try { land = st?.country?.landAt?.({town, km: 0, dir: "N"}, year) ?? null; } catch (e) { land = null; }

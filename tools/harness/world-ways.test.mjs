@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as WR from "../../modules/wodx-chronicle/scripts/world-rules.mjs";
-import * as PR from "../../modules/wodx-npc/scripts/passerby-rules.mjs";
+import * as WR from "../../modules/wodx-rules/chronicle/world-rules.mjs";
+import * as PR from "../../modules/wodx-rules/npc/passerby-rules.mjs";
 import * as PW from "../../modules/wodx-npc/scripts/passerby-world.mjs";
-import * as RS from "../../modules/wodx-npc/scripts/resident-rules.mjs";
+import * as RS from "../../modules/wodx-rules/npc/resident-rules.mjs";
 import {PEOPLE_TABLES, TRADE_SHEETS} from "../../modules/wodx-creation/data/people.mjs";
 import {tradesFor} from "../../modules/wodx-creation/data/people-trades-world.mjs";
 import {resolveTable} from "../../modules/wodx-chronicle/scripts/gen-core.mjs";

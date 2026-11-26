@@ -9,9 +9,9 @@
  *              leave evidence at the scene, whoever did it, players' characters too. It fades with time and rain
  *              (wodxWeather). Searching the scene finds what is left; a find goes on the open board.
  */
-import * as I from "./investigation-rules.mjs";
-import * as C from "./case-rules.mjs";
-import {countSuccesses, clampDifficulty} from "../../wodx-actions/scripts/core-rules.js";
+import * as I from "../../wodx-rules/interactables/investigation-rules.mjs";
+import * as C from "../../wodx-rules/interactables/case-rules.mjs";
+import {countSuccesses, clampDifficulty} from "../../wodx-rules/actions/core-rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";

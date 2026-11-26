@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* The no-effect audit, gear (B3795-B3797): cyberware, bioware and exoskeletons do something in the body */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(pathToFileURL(join(root, "modules/wodx-library/scripts/gear-rules.mjs")));
+const G = await import(pathToFileURL(join(root, "modules/wodx-rules/library/gear-rules.mjs")));
 const {GEAR_FX} = await import(pathToFileURL(join(root, "modules/wodx-library/data/gear-effects.mjs")));
 const data = JSON.parse(readFileSync(join(root, "modules/wodx-library/data/gear.json"), "utf8"));
 const by = n => data.items.find(i => i.name === n);

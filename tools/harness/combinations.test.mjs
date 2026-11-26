@@ -5,8 +5,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const read = p => readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
-const K = await import("../../modules/wodx-actions/scripts/kindred-rules.js");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+const K = await import("../../modules/wodx-rules/actions/kindred-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
 const DATA = JSON.parse(read("modules/wodx-actions/data/rules/vampire/combinations-lotc.json"));
 const DISCS = ["Animalism", "Auspex", "Celerity", "Chimerstry", "Dementation", "Dominate", "Fortitude", "Necromancy", "Obfuscate", "Obtenebration",
   "Potence", "Presence", "Protean", "Quietus", "Serpentis", "Thaumaturgy", "Vicissitude"];

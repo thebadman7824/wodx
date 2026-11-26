@@ -9,8 +9,8 @@
  */
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import {currentYear} from "./eras.mjs";
-import * as L from "./law-rules.mjs";
-import * as T from "./law-tax-rules.mjs";
+import * as L from "../../wodx-rules/chronicle/law-rules.mjs";
+import * as T from "../../wodx-rules/chronicle/law-tax-rules.mjs";
 import * as place from "./place.mjs";
 import {addDeed} from "./law-heat.mjs";
 

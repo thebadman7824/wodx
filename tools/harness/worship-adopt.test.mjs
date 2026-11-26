@@ -9,9 +9,9 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const A = await imp("modules/wodx-interactables/scripts/adopt-rules.mjs");
-const F = await imp("modules/wodx-chronicle/scripts/faith-rules.mjs");
-const R = await imp("modules/wodx-npc/scripts/routine-rules.mjs");
+const A = await imp("modules/wodx-rules/interactables/adopt-rules.mjs");
+const F = await imp("modules/wodx-rules/chronicle/faith-rules.mjs");
+const R = await imp("modules/wodx-rules/npc/routine-rules.mjs");
 const SAMPLE = src("tools/mapgen/samples/hohenhausen.wodx.json");
 const frame = A.frameOf({grid: {size: 100, distance: 5}, dimensions: {sceneX: 0, sceneY: 0, size: 100, distance: 5}, padding: 0});
 
@@ -52,7 +52,7 @@ test("worship: the generator takes --faith, the adopter reads the scene's faith"
 });
 
 /* B6362: the tagged house is holy ground, and its faith is read by prayer, True Faith and the demon's burn */
-const IR = await imp("modules/wodx-interactables/scripts/interact-rules.mjs");
+const IR = await imp("modules/wodx-rules/interactables/interact-rules.mjs");
 test("worship: a house of worship is holy ground kept for its faith", () => {
   for ( const f of Object.keys(F.FAITHS) ) assert.ok(IR.FAITHS.includes(f), f);
   const o = IR.worshipGround({kind: "mosque", faith: "islamic"}, "The mosque");

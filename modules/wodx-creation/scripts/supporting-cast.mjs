@@ -6,8 +6,8 @@
  */
 import {MODULE_ID, esc, disciplinesOf, disciplineItem} from "./actor-data.mjs";
 import {TEMPLATES, GROUPS, TIERS, SHORT} from "../data/dasc-templates.mjs";
-import * as SC from "./supporting-cast-rules.mjs";
-import * as BR from "./book-people-rules.mjs";
+import * as SC from "../../wodx-rules/creation/supporting-cast-rules.mjs";
+import * as BR from "../../wodx-rules/creation/book-people-rules.mjs";
 import {embraceData, makeGhoul} from "./change-of-state.mjs";
 
 const FOLDER = "WoDX · Supporting characters (Dark Ages)";

@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const MT = await import(pathToFileURL(join(root, "modules/wodx-combat/scripts/mounted-rules.js")));
-const C = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/chase-rules.mjs")));
+const MT = await import(pathToFileURL(join(root, "modules/wodx-rules/combat/mounted-rules.js")));
+const C = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/chase-rules.mjs")));
 
 const horse = (role = "reins", ground = "road") => ({...C.rideInFight("horse", 1197, ground), kind: "horse", role});
 const mule = {...C.rideInFight("mule", 1197, "road"), kind: "mule", role: "reins"};

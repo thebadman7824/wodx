@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {readFileSync} from "node:fs";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
-import * as R from "../../modules/wodx-combat/scripts/rules.js";
+import * as R from "../../modules/wodx-rules/combat/rules.js";
 
 /* Knocked down: the stand-up roll at the start of the turn and the Initiative cost (B3921) */
 

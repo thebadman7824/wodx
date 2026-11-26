@@ -5,8 +5,8 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const SW = await import(join(root, "modules/wodx-storyteller/scripts/siege-works-rules.mjs"));
-const B = await import(join(root, "modules/wodx-storyteller/scripts/battle-rules.mjs"));
+const SW = await import(join(root, "modules/wodx-rules/storyteller/siege-works-rules.mjs"));
+const B = await import(join(root, "modules/wodx-rules/storyteller/battle-rules.mjs"));
 
 /** Dice that always show one face. */
 const always = f => k => Array(k).fill(f);

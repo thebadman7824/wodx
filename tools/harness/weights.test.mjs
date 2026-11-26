@@ -11,11 +11,11 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));
-const W = await imp("modules/wodx-library/scripts/weight-rules.mjs");
-const L = await imp("modules/wodx-interactables/scripts/loose-rules.mjs");
-const H = await imp("modules/wodx-interactables/scripts/haul-rules.mjs");
-const MV = await imp("modules/wodx-combat/scripts/movement-rules.js");
-const R = await imp("modules/wodx-interactables/scripts/interact-rules.mjs");
+const W = await imp("modules/wodx-rules/library/weight-rules.mjs");
+const L = await imp("modules/wodx-rules/interactables/loose-rules.mjs");
+const H = await imp("modules/wodx-rules/interactables/haul-rules.mjs");
+const MV = await imp("modules/wodx-rules/combat/movement-rules.js");
+const R = await imp("modules/wodx-rules/interactables/interact-rules.mjs");
 const {GOODS} = await imp("modules/wodx-library/data/goods.mjs");
 const gear = JSON.parse(src("modules/wodx-library/data/gear.json")).items;
 

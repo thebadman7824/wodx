@@ -10,7 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const mock = installMock({dataRoot: root});
 mock.asGM();
 globalThis.canvas = {scene: null};
-const N = await import(join(root, "modules/wodx-otherworlds/scripts/net-rules.mjs"));
+const N = await import(join(root, "modules/wodx-rules/otherworlds/net-rules.mjs"));
 const T = await import(join(root, "modules/wodx-otherworlds/scripts/technica.mjs"));
 const IX = "wodx-interactables";
 const docs = new Map();

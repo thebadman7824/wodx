@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const R = await import(pathToFileURL(join(root, "modules/wodx-combat/scripts/rules.js")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/combat/rules.js")));
 
 test("shots: only a weapon with a capacity is counted", () => {
   assert.deepEqual(R.shotsOf({value: 3, max: 6}), {counted: true, value: 3, max: 6, empty: false});

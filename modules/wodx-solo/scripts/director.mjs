@@ -19,10 +19,10 @@
  *   setting wodx-solo.nightXp    Boolean            "Experience at the end of each night" (on)
  */
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
-import * as D from "./director-rules.mjs";
-import * as WR from "../../wodx-storyteller/scripts/wrapup-rules.mjs";
-import {lineFor} from "../../wodx-storyteller/scripts/prelude-rules.mjs";
-import {ANSWERS} from "./world-rules.mjs";
+import * as D from "../../wodx-rules/solo/director-rules.mjs";
+import * as WR from "../../wodx-rules/storyteller/wrapup-rules.mjs";
+import {lineFor} from "../../wodx-rules/storyteller/prelude-rules.mjs";
+import {ANSWERS} from "../../wodx-rules/solo/world-rules.mjs";
 import {nightTick} from "./world.mjs";
 import {placeOf, tell} from "./panel.mjs";
 

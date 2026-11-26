@@ -11,7 +11,7 @@
  * B3723: Artifacts and reworked relics go through the shared crafting table (WoDX Library wonders, WoDX Storyteller
  * wonders.mjs), as the owner picked on the Item Crafting Desk; this window hands them on and keeps arms, armour and oboli.
  */
-import * as S from "./soulforge-rules.js";
+import * as S from "../../wodx-rules/actions/soulforge-rules.js";
 import * as P from "./profiles.js";
 
 const MOD = "wodx-actions";

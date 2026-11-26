@@ -76,8 +76,8 @@ export async function run() {
     });
 
     await G.step("6 desk picks", async () => {
-      const J = await import(`/modules/wodx-otherworlds/scripts/journey-rules.mjs?${Date.now()}`);
-      const AR = await import(`/modules/wodx-creation/scripts/advance-rules.mjs?${Date.now()}`);
+      const J = await import(`/modules/wodx-rules/otherworlds/journey-rules.mjs?${Date.now()}`);
+      const AR = await import(`/modules/wodx-rules/creation/advance-rules.mjs?${Date.now()}`);
       const kit = api(LIB)?.wonders?.kitFor?.("hunter");
       const lab = J.REALM_TIME.labyrinth?.rule === "random" && J.timeOutside({realm: "labyrinth", hours: 2, slip: J.drawSlip(() => 0.95, "labyrinth")}).seconds === 2 * 3600 * 30;
       const m = {kind: "inquisitor", order: "Gate Order", name: "Gate Leftovers Wired", faithRating: 3, objects: [{id: "relic1", name: "A finger bone", type: "Item", wonder: ""}]};

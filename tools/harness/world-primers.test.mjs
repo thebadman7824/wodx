@@ -11,8 +11,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 const P = await imp("modules/wodx-storyteller/data/primers-world.mjs");
-const S = await imp("modules/wodx-storyteller/scripts/setup-rules.mjs");
-const W = await imp("modules/wodx-chronicle/scripts/world-rules.mjs");
+const S = await imp("modules/wodx-rules/storyteller/setup-rules.mjs");
+const W = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
 
 test("world primers: every way of life but Western Christendom has lines from 1197", () => {
   for ( const sphere of Object.keys(W.SPHERES) ) {

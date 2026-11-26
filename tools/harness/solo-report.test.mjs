@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
-import * as P from "../../modules/wodx-solo/scripts/report-rules.mjs";
+import * as P from "../../modules/wodx-rules/solo/report-rules.mjs";
 import {faultOf, placeFault, fileReports, digestLine} from "../solo/report-file.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "../..");

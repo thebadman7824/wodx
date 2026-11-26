@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 // The age floor: nothing romantic or sexual with anyone under 18, in any era (B3210-B3212).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const AR = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/age-rules.mjs")));
+const AR = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/age-rules.mjs")));
 const yearOf = t => t; // in these tests a world time is the year itself
 
 test("the floor is 18 in every era: a birth year, the age the body stopped, a child sign, the Storyteller's mark", () => {

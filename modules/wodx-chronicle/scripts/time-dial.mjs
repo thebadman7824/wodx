@@ -4,7 +4,7 @@
  */
 import {MODULE_ID, esc} from "./util.mjs";
 import {describeAt} from "./place.mjs";
-import * as D from "./time-dial-rules.mjs";
+import * as D from "../../wodx-rules/chronicle/time-dial-rules.mjs";
 
 const ID = "wodx-time-dial";
 const shown = () => { try { return game.settings.get(MODULE_ID, "timeDial") !== false; } catch (e) { return true; } };

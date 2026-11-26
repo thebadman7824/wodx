@@ -11,8 +11,8 @@
  *   heirs     a death recorded on the sheet passes strong grudges to the heirs at half weight
  *   Hooks out wodxGrudgeMove {npc, character, move}.
  */
-import * as M from "./memory-rules.mjs";
-import * as GR from "./grudge-rules.mjs";
+import * as M from "../../wodx-rules/npc/memory-rules.mjs";
+import * as GR from "../../wodx-rules/npc/grudge-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 // B6776: while the world is held (a flashback, a test that moves the clock) nothing here reacts to the clock
 const heldClock = () => { try { return !!game.modules.get("wodx-chronicle")?.api?.isHeld?.(); } catch (e) { return false; } };

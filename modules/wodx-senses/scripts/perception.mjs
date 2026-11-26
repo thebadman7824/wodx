@@ -2,8 +2,8 @@
  * WoDX Senses 0.4.0: the screen in frenzy and Rötschreck, the character's state on screen, scent trails for a wolf's nose, and hidden tokens that
  * show only to whoever found them. The rules are in perception-rules.mjs; main.mjs passes its helpers in build().
  */
-import * as P from "./perception-rules.mjs";
-import * as Q from "./quiet-rules.mjs";
+import * as P from "../../wodx-rules/senses/perception-rules.mjs";
+import * as Q from "../../wodx-rules/senses/quiet-rules.mjs";
 import {quietOn} from "./quiet.mjs";
 import {resource, detectProfile} from "../../wodx-actions/scripts/profiles.js";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
@@ -191,7 +191,7 @@ export function refreshVisibility() {
 export async function whoSees(token, {quiet = false, only = null} = {}) {
   if ( !game.user.isGM || !token?.actor ) return null;
   let RR = null;
-  try { RR = await import("../../wodx-npc/scripts/routine-rules.mjs"); } catch (e) { RR = null; }
+  try { RR = await import("../../wodx-rules/npc/routine-rules.mjs"); } catch (e) { RR = null; }
   if ( !RR?.notice ) { ui.notifications.warn("WoDX Senses needs WoDX NPC's noticing rules for this."); return null; }
   const scene = token.document.parent;
   const t = token.actor;

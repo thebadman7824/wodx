@@ -7,7 +7,7 @@ import { join, dirname } from "node:path";
 import { readFileSync } from "node:fs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/garou-rules.js")));
+const G = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/garou-rules.js")));
 
 test("every Mockery Breed mockeryOf() knows regenerates, with its page", () => {
   for (const k of ["warwolves", "anurana", "samsa", "kerasi", "yeren"]) {

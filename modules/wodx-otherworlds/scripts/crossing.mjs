@@ -1,5 +1,5 @@
 import {MODULE_ID, placeOf} from "./ratings.mjs";
-import {planAttempt, countRoll, outcomeOf, SETTLEMENTS, disconnection} from "./rules.mjs";
+import {planAttempt, countRoll, outcomeOf, SETTLEMENTS, disconnection} from "../../wodx-rules/otherworlds/rules.mjs";
 import {layersOf, tokenLayer} from "./twins.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 

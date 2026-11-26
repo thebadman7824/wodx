@@ -10,15 +10,15 @@ import {dirname, join} from "node:path";
  * people do.
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const WR = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
-const PL = await import(join(root, "modules/wodx-chronicle/scripts/place-rules.mjs"));
+const WR = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
+const PL = await import(join(root, "modules/wodx-rules/chronicle/place-rules.mjs"));
 const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
-const W = await import(join(root, "modules/wodx-atmosphere/scripts/weather-rules.mjs"));
-const M = await import(join(root, "modules/wodx-storyteller/scripts/money-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/atmosphere/weather-rules.mjs"));
+const M = await import(join(root, "modules/wodx-rules/storyteller/money-rules.mjs"));
 const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
 const PW = await import(join(root, "modules/wodx-creation/data/people-world.mjs"));
-const PR = await import(join(root, "modules/wodx-creation/scripts/people-rules.mjs"));
-const RR = await import(join(root, "modules/wodx-npc/scripts/resident-rules.mjs"));
+const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
+const RR = await import(join(root, "modules/wodx-rules/npc/resident-rules.mjs"));
 const {gregorianToJDN} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
 
 const ids = Object.keys(WR.WORLD_REGIONS);
@@ -165,7 +165,7 @@ test("money changers: a cut by age, none where the money is the same, and a pric
   assert.equal(M.priceAbroad(0, y, home, away).total, 0);
 });
 
-const F = await import(join(root, "modules/wodx-chronicle/scripts/faith-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/chronicle/faith-rules.mjs"));
 const {jdnToGregorian} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
 const day = (y, m, d) => { const jdn = gregorianToJDN(y, m, d); return {year: y, month: m, day: d, calendar: "gregorian", jdn}; };
 const iso = jdn => { const g = jdnToGregorian(jdn); return `${g.year}-${g.month}-${g.day}`; };

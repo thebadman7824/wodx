@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = f => readFileSync(join(root, f), "utf8");
 const MAIN = src("modules/wodx-actions/scripts/main.js");
-const R = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/solo-rules.mjs")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/solo/solo-rules.mjs")));
 
 test("#2484: a status on a vessel the player does not own goes through the Storyteller's computer", () => {
   const fn = MAIN.slice(MAIN.indexOf("async function statusEffect("), MAIN.indexOf("async function statusEffect(") + 400);

@@ -1,5 +1,5 @@
 import * as SV from "./servants.mjs";
-import * as AT from "./attitude-rules.mjs";
+import * as AT from "../../wodx-rules/npc/attitude-rules.mjs";
 
 /**
  * WoDX NPC 0.12.0: each NPC's attitude toward each character (attitude-rules.mjs has the rules). The NPC's world actor

@@ -8,8 +8,8 @@ import {dirname, join} from "node:path";
 // WoDX NPC: NPC Motives Desk, what comes after an NPC's first reaction (B5680-B5709).
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const F = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/follow-rules.mjs")));
-const R = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/routine-rules.mjs")));
+const F = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/follow-rules.mjs")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/routine-rules.mjs")));
 
 const guard = {template: "guard", aggression: 1, caution: 1, cunning: 0.5, loyalty: 1.2, cowardice: 0.3, tactics: ["melee", "call", "guard"], fears: []};
 const clerk = {template: "bystander", aggression: 0.2, caution: 1.2, cunning: 0.5, loyalty: 0.5, cowardice: 1.4, tactics: ["flee", "call"], fears: ["supernatural", "violence"]};
@@ -83,10 +83,10 @@ test("routines: the reactions follow through on the map", () => {
 });
 
 // Part two: r1, r2, g1, g2 (B5687, B5688, B5690, B5691)
-const HN = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/hunt-npc-rules.mjs")));
-const PW = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/prowl-rules.mjs")));
-const GR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/grudge-rules.mjs")));
-const VR = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/venture-rules.mjs")));
+const HN = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/hunt-npc-rules.mjs")));
+const PW = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/prowl-rules.mjs")));
+const GR = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/grudge-rules.mjs")));
+const VR = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/venture-rules.mjs")));
 
 test("r1: who feeds, when the hunt ends, and what a meal puts back", () => {
   assert.equal(HN.feedsOn({type: "Vampire", bloodMax: 10}), "blood");
@@ -161,8 +161,8 @@ test("part two is wired to the world", () => {
 });
 
 // Part three: e1-e3, g3-g6 (B5692-B5698)
-const DU = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/duty-rules.mjs")));
-const FR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/fates-rules.mjs")));
+const DU = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/duty-rules.mjs")));
+const FR = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/fates-rules.mjs")));
 
 test("duties lie over the NPC's own hours and lapse", () => {
   const own = [{from: 0, to: 24, place: "home", activity: "rest"}];
@@ -213,17 +213,17 @@ test("part three is wired to the world", () => {
   assert.match(r, /DU\.withDuties\(R\.blocksOf/, "duties reach the routine");
   assert.match(c, /await serve\(c\)/, "the weekly turn serves the founder");
   assert.match(c, /syncBackground\(a, bg, dots, cult.id\)/, "a cult is its Background on the sheet");
-  assert.match(readFileSync(new URL("../../modules/wodx-npc/scripts/cult-rules.mjs", import.meta.url), "utf8"), /blood: "Herd"/, "a blood cult is Herd on the sheet");
+  assert.match(readFileSync(new URL("../../modules/wodx-rules/npc/cult-rules.mjs", import.meta.url), "utf8"), /blood: "Herd"/, "a blood cult is Herd on the sheet");
   assert.match(c, /raidPlace\(c0\)/, "a raid goes to the meeting place");
   assert.match(src("modules/wodx-npc/scripts/servant-world.mjs"), /attendAll\(masters\)/, "servants attend");
   assert.match(src("modules/wodx-npc/scripts/orders.mjs"), /DU\.fetchAnswer/, "a fetch brings back");
-  assert.match(src("modules/wodx-npc/scripts/fates-rules.mjs"), /embraceReason\(/, "an Embrace has a reason");
+  assert.match(src("modules/wodx-rules/npc/fates-rules.mjs"), /embraceReason\(/, "an Embrace has a reason");
   assert.match(src("modules/wodx-npc/scripts/factions.mjs"), /postGuard\(c\)/, "a guard is posted");
 });
 
 test("g4 aftercare: a fetched person comes for an hour, then goes home", async () => {
-  const O = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/order-rules.mjs")));
-  const D = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/duty-rules.mjs")));
+  const O = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/order-rules.mjs")));
+  const D = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/duty-rules.mjs")));
   const o = O.normOrder({kind: "follow", leader: "m", fetched: true, until: 100 + D.FETCH_STAY});
   assert.equal(o.fetched, true);
   assert.equal(o.until, 100 + 3600);

@@ -15,10 +15,10 @@
  *               haulHome {x, y, w, h} (where a picture-less thing first stood).
  *   Who acts    Every change is made on the active Storyteller's client; a player's choice goes there by the socket.
  */
-import * as H from "./haul-rules.mjs";
+import * as H from "../../wodx-rules/interactables/haul-rules.mjs";
 import {contentsKg, gearKg, openSetDown, setDownChoices} from "./loose.mjs";
-import {countSuccesses, clampDifficulty} from "../../wodx-actions/scripts/core-rules.js";
-import {actionPool} from "../../wodx-actions/scripts/rules.js";
+import {countSuccesses, clampDifficulty} from "../../wodx-rules/actions/core-rules.js";
+import {actionPool} from "../../wodx-rules/actions/rules.js";
 
 const MOD = "wodx-interactables";
 const SOCKET = `module.${MOD}`;

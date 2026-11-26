@@ -36,7 +36,7 @@ test("#2483: the targeting panel clears an area outline when the power is not an
 });
 
 test("#2500: a carried light must be in the inventory (the Storyteller may light any)", async () => {
-  const C = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/carry-rules.mjs")));
+  const C = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/carry-rules.mjs")));
   assert.deepEqual(C.heldKinds(["Tallow candles", "Sword"]), ["candle"]);
   assert.deepEqual(C.heldKinds(["Electric torch"]), ["electric"], "an electric torch is not a torch");
   assert.deepEqual(C.heldKinds(["Pitch torch", "Storm lantern"]), ["torch", "lantern"]);
@@ -48,7 +48,7 @@ test("#2500: a carried light must be in the inventory (the Storyteller may light
 });
 
 test("#2482: the Storyteller's cards can be cleared, lose their dead chat controls, and older cards can be pressed", async () => {
-  const R = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/solo-rules.mjs")));
+  const R = await import(pathToFileURL(join(root, "modules/wodx-rules/solo/solo-rules.mjs")));
   const out = R.stripCardControls('<header><a class="message-delete" data-action="deleteMessage"><i class="fa-solid fa-trash"></i></a></header><button class="vta-btn">Go</button>');
   assert.doesNotMatch(out, /fa-trash|message-delete/);
   assert.match(out, /<button class="vta-btn">Go<\/button>/);
@@ -64,11 +64,11 @@ test("#2477: spent time keeps the guards a wait has", () => {
   const P = src("modules/wodx-solo/scripts/panel.mjs");
   const fn = P.slice(P.indexOf("export async function spendTime("), P.indexOf("/** Pause the game, or start it again. */"));
   for ( const g of [/placeOf\(user\)/, /making\(user\)/, /fightOn\(scene\.id\)\.length/, /game\.paused/, /if \( waiting \)/] ) assert.match(fn, g);
-  assert.match(src("modules/wodx-actions/scripts/theme-rules.js"), /"api:giveBlood": "Give a point of your vitae/);
+  assert.match(src("modules/wodx-rules/actions/theme-rules.js"), /"api:giveBlood": "Give a point of your vitae/);
 });
 
 test("#2487: Make the arrest sends the watch to the map, and every answer to the law is told", async () => {
-  const R = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/reach-rules.mjs")));
+  const R = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/reach-rules.mjs")));
   const spots = R.spotsNear({x: 0, y: 0}, {size: 100, width: 1000, height: 1000}, 2);
   assert.ok(spots.length && spots.every(p => p.x >= 0 && p.y >= 0), "inside the scene");
   assert.equal(spots[0].r, 1, "the nearest ring first");
@@ -84,7 +84,7 @@ test("#2487: Make the arrest sends the watch to the map, and every answer to the
 });
 
 test("#2490: a trip takes time in solo play, lands by the door, and a public place has its people", async () => {
-  const S = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/solo-rules.mjs")));
+  const S = await import(pathToFileURL(join(root, "modules/wodx-rules/solo/solo-rules.mjs")));
   assert.equal(S.spendSeconds(5 * 86400, S.TRIP_MAX_HOURS), 5 * 86400, "a five-day trip is not cut to 12 hours");
   assert.equal(S.spendSeconds(20 * 3600), 12 * 3600, "a hunt still stops at 12 hours");
   assert.ok(S.chunks(5 * 86400, S.tripStep(5 * 86400)).length <= 61, "a long trip passes in about 60 steps");
@@ -100,7 +100,7 @@ test("#2490: a trip takes time in solo play, lands by the door, and a public pla
   assert.equal(regionBox([]), null);
   const N = src("modules/wodx-npc/scripts/passersby.mjs");
   assert.match(N, /const on = typeof c\.on === "boolean" \? c\.on : \(soloOn\(\) && PUBLIC_KINDS\.has\(guess\)\);/);
-  const RR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/routine-rules.mjs")));
+  const RR = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/routine-rules.mjs")));
   assert.equal(RR.guessPlace("The Black Goat Tavern").kind, "tavern");
 });
 
@@ -121,7 +121,7 @@ test("#2509: Aim at is the one control, with an item they hold; Targeting is gon
   assert.doesNotMatch(M, /<label>Targeting<\/label>/, "no Targeting select left");
   assert.match(M, /<optgroup label="An item they hold">/);
   assert.match(M, /if \(hit && fd\.aimType === "item"\)/, "an item aimed at has no hit location");
-  const R = await import(pathToFileURL(join(root, "modules/wodx-combat/scripts/rules.js")));
+  const R = await import(pathToFileURL(join(root, "modules/wodx-rules/combat/rules.js")));
   assert.equal(R.heldAim("held:medium"), "medium");
   assert.equal(R.heldAim("held:precise"), "precise");
   assert.equal(R.heldAim("head"), null);
@@ -140,7 +140,7 @@ test("#2508: conditions say what they do, on the sheet and on a look at someone 
 });
 
 test("#2510: the time dial puts noon at the top and midnight at the foot", async () => {
-  const D = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/time-dial-rules.mjs")));
+  const D = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/time-dial-rules.mjs")));
   assert.equal(D.dialAngle(12), 0);
   assert.equal(Math.abs(D.dialAngle(0)), 180);
   assert.equal(D.dialAngle(18), 90);
@@ -169,7 +169,7 @@ test("#2506: a player may ask for a trait at once, and the Storyteller's approva
 });
 
 test("#2504: a player's menu shows what fits the character, the rest behind Show every action", async () => {
-  const T = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/theme-rules.js")));
+  const T = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/theme-rules.js")));
   assert.equal(T.fits("api:malkRite", {text: "Brujah | Celerity"}), false);
   assert.equal(T.fits("api:malkRite", {text: "Malkavian"}), true);
   assert.equal(T.fits("api:conditioning", {text: "Tzimisce | Dominate"}), true);
@@ -181,7 +181,7 @@ test("#2504: a player's menu shows what fits the character, the rest behind Show
 });
 
 test("#2505: a lifepath may begin before the common era", async () => {
-  const L = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/lifepath-rules.mjs")));
+  const L = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/lifepath-rules.mjs")));
   assert.equal(L.yearWords(-500), "500 BCE");
   assert.equal(L.yearWords(1197), "1197");
   const p = L.newPath({line: "vampire", birthYear: -500, turnYear: -470});
@@ -192,7 +192,7 @@ test("#2505: a lifepath may begin before the common era", async () => {
 });
 
 test("#2499: the Elder Powers' each-turn rules run on the turn engine (V20 Dark Ages pp. 220, 230, 247)", async () => {
-  const TR = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/turn-rules.js")));
+  const TR = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/turn-rules.js")));
   const chain = TR.resolveRec(TR.everyTurnOf("Chain the Psyche", "Vampire (Dark Ages)"), {successes: 3});
   assert.equal(chain.rounds, 3);
   assert.deepEqual(TR.stepOf(chain), [{kind: "damage", levels: 1, type: "bashing", soak: false}]);
@@ -210,7 +210,7 @@ test("#2499: the Elder Powers' each-turn rules run on the turn engine (V20 Dark 
 });
 
 test("#2506 desk pick: a world setting makes every study twice or four times as fast", async () => {
-  const L = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/learn-rules.mjs")));
+  const L = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/learn-rules.mjs")));
   const p = {kind: "ability", label: "Melee", key: "melee", current: 1, next: 2};
   const full = L.planFor(p, {kind: "practice"});
   assert.equal(full.goal, 4);
@@ -230,7 +230,7 @@ test("#2508: the look card's install mark doesn't clash with Chronicle's token l
 });
 
 test("#2506 desk pick: Find a teacher asks around town and names the best one there", async () => {
-  const L = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/learn-rules.mjs")));
+  const L = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/learn-rules.mjs")));
   assert.equal(L.askPool({charisma: 3, streetwise: 0, etiquette: 2}), 5);
   assert.equal(L.askPool({charisma: 2, streetwise: 3, etiquette: 1}), 5);
   assert.equal(L.askPool({}), 1);
@@ -261,7 +261,7 @@ test("#2508 desk pick: the look card says what the character knows of them: the 
 });
 
 test("#2505a: lines that age like mortals can't be born past a mortal lifespan; the undying keep the long range", async () => {
-  const R = await import("../../modules/wodx-creation/scripts/lifepath-rules.mjs");
+  const R = await import("../../modules/wodx-rules/creation/lifepath-rules.mjs");
   assert.equal(R.earliestBirth("mage", 1197), 1127);
   assert.equal(R.earliestBirth("werewolf", 1197), 1127);
   assert.equal(R.earliestBirth("mortal", 1197), 1127);
@@ -273,7 +273,7 @@ test("#2505a: lines that age like mortals can't be born past a mortal lifespan; 
 });
 
 test("#2475: a player's token sees a few squares outdoors and nothing in an unlit interior; a power's sight is left alone", async () => {
-  const S = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/solo-rules.mjs")));
+  const S = await import(pathToFileURL(join(root, "modules/wodx-rules/solo/solo-rules.mjs")));
   assert.equal(S.sightFor({indoor: false, gridDistance: 1}), 6);
   assert.equal(S.sightFor({indoor: true, gridDistance: 1}), 0);
   assert.equal(S.sightFor({indoor: false, gridDistance: 5, range: 0}), 30, "coming back out of doors gives the squares back");
@@ -285,7 +285,7 @@ test("#2475: a player's token sees a few squares outdoors and nothing in an unli
 });
 
 test("Action priority: a busy character can't start a lesser action; the one they are busy with is taken up too", async () => {
-  const B = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/busy-rules.js")));
+  const B = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/busy-rules.js")));
   const now = 1_000_000;
   const feeding = {kind: "feeding", with: "Actor.v", withName: "Jana", since: now};
   assert.equal(B.busyWhy({name: "Ota", mine: feeding, action: "trade", now}), "Ota is feeding from Jana. Stop that first.");

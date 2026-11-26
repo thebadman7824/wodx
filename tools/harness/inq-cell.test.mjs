@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const R = await imp("modules/wodx-storyteller/scripts/cell-rules.mjs");
-const C = await imp("modules/wodx-actions/scripts/inq-curses-rules.js");
+const R = await imp("modules/wodx-rules/storyteller/cell-rules.mjs");
+const C = await imp("modules/wodx-rules/actions/inq-curses-rules.js");
 const {ROTHENSTEIN} = await imp("modules/wodx-rothenstein/data/recipe.mjs");
 const DAY = 86400;
 

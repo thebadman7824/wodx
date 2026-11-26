@@ -2,7 +2,7 @@
  * Display-only desk, batch B (B3130 to B3133), the Foundry part: reads what WoDX Storyteller, NPC and Atmosphere leave
  * on a character, and the character's codex. Rules in deeper-rules.js.
  */
-import * as DR from "./deeper-rules.js";
+import * as DR from "../../wodx-rules/actions/deeper-rules.js";
 
 const api = id => (game.modules?.get?.(id)?.active ? game.modules.get(id).api ?? null : null);
 const tokenOf = actor => actor?.getActiveTokens?.()?.[0]?.document ?? null;

@@ -1,7 +1,7 @@
-import * as PR from "./passerby-rules.mjs";
-import * as CR from "./crowd-rules.mjs";
+import * as PR from "../../wodx-rules/npc/passerby-rules.mjs";
+import * as CR from "../../wodx-rules/npc/crowd-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {PLACE_KINDS, guessPlace} from "./routine-rules.mjs";
+import {PLACE_KINDS, guessPlace} from "../../wodx-rules/npc/routine-rules.mjs";
 /** #2490: the kinds of place where passers-by come by themselves in the Lone Chronicle. */
 export const PUBLIC_KINDS = new Set(["tavern", "market", "street", "church", "mosque", "synagogue", "temple", "castle", "gate", "workplace", "alley", "docks", "park", "station", "yard"]);
 const soloOn = () => { try { const m = game.modules.get("wodx-solo"); return !!m?.active && !!m.api?.isOn?.(); } catch (e) { return false; } };

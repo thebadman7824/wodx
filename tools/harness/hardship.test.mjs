@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const H = await imp("modules/wodx-storyteller/scripts/hardship-rules.mjs");
+const H = await imp("modules/wodx-rules/storyteller/hardship-rules.mjs");
 const {DAY, HOUR} = H;
 
 test("hardship: only the living", () => {

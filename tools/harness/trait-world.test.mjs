@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 /* Trait effects step 8 (Chronicle 0.23.0): backgrounds made into NPCs and places */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const T = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/trait-rules.mjs")));
+const T = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/trait-rules.mjs")));
 const src = p => readFileSync(join(root, p), "utf8");
 const bg = (name, value) => ({id: name, name, kind: "background", value});
 

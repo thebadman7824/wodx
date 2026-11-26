@@ -3,7 +3,7 @@
  * scenes (WoDX Chronicle api.scars; this module's api.upkeep.townScars): burnt or flooded buildings, burst doors and broken walls, lights out, rubble.
  * Each week of the town turn rebuilds a share of it, faster in a thriving town; the town card's Undo takes it back.
  */
-import * as MK from "./market-rules.mjs";
+import * as MK from "../../wodx-rules/storyteller/market-rules.mjs";
 import * as Markets from "./markets.mjs";
 import {MOD, chron, isActiveGM, setting} from "./core.mjs";
 

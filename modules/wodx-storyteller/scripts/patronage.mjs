@@ -10,11 +10,11 @@
  *   Month       artists without a patron for six months starve; a starving one may die or find a patron.
  *   Salon       the Storyteller holds one for a host: a kind tale about the host starts, the host's artists may rise.
  */
-import * as P from "./patronage-rules.mjs";
+import * as P from "../../wodx-rules/storyteller/patronage-rules.mjs";
 import * as Markets from "./markets.mjs";
 import * as Rumours from "./rumours.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, setting, log, whereIs} from "./core.mjs";
-import {sphereFor} from "../../wodx-chronicle/scripts/world-rules.mjs";
+import {sphereFor} from "../../wodx-rules/chronicle/world-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const T_MUSE = `${MOD}.museWork`;

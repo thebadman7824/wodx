@@ -8,7 +8,7 @@
  *     alarm. Disarm it: Dexterity + Security. A botch springs it on whoever was handling it.
  *   Clean a gun: wet powder is dried out of the character's guns.
  */
-import * as A from "./arms-rules.mjs";
+import * as A from "../../wodx-rules/library/arms-rules.mjs";
 
 const MOD = "wodx-library";
 const SOCKET = `module.${MOD}`;

@@ -1,4 +1,4 @@
-import * as P from "./prelude-rules.mjs";
+import * as P from "../../wodx-rules/storyteller/prelude-rules.mjs";
 import {MOD, esc} from "./core.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";

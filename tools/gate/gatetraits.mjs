@@ -218,15 +218,15 @@ export async function run() {
     });
 
     await step("21 codex thresholds and weather", async () => {
-      const X = await import("/modules/wodx-storyteller/scripts/codex-rules.mjs");
-      const H = await import("/modules/wodx-storyteller/scripts/hardship-rules.mjs");
+      const X = await import("/modules/wodx-rules/storyteller/codex-rules.mjs");
+      const H = await import("/modules/wodx-rules/storyteller/hardship-rules.mjs");
       const needs = X.needsOf("Gate page [Occult 5]");
       ok("21 codex thresholds and weather", X.knowsEnough(needs, {intelligence: 3, abilities: {occult: 2}}) && !X.knowsEnough(needs, {intelligence: 2, abilities: {occult: 1}}) && H.weatherDice(2, 3) === 5,
         {needs});
     });
 
     await step("22 queued keywords", async () => {
-      const E = await import("/modules/wodx-actions/scripts/effects-rules.js");
+      const E = await import("/modules/wodx-rules/actions/effects-rules.js");
       const g = {ok: true, strength: 4, duration: 1, targets: 0};
       const kinds = ["shape", "sideways", "summon", "make", "weather"].map(k => E.outcome(k, g, {weather: "fog"})?.kind);
       const OW = game.modules.get("wodx-otherworlds")?.api, AW = game.modules.get("wodx-atmosphere")?.api?.weather;

@@ -14,16 +14,16 @@
  * player. Opened from the Creation window, from a character sheet's header, or game.wodx.creation.lifepath(actor).
  */
 import {MODULE_ID, esc} from "./actor-data.mjs";
-import * as R from "./lifepath-rules.mjs";
-import * as D from "./lifepath-drill-rules.mjs";
-import * as S from "./lifepath-short-rules.mjs";
+import * as R from "../../wodx-rules/creation/lifepath-rules.mjs";
+import * as D from "../../wodx-rules/creation/lifepath-drill-rules.mjs";
+import * as S from "../../wodx-rules/creation/lifepath-short-rules.mjs";
 import {ORIGINS} from "../data/lifepath-drill.mjs";
-import {TOTALS} from "./totals-rules.mjs";
+import {TOTALS} from "../../wodx-rules/creation/totals-rules.mjs";
 import {defaultLine} from "../data/creation-totals.mjs";
-import {traitGroups} from "./first-night-build-rules.mjs";
+import {traitGroups} from "../../wodx-rules/creation/first-night-build-rules.mjs";
 import {MERITS_FLAWS} from "../../wodx-chronicle/data/trait-effects.mjs";
 import {daTable} from "../../wodx-chronicle/data/trait-lines.mjs";
-import {WORLD_REGIONS, cultureOf} from "../../wodx-chronicle/scripts/world-rules.mjs";
+import {WORLD_REGIONS, cultureOf} from "../../wodx-rules/chronicle/world-rules.mjs";
 import {generate, createPeople} from "./people.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";

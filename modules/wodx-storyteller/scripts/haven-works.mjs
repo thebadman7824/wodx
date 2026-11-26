@@ -9,12 +9,12 @@
  *              against an owner (WoDX NPC memory) may probe it (approval wodx-storyteller.probe). Approved, the rival
  *              is added to who knows the way, or a fire is set; wodxHavenProbe fires for other modules.
  */
-import * as W from "./haven-works-rules.mjs";
+import * as W from "../../wodx-rules/storyteller/haven-works-rules.mjs";
 import * as TownLooks from "./town-looks.mjs";
-import * as H from "./haven-rules.mjs";
+import * as H from "../../wodx-rules/storyteller/haven-rules.mjs";
 import * as Havens from "./havens.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, setting, log} from "./core.mjs";
-import {sphereFor} from "../../wodx-chronicle/scripts/world-rules.mjs";
+import {sphereFor} from "../../wodx-rules/chronicle/world-rules.mjs";
 
 const T_UP = `${MOD}.upgrade`, T_PROBE = `${MOD}.probe`;
 const now = () => game.time?.worldTime ?? 0;

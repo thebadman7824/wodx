@@ -14,11 +14,11 @@
  *
  * Voices are shelved (B2750): text only, no sound.
  */
-import * as OR from "./overheard-rules.mjs";
+import * as OR from "../../wodx-rules/npc/overheard-rules.mjs";
 import * as G from "./talk-grammar.mjs";
-import * as TK from "./talk-rules.mjs";
-import * as AR from "./alert-rules.mjs";
-import {isAnimal} from "./animal-rules.mjs";
+import * as TK from "../../wodx-rules/npc/talk-rules.mjs";
+import * as AR from "../../wodx-rules/npc/alert-rules.mjs";
+import {isAnimal} from "../../wodx-rules/npc/animal-rules.mjs";
 import {SIDE_FACTS} from "../data/grammar/groups.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";

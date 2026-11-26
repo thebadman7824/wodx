@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as V from "../../modules/wodx-otherworlds/scripts/veil-look-rules.mjs";
+import * as V from "../../modules/wodx-rules/otherworlds/veil-look-rules.mjs";
 
 /* What only the right eyes see (B4634) */
 test("veil looks: a thin Gauntlet shimmers for werebeasts and mages, a thin Shroud mists for the dead; the Wyrm's haze for those who sense it", () => {

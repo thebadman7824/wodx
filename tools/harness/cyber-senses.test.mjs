@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* B3799: installed cyberware reaches the senses */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(pathToFileURL(join(root, "modules/wodx-senses/scripts/senses-rules.mjs")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/senses/senses-rules.mjs")));
 
 test("low-light optics take away the darkness step; sharper hearing makes hearing easier", () => {
   const none = R.powersFor({});

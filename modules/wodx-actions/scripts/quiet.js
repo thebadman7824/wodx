@@ -9,7 +9,7 @@
  * The state is the actor flag wodx-actions.quiet; its level follows the current Paradox pool. Tokens only one player
  * sees carry wodx-actions.quietSeen (user ids); refreshToken hides them from everyone else.
  */
-import * as Q from "./quiet-rules.js";
+import * as Q from "../../wodx-rules/actions/quiet-rules.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };

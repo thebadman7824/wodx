@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));
-const BR = await imp("modules/wodx-npc/scripts/bond-rules.mjs");
-const TR = await imp("modules/wodx-npc/scripts/ties-rules.mjs");
+const BR = await imp("modules/wodx-rules/npc/bond-rules.mjs");
+const TR = await imp("modules/wodx-rules/npc/ties-rules.mjs");
 const XH = await imp("modules/wodx-sheets/scripts/extras-html.mjs");
 
 test("every bond kind reads back from the other end and has a line saying what it does", () => {

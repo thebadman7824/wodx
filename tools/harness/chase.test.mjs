@@ -6,7 +6,7 @@ import {dirname, join} from "node:path";
 
 /* WoDX Interactables 0.26.0: chases and pursuit (chase-rules.mjs), and the runtime file loading without Foundry. */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const C = await import(join(root, "modules/wodx-interactables/scripts/chase-rules.mjs"));
+const C = await import(join(root, "modules/wodx-rules/interactables/chase-rules.mjs"));
 
 const S = n => ({successes: n, botch: false});
 const B = {successes: 0, botch: true};

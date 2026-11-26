@@ -9,7 +9,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const G = await imp("modules/wodx-library/data/goods.mjs");
 const L = await imp("modules/wodx-library/data/goods-ways.mjs");
-const W = await imp("modules/wodx-chronicle/scripts/world-rules.mjs");
+const W = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
 const KEYS = new Set([...Object.keys(W.WORLD_REGIONS), ...Object.keys(W.SPHERES), "*"]);
 const good = n => G.GOODS.find(g => g.name === n);
 const MOR = {way: "latin", region: "moravia"}, JP = {way: "japanese", region: "japan"}, MEX = {way: "mesoamerican", region: "mexico"};

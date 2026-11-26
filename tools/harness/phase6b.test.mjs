@@ -69,7 +69,7 @@ function mortal(name, wp = 3, {kinfolk = null} = {}) {
 
 /* ---------------- The rules (pure) ---------------- */
 
-const G = await import(join(root, "modules/wodx-actions/scripts/garou-rules.js"));
+const G = await import(join(root, "modules/wodx-rules/actions/garou-rules.js"));
 const D = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/garou.json"), "utf8"));
 const F = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/fera.json"), "utf8"));
 const L = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/gifts-daw.json"), "utf8"));
@@ -566,7 +566,7 @@ test("for WoDX Combat: teeth and claws by form and era, silver by breed and form
   ERA = "dark-ages";
   const corax = garou("Raven", {changingbreed: "Corax"});
   assert.deepEqual(GX.banesOf(corax), ["gold"]);
-  const R = await import(join(root, "modules/wodx-combat/scripts/rules.js"));
+  const R = await import(join(root, "modules/wodx-rules/combat/rules.js"));
   const sp = R.soakPool({profile: "lupine", damageType: "aggravated", stamina: 3, aggSoak: false});
   assert.equal(sp.dice, 0);
   assert.match(sp.notes.join(" "), /DA:W p\. 102/);

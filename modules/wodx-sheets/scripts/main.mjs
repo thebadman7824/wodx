@@ -18,20 +18,20 @@ import MummyActorSheet, { MummyActorSheetV2 } from "../../../systems/worldofdark
 import { onV2 } from "../../../systems/worldofdarkness/module/actor/template/lines-v2.js";
 import * as BG from "./beginner.mjs";
 import * as SK from "./skins.mjs";
-import * as ST from "./standing-rules.mjs";
+import * as ST from "../../wodx-rules/sheets/standing-rules.mjs";
 import { isDA as isFaeDA } from "../../wodx-actions/scripts/fae-da.js";
 import { isDA as isMageDA } from "../../wodx-actions/scripts/mage-da.js";
-import * as FR from "../../wodx-actions/scripts/fae-da-rules.js";
-import * as MR from "../../wodx-actions/scripts/mage-da-rules.js";
-import * as HR from "../../wodx-actions/scripts/hunter-rules.js";
+import * as FR from "../../wodx-rules/actions/fae-da-rules.js";
+import * as MR from "../../wodx-rules/actions/mage-da-rules.js";
+import * as HR from "../../wodx-rules/actions/hunter-rules.js";
 import { lineNow } from "../../wodx-actions/scripts/hunter.js";
 import { isKotE } from "../../wodx-actions/scripts/kote.js";
 import { isOrpheus } from "../../wodx-actions/scripts/orpheus.js";
-import * as RR from "../../wodx-actions/scripts/reckoning-rules.js";
-import * as KR from "../../wodx-actions/scripts/kote-rules.js";
-import * as UR from "../../wodx-actions/scripts/mummy-rules.js";
-import * as CR from "../../wodx-actions/scripts/c20-rules.js";
-import * as SR from "./sheet-rules.mjs";
+import * as RR from "../../wodx-rules/actions/reckoning-rules.js";
+import * as KR from "../../wodx-rules/actions/kote-rules.js";
+import * as UR from "../../wodx-rules/actions/mummy-rules.js";
+import * as CR from "../../wodx-rules/actions/c20-rules.js";
+import * as SR from "../../wodx-rules/sheets/sheet-rules.mjs";
 import * as X from "./extras.mjs";
 import * as AN from "./anachronism.mjs";
 import * as SROLL from "./sheet-rolls.mjs";
@@ -685,6 +685,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.26.1", extras: X, rules: SR, sheetFor, viewFor, skins: { loaded: SK.loaded, linesOf: SK.linesOf, load: SK.load, report: SK.report }, sheetRollMods: SROLL.modsFor,
+  game.modules.get(MOD).api = { version: "0.26.2", extras: X, rules: SR, sheetFor, viewFor, skins: { loaded: SK.loaded, linesOf: SK.linesOf, load: SK.load, report: SK.report }, sheetRollMods: SROLL.modsFor,
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything, bringForward: AN.bringForward, undoForward: AN.undoForward } };
 });

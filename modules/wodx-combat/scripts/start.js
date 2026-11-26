@@ -15,7 +15,7 @@
  * outside a fight (attacker and target; the attack that opened it has already been rolled, so it stands as the
  * ambush's first blow).
  */
-import * as S from "./start-rules.js";
+import * as S from "../../wodx-rules/combat/start-rules.js";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-combat";

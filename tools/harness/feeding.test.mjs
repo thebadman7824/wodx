@@ -9,7 +9,7 @@ import {installMock} from "./foundry-mock.mjs";
 /* WoDX Actions 3.41.0: what feeding does to the vessel, and the feeding limits of clans and bloodlines (feeding-rules.js) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const KF = await import(join(root, "modules/wodx-actions/scripts/feeding-rules.js"));
+const KF = await import(join(root, "modules/wodx-rules/actions/feeding-rules.js"));
 
 /* ---- the rules ---- */
 
@@ -136,7 +136,7 @@ test("habits: the year and the clan", () => {
     assert.ok(!s.state || R.VESSEL_STATES[s.state], `${k} state`);
   }
 });
-const R0 = await import(join(root, "modules/wodx-actions/scripts/rules.js"));
+const R0 = await import(join(root, "modules/wodx-rules/actions/rules.js"));
 function await_rules() { return R0; }
 
 /* ---- the Feed window on a stand-in for Foundry ---- */
