@@ -22,7 +22,7 @@ const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 const chron = () => game.modules.get("wodx-chronicle")?.active ? game.modules.get("wodx-chronicle").api : null;
 
 export function registerSettings() {
-  game.settings.register(MOD, "npcRefill", {name: "NPCs refill their own pools", hint: "Each night NPCs of every line regain their line's pool as the book says: Gnosis, Quintessence and Sekhem by WoDX Actions' daily rolls, Glamour, Pathos and Faith here.",
+  game.settings.register(MOD, "npcRefill", {name: "NPCs refill their own pools", hint: "Each night NPCs of every line get back their line's pool (Gnosis, Glamour, Pathos, Faith and the like) as the book says.",
     scope: "world", config: true, type: Boolean, default: true});
 }
 

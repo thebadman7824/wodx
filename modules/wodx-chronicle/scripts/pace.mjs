@@ -7,10 +7,10 @@ import * as P from "./pace-rules.mjs";
 let last = Date.now(), timer = null, stepping = false;
 
 export function registerPaceSettings(onChange) {
-  game.settings.register(MODULE_ID, "paceMinutes", {name: "Clock runs with the table: game minutes a step",
-    hint: "The game clock moves this many game minutes every so many real minutes. 0 keeps it by hand.",
+  game.settings.register(MODULE_ID, "paceMinutes", {name: "Clock runs by itself: game minutes a step",
+    hint: "The game clock moves this many minutes each step. 0 means you move it by hand.",
     scope: "world", config: true, type: Number, default: 0, onChange});
-  game.settings.register(MODULE_ID, "paceEvery", {name: "Clock runs with the table: every so many real minutes",
+  game.settings.register(MODULE_ID, "paceEvery", {name: "Clock runs by itself: real minutes between steps",
     scope: "world", config: true, type: Number, default: 10, onChange});
 }
 

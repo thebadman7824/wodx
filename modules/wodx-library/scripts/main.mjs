@@ -185,8 +185,8 @@ Hooks.once("init", () => {
   // B3683: each registered line's kit names its own switch (wonder-lines.mjs)
   for ( const k of Reg.lines() ) if ( k.setting ) game.settings.register(MOD, k.setting, {name: k.settingName || `Making items (${k.title})`,
     hint: k.settingHint || "", scope: "world", config: true, type: Boolean, default: k.settingDefault !== false});
-  game.settings.register(MOD, "craftKinfolk", {name: "Kinfolk with Gnosis may make fetishes and talens (house rule)",
-    hint: "The books say Kinfolk cannot make fetishes (W20 Kinfolk; Hammer and Klaive). Turn this on to let Kinfolk with Gnosis who know the rite make them anyway.",
+  game.settings.register(MOD, "craftKinfolk", {name: "Kinfolk may make fetishes and talens (house rule)",
+    hint: "The books forbid it. Turn this on to let Kinfolk with Gnosis who know the rite make them anyway.",
     scope: "world", config: true, type: Boolean, default: false});
   game.settings.registerMenu(MOD, "gearMenu", {
     name: "Gear by era", label: "Open gear by era",

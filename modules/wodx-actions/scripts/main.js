@@ -158,9 +158,9 @@ function registerSettings() {
     game.settings.register(MOD, "flavorText", { name: "Flavor text on action cards",
         hint: "Adds one short line describing what happened to each action card.",
         scope: "world", config: true, type: String, default: "all", choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
-    game.settings.register(MOD, "consensusEra", { name: "Consensus by era", hint: "How magick works changes with the year: no split before 1450, the Sorcerers Crusade rules to 1699, Mage 20th after (house rule).",
+    game.settings.register(MOD, "consensusEra", { name: "Consensus by era", hint: "How magick works changes with the year, in three ages: before 1450, to 1699, and after (house rule).",
         scope: "world", config: true, type: Boolean, default: true });
-    game.settings.register(MOD, "realityZones", { name: "Reality Zones (Mage 20th)", hint: "Zone: a place's accepted styles decide what is coincidental. One world: one Consensus everywhere. Free: the Storyteller rules each time.",
+    game.settings.register(MOD, "realityZones", { name: "Reality Zones", hint: "Zone: what counts as coincidental magick depends on the place. One world: the same everywhere. Free: the Storyteller decides each time.",
         scope: "world", config: true, type: String, default: "world", choices: { zone: "The place decides", world: "One Consensus everywhere", free: "The Storyteller rules each time" } });
     s("spendResources", "Deduct Willpower and blood", "Update the character sheet when Willpower or blood is spent or gained.", Boolean, true);
     s("applyChanges", "Apply results to sheets", "Apply health, Road, Virtue, frenzy and blood results automatically. Off: results are reported only.", Boolean, true);

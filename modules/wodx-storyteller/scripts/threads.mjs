@@ -51,7 +51,7 @@ export function loadDeck() {
 export function forgetDeck() { DECK = []; deckLoading = null; }
 
 export function registerThreadSettings() {
-  game.settings.register(MOD, "threads", {name: "Threads of Fate (storylines woven from what happens)", hint: "New storylines open on their own, ask the Storyteller first, or are off.",
+  game.settings.register(MOD, "threads", {name: "Threads of Fate", hint: "New storylines open on their own, ask the Storyteller first, or are off.",
     scope: "world", config: true, type: String, default: "off", choices: {off: "Off", suggest: "Suggest", auto: "Open by itself"}});
   game.settings.register(MOD, "threadsState", {scope: "world", config: false, type: Object, default: {open: [], done: [], refused: [], last: 0}, onChange: () => ThreadsApp.refresh()});
 }

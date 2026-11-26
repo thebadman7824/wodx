@@ -38,7 +38,7 @@ export function build(ctx) {
       scope: "world", config: true, type: Number, default: OR.DEFAULTS.earshot, range: {min: 1, max: 12, step: 1}});
     game.settings.register(MOD, "overheardChance", {name: "Overheard talk: chance a pair talks", hint: "Each time WoDX looks (a character moves, or every half minute), from 0 (never) to 1 (whenever they may).",
       scope: "world", config: true, type: Number, default: OR.DEFAULTS.chance, range: {min: 0, max: 1, step: 0.05}});
-    game.settings.register(MOD, "overheardGap", {name: "Overheard talk: minutes before a pair talks again", hint: "Real minutes. A scene has at most one exchange each 45 seconds whatever this says.",
+    game.settings.register(MOD, "overheardGap", {name: "Overheard talk: minutes between a pair's talks", hint: "Real minutes. Each scene has no more than one overheard exchange every 45 seconds.",
       scope: "world", config: true, type: Number, default: 5, range: {min: 1, max: 60, step: 1}});
   }
 

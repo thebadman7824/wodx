@@ -65,7 +65,7 @@ export function registerSettings(hooks) {
   });
   game.settings.register(MODULE_ID, "autoApprove", {scope: "world", config: false, type: Object, default: {},
     onChange: () => hooks.onApprovalsChange()});
-  game.settings.register(MODULE_ID, "npcCap", {name: "NPC proposals a session", hint: "How many proposals from WoDX NPC (faction moves and the like) reach the approval queue in one session; the rest are held back until you put them in. 0 means no cap.",
+  game.settings.register(MODULE_ID, "npcCap", {name: "NPC suggestions a session", hint: "How many NPC suggestions (faction moves and the like) reach the approval queue in one session; the rest wait. 0 means no limit.",
     scope: "world", config: true, type: Number, default: 0, range: {min: 0, max: 100, step: 1}});
 
   // House rules

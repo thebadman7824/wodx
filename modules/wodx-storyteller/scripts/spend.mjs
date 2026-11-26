@@ -16,7 +16,7 @@ export const T_TIME = `${MOD}.time`;
 const all = c => c?.contents ?? [...(c?.values?.() ?? c ?? [])];
 
 export function registerSpendSettings() {
-  game.settings.register(MOD, "timeApart", {name: "Work done apart goes on the character's own time",
+  game.settings.register(MOD, "timeApart", {name: "Characters apart keep their own time",
     hint: "Characters on another scene from the group keep their own time, and Convene lines everyone up later.",
     scope: "world", config: true, type: Boolean, default: true});
 }

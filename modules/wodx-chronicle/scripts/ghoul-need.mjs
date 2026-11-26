@@ -33,7 +33,7 @@ export function registerGhoulNeedSettings() {
   game.settings.register(MODULE_ID, "ghoulNeedSkips", {scope: "world", config: false, type: Array, default: []});
   game.settings.register(MODULE_ID, "ghoulNeed", {
     name: "Ghouls need vitae each month", scope: "world", config: true, type: Boolean, default: true,
-    hint: "A ghoul who goes a month without vitae loses it, then its Disciplines, and fights the craving (V20 Dark Ages pp. 400 to 401)."
+    hint: "A ghoul who goes a month without vitae loses it, then its Disciplines, and fights the craving."
   });
 }
 
