@@ -61,7 +61,8 @@ export function stateOf(a) {
     woundPenalty: n(dmg.woundpenalty), incapacitated: /incap/i.test(String(dmg.woundlevel ?? "")),
     rage: rage.value, ragePerm: rage.perm || rage.max, angst: r("angst").value, paradox: r("paradox").value, banality: r("banality").value,
     willpower: wp.value, willpowerPerm: wp.perm || n(a.system?.advantages?.willpower?.permanent),
-    building: !!foundry.applications.instances?.get?.(`wodx-wizard-${a.id}`)?.rendered};
+    // B8039: also while a solo arrival's sheet is not yet marked ready (WoDX Creation's unfinished)
+    building: !!foundry.applications.instances?.get?.(`wodx-wizard-${a.id}`)?.rendered || (() => { try { return !!game.modules.get("wodx-creation")?.api?.unfinished?.(a); } catch (e) { return false; } })()};
 }
 
 export function refreshScreen() {

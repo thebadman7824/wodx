@@ -10,6 +10,7 @@ import * as know from "./know.mjs";
 import * as knowRules from "./know-rules.mjs";
 import * as safety from "./safety.mjs";
 import {ClockApp, setDateDialog} from "./clock-app.mjs";
+import {registerTimeDialSettings, installTimeDial} from "./time-dial.mjs";
 import {HouseRulesApp} from "./house-rules-app.mjs";
 import {runEraTest} from "./era-test.mjs";
 import * as contentFixes from "./content-fixes.mjs";
@@ -115,6 +116,7 @@ Hooks.once("init", () => {
   waiting.registerWaitingSettings();
   // 0.35.0: the clock that runs with the table (off by default)
   pace.registerPaceSettings(() => ClockApp.refresh());
+  registerTimeDialSettings();
   // The WoDX look (6e): each player's own look, text size and motion
   theme.registerThemeSettings();
   theme.applyLook();
@@ -245,6 +247,7 @@ Hooks.once("ready", async () => {
   pace.startPace();
   Hooks.on("updateScene", (sc, ch) => { if ( ch?.flags?.[MODULE_ID] ) ClockApp.refresh(); });
   Hooks.on("canvasReady", () => ClockApp.refresh());
+  installTimeDial();
 
   age.listen();
   const api = {

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.94.0 (Fixes from the first solo test (B8034 to B8041, B8058, B8059): Who they are comes after the book and writes to the sheet, a solo arrival's sheet waits for the Ready button, lists of tribes, kiths and the like come from the system, languages go through Chronicle, a lifepath may begin before the common era, and learning offers Ask the Storyteller to let it come at once (#2506))
 - 0.93.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)
 - 0.93.0 (The Aughisky, Lazarites, Skull Pigs and Fir Bolgs of Dark Ages: Werewolf (B7939))
 - 0.92.0 (Revenant families in every era (B7840-B7848): twenty family lines from V20 Dark Ages, V20 Ghouls and Revenants and Dark Ages: Vampire, each in the years it lives; weaknesses that work in play; revenant aging; lifepaths by family and year)

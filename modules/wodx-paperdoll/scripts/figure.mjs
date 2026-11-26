@@ -142,7 +142,7 @@ export function makeFigureApp({skin, hair, year, ageOf = () => ({age: null, mino
       wire(div, this.fig, cat, this.ui, {
         ui: u => { this.ui = u; this.render(); },
         fig: f => { this.fig = f; this.render(); },
-        save: async f => { if ( this.actor.flags?.[MOD]?.figure ) await this.actor.unsetFlag(MOD, "figure"); await this.actor.setFlag(MOD, "figure", f); await markChild(this.actor, f.growth ?? ""); ui.notifications?.info(`${this.actor.name}: figure kept. The walking sprite follows when the sprites are next drawn.`); }
+        save: async f => { if ( this.actor.flags?.[MOD]?.figure ) await this.actor.unsetFlag(MOD, "figure"); await this.actor.setFlag(MOD, "figure", f); await markChild(this.actor, f.growth ?? ""); ui.notifications?.info(`${this.actor.name}: figure kept. The sprite batch draws it next time it runs, and the token takes it then; until then the token keeps its picture.`); }
       });
       return div;
     }

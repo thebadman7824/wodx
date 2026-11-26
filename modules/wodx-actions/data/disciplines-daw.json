@@ -1695,9 +1695,9 @@
 "p": 191,
 "r": "",
 "diff": "",
-"c": "",
+"c": "b3",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Becomes living darkness: winged (flies 25 mph), burrowing (through earth and stone) or brutish (+1 lethal brawling). Physicals +3, Socials 0, Perception and Stealth 2 easier; Strength + 2 aggravated poison bites.",
 "elder": true
 },
 {
@@ -1709,9 +1709,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on: each blood point drunk from an animal counts as two. Every third animal feeding makes Self-Control/Instinct rolls 1 harder (it adds up) until the vampire feeds on a human or Cainite again.",
+"elder": true,
+"passive": true
 },
 {
 "id": "animalism-the-twin-souls",
@@ -1719,11 +1720,11 @@
 "l": 6,
 "n": "The Twin Souls",
 "p": 193,
-"r": "",
-"diff": "",
-"c": "",
+"r": "perception+animalken",
+"diff": 6,
+"c": "w1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Touches an animal to share minds, a Willpower point a turn. A full bond takes 10 turns minus successes and a frenzy test; then the vampire uses its senses from anywhere and Animalism on it is 2 easier.",
 "elder": true
 },
 {
@@ -1735,9 +1736,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on: talks with every animal of one chosen family at a time (dogs and wolves, say) with no roll and no eye contact.",
+"elder": true,
+"passive": true
 },
 {
 "id": "animalism-beast-shard",
@@ -1745,11 +1747,11 @@
 "l": 7,
 "n": "Beast Shard",
 "p": 193,
-"r": "",
-"diff": "",
+"r": "charisma+selfcontrol|instinct",
+"diff": "var",
 "c": "",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Unleash the Beast on many at once, no eye contact, difficulty 5 + targets. Infected Cainites resist frenzy at +2, mortals frenzy like Cainites, and the vampire's Disciplines on them are 1 easier.",
 "elder": true
 },
 {
@@ -1760,9 +1762,9 @@
 "p": 194,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "w1",
+"t": "instant",
+"e": "A Willpower point drops the vampire into frenzy at will, no roll. Ending it takes another Willpower point and a Self-Control/Instinct roll at whatever difficulty the present provocation would set (at least 4).",
 "elder": true
 },
 {
@@ -1771,11 +1773,11 @@
 "l": 8,
 "n": "The Beast’s Quills",
 "p": 194,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+selfcontrol|instinct",
+"diff": 8,
+"c": "b1",
+"t": "scene",
+"e": "Primes the Beast for the scene: the first brawl or melee blow taken unleashes it on the attacker with the activation successes; if lethal damage got through, the attacker's frenzy rolls are also 2 harder.",
 "elder": true
 },
 {
@@ -1784,11 +1786,11 @@
 "l": 9,
 "n": "Plague of Beasts",
 "p": 194,
-"r": "",
-"diff": "",
+"r": "charisma+animalken",
+"diff": 8,
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"t": "turns",
+"e": "Animals within a mile per success swarm to obey rough orders. The swarm's attack pool starts at 2 and grows 2 a turn for turns equal to successes, for 3 + successes bashing; Perception inside is 2 harder.",
 "elder": true
 },
 {
@@ -1797,11 +1799,11 @@
 "l": 6,
 "n": "Far Sense",
 "p": 198,
-"r": "",
-"diff": "",
+"r": "perception+empathy",
+"diff": 6,
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"t": "turns",
+"e": "Spies on a familiar person and their surroundings from afar for a turn per success while staying aware of their own body; other Auspex powers work through it.",
 "elder": true
 },
 {
@@ -1810,11 +1812,11 @@
 "l": 6,
 "n": "The Heart’s Desire",
 "p": 198,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "perception+empathy",
+"diff": "t:willpower",
+"c": "b1",
+"t": "instant",
+"e": "Reads what a partner longs to hear: each success adds a die to, or takes 1 off the difficulty (to 4) of, the next mundane Social action against them. No help to Social Disciplines.",
 "elder": true
 },
 {
@@ -1823,11 +1825,11 @@
 "l": 6,
 "n": "Soul Bond",
 "p": 198,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "intelligence+occult",
+"diff": 7,
+"c": "w1",
+"t": "permanent",
+"e": "Hours of meditation in touch with a person, thing or place; five successes (a person's Willpower dots) bind it. Auspex then reaches it at any range, 2 easier. Difficulty 7 or their Willpower if higher.",
 "elder": true
 },
 {
@@ -1836,11 +1838,11 @@
 "l": 7,
 "n": "Anticipate Victory",
 "p": 199,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "perception+brawl|melee|archery",
+"diff": "var",
+"c": "b1",
+"t": "instant",
+"e": "Reads an opponent's next move: Perception + the Ability they are using, against their Manipulation + that Ability; each success is a bonus die on the vampire's next action. Works in games and contests of wit too.",
 "elder": true
 },
 {
@@ -1852,9 +1854,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on: wound penalties turn into bonus dice. It does not let the vampire act while Incapacitated, but each wound taken there gives back a Willpower point.",
+"elder": true,
+"passive": true
 },
 {
 "id": "auspex-a-gathering-of-souls",
@@ -1862,11 +1865,11 @@
 "l": 7,
 "n": "A Gathering of Souls",
 "p": 199,
-"r": "",
-"diff": "",
-"c": "",
+"r": "intelligence+intimidation",
+"diff": "t:willpower",
+"c": "w1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "A touch sends others into Soul's Flight; the willing pay their own Willpower. Forcing the unwilling costs a Willpower point a turn, rolled against their Willpower until successes reach their Willpower dots.",
 "elder": true
 },
 {
@@ -1875,11 +1878,11 @@
 "l": 8,
 "n": "Omniscience",
 "p": 199,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "perception+awareness",
+"diff": "var",
+"c": "w1",
+"t": "scene",
+"e": "For the scene, runs the first four Auspex powers on everyone nearby at once; any that need a roll use one Perception + Awareness roll compared against each subject.",
 "elder": true
 },
 {
@@ -1888,11 +1891,11 @@
 "l": 8,
 "n": "Soul’s Sword",
 "p": 199,
-"r": "",
+"r": "intelligence+intimidation",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "bX",
+"t": "instant",
+"e": "Touch or eye contact, resisted by Willpower: one blood on a mortal, three blood and a Willpower point on others. Net successes strip Willpower (1, 3, 6, all) and wound; at five the victim passes Willpower (7) or dies.",
 "elder": true
 },
 {
@@ -1904,9 +1907,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "In torpor, the elder roams as in Soul's Flight but cannot wake the body early. If the cord is cut, they drift back over a year and a day, and the body stays asleep until then.",
+"elder": true,
+"passive": true
 },
 {
 "id": "bardo-boon-of-anubis",
@@ -1914,11 +1918,11 @@
 "l": 6,
 "n": "Boon of Anubis",
 "p": 202,
-"r": "",
+"r": "road",
 "diff": "",
-"c": "",
+"c": "w1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "A kiss and a Willpower point: on a Road of Humanity roll, a mortal cannot be Embraced for a month per success, or ever for a Willpower dot. Hurting them raises degeneration difficulty by 3.",
 "elder": true
 },
 {
@@ -1929,9 +1933,9 @@
 "p": 202,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b2",
+"t": "instant",
+"e": "Two blood, reflexively: Celerity dots join one Strength roll as extra dice; an attack made this way also knocks the target down.",
 "elder": true
 },
 {
@@ -1942,9 +1946,9 @@
 "p": 202,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b1",
+"t": "instant",
+"e": "One blood: Celerity dots become automatic successes on one roll of fine handwork instead of extra dice.",
 "elder": true
 },
 {
@@ -1955,9 +1959,9 @@
 "p": 202,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b1",
+"t": "turn",
+"e": "One blood and a chosen cut to Celerity for the turn: a thrown weapon that hits gains that many automatic damage successes.",
 "elder": true
 },
 {
@@ -1968,9 +1972,9 @@
 "p": 202,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b4",
+"t": "turn",
+"e": "Four blood: for the rest of the turn, Celerity counts as automatic successes on every Dexterity roll, extra actions too, instead of dice.",
 "elder": true
 },
 {
@@ -1981,9 +1985,9 @@
 "p": 203,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "bX",
+"t": "turn",
+"e": "With Celerity active, a blood point buys one more action this turn; 3, 6, 10 and 15 blood buy up to five. Each extra action costs a level of unsoakable lethal damage.",
 "elder": true
 },
 {
@@ -1994,9 +1998,9 @@
 "p": 203,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b5",
+"t": "turn",
+"e": "Five blood a turn: moves at full speed in any direction, up walls, over water, through stone unharmed. Passing through someone is a Dexterity + Athletics attack (dodge only) filling their health with lethal.",
 "elder": true
 },
 {
@@ -2007,9 +2011,9 @@
 "p": 203,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b3",
+"t": "instant",
+"e": "Three blood, reflexively, even after an attack is rolled but before damage: everything halts while the vampire moves their full speed, in place of a defense, so the attack nearly always misses.",
 "elder": true
 },
 {
@@ -2021,9 +2025,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on: the first three Chimerstry powers cost nothing, up to Intelligence illusions move without close focus, and they last while within Willpower in miles.",
+"elder": true,
+"passive": true
 },
 {
 "id": "chimerstry-shared-nightmare",
@@ -2031,11 +2036,11 @@
 "l": 6,
 "n": "Shared Nightmare",
 "p": 206,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+subterfuge",
+"diff": "t:perception+selfcontrol",
+"c": "w2bX",
+"t": "scene",
+"e": "Horrid Reality on a crowd: one roll checked against each target's Perception + Self-Control/Instinct, costing two Willpower plus a blood point per target.",
 "elder": true
 },
 {
@@ -2046,9 +2051,9 @@
 "p": 206,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "w1bX",
+"t": "scene",
+"e": "A Willpower point and a blood per die make an illusory blade for the scene: Strength plus those dice, aggravated, at most a die above a real blade. A blood point reforms it if dropped; its wounds stay.",
 "elder": true
 },
 {
@@ -2057,11 +2062,11 @@
 "l": 7,
 "n": "Far Fatuus",
 "p": 206,
-"r": "",
-"diff": "",
+"r": "perception+subterfuge",
+"diff": "var",
 "c": "",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Casts Chimerstry into a place the vampire can see or picture: difficulty 6 for one as known as their haven, up to 9 for one known only from a description. Success lets other Chimerstry work there.",
 "elder": true
 },
 {
@@ -2070,11 +2075,11 @@
 "l": 7,
 "n": "Interrupt Reality",
 "p": 206,
-"r": "",
-"diff": "",
+"r": "manipulation+subterfuge",
+"diff": 7,
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"t": "scene",
+"e": "For the scene, real things or people seem unreal and witnesses dismiss them as visions: one object at one success, a person at two, a small group at three, a whole crowd at five. Auspex may see through it.",
 "elder": true
 },
 {
@@ -2083,11 +2088,11 @@
 "l": 8,
 "n": "Visions from the Asura",
 "p": 206,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+subterfuge",
+"diff": "t:willpower",
+"c": "w1",
+"t": "nights",
+"e": "Lifelike everyday illusions that vanish when the victim reacts, a night per success (1 harder if they have a derangement). Each night costs them a Willpower point, or brings a derangement once they have none.",
 "elder": true
 },
 {
@@ -2096,11 +2101,11 @@
 "l": 8,
 "n": "Synesthesia",
 "p": 207,
-"r": "",
-"diff": "",
-"c": "",
+"r": "manipulation+subterfuge",
+"diff": "7|t:willpower",
+"c": "w1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Scrambles the senses: each success takes a point of Perception; at zero the victim can only wait. One victim (their Willpower) a week to for good by successes; all in sight (difficulty 7) until sunrise.",
 "elder": true
 },
 {
@@ -2109,11 +2114,11 @@
 "l": 9,
 "n": "Fabrication",
 "p": 207,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+subterfuge",
+"diff": "6|t:willpower",
+"c": "b5w1",
+"t": "scene",
+"e": "Five blood and a Willpower point remake reality nearby for a scene: dull blades at one success, swap things at two, solid or insubstantial at three, unmake matter at six. On a person, 2 aggravated a success.",
 "elder": true
 },
 {
@@ -2125,9 +2130,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Bought more than once, each time a new infernal gift agreed with the Storyteller: fire immunity, wings, a demon form, a link to Hell, a chained Beast. It never beats faith, sunlight or the need for blood.",
+"elder": true,
+"passive": true
 },
 {
 "id": "daimoinon-lure-diabolik",
@@ -2135,11 +2141,11 @@
 "l": 6,
 "n": "Lure Diabolik",
 "p": 210,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+empathy",
+"diff": "t:willpower",
+"c": "w1",
+"t": "permanent",
+"e": "Hell's tongue, a Willpower point per roll until successes reach the victim's Willpower dots: they lose a Road dot, and while it stays lost the vampire's Mental and Social rolls on them are 1 easier.",
 "elder": true
 },
 {
@@ -2148,11 +2154,11 @@
 "l": 7,
 "n": "Bring the Plague",
 "p": 210,
-"r": "",
+"r": "manipulation+occult",
 "diff": "",
-"c": "",
+"c": "b5",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "A touch and five blood, beating Stamina + Fortitude: a contagious plague that blocks healing and deals an unsoakable aggravated level daily unless Stamina succeeds, until successes reach the Daimonion dots.",
 "elder": true
 },
 {
@@ -2163,9 +2169,9 @@
 "p": 211,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "w1bX",
+"t": "night",
+"e": "A Willpower point and blood summon a demon of one deadly sin, each blood past the first adding a dot to an Attribute or Willpower. It serves a night (more if Willpower is not regained); one at a time.",
 "elder": true
 },
 {
@@ -2174,11 +2180,11 @@
 "l": 8,
 "n": "Call Forth the Herald of Hell",
 "p": 211,
-"r": "",
-"diff": "",
-"c": "",
+"r": "manipulation+occult",
+"diff": 7,
+"c": "b5",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Five blood tear a gate: each success costs an unsoakable aggravated level, then a die at or under the successes lets a demon prince through to ravage all. Mortals who see it lose Willpower dots each turn.",
 "elder": true
 },
 {
@@ -2187,11 +2193,11 @@
 "l": 8,
 "n": "Adramelech’s Wrath",
 "p": 212,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "intelligence+occult",
+"diff": "t:road",
+"c": "w1bX",
+"t": "turns",
+"e": "A scream, a Willpower point and three blood per turn: a Cainite in sight burns as under the noon sun and faces Rötschreck, for at most a turn per success. Against True Faith it rebounds on the caster.",
 "elder": true
 },
 {
@@ -2204,7 +2210,7 @@
 "diff": "",
 "c": "",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "The Methuselah dies as an unstoppable horror tears out of their body; it ravages the land for a minute per Road dot, then reality forces it back. It has no stats: it is a story event.",
 "elder": true
 },
 {
@@ -2213,11 +2219,11 @@
 "l": 6,
 "n": "The Call",
 "p": 215,
-"r": "",
-"diff": "",
+"r": "perception+empathy",
+"diff": 6,
 "c": "",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Malkavians only: names a Malkavian of the same or weaker blood and talks with them mind to mind while in range, though each must speak as if side by side, shouting over any din around them.",
 "elder": true
 },
 {
@@ -2226,11 +2232,11 @@
 "l": 6,
 "n": "Stain the Soul",
 "p": 216,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+empathy",
+"diff": "t:willpower",
+"c": "w1",
+"t": "permanent",
+"e": "Plants a chosen derangement for good; the victim may spend Willpower one for one to cancel successes. It cannot be ignored with Willpower and ends only with a change of Road. Once per story on any victim.",
 "elder": true
 },
 {
@@ -2239,11 +2245,11 @@
 "l": 7,
 "n": "Cobble the Road",
 "p": 216,
-"r": "",
-"diff": "",
+"r": "manipulation+subterfuge",
+"diff": "t:wits+subterfuge",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"t": "permanent",
+"e": "With eye contact, successes at least equal to the target's Self-Control/Instinct rewrite one of their Virtues; they test degeneration nightly down to Road 3. A botch changes one of the caster's Virtues.",
 "elder": true
 },
 {
@@ -2252,11 +2258,11 @@
 "l": 7,
 "n": "The Sword of Malkav",
 "p": 216,
-"r": "",
-"diff": "",
-"c": "",
+"r": "intelligence+intimidation",
+"diff": "t:willpower",
+"c": "w1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Eye contact and a Willpower point twist a truth the victim holds into a lie they wholly believe, a turn to a year by successes. Proof against it deals an aggravated level a turn; for Cainites, frenzy at +3.",
 "elder": true
 },
 {
@@ -2265,11 +2271,11 @@
 "l": 8,
 "n": "Prison of the Mind",
 "p": 217,
-"r": "",
-"diff": "",
+"r": "charisma+intimidation",
+"diff": 8,
 "c": "",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Vitae smeared on the victim and a turn of eye contact, against their Wits + Courage (8): their mind is locked in a dream world a week to decades by successes; Cainites fall into torpor.",
 "elder": true
 },
 {
@@ -2280,9 +2286,9 @@
 "p": 217,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "w1",
+"t": "instant",
+"e": "A hand on the face and a Willpower point clear every derangement and outside hold on the mind; the target regains all Willpower and gets +1 Mental die for a week. Or the madness is buried until a set time.",
 "elder": true
 },
 {
@@ -2291,11 +2297,11 @@
 "l": 6,
 "n": "Chain the Psyche",
 "p": 220,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+intimidation",
+"diff": "t:stamina+empathy",
+"c": "b1",
+"t": "turns",
+"e": "Punishes a thrall with pain: a turn per success of helpless agony, each turn an unsoakable bashing level.",
 "elder": true
 },
 {
@@ -2307,9 +2313,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on: Dominate works through a brief touch of skin on skin instead of eye contact.",
+"elder": true,
+"passive": true
 },
 {
 "id": "dominate-loyalty",
@@ -2320,9 +2327,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on: anyone else trying to command, coerce or Dominate the vampire's thralls is 3 harder; at 10 or more it cannot be done.",
+"elder": true,
+"passive": true
 },
 {
 "id": "dominate-mass-manipulation",
@@ -2333,8 +2341,8 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"t": "instant",
+"e": "Rolls a Dominate power against the hardest target in a group (only they need eye contact); each success spreads it to one more person nearby.",
 "elder": true
 },
 {
@@ -2343,11 +2351,11 @@
 "l": 7,
 "n": "Still the Mortal Flesh",
 "p": 220,
-"r": "",
-"diff": "",
+"r": "manipulation+medicine",
+"diff": "t:willpower+2",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"t": "turns",
+"e": "Names a body function and stops or alters it for a turn per success; past difficulty 10 it fails. A stopped heart kills a mortal but barely troubles a vampire; it works on other supernatural beings too.",
 "elder": true
 },
 {
@@ -2356,11 +2364,11 @@
 "l": 8,
 "n": "Far Mastery",
 "p": 220,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "perception+empathy",
+"diff": "t:wits+stealth",
+"c": "w1",
+"t": "instant",
+"e": "Reaches anyone the vampire knows, at any distance: on success, any Dominate power works as if eye contact were made. A supernatural target costs a second Willpower point.",
 "elder": true
 },
 {
@@ -2369,11 +2377,11 @@
 "l": 9,
 "n": "Speak Through the Blood",
 "p": 220,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+leadership",
+"diff": "var",
+"c": "w1",
+"t": "permanent",
+"e": "A permanent Willpower point sends a slow, subtle command down the bloodline over decades; difficulty 4 plus the generations it passes, each step past 10 needing an extra success. Works from torpor.",
 "elder": true
 },
 {
@@ -2384,9 +2392,9 @@
 "p": 221,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b2",
+"t": "scene",
+"e": "For the scene, a weapon whose damage is soaked to nothing breaks, and unarmed attackers take the soak successes as bashing damage.",
 "elder": true
 },
 {
@@ -2395,11 +2403,11 @@
 "l": 7,
 "n": "The Blessing of Vitality",
 "p": 221,
-"r": "",
-"diff": "",
-"c": "",
+"r": "stamina+survival",
+"diff": 8,
+"c": "w1bX",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "A blood mark on the forehead, a Willpower point and a blood per Fortitude dot given (up to the vampire's own): the subject's Fortitude becomes that, even past their limit, a turn to forever by successes.",
 "elder": true
 },
 {
@@ -2410,9 +2418,9 @@
 "p": 222,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b2",
+"t": "scene",
+"e": "For the scene, ordinary heat, blades and blows cannot hurt outside combat (flame still does), metal can be worked by hand, unarmed hits do Strength + Fortitude bashing, and bare hands can block any attack.",
 "elder": true
 },
 {
@@ -2421,11 +2429,11 @@
 "l": 6,
 "n": "Steal the Mind",
 "p": 223,
-"r": "",
-"diff": "",
+"r": "perception+subterfuge",
+"diff": "t:willpower",
 "c": "",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Takes a target's mind: all their thoughts and memories open to the Kiasyd while they lose their Knowledges, ten minutes to a month by successes. Harm returns it; if the victim dies first, the memories stay.",
 "elder": true
 },
 {
@@ -2437,8 +2445,8 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"t": "scene",
+"e": "The aura turns plain and the Beast hides: to every sense and power the vampire seems an ordinary human, and anything aimed at the Beast (such as Song of Serenity) fails.",
 "elder": true
 },
 {
@@ -2447,11 +2455,11 @@
 "l": 7,
 "n": "Fortress of Silence",
 "p": 227,
-"r": "",
-"diff": "",
-"c": "",
+"r": "stamina+occult",
+"diff": "t:willpower",
+"c": "b1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "One blood. Meditating: a Willpower point back every 15 minutes, then Mental and Willpower rolls 1 easier that night. On a foe (vs Willpower): each success locks out a Dexterity or Mental die for the scene.",
 "elder": true
 },
 {
@@ -2460,11 +2468,11 @@
 "l": 8,
 "n": "Reaper of the Heart",
 "p": 227,
-"r": "",
-"diff": "",
+"r": "manipulation+performance",
+"diff": "t:wits+awareness",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"t": "scene",
+"e": "Mask of a Thousand Faces as someone the target deeply feels for, living or dead: each success adds two dice to the vampire's Social rolls on them and makes theirs toward the vampire 2 harder, for the scene.",
 "elder": true
 },
 {
@@ -2473,11 +2481,11 @@
 "l": 9,
 "n": "Obscure God’s Creation",
 "p": 227,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "wits+subterfuge",
+"diff": 9,
+"c": "w1",
+"t": "permanent",
+"e": "From total seclusion, a Willpower dot erases the vampire from memory: one success blurs those who knew them, two shifts their deeds onto others, three wipes records, four leaves no trace but what they choose to show.",
 "elder": true
 },
 {
@@ -2486,11 +2494,11 @@
 "l": 6,
 "n": "The Darkness Within",
 "p": 230,
-"r": "",
-"diff": "",
-"c": "",
+"r": "willpower",
+"diff": 6,
+"c": "b1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Inner darkness engulfs a target, draining two blood a turn (Stamina 6 resists each turn); anyone with less Courage than the successes flees or faces Rötschreck. Called back, it brings the drained blood.",
 "elder": true
 },
 {
@@ -2499,11 +2507,11 @@
 "l": 6,
 "n": "Walk the Abyss",
 "p": 230,
-"r": "",
-"diff": "",
+"r": "intelligence+stealth",
+"diff": 7,
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"t": "instant",
+"e": "Steps through one person-sized shadow and out of another in sight, or reaches through to grab (Intelligence + Brawl). Then Courage at 5 (7 if pulled through unwilling) or Rötschreck; a botch strands them.",
 "elder": true
 },
 {
@@ -2512,11 +2520,11 @@
 "l": 7,
 "n": "Shadow Twin",
 "p": 230,
-"r": "",
-"diff": "",
-"c": "",
+"r": "willpower",
+"diff": 8,
+"c": "b1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Frees a person's shadow for an hour per success (dawn ends it): half their traits, half the caster's Obtenebration, up to 50 feet away, half damage. If it dies, its owner loses half their Willpower.",
 "elder": true
 },
 {
@@ -2525,11 +2533,11 @@
 "l": 8,
 "n": "Oubliette",
 "p": 231,
-"r": "",
-"diff": "",
-"c": "",
+"r": "wits+intimidation",
+"diff": 7,
+"c": "b1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "One blood and a contested roll against Dexterity + Occult (both 7) hang a victim in the Abyss: mortals suffocate in Stamina minutes, vampires hang helpless. Sunlight or the caster ends it.",
 "elder": true
 },
 {
@@ -2538,11 +2546,11 @@
 "l": 9,
 "n": "Ahriman’s Demesne",
 "p": 231,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+occult",
+"diff": 6,
+"c": "w2",
+"t": "instant",
+"e": "Two Willpower and three turns of focus open a void: all inside take a level per success outright (aggravated for vampires). It takes the dead and mortals at one level; each taken alive gives a Willpower point.",
 "elder": true
 },
 {
@@ -2553,9 +2561,9 @@
 "p": 235,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b2",
+"t": "scene",
+"e": "For the scene, any hit on an object destroys it outright; aimed at a foe's weapon or armor, it breaks that instead of wounding them.",
 "elder": true
 },
 {
@@ -2567,9 +2575,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on unless willed off: unarmed blows do lethal damage and can only be dodged, never blocked or parried.",
+"elder": true,
+"passive": true
 },
 {
 "id": "potence-aftershock",
@@ -2579,9 +2588,9 @@
 "p": 235,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b3",
+"t": "instant",
+"e": "Three blood on an attack, leaving Potence off the damage: if it wounds after soak, the target later takes Potence in lethal levels at a moment the vampire names within 24 hours. One stored blow at a time.",
 "elder": true
 },
 {
@@ -2590,11 +2599,11 @@
 "l": 6,
 "n": "Kingmaker",
 "p": 238,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+empathy",
+"diff": 7,
+"c": "b1",
+"t": "scene",
+"e": "Lends a target in sight and earshot the vampire's grace for the scene: dice equal to Presence on their Social rolls, and 1 off the difficulty per two successes. Difficulty 5 if the two know each other well.",
 "elder": true
 },
 {
@@ -2603,11 +2612,11 @@
 "l": 6,
 "n": "Love",
 "p": 238,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "charisma+subterfuge",
+"diff": "t:willpower",
+"c": "b1",
+"t": "scene",
+"e": "The victim feels bound to the vampire as by a blood oath for the scene, and each success takes a die from their Social rolls against them. It can be renewed in later scenes the same night.",
 "elder": true
 },
 {
@@ -2616,11 +2625,11 @@
 "l": 6,
 "n": "Paralyzing Glance",
 "p": 238,
-"r": "",
-"diff": "",
+"r": "manipulation+intimidation",
+"diff": "t:willpower",
 "c": "",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Eye contact freezes the victim in whimpering terror, three turns up to a week by successes. A real threat to their life allows a Courage roll (difficulty the vampire's Intimidation + 3) to break free.",
 "elder": true
 },
 {
@@ -2629,11 +2638,11 @@
 "l": 6,
 "n": "Spark of Rage",
 "p": 239,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+subterfuge",
+"diff": 8,
+"c": "b1",
+"t": "scene",
+"e": "Flares tempers in those nearest: 2, 4, 8, 20 or everyone around by successes. Affected vampires spend Willpower or roll Self-Control/Instinct against the user's pool or frenzy; a botch frenzies the user.",
 "elder": true
 },
 {
@@ -2642,11 +2651,11 @@
 "l": 7,
 "n": "Cooperation",
 "p": 239,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "charisma+leadership",
+"diff": 8,
+"c": "b1",
+"t": "scene",
+"e": "Makes 2, 4, 8, 20 or everyone nearby (by successes) friendlier to one another for the scene, a Willpower point stretching it longer. Frenzy from insults within the group is 3 easier to resist.",
 "elder": true
 },
 {
@@ -2658,9 +2667,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on: mortals cannot spend Willpower against the vampire's Presence. Others first roll Willpower (vampire's Willpower + 2); their successes cap what they may spend against it that night.",
+"elder": true,
+"passive": true
 },
 {
 "id": "presence-pulse-of-the-people",
@@ -2668,11 +2678,11 @@
 "l": 9,
 "n": "Pulse of the People",
 "p": 239,
-"r": "",
-"diff": "",
-"c": "",
+"r": "charisma+leadership",
+"diff": 9,
+"c": "w1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Casts one emotion over a whole city or region the vampire knows: a minute to a week by successes for residents, one step less for visitors and supernatural beings. Works even from torpor.",
 "elder": true
 },
 {
@@ -2683,9 +2693,9 @@
 "p": 242,
 "r": "",
 "diff": "",
-"c": "",
+"c": "b1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "One blood and a turn: nothing in the surroundings but sun and fire can harm or hinder the vampire, weather, heat, cold, falls and disasters included.",
 "elder": true
 },
 {
@@ -2697,9 +2707,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on while in the earth: moves through soil or any natural material at half walking pace, at no extra cost, sensing everything within 50 yards.",
+"elder": true,
+"passive": true
 },
 {
 "id": "protean-ephemeral-slumber",
@@ -2709,9 +2720,9 @@
 "p": 242,
 "r": "",
 "diff": "",
-"c": "",
+"c": "w1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "A Willpower point on taking mist form keeps it through the day's sleep, safe from all but fire and sunlight.",
 "elder": true
 },
 {
@@ -2722,9 +2733,9 @@
 "p": 242,
 "r": "",
 "diff": "",
-"c": "",
+"c": "b3",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Three blood, reflexively: skin turns to stone and halves physical damage pools against the vampire; fire, sunlight and supernatural aggravated harm still cut through.",
 "elder": true
 },
 {
@@ -2735,9 +2746,9 @@
 "p": 242,
 "r": "",
 "diff": "",
-"c": "",
+"c": "b2",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "After feeding, takes the last victim's looks (no skills or powers), hiding all signs of being Cainite if it was a human or beast. Two blood and two turns, or three blood for one; it lasts until changed back.",
 "elder": true
 },
 {
@@ -2746,11 +2757,11 @@
 "l": 6,
 "n": "Reversion to the True Form",
 "p": 243,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+animalken",
+"diff": "t:willpower",
+"c": "w1",
+"t": "turns",
+"e": "A touch (even as part of an attack) forces a shapeshifter into their true form and keeps them there a turn per success.",
 "elder": true
 },
 {
@@ -2762,9 +2773,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "In torpor and unwatched, creeps along like a worm, a yard an hour at most, even by day.",
+"elder": true,
+"passive": true
 },
 {
 "id": "protean-shape-of-the-beasts-wrath",
@@ -2774,9 +2786,9 @@
 "p": 243,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b3",
+"t": "night",
+"e": "A giant beast form in three turns, until sunrise: seven extra Physical dots, Strength + 2 aggravated claws, a Bruised level more, double running speed, keen senses. Frenzy is 2 harder and Willpower cannot stop it.",
 "elder": true
 },
 {
@@ -2787,9 +2799,9 @@
 "p": 243,
 "r": "",
 "diff": "",
-"c": "",
+"c": "b3",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Turns insubstantial at once while still looking solid: walks through walls, ignores gravity, cannot touch things, takes no physical harm and soaks fire and sunlight with double dice.",
 "elder": true
 },
 {
@@ -2798,11 +2810,11 @@
 "l": 8,
 "n": "Purify the Impaled Breast",
 "p": 243,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "willpower",
+"diff": 8,
+"c": "b1",
+"t": "instant",
+"e": "One success pushes every foreign object out of the body, stakes included; a Willpower point keeps chosen items in.",
 "elder": true
 },
 {
@@ -2814,9 +2826,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Final Death is not final: after nights equal to Generation, the ashes reform as a new body one Generation higher, recalling little but the killer. Traits over the new cap are lost; this power stays.",
+"elder": true,
+"passive": true
 },
 {
 "id": "quietus-cruscitus-taste-of-death",
@@ -2824,11 +2837,11 @@
 "l": 6,
 "n": "Taste of Death",
 "p": 247,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "willpower",
+"diff": 7,
+"c": "bX",
+"t": "turns",
+"e": "Like Baal's Caress at 7, two blood per point: a sticky sap that eats wood in a turn, metal in two, stone in three. It burns a turn per success, damage equal to successes then one less each turn.",
 "elder": true
 },
 {
@@ -2840,9 +2853,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on: drinks through the skin from any blood or bare flesh it touches, at most two points a turn whatever the Generation. Victims resist this Kiss more easily: vampires at 6, mortals at 8 as if Cainite.",
+"elder": true,
+"passive": true
 },
 {
 "id": "quietus-cruscitus-blood-of-destruction",
@@ -2850,11 +2864,11 @@
 "l": 8,
 "n": "Blood of Destruction",
 "p": 247,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "willpower",
+"diff": 7,
+"c": "b1",
+"t": "scene",
+"e": "Reflexively, one blood and half the pool make all the vampire's vitae a toxin with every Cruscitus effect for the scene: piercing blades corrode, natural weapons take two aggravated, wounding attackers get splashed.",
 "elder": true
 },
 {
@@ -2863,11 +2877,11 @@
 "l": 9,
 "n": "Weaken the Blood",
 "p": 247,
-"r": "",
-"diff": "",
+"r": "willpower",
+"diff": "t:stamina",
 "c": "",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "If the vampire's blood ever entered the victim, contested Willpower (harder by their Fortitude) raises their Generation by the net successes; after 10 minus Stamina + Fortitude nights it returns, a step a night.",
 "elder": true
 },
 {
@@ -2876,11 +2890,11 @@
 "l": 6,
 "n": "Blood Awakening",
 "p": 250,
-"r": "",
-"diff": "",
+"r": "perception+empathy",
+"diff": 7,
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"t": "instant",
+"e": "After drinking a blood point from someone, reads memories in it: vague recent hours at one success, everything they ever knew at six. Perception is 2 harder meanwhile; a botch stuns until blood is spent.",
 "elder": true
 },
 {
@@ -2889,11 +2903,11 @@
 "l": 7,
 "n": "Dam the Heart’s River",
 "p": 251,
-"r": "",
-"diff": "",
+"r": "willpower",
+"diff": "var",
 "c": "",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Reflexively locks up to 5 blood (difficulty 5 + points) into clots that stop bleeding or feeding. Or, with touch or shared blood, a Willpower point and Manipulation + Medicine seize a target's blood for turns.",
 "elder": true
 },
 {
@@ -2902,11 +2916,11 @@
 "l": 8,
 "n": "Songs of Distant Vitae",
 "p": 251,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "wits+intimidation",
+"diff": "t:willpower",
+"c": "b4",
+"t": "turns",
+"e": "With the victim's fresh blood, they relive the terror of all they fed on: stunned two turns per success, losing 2 blood a turn. After, Courage and Self-Control/Instinct (8) or Rötschreck and a derangement.",
 "elder": true
 },
 {
@@ -2915,11 +2929,11 @@
 "l": 9,
 "n": "Condemn the Sins",
 "p": 251,
-"r": "",
-"diff": "",
-"c": "",
+"r": "manipulation+occult",
+"diff": "var",
+"c": "bX",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "The turn after a lesser Hematus power hits a Cainite, a Willpower dot and blood equal to the difficulty (4 plus one per generation reached, max 10) spread that same effect through their line of descendants.",
 "elder": true
 },
 {
@@ -2930,9 +2944,9 @@
 "p": 254,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b2",
+"t": "scene",
+"e": "Two blood grow two more heads, each with its own full action a turn (bites, gaze powers; Typhon's Maw applies). The vampire also sees ghosts, and the heads can touch them as if solid.",
 "elder": true
 },
 {
@@ -2943,9 +2957,9 @@
 "p": 254,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b3",
+"t": "scene",
+"e": "Three blood and a turn take a god's form fixed when bought: Serpentis dots spread among Attributes (at most half on one), even past Generation limits, plus one effect agreed with the Storyteller.",
 "elder": true
 },
 {
@@ -2956,9 +2970,9 @@
 "p": 254,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b1",
+"t": "scene",
+"e": "Hollow fangs: each bite adds Serpentis in lethal damage, and humans who live are paralyzed (-5 to all actions) and roll Stamina every 30 seconds for five minutes or die.",
 "elder": true
 },
 {
@@ -2969,9 +2983,9 @@
 "p": 254,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "bX",
+"t": "turns",
+"e": "Two blood a turn: a storm 3 yards across per Serpentis dot, half speed, immune to physical harm. All inside take Serpentis bashing each turn; a blood point throws lightning (Perception + Occult), Serpentis aggravated.",
 "elder": true
 },
 {
@@ -2982,9 +2996,9 @@
 "p": 256,
 "r": "",
 "diff": "",
-"c": "",
+"c": "b1w1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "One blood and a Willpower point merge with a spirit animal: Intelligence -2, Wits -1, but sunlight cannot harm, staying awake costs 2 Willpower a day, and the Umbra is open. Changing back costs the same.",
 "elder": true
 },
 {
@@ -2993,11 +3007,11 @@
 "l": 6,
 "n": "Kiss of Lachesis",
 "p": 258,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+occult",
+"diff": "t:stamina+4",
+"c": "b2",
+"t": "permanent",
+"e": "A touch and a turn's focus age or restore a target a week up to centuries by successes. Each success used comes back as unsoakable lethal damage, rolled against Temporis. It changes wear, not memories or powers.",
 "elder": true
 },
 {
@@ -3006,11 +3020,11 @@
 "l": 7,
 "n": "Cheat the Fates",
 "p": 258,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "wits+occult",
+"diff": 7,
+"c": "w1b3",
+"t": "turns",
+"e": "Halts time a turn per success (one if reflexive) for the vampire and up to Wits passengers; no Disciplines, and frozen foes cannot defend. After, a die per passenger per turn at Temporis: each success is aggravated.",
 "elder": true
 },
 {
@@ -3019,11 +3033,11 @@
 "l": 8,
 "n": "Clio’s Kiss",
 "p": 259,
-"r": "",
-"diff": "",
-"c": "",
+"r": "stamina+occult",
+"diff": 8,
+"c": "b5",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Five blood carry a ballroom-sized sphere back a week to centuries by successes; those inside watch unseen. A Willpower dot brings one thing or person forward if history does not need them.",
 "elder": true
 },
 {
@@ -3032,11 +3046,11 @@
 "l": 6,
 "n": "Father’s Judgment",
 "p": 261,
-"r": "",
-"diff": "",
-"c": "",
+"r": "manipulation+medicine|empathy",
+"diff": 7,
+"c": "w1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Against a Cainite in sight, contested by their Willpower (9): each success clots a blood point they cannot use for anything until they spend a Willpower point per point to free it.",
 "elder": true
 },
 {
@@ -3048,9 +3062,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on: Gift of Sleep and Healer's Touch work at line of sight instead of touch, and Gift of Sleep can turn wound penalties into bonus dice while it lasts.",
+"elder": true,
+"passive": true
 },
 {
 "id": "valeren-healer-rayzeels-song",
@@ -3058,11 +3073,11 @@
 "l": 8,
 "n": "Rayzeel’s Song",
 "p": 261,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "charisma+performance",
+"diff": 7,
+"c": "w1",
+"t": "scene",
+"e": "Music aimed at one task (healing, battle, talks): each success takes 1 off listeners' relevant rolls for the scene, a Willpower point per three listeners. Failure makes them 1 harder; a botch 2 and a lethal level.",
 "elder": true
 },
 {
@@ -3071,11 +3086,11 @@
 "l": 9,
 "n": "Heaven’s Gate",
 "p": 262,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "willpower",
+"diff": 8,
+"c": "w2b5",
+"t": "permanent",
+"e": "Two Willpower and five blood revive someone dead under a week (not of age, soul intact, head mostly whole): the soul returns, the body heals, and they become a revenant. It cannot undo the Embrace.",
 "elder": true
 },
 {
@@ -3086,9 +3101,9 @@
 "p": 264,
 "r": "",
 "diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"c": "b3",
+"t": "instant",
+"e": "Three blood, against a foe who has struck the Salubri: one melee or brawl attack counts as if every die of the pool (Celerity included) hit, with two more damage dice, and armor counts half. Once a turn.",
 "elder": true
 },
 {
@@ -3097,11 +3112,11 @@
 "l": 6,
 "n": "Dream Combat",
 "p": 264,
-"r": "",
-"diff": "",
+"r": "willpower",
+"diff": 7,
 "c": "",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Eye contact and contested Willpower pull a target into a dream duel lasting a turn outside: Manipulation for Strength, Charisma for Dexterity, damage to Willpower. At 0 the loser is comatose or in torpor.",
 "elder": true
 },
 {
@@ -3113,9 +3128,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Burning Touch no longer ends after a turn: after the first touch it keeps working at range under the third eye, and each blood spent also takes a die from the victim's Rötschreck resistance.",
+"elder": true,
+"passive": true
 },
 {
 "id": "valeren-warrior-song-of-the-blooded",
@@ -3123,11 +3139,11 @@
 "l": 8,
 "n": "Song of the Blooded",
 "p": 265,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "charisma+performance",
+"diff": 7,
+"c": "w3b5",
+"t": "scene",
+"e": "Free once a chapter; then three Willpower, five blood and a sung prayer. For the scene: Physicals at the Generation maximum, a blazing halo (no Stealth, attacks on them 2 harder), immune to mental Disciplines.",
 "elder": true
 },
 {
@@ -3139,9 +3155,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on: hospitality anywhere, and those hunting the Salubri with ill intent lose 2 dice; a chance sighting calls for contested Willpower (6), and if the Salubri wins the hunter loses interest for the scene.",
+"elder": true,
+"passive": true
 },
 {
 "id": "valeren-watcher-aversion",
@@ -3152,9 +3169,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Pariah's Caress works at line of sight: the target's Social difficulties rise by 2 (to 9), and any Social botch comes across as an insult or threat that may start a fight.",
+"elder": true,
+"passive": true
 },
 {
 "id": "valeren-watcher-purification",
@@ -3162,11 +3180,11 @@
 "l": 8,
 "n": "Purification",
 "p": 267,
-"r": "",
-"diff": "",
-"c": "",
+"r": "willpower",
+"diff": 8,
+"c": "w1",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Contested Willpower against a spirit or demon until one side leads by three. A win expels and calms it; another Willpower point puts it in a person, beast, place or the Salubri, serving as if blood bound.",
 "elder": true
 },
 {
@@ -3175,11 +3193,11 @@
 "l": 9,
 "n": "Soul Exchange",
 "p": 267,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "manipulation+occult",
+"diff": 8,
+"c": "w1",
+"t": "permanent",
+"e": "Swaps the souls of two people in sight: their Roads and ratings, Virtues and Natures trade places at once. Two Healers using Unburden the Bestial Soul can undo it.",
 "elder": true
 },
 {
@@ -3190,9 +3208,9 @@
 "p": 270,
 "r": "",
 "diff": "",
-"c": "",
+"c": "b3",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Three blood for a zulo form with bat wings: flies at 25 mph carrying what two hands could, hearing 2 easier, sight 1 harder, +2 Intimidation. Strength + Body Crafts (7) grows Strength + 2 aggravated claws.",
 "elder": true
 },
 {
@@ -3204,9 +3222,10 @@
 "r": "",
 "diff": "",
 "c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
-"elder": true
+"t": "passive",
+"e": "Always on: the vampire's blood turns black and oily, slow to drink and hard to remove. In open air it ignites, a turn per blood point, three dice aggravated a turn; the vampire is immune to its own fire.",
+"elder": true,
+"passive": true
 },
 {
 "id": "vicissitude-sublimation-of",
@@ -3214,11 +3233,11 @@
 "l": 8,
 "n": "Sublimation of",
 "p": 270,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "strength+bodycrafts",
+"diff": 6,
+"c": "b1",
+"t": "permanent",
+"e": "Five successes strip a victim's flesh (to Incapacitated, lethal), then Dexterity + Body Crafts (7) and a blood point seal them in a cocoon. They heal inside and emerge in the shape the vampire chose.",
 "elder": true
 },
 {
@@ -3229,9 +3248,9 @@
 "p": 270,
 "r": "",
 "diff": "",
-"c": "",
+"c": "b6",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "Six blood: a winged, scaled dragon with double Strength and Stamina, 4 armor, five extra Bruised levels, Strength-based Intimidation each turn. Its blood burns in air as Blood of the Earth and can be spat.",
 "elder": true
 },
 {
@@ -3240,11 +3259,11 @@
 "l": 6,
 "n": "Into the Chasm",
 "p": 273,
-"r": "",
-"diff": "",
-"c": "",
-"t": "var",
-"e": "Elder power: the system is on the page.",
+"r": "intelligence+occult",
+"diff": "var",
+"c": "b3",
+"t": "turns",
+"e": "An hour and three blood painting glyphs open a portal to the Abyss, a turn per success. Inside, Wits + Obtenebration (6, rising on failures) opens a way out to a place visited before; each try costs a lethal level.",
 "elder": true
 },
 {
@@ -3253,11 +3272,11 @@
 "l": 7,
 "n": "Evocation of the Oubliette",
 "p": 274,
-"r": "",
-"diff": "",
-"c": "",
+"r": "perception+occult",
+"diff": 6,
+"c": "b3",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "A turn of focus, three blood and an attack (dodge only) on someone in sight drag them into the Abyss for nights equal to Obtenebration, or until a blood point calls them back. Non-Mystics gain a derangement.",
 "elder": true
 },
 {
@@ -3266,11 +3285,11 @@
 "l": 8,
 "n": "Cry That Slays the Light",
 "p": 274,
-"r": "",
-"diff": "",
+"r": "intelligence+occult",
+"diff": 8,
 "c": "",
 "t": "var",
-"e": "Elder power: the system is on the page.",
+"e": "After a week of silence, success learns a word that, spoken later, blots out the sky for an hour: vampires ignore sunlight and Rötschreck. After, Road dice at 4; each success keeps Road dots, and Road 0 ends them.",
 "elder": true
 },
 {
@@ -3410,10 +3429,10 @@
 "n": "Seal of Abamixtra",
 "p": 279,
 "r": "wits+occult",
-"diff": "7",
+"diff": 7,
 "c": "b1",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Raises a corpse per success to do one simple task until it is done or the corpse is destroyed, slowly rotting; they never defend themselves. Physicals at half Necromancy (round up), no Abilities, four health levels.",
 "trad": "necro"
 },
 {
@@ -3423,10 +3442,10 @@
 "n": "Awaken the Homuncular Servant",
 "p": 279,
 "r": "intelligence+occult",
-"diff": "7",
+"diff": 7,
 "c": "b1",
-"t": "night",
-"e": "Necromancy path power; the system is on the page.",
+"t": "nights",
+"e": "Turns a severed hand, eye, head or small dead beast into a cunning familiar that sees and hears for its master and reports by crude telepathy. It stops if more than 100 yards away and lasts a night per success.",
 "trad": "necro"
 },
 {
@@ -3436,10 +3455,10 @@
 "n": "Shambling Hordes",
 "p": 280,
 "r": "wits+occult",
-"diff": "8",
-"c": "b1",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"diff": 8,
+"c": "bX",
+"t": "permanent",
+"e": "Each success lets a blood point raise two corpses that fight on command or follow standing orders as long as the orders last. Another blood point per corpse adds Physical dots equal to Necromancy.",
 "trad": "necro"
 },
 {
@@ -3448,11 +3467,11 @@
 "l": 4,
 "n": "Baleful Exorcism",
 "p": 280,
-"r": "",
+"r": "willpower",
 "diff": "",
-"c": "",
+"c": "w1",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Contested Willpower drives a mortal's (or ghoul's) soul out of the body, which lies comatose, for an hour per net success; it does not work on Cainites or other supernatural beings.",
 "trad": "necro"
 },
 {
@@ -3465,7 +3484,7 @@
 "diff": "",
 "c": "",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Puts a willing ghost or projected soul into a still-warm corpse or a body emptied by Baleful Exorcism; it uses the body's physical traits and its own mental ones. A dying vampire's body needs five successes.",
 "trad": "necro"
 },
 {
@@ -3475,10 +3494,10 @@
 "n": "A Touch of Death",
 "p": 280,
 "r": "perception+awareness",
-"diff": "6",
+"diff": 6,
 "c": "",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"t": "instant",
+"e": "Touching a person or thing tells whether a ghost touched it or used powers on it: the last turn at one success up to the past week at five. A botch misleads; a ghost found inside is revealed.",
 "trad": "necro"
 },
 {
@@ -3488,10 +3507,10 @@
 "n": "Reveal the Catene",
 "p": 281,
 "r": "perception+occult",
-"diff": "7",
+"diff": 7,
 "c": "b1",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"t": "instant",
+"e": "After three turns handling an object, learns whether it matters to any ghost; three successes name one such ghost. A botch bars this item for good.",
 "trad": "necro"
 },
 {
@@ -3500,11 +3519,11 @@
 "l": 3,
 "n": "Tread Upon the Grave",
 "p": 281,
-"r": "",
-"diff": "8",
+"r": "willpower",
+"diff": 8,
 "c": "",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"t": "instant",
+"e": "Senses how thin the Shroud is in an area; three successes also tell if it has been tampered with. Once a scene; a botch stuns for a turn and costs a Willpower point.",
 "trad": "necro"
 },
 {
@@ -3514,10 +3533,10 @@
 "n": "Death Knell",
 "p": 281,
 "r": "perception+occult",
-"diff": "7",
+"diff": 7,
 "c": "w1",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"t": "instant",
+"e": "Always senses when someone within half a mile rises as a ghost. A Willpower point and the roll find it: a vague direction at one success, within a quarter mile at three, to the foot at five.",
 "trad": "necro"
 },
 {
@@ -3527,10 +3546,10 @@
 "n": "Ephemeral Binding",
 "p": 281,
 "r": "manipulation+occult",
-"diff": "8",
-"c": "w1",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"diff": 8,
+"c": "b1w1",
+"t": "nights",
+"e": "Vitae on an object (or drunk by a person) and a Willpower point make it a fetter for one ghost the caster names or senses, a night per success (a week per success for another Willpower point).",
 "trad": "necro"
 },
 {
@@ -3540,10 +3559,10 @@
 "n": "Mortuus in Vultus",
 "p": 282,
 "r": "",
-"diff": "7",
+"diff": 7,
 "c": "b1",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Looks like a mummified corpse until next sunset: Dexterity and Appearance -2, +2 Intimidation dice, and spotting them while still takes five Perception + Medicine successes. Others: touch, vs Stamina + 3.",
 "trad": "necro"
 },
 {
@@ -3554,9 +3573,9 @@
 "p": 282,
 "r": "",
 "diff": "",
-"c": "",
+"c": "w1",
 "t": "scene",
-"e": "Necromancy path power; the system is on the page.",
+"e": "A Willpower point: no wound penalties for the scene and a die per Corpse in the Monster dot to resist emotional sway, but manipulating others is 1 harder. Frenzy still threatens.",
 "trad": "necro"
 },
 {
@@ -3566,10 +3585,10 @@
 "n": "Intimations of Mortality",
 "p": 282,
 "r": "intelligence+medicine",
-"diff": "8",
+"diff": 8,
 "c": "w1",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"t": "night",
+"e": "A vampire in sight within 20 yards feels every misery of mortal life until sunrise: all actions +2 difficulty (a Willpower point a scene ignores it) and no blood boosts to Physicals.",
 "trad": "necro"
 },
 {
@@ -3579,10 +3598,10 @@
 "n": "Benedictio Mortem",
 "p": 282,
 "r": "stamina+occult",
-"diff": "8",
-"c": "",
-"t": "turn",
-"e": "Necromancy path power; the system is on the page.",
+"diff": 8,
+"c": "w1",
+"t": "turns",
+"e": "For a turn per success: no frenzy or Rötschreck checks, stakes are ordinary wounds, fire deals lethal, holy items do nothing, and sunlight hurts only bare skin on a clear day, as bashing.",
 "trad": "necro"
 },
 {
@@ -3593,9 +3612,9 @@
 "p": 282,
 "r": "",
 "diff": "",
-"c": "",
+"c": "b12",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Twelve blood spent without pause give mortal comforts until next midnight: food, warmth, waking by day, and shade or a cloak keeps sunlight off. Frenzy checks are halved, then 3 harder for six nights.",
 "trad": "necro"
 },
 {
@@ -3605,10 +3624,10 @@
 "n": "Ashes to Ashes",
 "p": 283,
 "r": "intelligence+medicine",
-"diff": "6",
+"diff": 6,
 "c": "b1",
 "t": "turns",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Vitae dripped on a human corpse turns it to unrecognizable ash in five turns minus successes. A botch only rots it, and the power cannot be tried on it again.",
 "trad": "necro"
 },
 {
@@ -3619,9 +3638,9 @@
 "p": 284,
 "r": "intelligence+medicine",
 "diff": "",
-"c": "",
-"t": "turn",
-"e": "Necromancy path power; the system is on the page.",
+"c": "w1",
+"t": "turns",
+"e": "Freezes a visible target within 25 yards for a turn per success: no movement or blood spending, though senses and perception powers work. Cainites can still act at a penalty equal to the successes.",
 "trad": "necro"
 },
 {
@@ -3634,7 +3653,7 @@
 "diff": "",
 "c": "w1",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "A touch on a limb deals two aggravated levels; unless both are soaked, the limb withers until healed (for mortals, for life). A blow to the face costs Appearance and can blind, deafen or mute.",
 "trad": "necro"
 },
 {
@@ -3644,10 +3663,10 @@
 "n": "Gift of Melancholia",
 "p": 284,
 "r": "intelligence+medicine",
-"diff": "6",
-"c": "",
+"diff": 6,
+"c": "w1",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "A target in sight within 20 yards resists with Stamina + Fortitude (at the caster's Willpower) or sickens: Strength and Wits halved, Dexterity -1, fed blood may come back up. Contagious among mortals.",
 "trad": "necro"
 },
 {
@@ -3656,11 +3675,11 @@
 "l": 5,
 "n": "Dust to Dust",
 "p": 284,
-"r": "",
-"diff": "t:stamina",
-"c": "",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"r": "willpower",
+"diff": "t:stamina+3",
+"c": "b2w1",
+"t": "instant",
+"e": "Two blood and a Willpower point dripped on a Cainite in reach: each success is an aggravated wound that turns flesh to dust, and every two levels can wither a body part as Ashen Lady's Embrace.",
 "trad": "necro"
 },
 {
@@ -3672,8 +3691,8 @@
 "r": "manipulation+occult",
 "diff": "t:willpower",
 "c": "b1",
-"t": "night",
-"e": "Necromancy path power; the system is on the page.",
+"t": "nights",
+"e": "A chant sinks a victim into morbid gloom for a night per success: Social rolls +2 (not Intimidation), others +1. Lasting longer than their Willpower strips Willpower dots; at zero, death or torpor.",
 "trad": "necro"
 },
 {
@@ -3683,10 +3702,10 @@
 "n": "Summon Wisp",
 "p": 285,
 "r": "charisma+occult",
-"diff": "5",
+"diff": 5,
 "c": "b1",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"t": "scene",
+"e": "A weightless light for the scene that flies as fast as the vampire runs. Mortals who see it roll Willpower (4) or are dazed (+1 to actions); if the caster doubles their successes, they follow it blindly.",
 "trad": "necro"
 },
 {
@@ -3699,7 +3718,7 @@
 "diff": "t:willpower",
 "c": "b1",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Eye contact plants nightmares of their own death: the victim regains no Willpower from that sleep and for the next day has the Nightmares Flaw and feels an Eerie Presence. A botch turns the dreams on the caster.",
 "trad": "necro"
 },
 {
@@ -3709,10 +3728,10 @@
 "n": "Phantasms",
 "p": 285,
 "r": "manipulation+occult",
-"diff": "7",
+"diff": 7,
 "c": "b1",
 "t": "night",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Shapes chill, voiceless apparitions anywhere in sight: each success adds one phenomenon, or a trait or trigger to a phantom. A botch draws a hostile ghost (the Haunted Flaw for nights equal to the 1s).",
 "trad": "necro"
 },
 {
@@ -3722,10 +3741,10 @@
 "n": "Spectral Menacing",
 "p": 286,
 "r": "manipulation+occult",
-"diff": "8",
+"diff": 8,
 "c": "b1",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Tears the Shroud around a victim: ghosts' powers on them are 1 easier per success (to 4) and hostile ghosts flock to them, the bonus fading by one each dawn. A botch haunts the caster for good.",
 "trad": "necro"
 },
 {
@@ -3735,10 +3754,10 @@
 "n": "Peering Across the Shroud",
 "p": 287,
 "r": "perception+awareness",
-"diff": "5",
+"diff": 5,
 "c": "",
 "t": "scene",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Sees and hears ghosts, hazy and whispering, for the scene, but cannot touch them; to the dead the necromancer's eyes glow blue. A botch blinds for the scene.",
 "trad": "necro"
 },
 {
@@ -3748,10 +3767,10 @@
 "n": "Summon Soul",
 "p": 287,
 "r": "manipulation+occult",
-"diff": "7",
+"diff": 7,
 "c": "b1",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"t": "scene",
+"e": "Calls a ghost the caster can name or picture, with something it knew in life at hand (its remains make it 1 easier). It stays in sight until scene's end or dismissed for Willpower. Difficulty 7 or its Willpower.",
 "trad": "necro"
 },
 {
@@ -3761,10 +3780,10 @@
 "n": "Compel Soul",
 "p": 287,
 "r": "manipulation+occult",
-"diff": "6",
+"diff": 6,
 "c": "b1",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Holding something the ghost handled in life, vs its Willpower (6 for both): net successes set how many and how risky the orders, or force a true answer. If the ghost wins, the caster loses that much Willpower.",
 "trad": "necro"
 },
 {
@@ -3773,11 +3792,11 @@
 "l": 4,
 "n": "Haunting",
 "p": 287,
-"r": "",
-"diff": "",
+"r": "manipulation+occult",
+"diff": "t:willpower+4",
 "c": "b1",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"t": "nights",
+"e": "A blood circle ties a named ghost that is present to a place (an object is 1 harder), a night per success; Willpower stretches it to seven nights, a Willpower dot to over a year. Escape tries cost it aggravated levels.",
 "trad": "necro"
 },
 {
@@ -3787,10 +3806,10 @@
 "n": "Torment",
 "p": 288,
 "r": "stamina+empathy",
-"diff": "4",
+"diff": "t:willpower",
 "c": "",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"t": "instant",
+"e": "Strikes a ghost's spirit body from the living world, where it cannot strike back: each success is a lethal level. Difficulty the ghost's Willpower, at least 4.",
 "trad": "necro"
 },
 {
@@ -3800,10 +3819,10 @@
 "n": "Shroudsight",
 "p": 289,
 "r": "perception+awareness",
-"diff": "7",
+"diff": 7,
 "c": "",
 "t": "scene",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Looks into the Underworld for the scene: its buildings, objects and dead, though nothing there can be touched.",
 "trad": "necro"
 },
 {
@@ -3814,9 +3833,9 @@
 "p": 289,
 "r": "perception+occult",
 "diff": "",
-"c": "",
+"c": "w1",
 "t": "scene",
-"e": "Necromancy path power; the system is on the page.",
+"e": "A Willpower point: speaks freely with any ghosts in the area for the scene, seen or not.",
 "trad": "necro"
 },
 {
@@ -3825,11 +3844,11 @@
 "l": 3,
 "n": "Touch the Nether",
 "p": 289,
-"r": "",
-"diff": "7",
-"c": "",
+"r": "wits+occult",
+"diff": 7,
+"c": "w1",
 "t": "scene",
-"e": "Necromancy path power; the system is on the page.",
+"e": "A Willpower point: stands on both sides of the Shroud for the scene, touching and touched by ghosts and things of the Underworld while still solid among the living. A blood point a scene extends it.",
 "trad": "necro"
 },
 {
@@ -3838,11 +3857,11 @@
 "l": 4,
 "n": "Ex Nihilo",
 "p": 289,
-"r": "",
-"diff": "8",
-"c": "",
-"t": "turns",
-"e": "Necromancy path power; the system is on the page.",
+"r": "stamina+occult",
+"diff": 8,
+"c": "w2b2",
+"t": "var",
+"e": "A door drawn in chalk or blood lets the caster alone walk into the Underworld as a solid ghost, hurt only by what wounds ghosts. Coming back costs a Willpower point and another roll; death there is the end.",
 "trad": "necro"
 },
 {
@@ -3851,11 +3870,11 @@
 "l": 5,
 "n": "Shroud Mastery",
 "p": 289,
-"r": "",
-"diff": "9",
-"c": "",
+"r": "willpower",
+"diff": 9,
+"c": "w2",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Each success raises or lowers ghosts' power difficulties by 1 within half a mile (to 4), fading a point an hour; every 2 points eased also eases other Necromancy by 1.",
 "trad": "necro"
 },
 {
@@ -3865,10 +3884,10 @@
 "n": "Whispers to the Soul",
 "p": 289,
 "r": "",
-"diff": "8",
+"diff": 8,
 "c": "",
-"t": "night",
-"e": "Necromancy path power; the system is on the page.",
+"t": "var",
+"e": "Whispers a secret name of Lilith to one target in sight within 100 paces: they roll Willpower (8) or suffer nightmares and visions, -2 dice on all pools, for days equal to the caster's Manipulation.",
 "trad": "necro"
 },
 {
@@ -3881,7 +3900,7 @@
 "diff": "",
 "c": "b1",
 "t": "night",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Fills the mouth with black bile and vitae: the next bite before dawn does double damage before soak (feeding is no faster).",
 "trad": "necro"
 },
 {
@@ -3893,8 +3912,8 @@
 "r": "",
 "diff": "",
 "c": "b2",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"t": "scene",
+"e": "Turns spilled blood into a humor that works on touch: phlegmatic (-2 dice), melancholic (no Willpower spending), sanguine (wounds bleed a level more) or bilious (lethal levels equal to Stamina), for the scene.",
 "trad": "necro"
 },
 {
@@ -3904,10 +3923,10 @@
 "n": "Caul of the Neverborn",
 "p": 290,
 "r": "",
-"diff": "7",
-"c": "",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"diff": 7,
+"c": "b5",
+"t": "scene",
+"e": "After drinking five blood from a cold corpse, five blood: two more soak dice and no wound penalties for the scene, sees how hurt anyone is, and Perception + Occult (7) shows ghosts to speak with.",
 "trad": "necro"
 },
 {
@@ -3917,10 +3936,10 @@
 "n": "Lament of D’hainu",
 "p": 290,
 "r": "stamina+athletics",
-"diff": "7",
+"diff": 7,
 "c": "w2",
-"t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"t": "scene",
+"e": "A howl spreads despair five yards per success: those who fail Willpower (7) try to kill themselves for the scene (Cainites fall into torpor), then lose 2 dice until sunrise. Others lose 2 dice for the scene.",
 "trad": "necro"
 },
 {
@@ -3930,10 +3949,10 @@
 "n": "Eyes of the Wraith",
 "p": 291,
 "r": "perception+occult",
-"diff": "6",
+"diff": 6,
 "c": "",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Grants the ghostly Deathsight power, seeing the world as the restless dead do.",
 "trad": "necro"
 },
 {
@@ -3944,9 +3963,9 @@
 "p": 291,
 "r": "",
 "diff": "",
-"c": "",
+"c": "bX",
 "t": "scene",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Blood spent sets a one-yard aura for the scene that ruins nonliving things: a week for one blood, down to a turn for five. Ruined items botch any use; worn clothing and living beings are spared.",
 "trad": "necro"
 },
 {
@@ -3956,10 +3975,10 @@
 "n": "Pischacha’s Feast",
 "p": 291,
 "r": "",
-"diff": "6",
+"diff": 6,
 "c": "w1",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "A Willpower point lets the vampire feed on death: 1 to 4 points from a fresh death site or graveyard (once a week), or feeding on a ghost like a victim. These points work like blood except for waking at dusk.",
 "trad": "necro"
 },
 {
@@ -3969,10 +3988,10 @@
 "n": "Curse of the Maelstrom",
 "p": 291,
 "r": "willpower",
-"diff": "8",
-"c": "",
+"diff": 8,
+"c": "bX",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "Summons a Spectre per success to wreak havoc within half a mile (wider per extra blood); or one target, by touch or a Dexterity + Occult (7) bolt, takes an aggravated level and +2 on Social rolls until sunrise.",
 "trad": "necro"
 },
 {
@@ -3982,10 +4001,10 @@
 "n": "Night Cry",
 "p": 292,
 "r": "manipulation+occult",
-"diff": "6",
-"c": "b1",
+"diff": 6,
+"c": "w1bX",
 "t": "var",
-"e": "Necromancy path power; the system is on the page.",
+"e": "A wail hits targets within a yard per Necromancy dot (a Willpower point, plus a blood per extra target): allies get 1 less difficulty per success, or foes take an aggravated level each.",
 "trad": "necro"
 },
 {

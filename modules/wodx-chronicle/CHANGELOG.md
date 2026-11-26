@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.146.0 (Fixes from the first solo test (B8055, B8058): the law card's Make the arrest sends the watch (WoDX Storyteller) or tells the culprit's players, Let it go leaves a line, and a time dial (each person can hide it) shows the hour, day or night and the moon (#2510))
 - 0.145.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)
 - 0.145.0 (The merits and flaws of Dark Ages: Werewolf (pp. 86-89), Dark Ages: Fae (pp. 97-101), Dark Ages: Devil's Due (pp. 98-100) and the Dark Ages: Inquisitor Companion (pp. 124-127) join the trait table, 75 rows (B7931-B7934); Dark Ages: Mage merits and flaws, pp. 90-93 (B7909); The eighteen merits and flaws of Dark Ages: Inquisitor (pp. 166-169) in the trait table, with their roll effects (B7889); manifest.local.haunts and manifest.local.souls (B7901, B7903))
 - 0.144.0 (Languages in chat work from Foundry 14's own chat box (B7268, B7269), a player speaks only the languages their characters know (B7267), and "Try for the gist" answers a click on any copy of the line (B7270). Gate gateplaylang types each line into the chat box and reads it in a second browser as a player)

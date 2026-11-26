@@ -23,6 +23,23 @@ export const FORCES = {
 export const FORCE_WORDS = {law: "the watch", patrol: "a patrol", soldiers: "soldiers", raid: "hunters", purge: "the purge", secret: "men with no names"};
 export const forceWords = (kind, year) => (kind === "law" || kind === "patrol") && !early(year) ? (kind === "law" ? "the police" : "a police patrol") : (FORCE_WORDS[kind] ?? "people");
 
+/**
+ * #2487: the spots by a token where the people a move sends may stand, nearest first: rings 1 to step squares out,
+ * inside the scene. The caller drops those behind a wall, so the people sent are seen when they come.
+ */
+export function spotsNear({x = 0, y = 0} = {}, {size = 100, width = 2000, height = 2000} = {}, step = 3) {
+  const out = [];
+  for ( let r = 1; r <= Math.max(1, step); r++ ) {
+    for ( let dx = -r; dx <= r; dx++ ) for ( let dy = -r; dy <= r; dy++ ) {
+      if ( Math.max(Math.abs(dx), Math.abs(dy)) !== r ) continue;
+      const px = x + dx * size, py = y + dy * size;
+      if ( px < 0 || py < 0 || px + size > width || py + size > height ) continue;
+      out.push({x: px, y: py, r});
+    }
+  }
+  return out;
+}
+
 /** The extras one move sends in a year: [{key, n}]. */
 export function forceFor(kind, year) {
   const f = FORCES[kind];

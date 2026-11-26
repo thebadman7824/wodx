@@ -199,18 +199,25 @@ export async function chooseSource(actor, p) {
   const row = (c, i) => `<li class="${c.ok ? "" : "wodx-muted"}"><label><input type="radio" name="src" value="${i}" ${i === first ? "checked" : ""} ${c.ok ? "" : "disabled"}>
     <b>${esc(c.src.kind === "teacher" ? `${c.src.name} (${c.src.rating} dots)` : c.src.name)}</b>${c.src.quality ? ` <span class="wodx-tag">${esc(c.src.quality)}</span>` : ""}
     <span class="wodx-quiet">${c.ok ? esc(`${c.time}; difficulty ${c.plan.diff}, ${c.plan.goal} successes${c.src.willWhy ? `. ${c.src.willWhy}` : ""}`) : esc(c.why)}</span></label></li>`;
-  const gm = game.user.isGM ? `<div class="form-group"><label><input type="checkbox" name="waive"> Waive it this time: learn at once</label></div>` : "";
+  // #2506: the player may ask for it at once (the Storyteller decides); the Storyteller may simply grant it
+  const gm = game.user.isGM ? `<div class="form-group"><label><input type="checkbox" name="waive"> Waive it this time: learn at once</label></div>`
+    : `<div class="form-group"><label><input type="checkbox" name="waive"> Ask the Storyteller to let it come at once, with no study (for a story reason)</label></div>`;
+  const teachers = choices.filter(c => c.src.kind === "teacher");
+  const how = `<p class="wodx-quiet">${esc(teachers.length
+    ? "A teacher is someone in the chronicle with at least as many dots in it as you will have. Those you know of are listed first; one who will not teach you, or is in another town, is greyed out with the reason."
+    : `No one you know of has ${p.label} at ${p.next} or more. Pick "${L.SOURCE_KINDS.storyteller}" and the Storyteller finds one, or meet someone who knows it and ask again.`)}</p>`;
   const result = await DialogV2.prompt({
     classes: ["wodx", "wodx-dialog", "wodx-learn"],
     window: {title: `Where is it learned? ${p.label}`},
     content: `<p>${esc(p.label)} ${p.current} → ${p.next} for ${p.cost} experience. The points are spent now; the trait rises when the study is done.</p>
       <p class="wodx-quiet">${esc(why)}</p>
-      <ul class="wodx-list wodx-learn-list" data-fixed>${choices.map(row).join("")}</ul>${gm}`,
+      ${how}<ul class="wodx-list wodx-learn-list" data-fixed>${choices.map(row).join("")}</ul>${gm}`,
     ok: {label: game.user.isGM ? "Begin" : "Ask", callback: (event, button) => ({i: Number(button.form.elements.src?.value ?? -1), waive: !!button.form.elements.waive?.checked})},
     rejectClose: false
   });
   if ( !result ) return null;
-  if ( result.waive ) return {waive: true};
+  if ( result.waive && game.user.isGM ) return {waive: true};
+  if ( result.waive ) return {instant: true};
   const c = choices[result.i];
   if ( !c?.ok ) { ui.notifications.warn("Pick where it is learned."); return null; }
   return {...c.src};

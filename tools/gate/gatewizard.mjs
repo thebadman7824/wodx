@@ -162,12 +162,14 @@ export async function run() {
       const btn = app.element?.querySelector("button[data-action=blood]");
       if ( btn ) { await act(app, "blood", btn); await sleep(400); }
       const blood = Number(a().system.advantages.bloodpool?.temporary), max = Number(a().system.advantages.bloodpool?.max) || 10;
+      // B8035 (#2501): a new Cainite starts with a full pool, so "Fill the pool" posts no roll
+      const full = /Fill the pool/.test(btn?.textContent ?? "");
       await app.close();
       const wolf = await Actor.create({name: "WoDX gate: Wizard derived Garou", type: "Werewolf", system: {auspice: "Ahroun", breed: "Lupus", tribe: "Bone Gnawers"}, ownership: own});
       const wl = api().derived(wolf, "w20").rows.map(r => [r.key, r.want]);
-      ok("10 derived traits", shown && !!setAll && hum === 5 + bought("road") && wp === wantWp && game.messages.size > blood0 && blood >= 1 && blood <= max
+      ok("10 derived traits", shown && !!setAll && hum === 5 + bought("road") && wp === wantWp && (full ? blood === max : game.messages.size > blood0 && blood >= 1 && blood <= max)
         && JSON.stringify(wl) === JSON.stringify([["rage", 5], ["gnosis", 5], ["willpower", 4]]),
-        {shown, setAll: !!setAll, hum, wp, wantWp, blood, max, newMessages: game.messages.size - blood0, wolf: wl, offAfter: api().derived(a()).rows.filter(r => r.off).map(r => r.key)});
+        {shown, setAll: !!setAll, hum, wp, wantWp, blood, max, full, newMessages: game.messages.size - blood0, wolf: wl, offAfter: api().derived(a()).rows.filter(r => r.off).map(r => r.key)});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {

@@ -72,14 +72,17 @@ async function cardOf(msg) {
   let html = "";
   try { const el = await msg.renderHTML?.(); html = el?.outerHTML ?? ""; } catch (e) { html = ""; }
   if ( !html ) html = `<div class="message-content">${msg.content ?? ""}</div>`;
+  // B8050 (#2482): the chat card's own header controls (its trash can, its menu) do nothing in this list, so they go
+  html = R.stripCardControls(html);
   return {id: msg.id, at: msg.timestamp ?? Date.now(), title: R.titleOf(msg), source: R.sourceOf(msg.flags), html,
     buttons: R.buttonsOf(msg.content).map(b => ({n: b.n, label: b.label})).filter(b => b.label)};
 }
 const secret = msg => msg && R.forStoryteller(msg.whisper, gmIds()) && !msg.flags?.[MOD]?.panel;
 
-async function eyes({userId}) {
+async function eyes({userId, since = 0}) {
   if ( !usable(userId) ) return reply(userId, "st.refused", {why: "the tools are off"});
-  const list = game.messages.contents.filter(secret).slice(-30);
+  // B8050 (#2482): cards the player cleared stay cleared
+  const list = game.messages.contents.filter(m => secret(m) && Number(m.timestamp ?? 0) > Number(since || 0)).slice(-30);
   const cards = [];
   for ( const m of list ) cards.push(await cardOf(m));
   reply(userId, "st.eyes", {cards, replace: true});
@@ -96,12 +99,41 @@ async function press({userId, messageId, n, label}) {
   if ( !usable(userId) ) return reply(userId, "st.refused", {why: "the tools are off"});
   const msg = game.messages.get(messageId);
   if ( !secret(msg) ) return reply(userId, "st.refused", {why: "that card is gone"});
-  const el = H.findButton(messageId, {n: Number(n), label: String(label ?? "")});
+  const pick = {n: Number(n), label: String(label ?? "")};
+  let el = H.findButton(messageId, pick), spare = null;
+  // B8050 (#2482): a card the seat's chat log has not drawn (an older one) is drawn off screen, with its listeners
+  if ( !el ) ({el, spare} = await drawnButton(msg, pick));
+  const before = {n: game.messages.size, flags: JSON.stringify(msg.flags ?? {})};
   if ( el ) el.click();
+  // A button drawn off screen only works when its own render hook bound it: it counts as pressed when something
+  // came of it (a new card, the card changed, or the button switched itself off)
+  let acted = !!el;
+  if ( el && spare ) {
+    await new Promise(r => setTimeout(r, 600));
+    acted = el.disabled || game.messages.size > before.n || JSON.stringify(game.messages.get(messageId)?.flags ?? {}) !== before.flags;
+  }
+  if ( spare ) setTimeout(() => spare.remove(), 5000);
   await H.log({kind: "card", source: R.sourceOf(msg.flags), title: R.titleOf(msg), buttons: [String(label)], choice: String(label),
-    acted: !!el, note: el ? `pressed for ${game.users.get(userId)?.name ?? "the player"}` : "button not found on the seat's screen"});
-  reply(userId, "st.pressed", {label, done: !!el});
-  return !!el;
+    acted, note: acted ? `pressed for ${game.users.get(userId)?.name ?? "the player"}` : el ? "pressed off screen, and nothing came of it" : "button not found on the seat's screen"});
+  reply(userId, "st.pressed", {label, done: acted, offscreen: !!(el && spare && !acted)});
+  return acted;
+}
+
+/** B8050: the card drawn by its own renderHTML (the modules' render hooks bind its buttons) in a hidden box on the seat. */
+async function drawnButton(msg, pick) {
+  try {
+    const el = await msg.renderHTML?.();
+    if ( !el ) return {el: null, spare: null};
+    const box = document.createElement("div");
+    box.className = "wsolo-offscreen";
+    box.style.cssText = "position:fixed;left:-10000px;top:0;width:400px;";
+    box.append(el);
+    document.body.append(box);
+    const live = [...box.querySelectorAll("button, a[data-action]")].filter(b => !b.disabled && !b.hasAttribute("disabled"));
+    const hit = (live[pick.n] && R.plain(live[pick.n].innerHTML) === pick.label) ? live[pick.n] : live.find(b => R.plain(b.innerHTML) === pick.label) ?? null;
+    if ( !hit ) { box.remove(); return {el: null, spare: null}; }
+    return {el: hit, spare: box};
+  } catch (e) { console.warn(`${MOD} | draw card`, e); return {el: null, spare: null}; }
 }
 
 let index = null, indexAt = 0;
@@ -241,20 +273,24 @@ async function guard(why) {
 /* ------------------------------------------------------------------ */
 
 let seenCards = [], unread = 0;
+/** B8050 (#2482): when the player last cleared the list; cards from before it are not sent again. */
+let clearedAt = 0;
+try { clearedAt = Number(globalThis.localStorage?.getItem?.("wodx-solo.eyesCleared")) || 0; } catch (e) { clearedAt = 0; }
 
 class StEyes extends ApplicationV2 {
   static DEFAULT_OPTIONS = {
     id: "wodx-solo-eyes", classes: ["wodx", "wsolo-dialog", "wsolo-eyes"],
     window: {title: "The Storyteller's cards", icon: "fa-solid fa-eye", resizable: true},
     position: {width: 520, height: 640},
-    actions: {press: StEyes.#onPress}
+    actions: {press: StEyes.#onPress, clear: StEyes.#onClear}
   };
   static open() { return (foundry.applications.instances?.get?.("wodx-solo-eyes") ?? new StEyes()).render({force: true}); }
   async _renderHTML() {
     unread = 0;
     const div = document.createElement("div");
     const cards = [...seenCards].reverse();
-    div.innerHTML = cards.length ? `${cards.length > 5 ? searchBox("ul.wsolo-eyes-list", "Find a card…", "Search the Storyteller's cards") : ""}
+    div.innerHTML = cards.length ? `<div class="wsolo-eyes-tools"><button type="button" data-action="clear"><i class="fa-solid fa-trash"></i> Clear the list</button></div>
+      ${cards.length > 5 ? searchBox("ul.wsolo-eyes-list", "Find a card…", "Search the Storyteller's cards") : ""}
       <ul class="wsolo-eyes-list">${cards.map(c => `<li class="wsolo-eye">
         <div class="wsolo-eye-head"><b>${esc(c.title)}</b> <span class="wodx-quiet">${esc(c.source)}</span></div>
         <div class="wsolo-eye-card" inert>${c.html}</div>
@@ -268,6 +304,15 @@ class StEyes extends ApplicationV2 {
   static #onPress(ev, t) {
     ask("ask.st.press", {messageId: t.dataset.msg, n: Number(t.dataset.n), label: t.dataset.label});
     t.disabled = true;
+  }
+  /** B8050 (#2482): empty the list; the cards stay in the seat's chat, and only new ones come here. */
+  static #onClear() {
+    // The seat's own times: the newest card cleared, so the player's clock never has to match the seat's
+    clearedAt = Math.max(clearedAt, ...seenCards.map(c => Number(c.at ?? 0)));
+    seenCards = []; unread = 0;
+    try { globalThis.localStorage?.setItem?.("wodx-solo.eyesCleared", String(clearedAt)); } catch (e) { /* private window */ }
+    this.render();
+    refreshPanel();
   }
 }
 
@@ -363,17 +408,19 @@ function table(title, head, rows, width = 560) {
 
 const CLIENT = {
   "st.refused": p => ui.notifications.warn(`Storyteller tools: ${p.why}.`),
-  "st.pressed": p => ui.notifications.info(p.done ? `The seat pressed ${p.label}.` : `${p.label} could not be pressed on the seat.`),
+  // B8050 (#2482): what the press did shows as the card it makes, which comes into the list; the note says so
+  "st.pressed": p => ui.notifications[p.done ? "info" : "warn"](p.done ? `${p.label}: done on the seat. Any card it made comes into this list.` : (p.offscreen ? `${p.label}: this older card's button did nothing from the list. Press it in the chat log, or ask again.` : `${p.label} could not be pressed: the card has no such button now.`)),
   "st.given": p => ui.notifications.info(`${p.name} is now on ${p.actor}'s sheet.`),
   "st.xp": p => ui.notifications.info(`${p.actor} has ${p.amount} more experience.`),
   "st.items": p => StGive.show(p.rows ?? [], p.query ?? null),
   "st.night": p => { StNight.show(p.rows ?? []); if ( p.done ) ui.notifications.info(`${p.done}.`); },
   "st.eyes": p => {
     const incoming = p.cards ?? [];
-    seenCards = p.replace ? incoming.slice(-R.EYES_CAP) : incoming.reduce((l, c) => R.addEyes(l, c), seenCards);
+    const fresh = incoming.filter(c => Number(c.at ?? 0) > clearedAt);
+    seenCards = p.replace ? fresh.slice(-R.EYES_CAP) : fresh.reduce((l, c) => R.addEyes(l, c), seenCards);
     const app = foundry.applications.instances?.get?.("wodx-solo-eyes");
     if ( app?.rendered ) app.render();
-    else if ( !p.replace ) { unread += incoming.length; refreshPanel(); }
+    else if ( !p.replace ) { unread += fresh.length; refreshPanel(); }
   },
   "st.check": p => table("Check the systems", ["", "Part", "How it stands"], (p.rows ?? []).map(r => [
     r.state === "ok" ? '<i class="fa-solid fa-circle-check" title="fine"></i>' : '<i class="fa-solid fa-triangle-exclamation" title="look at this"></i>',
@@ -419,7 +466,7 @@ async function onToggle() {
 
 function openTool(id) {
   if ( !mine() ) return ui.notifications.warn("Storyteller tools are off.");
-  if ( id === "eyes" ) { StEyes.open(); return ask("ask.st.eyes"); }
+  if ( id === "eyes" ) { StEyes.open(); return ask("ask.st.eyes", {since: clearedAt}); }
   if ( id === "give" ) return StGive.open();
   if ( id === "xp" ) return xpDialog();
   if ( id === "check" ) return ask("ask.st.check");

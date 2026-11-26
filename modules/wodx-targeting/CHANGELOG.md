@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.4.5 (Fixes from the first solo test (B8048): the area outline clears when the power is not an area one)
 - 0.4.4 (The Dark Ages Gift Survivor has its table tag: it works on the one using it (B7936))
 - 0.4.3 (Table tags for the Dark Ages Companion's powers (B7697, B7699, B7700))
 - 0.4.2 (Target tags for the powers of B7662)

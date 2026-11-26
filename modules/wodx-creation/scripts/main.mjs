@@ -36,7 +36,7 @@ import {threadsOf} from "./lifepath-threads-rules.mjs";
 import * as firstNight from "./first-night.mjs";
 import * as firstNightRules from "./first-night-rules.mjs";
 import * as wizardRules from "./wizard-rules.mjs";
-import {WizardApp, ledgerFor as wizardLedger, derivedFor} from "./wizard.mjs";
+import {WizardApp, creationUnfinished, ledgerFor as wizardLedger, derivedFor} from "./wizard.mjs";
 import * as derivedRules from "./derived-rules.mjs";
 import * as BOOKP from "../data/vtda-people.mjs";
 import * as BOOKPM from "./book-people.mjs";
@@ -82,6 +82,11 @@ function start() {
   if ( !active ) { if ( !isWoDXWorld() ) return; active = true; }
   started = true;
   clearTimeout(waiting);
+  // B8037 (#2479): a page refresh in the middle of making a character opens the wizard again where it stopped
+  setTimeout(() => {
+    const me = game.user?.character;
+    if ( !game.user?.isGM && me?.isOwner && creationUnfinished(me) ) WizardApp.openFor(me);
+  }, 4000);
   guard("xp.registerXPHandler", () => xp.registerXPHandler());
   guard("learn.registerLearning", () => learn.registerLearning());
   guard("people.registerPeople", () => people.registerPeople());
@@ -131,7 +136,7 @@ function start() {
     secondBreath: states.secondBreath, secondBreathDialog: states.secondBreathDialog,
     totals, check: actor => CreationCheckApp.open(actor),
     firstNight: actor => firstNight.FirstNightApp.open(actor ?? null), firstNightOf: firstNight.recordOf, forecast: firstNight.forecastFor, signOff: firstNight.signOff, firstNightRules,
-    wizard: (actor, page = null) => WizardApp.openFor(actor, page), wizardLedger, wizardRules, derived: derivedFor, derivedRules,
+    wizard: (actor, page = null) => WizardApp.openFor(actor, page), unfinished: actor => creationUnfinished(actor), wizardLedger, wizardRules, derived: derivedFor, derivedRules,
     lifepath: actor => lifepath.LifepathApp.openFor(actor), lifepathOf: lifepath.lifepathOf, lifepathRules, makeLifepathPeople: lifepath.makePeople,
     lifepathThreads: actor => threadsOf(lifepath.lifepathOf(actor)),
     archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs, dueNow: archive.dueNow, autoTick: archive.autoTick},

@@ -30,6 +30,23 @@ export function kindsFor(year) {
   return Object.entries(CARRIED).filter(([, k]) => y ? (y >= k.from && y <= k.to) : k.from === 0).map(([id, k]) => ({id, label: k.label}));
 }
 
+/**
+ * B8049 (#2500): a light comes from the inventory. What each kind is called on an item (any language WoDX writes in
+ * English), so "Tallow candles", "Pitch torch" or "Storm lantern" count.
+ */
+export const ITEM_WORDS = {
+  candle: /\bcandles?\b|\btaper\b/i,
+  torch: /\btorch(?:es)?\b(?!.*\belectric\b)|\bbrand\b|\bflambeau\b/i,
+  lantern: /\blantern\b|\boil lamp\b|\blamp\b/i,
+  glow: /\bglow ?stick\b|\blight ?stick\b/i,
+  electric: /\belectric torch\b|\bflashlight\b|\bpocket torch\b/i
+};
+/** The kinds the item names allow, in CARRIED's order. An electric torch is never also counted as a torch. */
+export function heldKinds(names = []) {
+  const list = (names ?? []).map(x => String(x ?? ""));
+  return Object.keys(CARRIED).filter(id => list.some(nm => ITEM_WORDS[id]?.test(nm) && !(id === "torch" && ITEM_WORDS.electric.test(nm))));
+}
+
 /** Seconds of fuel in a fresh one, in a year. */
 export function fuelFor(kind, year) {
   const k = CARRIED[kind];

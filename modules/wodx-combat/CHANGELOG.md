@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.51.2 (Fixes from the first solo test (B8052, B8058): a fight's holds and marks end with it, and Aim at replaces Targeting in the attack window when the target has parts to aim at (#2509))
 - 3.51.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)
 - 3.51.0 (The Garou's maneuvers and pack tactics of Dark Ages: Werewolf, and a Dark Ages fae's Greater Features in a fight (B7937-B7938))
 - 3.50.0 (Infernal body features (B7696); The Dark Ages Companion's maneuvers (B7694))

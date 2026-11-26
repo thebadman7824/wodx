@@ -335,18 +335,30 @@ export function build(ctx) {
         const regionOpts = [];
         for (const sc of scenes) for (const r of sc.regions ?? []) regionOpts.push([`${sc.id}|${r.id}`, `${sc.name}: ${r.name}`]);
         const here = tok ? [...(tok.document?.regions ?? [])][0] : null;
-        const content = `<form><p><b>${esc(actor.name)}</b>: ${sun.phase === "night" ? `night; dawn in ${sun.toDawn !== null ? Math.round(sun.toDawn / 60) : "?"} minutes` : `${sun.phase}: the sun ${Math.round(sun.altitude)}° up`}.${ex ? ` Now: ${ex.exposed ? `<b>in sunlight</b> (${esc(ex.why)})` : esc(ex.why)}.` : ""}</p>
-          <div class="form-group"><label><input type="checkbox" name="cover" ${actor.getFlag(MOD, "sunCover") ? "checked" : ""}/> Heavily clothed: cloak, hood, gloves (light counts as "covered", soak 5)</label></div>
-          <div class="form-group"><label><input type="checkbox" name="buried" ${actor.getFlag(MOD, "buried") ? "checked" : ""}/> Buried in the earth (safe from the sun)</label></div>
-          <div class="form-group"><label><input type="checkbox" name="vigil" ${actor.getFlag(MOD, "dawnVigil") ? "checked" : ""}/> At dawn, try to stay awake (the Road at difficulty 8 is rolled by itself; V20 pp. 262-263)</label></div>
-          <fieldset><legend>Haven (${esc(h.where)})</legend>
-            <div class="form-group"><label>Haven</label>${scenes.length > 4 ? searchBox("select[name=haven]", "Search scenes…", "Search scenes") : ""}<select name="haven">
-              <option value="keep">Keep as it is</option>
-              ${tok ? `<option value="here">Where the token stands now${here ? ` (${esc(here.name)})` : ""}</option>` : ""}
+        // B8054 (#2502): the haven is a place the player sees and picks (the room, house or map they stand in); the rule
+        // for being covered is one plain line, and the window says how each stands now. The full lists are the Storyteller's.
+        const gm = !!game.user.isGM;
+        const hereName = here?.name ?? tok?.document?.parent?.name ?? "";
+        const dawnText = sun.phase === "night" ? `It is night; dawn comes in ${sun.toDawn !== null ? Math.round(sun.toDawn / 60) : "?"} minutes.` : `It is ${sun.phase}: the sun is ${Math.round(sun.altitude)}° up.`;
+        const nowText = ex ? (ex.exposed ? `<b>${esc(actor.name)} is in sunlight now</b> (${esc(ex.why)}).` : `${esc(actor.name)} is out of the sun now (${esc(ex.why)}).`) : "";
+        const havenNow = h.set ? `The haven is <b>${esc(h.where)}</b>; ${esc(actor.name)} is ${h.inside ? "<b>in it now</b>" : "<b>not in it now</b>"}.` : `<b>No haven is set.</b> At dawn, ${esc(actor.name)} sleeps wherever they are.`;
+        const content = `<form><p>${dawnText} ${nowText}</p>
+          <fieldset><legend>Haven</legend>
+            <p>${havenNow}</p>
+            <div class="form-group"><label>Set the haven</label><select name="haven" data-fixed>
+              <option value="keep">Keep it as it is</option>
+              ${tok ? `<option value="here"${!h.set ? " selected" : ""}>Here, where ${esc(actor.name)} stands${hereName ? `: ${esc(hereName)}` : ""}</option>` : ""}
               <option value="clear">No haven</option>
-              ${scenes.map(sc => `<option value="scene|${sc.id}" ${cur.sceneId === sc.id && !cur.regionId ? "selected" : ""}>The whole scene: ${esc(sc.name)}</option>`).join("")}
+              ${gm ? scenes.map(sc => `<option value="scene|${sc.id}">The whole map: ${esc(sc.name)}</option>`).join("") : ""}
             </select></div>
-            ${regionOpts.length ? `<div class="form-group"><label>Or a region</label>${regionOpts.length > 5 ? searchBox("select[name=region]", "Search regions…", "Search regions") : ""}<select name="region"><option value="">— none —</option>${regionOpts.map(([v, l]) => `<option value="${v}" ${`${cur.sceneId}|${cur.regionId}` === v ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>` : ""}
+            <p class="wodx-quiet">A haven is the room or house marked on the map${here ? "" : " (this map has no marked room here, so the whole map counts)"}. At dawn the window says whether ${esc(actor.name)} is inside it.</p>
+            ${gm && regionOpts.length ? `<div class="form-group"><label>Or a marked room (Storyteller)</label>${regionOpts.length > 5 ? searchBox("select[name=region]", "Search regions…", "Search regions") : ""}<select name="region"><option value="">None</option>${regionOpts.map(([v, l]) => `<option value="${v}" ${`${cur.sceneId}|${cur.regionId}` === v ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>` : ""}
+          </fieldset>
+          <fieldset><legend>Against the sun</legend>
+            <div class="form-group"><label><input type="checkbox" name="cover" ${actor.getFlag(MOD, "sunCover") ? "checked" : ""}/> Covered: cloak, hood and gloves over all the skin</label></div>
+            <p class="wodx-quiet">Covered means no bare skin: any sunlight then counts as covered light, soaked at difficulty 5. Uncovered, it counts as the light that falls there (direct sun soaks at 10). Only Fortitude soaks sunlight; without it, none is soaked.</p>
+            <div class="form-group"><label><input type="checkbox" name="buried" ${actor.getFlag(MOD, "buried") ? "checked" : ""}/> Buried in the earth: the sun cannot reach them</label></div>
+            <div class="form-group"><label><input type="checkbox" name="vigil" ${actor.getFlag(MOD, "dawnVigil") ? "checked" : ""}/> Try to stay awake at dawn (the Road is rolled at difficulty 8; V20DA p. 336)</label></div>
           </fieldset></form>`;
         return dialog(`Sun and haven: ${actor.name}`, content, "Save", async fd => {
             await ctx.setFlag(actor, "sunCover", fd.cover ? true : null);
@@ -364,7 +376,7 @@ export function build(ctx) {
             }
             if (haven || fd.haven === "clear") await ctx.setFlag(actor, "haven", haven);
             const h2 = havenStatus(actor);
-            return post(actor, `${actor.name}: sun and haven`, `<div class="vta-note">${fd.cover ? "Heavily clothed." : "Not covered."}${fd.buried ? " Buried in the earth." : ""}${fd.vigil ? " Tries to stay awake at dawn." : ""} Haven: ${esc(h2.where)}.</div>`);
+            return post(actor, `${actor.name}: sun and haven`, `<div class="vta-note">Haven: ${esc(h2.where)}${h2.set ? (h2.inside ? ", and in it now" : ", not in it now") : ""}. ${fd.cover ? "Covered: sunlight soaks at difficulty 5." : "Not covered: sunlight soaks as the light there (direct sun at 10)."}${fd.buried ? " Buried in the earth." : ""}${fd.vigil ? " Tries to stay awake at dawn." : ""}</div>`);
         }, { width: 520 });
     }
 

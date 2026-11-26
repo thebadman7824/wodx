@@ -41,9 +41,11 @@ export function moodFor(tension, base = "calm", has = () => true) {
  * fewer (or at a third of a small pool, whichever is lower) and quickens and loudens as the pool empties.
  * Null: no heartbeat. {bpm, volume} otherwise, volume from 0 to 1 before the player's own cue volume.
  */
-export function heartbeat({blood, max = 10, hasBlood = false} = {}) {
+export function heartbeat({blood, max, hasBlood = false} = {}) {
   if ( !hasBlood ) return null;
-  const b = Number(blood), m = Math.max(1, Number(max) || 10);
+  // B8039 (#2473): a pool with no size yet (a sheet still being made) gives no heartbeat
+  if ( !(Number(max) > 0) ) return null;
+  const b = Number(blood), m = Number(max);
   if ( !Number.isFinite(b) || b < 0 ) return null;
   const start = Math.min(4, Math.max(1, Math.ceil(m / 3)));
   if ( b > start ) return null;

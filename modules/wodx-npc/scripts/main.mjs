@@ -66,7 +66,7 @@ import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.108.1";
+const VERSION = "0.109.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -84,6 +84,10 @@ function registerSettings() {
   game.settings.register(MOD, "mode", {
     name: "NPCs in combat", hint: "What NPCs with no player owner do on their turn, unless the scene or the NPC says otherwise.",
     scope: "world", config: true, type: String, default: "suggest", choices: NR.MODES
+  });
+  game.settings.register(MOD, "walkRound", {
+    name: "My token walks round walls", hint: "When you drag your own token to a spot a wall stands in the way of, it walks a path round the walls and through open doors instead of stopping at the wall. Not in a fight, where each move is counted.",
+    scope: "client", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "gridless", {
     name: "Move NPCs on gridless scenes", hint: "On a scene with no grid, NPCs walk a square lattice of the scene's grid size, round walls, as on a square grid.",
@@ -1196,6 +1200,104 @@ export async function openNpcPanel() {
 /* ------------------------------------------------------------------ */
 /*  Hooks                                                              */
 /* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ */
+/*  #2492: a player's own token walks round walls                       */
+/* ------------------------------------------------------------------ */
+
+/** The cells of a path, keeping only the turns. */
+function turnsOf(path) {
+  if ( path.length <= 2 ) return path;
+  const out = [path[0]];
+  for ( let k = 1; k < path.length - 1; k++ ) {
+    const a = path[k - 1], b = path[k], c = path[k + 1];
+    if ( (b.i - a.i) !== (c.i - b.i) || (b.j - a.j) !== (c.j - b.j) ) out.push(b);
+  }
+  out.push(path[path.length - 1]);
+  return out;
+}
+/**
+ * A drag of the player's own token that a wall cuts short walks a path round the walls instead (the NPCs' own path
+ * finder). Only the dragging user's client, only off a fight, and only when there is a way: otherwise the move goes
+ * as Foundry makes it.
+ */
+function walkRound(doc, movement, operation) {
+  try {
+    if ( game.user.isGM || operation?.wodxWalkRound || movement?.method !== "dragging" ) return true;
+    if ( game.settings.get(MOD, "walkRound") === false ) return true;
+    const tok = doc.object;
+    if ( !tok || !doc.isOwner || canvas.scene?.id !== doc.parent?.id || !squareGrid() ) return true;
+    if ( game.combats?.some(c => c.started && c.scene?.id === doc.parent?.id && c.combatants.some(x => x.tokenId === doc.id)) ) return true;
+    const dest = movement.destination ?? {};
+    if ( !Number.isFinite(dest.x) || !Number.isFinite(dest.y) ) return true;
+    const half = {x: tok.w / 2, y: tok.h / 2};
+    const from = {x: doc.x + half.x, y: doc.y + half.y}, to = {x: dest.x + half.x, y: dest.y + half.y};
+    let hit = false;
+    try { hit = !!CONFIG.Canvas.polygonBackends.move.testCollision(from, to, {type: "move", mode: "any"}); } catch (e) { hit = false; }
+    if ( !hit ) return true;
+    const hex = gridKind() === "hex";
+    const start = cellOf(tok), goal = grid().getOffset(hex ? to : {x: dest.x + 1, y: dest.y + 1});
+    // A bounded search, so a drop in a sealed room never holds the screen: no path means Foundry's own move
+    const path = NR.findPath(start, goal, passableFor(tok), {maxNodes: 4000, neighbors: stepsFor(), heuristic: hex ? hexHeuristic(goal) : null});
+    if ( !path || path.length < 2 ) return true;
+    const waypoints = (hex ? path : turnsOf(path)).slice(1).map(c => topLeftFor(tok, c));
+    setTimeout(() => { doc.move(waypoints, {autoRotate: true, wodxWalkRound: true}).catch(e => console.warn(`${MOD} | walk round`, e)); }, 0);
+    return false;
+  } catch (e) { console.warn(`${MOD} | walk round`, e); return true; }
+}
+Hooks.on("preMoveToken", walkRound);
+
+/* ------------------------------------------------------------------ */
+/*  #2508: a player's double-click on someone else's token              */
+/* ------------------------------------------------------------------ */
+
+/** What a player can see of a token they cannot open: its name, how hurt it looks, and its conditions with what they do. */
+export function lookCard(tok) {
+  const doc = tok?.document ?? tok, actor = doc?.actor;
+  const name = doc?.name || "Someone";
+  const rows = [];
+  try {
+    const w = actor?.system?.health?.damage?.woundlevel;
+    if ( w ) rows.push(`<p><b>How hurt they look:</b> ${esc(game.i18n.localize(w))}</p>`);
+  } catch (e) { /* no health */ }
+  const conds = [];
+  try { for ( const c of chron()?.conditions?.conditionsOf?.(actor) ?? [] ) conds.push({name: c.name, what: c.summary ?? ""}); } catch (e) { /* no Chronicle */ }
+  try {
+    for ( const id of actor?.statuses ?? [] ) {
+      if ( String(id).startsWith("wodx-") ) continue;
+      const fx = (CONFIG.statusEffects ?? []).find(e => e.id === id);
+      if ( fx ) conds.push({name: game.i18n.localize(fx.name ?? fx.label ?? id), what: fx.description ? game.i18n.localize(fx.description) : ""});
+    }
+  } catch (e) { /* no statuses */ }
+  rows.push(conds.length ? `<p><b>Conditions:</b></p><ul>${conds.map(c => `<li><b>${esc(c.name)}</b>${c.what ? `: ${esc(c.what)}` : ""}</li>`).join("")}</ul>` : "<p>No conditions you can see.</p>");
+  rows.push(`<p class="hint">Target them (T) for the WoDX Actions on them: speak, aim, feed, carry.</p>`);
+  return {name, html: rows.join("")};
+}
+function lookAt(tok) {
+  const {name, html} = lookCard(tok);
+  return foundry.applications.api.DialogV2.prompt({window: {title: name}, classes: ["wodx-dialog", "wnpc-look"], content: html, ok: {label: "Close"}, rejectClose: false}).catch(() => null);
+}
+/** A double-click that would do nothing (no right to open the sheet) shows the look card instead. */
+function installLook() {
+  const T = CONFIG.Token?.objectClass;
+  if ( !T?.prototype?._onClickLeft2 || T.prototype._wodxLookCard ) return;
+  const base = T.prototype._onClickLeft2;
+  // Foundry lets a double-click through only to a user who may view the token's actor; a player may look at anyone
+  const view = T.prototype._canView;
+  if ( typeof view === "function" ) T.prototype._canView = function (user, event) {
+    if ( user && !user.isGM && this.document?.actor && !this.document.actor.testUserPermission?.(user, "LIMITED") && this.isVisible !== false && !this.document.hidden ) return true;
+    return view.call(this, user, event);
+  };
+  T.prototype._onClickLeft2 = function (event) {
+    const actor = this.document?.actor;
+    if ( !game.user.isGM && actor && !actor.testUserPermission?.(game.user, "LIMITED") ) { lookAt(this); return; }
+    return base.call(this, event);
+  };
+  T.prototype._wodxLookCard = true;
+}
+// Before the first scene is drawn: a token's mouse handler keeps the methods it found when it was drawn
+Hooks.once("setup", installLook);
+Hooks.once("canvasInit", installLook);
 
 /* Phase 7c: routines, places and reactions, built with this module's grid helpers */
 const routines = buildRoutines({MOD, esc, gmIds, isActiveGM, C, chron, profileFor, H3, gridKind, grid, cellOf, cellsAt, topLeftFor, passableFor, stepsFor, stepCost,

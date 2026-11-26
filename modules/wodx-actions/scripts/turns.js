@@ -59,8 +59,11 @@ async function hurt(target, step, rec) {
   const caster = rec.byUuid ? fromUuidSync(rec.byUuid) : null;
   const dice = TR.damageDice(step, rec, pool => poolDice(caster?.actor ?? caster, pool));
   if ( step.pool && dice < 1 ) return "";
-  await C.soakAndApply(target, {mode: dice ? "pool" : "levels", amount: dice || n(step.levels) || 1, type: step.type ?? "lethal", soak: step.soak !== false});
-  return dice ? `${dice} ${step.type ?? "lethal"} dice` : `${n(step.levels) || 1} ${step.type ?? "lethal"} level${(n(step.levels) || 1) === 1 ? "" : "s"}${step.soak === false ? ", unsoakable" : ""}`;
+  // levels "counter": as many levels as the record's counter holds now (Taste of Death)
+  const levels = step.levels === "counter" ? n(rec.counter?.value) : (n(step.levels) || 1);
+  if ( !dice && levels < 1 ) return "";
+  await C.soakAndApply(target, {mode: dice ? "pool" : "levels", amount: dice || levels, type: step.type ?? "lethal", soak: step.soak !== false});
+  return dice ? `${dice} ${step.type ?? "lethal"} dice` : `${levels} ${step.type ?? "lethal"} level${levels === 1 ? "" : "s"}${step.soak === false ? ", unsoakable" : ""}`;
 }
 
 async function runStep(actor, tok, step, rec, e) {

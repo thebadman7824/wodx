@@ -136,3 +136,10 @@
 /* The purse in one line (B2830) */
 .wodx-money .wodx-purse-line { margin: 0 0 0.25rem; }
 .wodx-money .wodx-purse-more > summary { cursor: pointer; opacity: 0.85; }
+
+/* B8041 (#2495): the Gender line's word is a hint in the empty box and a small label above it once filled. The
+   system's floating labels follow :valid, which an input with no "required" always is, so this one follows a class. */
+.wod20 .wodx-gender-field .floating-label { top: 7px; font-size: inherit; opacity: 0.5; }
+.wod20 .wodx-gender-field input:focus ~ .floating-label,
+.wod20 .wodx-gender-field.wodx-has-value .floating-label { top: -9px; font-size: var(--wod-font-xxs); opacity: 1; }
+.wod20 .wodx-gender-field:not(.wodx-has-value) input:not(:focus):valid ~ .floating-label { top: 7px; font-size: inherit; opacity: 0.5; }

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.109.0 (Fixes from the first solo test (B8056 to B8058): in solo play a public place the Storyteller never set has passers-by (#2490), a drag cut short by a wall walks round it outside a fight (client setting, #2492), and a look card on double-click (#2508))
 - 0.108.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)
 - 0.108.0 (Dark Ages septs: a Garou faction in the Dark Ages and the Long Night keeps a sept with the positions of Dark Ages: Werewolf (pp. 169-170) and the Litany as its law (pp. 31-33); from 1450 the W20 sept as before (B7865))
 - 0.107.5 (The revenant archetype picks every family name, Dark Ages and modern (B7840))

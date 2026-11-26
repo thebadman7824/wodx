@@ -577,3 +577,11 @@ test("#2486: Rothenstein names its landing", async () => {
   const C = await import(pathToFileURL(join(root, "modules/wodx-rothenstein/chronicle.mjs")));
   assert.equal(C.MANIFEST.landing, "Dolany Village");
 });
+
+test("#2501 (B8038): while the character is being made, the panel and the clock wait; report, pause and stuck stay open", () => {
+  const panel = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
+  assert.match(panel, /FREE_WHILE_MAKING = new Set\(\["report", "pause", "stuck"\]\)/);
+  assert.match(panel, /if \( making\(user\) \) \{ await tell/, "the seat refuses to pass time too");
+  const actions = readFileSync(join(root, "modules/wodx-actions/scripts/main.js"), "utf8");
+  assert.match(actions, /api\?\.unfinished\?\.\(actor\)\) \{/, "WoDX Actions opens the wizard instead");
+});

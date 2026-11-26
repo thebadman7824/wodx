@@ -48,3 +48,11 @@ test("adaptive sound is wired: settings, effect hooks, the old combat switch kep
   assert.match(main, /if \( setting\("adaptive"\) \) return adaptSoon\(\);\n  if \( !playlistFor\(currentKit\(\), "combat"\) \) return;/);
   assert.match(main, /adaptive: \{tension: tensionNow, adapt,/);
 });
+
+test("#2473 (B8039): a pool with no size yet gives no heartbeat, and nothing plays while the character is being made", async () => {
+  const {readFileSync} = await import("node:fs");
+  assert.equal(AR.heartbeat({blood: 0, hasBlood: true}), null, "unset max");
+  assert.equal(AR.heartbeat({blood: 0, max: 0, hasBlood: true}), null, "max 0");
+  const src = readFileSync(new URL("../../modules/wodx-atmosphere/scripts/main.mjs", import.meta.url), "utf8");
+  assert.match(src, /api\?\.unfinished\?\.\(a\)\ \) return null/);
+});

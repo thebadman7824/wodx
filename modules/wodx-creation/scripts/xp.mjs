@@ -101,6 +101,7 @@ export async function requestSpend(actor, purchase) {
     const src = await Learn.chooseSource(actor, purchase);
     if ( !src ) return {ok: false, reason: "cancelled"};
     if ( src.waive && game.user.isGM ) waive = true;
+    else if ( src.instant ) purchase = {...purchase, instant: true};
     else purchase = {...purchase, source: src};
   }
   if ( game.user.isGM ) {
@@ -121,7 +122,8 @@ const slimItem = it => (it && typeof it === "object" ? {name: String(it.name ?? 
   system: foundry.utils.deepClone(it.system ?? {}), flags: foundry.utils.deepClone(it.flags ?? {})} : null);
 const slim = p => ({kind: p.kind, key: p.key, label: p.label, current: p.current, next: p.next, cost: p.cost, group: p.group,
   ...(p.fromChange ? {fromChange: {change: String(p.fromChange.change), pool: String(p.fromChange.pool)}} : {}),
-  ...(p.kind === "newPower" || p.kind === "power" ? {cat: p.cat, own: !!p.own, level: p.level, item: slimItem(p.item)} : {}), ...(p.source?.kind ? {source: slimSource(p.source)} : {})});
+  ...(p.kind === "newPower" || p.kind === "power" ? {cat: p.cat, own: !!p.own, level: p.level, item: slimItem(p.item)} : {}), ...(p.source?.kind ? {source: slimSource(p.source)} : {}),
+  ...(p.instant ? {instant: true} : {})});
 
 /** Active GM: a player's request arrives. Check it, then queue it. */
 export async function onRequest(payload) {
@@ -138,7 +140,9 @@ export async function onRequest(payload) {
   }
   // B6230: the source is checked now too, so a request that cannot be taught never reaches the queue
   let srcLine = "";
-  if ( !now.fromChange && Learn.needsSource(actor, now) ) {
+  // #2506: the player asks for it at once; the Storyteller's approval raises the trait with no study
+  if ( payload.purchase.instant && !now.fromChange && Learn.needsSource(actor, now) ) srcLine = " Asked for at once, with no study: approve to raise it now (for a story reason), or refuse and the player picks a teacher, a book or practice.";
+  else if ( !now.fromChange && Learn.needsSource(actor, now) ) {
     const r = Learn.resolveSource(actor, now, payload.purchase.source);
     if ( !r.ok ) {
       await ChatMessage.create({content: `<div class="wodx-card"><p>The request for ${esc(actor.name)} could not be queued: ${esc(r.why)}</p></div>`, whisper: [user.id], speaker: {alias: "Storyteller"}});
@@ -151,7 +155,7 @@ export async function onRequest(payload) {
     id: foundry.utils.randomID(), type: XP_TYPE, key: `xp:${actor.id}:${now.kind}:${now.key}`,
     title: now.fromChange ? `${actor.name}: ${describe(now)}, a dot from ${CP.POOLS[now.fromChange.change].label}` : `${actor.name}: ${describe(now)} for ${now.cost} experience`,
     detail: `${kindLabel(now.kind)}. ${payerOf(actor) === actor ? actor.name : `Paid by ${payerOf(actor).name}, who`} has ${xpTotals(payerOf(actor)).available} experience to spend. Cost by ${chartName(actor)}.${srcLine}`,
-    data: {actorId: actor.id, purchase: slim({...now, source: payload.purchase.source})}, from: user.id, createdAt: Date.now(), worldTime: game.time.worldTime
+    data: {actorId: actor.id, purchase: slim({...now, source: payload.purchase.source, instant: !!payload.purchase.instant})}, from: user.id, createdAt: Date.now(), worldTime: game.time.worldTime
   });
 }
 
@@ -167,11 +171,11 @@ export function registerXPHandler() {
   chronicle()?.registerApprovalHandler?.(XP_TYPE, {
     label: "Experience",
     // Small (B2454): a spend by the book, checked again against the sheet as it is now
-    small: entry => { const a = game.actors.get(entry.data?.actorId), p = entry.data?.purchase ?? {}; return !!a && (p.fromChange ? !!changeDot(a, p)?.ok : byTheBook(recheck(a, p), p.cost ?? null)); },
+    small: entry => { const a = game.actors.get(entry.data?.actorId), p = entry.data?.purchase ?? {}; if ( p.instant ) return false; return !!a && (p.fromChange ? !!changeDot(a, p)?.ok : byTheBook(recheck(a, p), p.cost ?? null)); },
     approve: async entry => {
       const actor = game.actors.get(entry.data?.actorId);
       if ( !actor ) throw new Error("The character is gone");
-      const r = await spend(actor, entry.data.purchase, {by: game.user.name});
+      const r = await spend(actor, entry.data.purchase, {by: game.user.name, waive: !!entry.data.purchase?.instant});
       if ( !r.ok ) {
         ui.notifications.warn(`${actor.name}: ${r.reason}`);
         if ( entry.from ) await ChatMessage.create({content: `<div class="wodx-card"><p>${esc(r.reason)}</p></div>`, whisper: [entry.from], speaker: {alias: "Storyteller"}});

@@ -259,9 +259,22 @@ function healthLabel(actor) {
   const k = actor.system?.health?.damage?.woundlevel;
   return k ? game.i18n.localize(k) : "";
 }
+/** #2508: each condition with what it does (WoDX's own, then Foundry's other statuses on the actor). */
 function conditionNames(actor) {
-  try { return (chron()?.conditions?.conditionsOf?.(actor) ?? []).map(c => c?.label ?? c?.name ?? String(c)); }
-  catch (e) { return []; }
+  const out = [];
+  try { for ( const c of chron()?.conditions?.conditionsOf?.(actor) ?? [] ) out.push({name: c?.label ?? c?.name ?? String(c), summary: c?.summary ?? "", source: c?.source ?? ""}); }
+  catch (e) { /* no Chronicle */ }
+  try {
+    for ( const id of actor?.statuses ?? [] ) {
+      if ( String(id).startsWith("wodx-") ) continue;
+      const fx = (CONFIG.statusEffects ?? []).find(e => e.id === id);
+      if ( !fx ) continue;
+      const name = game.i18n.localize(fx.name ?? fx.label ?? id);
+      if ( out.some(o => o.name === name) ) continue;
+      out.push({name, summary: fx.description ? game.i18n.localize(fx.description) : (fx.hint ?? ""), source: ""});
+    }
+  } catch (e) { /* no statuses */ }
+  return out;
 }
 function tieList(actor) {
   const own = actor.getFlag(MOD, "ties") ?? [];

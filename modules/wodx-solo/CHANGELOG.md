@@ -2,6 +2,7 @@
 
 Newest first.
 
+- 0.16.0 (Fixes from the first solo test (B8045, B8050, B8051, B8056): spent time keeps a wait's guards, a trip's hours (up to a fortnight) pass on the world clock, the Storyteller's cards lose their dead chat controls, older cards can be pressed, the list can be cleared, and Carry the fallen lifts the body with the character's own token first)
 - 0.15.1 (First solo test fixes (B8030 to B8033): Report a problem is on the panel without unfolding it; a stray actor the player owns no longer stops Make my character, and the panel can start a new character after asking; the landing is the one the chronicle names; a new character's token sees 6 squares in the dark; and the empty-seat notice tells the player to start Play-Solo)
 - 0.15.0 (The oracle reads the night (B7132): the director's rest, steady or pressure moves the odds a step by what a yes would mean, and a 10 or a 1 draws a Threads of Fate storyline through the approval queue. shiftOdds and turnsTheNight are new in the world rules)
 - 0.14.1 (The lone player's landing follows the chronicle in play (B7565): a scene named for its town counts after a market, and the plain night scene and the arrival window are named for that town; with no chronicle in play they name none ("By night: the way in", "Who comes in out of the night?"). The never-run worlds are WoDX Chronicle's one Live-world list (B7564))
