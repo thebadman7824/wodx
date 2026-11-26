@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.111.0 (Relationships: a Ledger entry come due marks its tie (B7838))
+- 0.110.0 (The look card shows what the looking character knows of them (B8094))
 - 0.109.2 (A character the NPC has fought now counts as met in the Storyteller's "How they regard the characters" on the NPC's Relationships tab, so "Fought them" shows after a fight with a stranger; before, it still said the NPC had met no player's character (#2567))
 - 0.109.1 (Routines remember how their last walk went (moved along its way, refused, or placed square by square after an error), read by the sprite check gate (B6143) to tell a walk that was never animated from one that was)
 - 0.109.0 (Fixes from the first solo test (B8056 to B8058): in solo play a public place the Storyteller never set has passers-by (#2490), a drag cut short by a wall walks round it outside a fight (client setting, #2492), and a look card on double-click (#2508))

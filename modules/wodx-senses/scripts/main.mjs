@@ -30,7 +30,7 @@ import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.15.6";
+const VERSION = "0.15.7";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -757,7 +757,9 @@ Hooks.once("init", () => {
   registerSight();
   setupSight({powerDots});
   const perception = setupPerception({attrOf, abilityOf, powerDots, formOf, sightBlocked, esc, gmIds});
-  const api = {perception, sight: {cycle: cycleSight, colourSafe, ties: OW.tiesDialog, enchant: OW.enchant, tieFetter: OW.tieFetter, traits: OW.traitsOf, rollFor: OW.rollFor, now: OW.sightNow, draw: OW.drawOther, filter: OW.filterFor, rules: OR}, version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
+  const api = {perception, sight: {cycle: cycleSight, colourSafe, ties: OW.tiesDialog, enchant: OW.enchant, tieFetter: OW.tieFetter, traits: OW.traitsOf, rollFor: OW.rollFor, now: OW.sightNow, draw: OW.drawOther, filter: OW.filterFor, rules: OR}, version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES,
+    /** Is this point indoors? A tagged region's own word first, else the scene's kind of place (WoDX Solo's sight in the dark, #2475). */
+    indoorAt: (scene, p) => R.isIndoor(placeAt(scene, p))};
   game.modules.get(MOD).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {senses: api});
 });

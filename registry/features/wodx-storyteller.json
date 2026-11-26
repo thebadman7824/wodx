@@ -8,22 +8,28 @@
    "module": "wodx-storyteller",
    "core": true,
    "files": [
-    "modules/wodx-storyteller/scripts/ledger.mjs"
+    "modules/wodx-storyteller/scripts/ledger.mjs",
+    "modules/wodx-rules/npc/ties-rules.mjs",
+    "modules/wodx-sheets/scripts/extras-html.mjs",
+    "modules/wodx-sheets/scripts/extras.mjs"
    ],
    "steps": {
     "built": {
      "pr": 1414,
-     "decisions": "B125"
+     "decisions": "B125, B7838"
     },
     "wired": {
      "reader": "modules/wodx-storyteller/scripts/ledger.mjs:registerLedgerHooks"
     },
     "shown": {
-     "what": "a whispered 'Comes due' card for the Storyteller, once, and a tracker line"
+     "what": "a whispered 'Comes due' card for the Storyteller, once, a tracker line, and a Due badge on the tie on both characters' Relationships tabs (B7838)"
+    },
+    "gated": {
+     "gate": "tools/gate/gateledgerdue.mjs",
+     "step": "1. a debt come due shows Due on both Relationships tabs"
     }
    },
    "open": [
-    "gated: gatedatedplay step 6 drives the real clock but checks the card only (graded marker); a due debt has nothing but the card to show",
     "gateledger step 4 (inheritance) fails on cloud lane 9 alone with a fixed 800 ms wait (17 November 2026); it passes on the PC lanes"
    ],
    "deferred": [],

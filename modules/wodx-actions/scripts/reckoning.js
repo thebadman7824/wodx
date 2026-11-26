@@ -131,7 +131,7 @@ export function build(ctx) {
             const d = K.edgeDifficulty(e, { t: tgt ? { stamina: attr(tgt, "stamina") } : null, lethal });
             if (d !== null) root.querySelector("[name=diff]").value = d;
             const pool = e.roll ? `${e.roll[0] ? `${cap(e.roll[0])} + ` : ""}${cap(e.roll[1])}` : "no roll";
-            root.querySelector(".wodx-edge-info").innerHTML = `<b>${esc(e.name)}</b> · ${pool}${typeof e.diff === "number" ? ` at ${e.diff}` : e.diff ? " (difficulty from the target or the page)" : ""}${e.conviction ? ` · ${e.conviction} Conviction` : ""} · p. ${e.p}<br>${esc(e.e)}${K.edgeAllowed(e, i.virtues) ? "" : `<br><b>${cap(e.virtue)} ${i.virtues[e.virtue]} is below this edge's level.</b>`}`;
+            root.querySelector(".wodx-edge-info").innerHTML = `<b>${esc(e.name)}</b> · ${pool}${typeof e.diff === "number" ? ` at ${e.diff}` : e.diff ? " (difficulty from the target or the page)" : ""}${e.conviction ? ` · ${e.conviction} Conviction` : ""} · ${esc(e.ref)}<br>${esc(e.e)}${K.edgeAllowed(e, i.virtues) ? "" : `<br><b>${cap(e.virtue)} ${i.virtues[e.virtue]} is below this edge's level.</b>`}`;
         };
         return dialog(`Use an edge: ${actor.name}`, content, "Use", async fd => {
             const e = K.edgeFor(fd.edge);
@@ -146,11 +146,11 @@ export function build(ctx) {
             // The edge's keywords on the effects card (the HtR list), from its successes (one for an edge with no roll)
             const plan = got => {
                 if (!(got > 0) || !EF.isOn()) return { html: "", items: [] };
-                const pp = EF.powerPlan(actor, { set: "htr", id: `${e.path}-${e.id}`, name: e.name, line: "htr", successes: got, source: `Hunter: The Reckoning p. ${e.p}`, world: "Hunter (HtR)" });
+                const pp = EF.powerPlan(actor, { set: "htr", id: `${e.path}-${e.id}`, name: e.name, line: "htr", successes: got, source: `${e.ref}`, world: "Hunter (HtR)" });
                 return { html: pp.html, items: pp.items.filter(x => x.route !== "off" && x.route !== "st") };
             };
             const fxOf = items => items.length ? { kind: "effects", caster: actor.name, items } : undefined;
-            if (!e.roll) { const pl = plan(1); await lim.done({ successes: 1 }); return post(actor, `${actor.name}: ${esc(e.name)}`, `<div class="vta-note">${e.conviction ? `${e.conviction} Conviction. ` : ""}${esc(e.e)}</div>${pl.html}<div class="wodx-quiet">Hunter: The Reckoning p. ${e.p}</div>`, [], fxOf(pl.items)); }
+            if (!e.roll) { const pl = plan(K.EDGE_STRENGTH[e.id] ? Math.max(1, n(i.virtues[K.EDGE_STRENGTH[e.id]])) : 1); await lim.done({ successes: 1 }); return post(actor, `${actor.name}: ${esc(e.name)}`, `<div class="vta-note">${e.conviction ? `${e.conviction} Conviction. ` : ""}${esc(e.e)}</div>${pl.html}<div class="wodx-quiet">${e.ref}</div>`, [], fxOf(pl.items)); }
             const [a, v] = e.roll;
             const stat = k => (ATTR.includes(k) ? attr(actor, k) : K.VIRTUES.includes(k) ? i.virtues[k] : (findAbility(actor, k)?.value ?? 0));
             const dice = (a ? stat(a) : 0) + stat(v) + risk + n(fd.bonus);
@@ -167,7 +167,7 @@ export function build(ctx) {
             }
             const pl = plan(r.botch || (fd.resisted && !fd.won) ? 0 : r.successes);
             await lim.done({ successes: r.botch || (fd.resisted && !fd.won) ? 0 : r.successes });
-            body += `<div class="vta-note">${esc(e.e)}</div>${pl.html}<div class="wodx-quiet">Hunter: The Reckoning p. ${e.p}</div>`;
+            body += `<div class="vta-note">${esc(e.e)}</div>${pl.html}<div class="wodx-quiet">${e.ref}</div>`;
             return post(actor, `${actor.name}: ${esc(e.name)}`, body, [r.roll], fxOf(pl.items));
         }, { width: 560, render: root => { LIM.decorate(root, { actor, sel: "select[name=edge]", powerOf: v => { const q = K.edgeFor(v); return q && { name: q.name, level: q.level }; } }); describe(root); root.querySelector("[name=edge]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "edge", power: r => K.edgeFor(r.querySelector("[name=edge]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
@@ -206,7 +206,7 @@ export function build(ctx) {
                 "system.advantages.willpower.permanent": Math.max(K.IMBUE.willpower, n(actor.system?.advantages?.willpower?.permanent)),
                 "system.advantages.willpower.temporary": Math.max(K.IMBUE.willpower, n(actor.system?.advantages?.willpower?.permanent)),
                 "system.settings.hasedges": true });
-            await hunter.createEmbeddedDocuments("Item", picks.map(e => ({ name: e.name, type: "Power", system: { type: "wod.types.edge", value: e.level, description: `${K.PATHS[e.path].label} ${e.level}: ${e.e} (Hunter: The Reckoning p. ${e.p})` } })));
+            await hunter.createEmbeddedDocuments("Item", picks.map(e => ({ name: e.name, type: "Power", system: { type: "wod.types.edge", value: e.level, description: `${K.PATHS[e.path].label} ${e.level}: ${e.e} (${e.ref})` } })));
             await hunter.setFlag(MOD, "imbued", { creed: fd.creed, at: game.time.worldTime });
             await ctx.logEvent?.(hunter, `Imbued: a ${c.label}.`, "imbuing");
             return post(hunter, `${hunter.name} is imbued`, `<div class="vta-sec">${esc(c.label)} · Mercy ${v.mercy}, Vision ${v.vision}, Zeal ${v.zeal} · Conviction ${c.conviction} · edges: ${picks.map(e => esc(e.name)).join(", ")}</div>${hunter !== actor ? `<div class="vta-note">A new Hunter sheet; the mortal sheet is kept and linked.</div>` : ""}<div class="wodx-quiet">Hunter: The Reckoning p. 84</div>`);

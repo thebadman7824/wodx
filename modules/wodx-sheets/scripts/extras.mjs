@@ -622,7 +622,18 @@ export function listen(sheet, root) {
       case "leave": {
         const tok = actor.getActiveTokens?.()?.[0];
         if ( !tok ) return ui.notifications.warn("Put the character's token on the map first.");
+        // Desk pick inv3 (26 Nov): Drop puts it on the pile at the character's feet, shown with a simple icon, where
+        // anyone can pick it up again; a container with things in it still goes down as a box
+        const loose = game.modules.get("wodx-interactables")?.active ? game.modules.get("wodx-interactables").api?.loose : null;
+        if ( loose?.setDown && !XR.isContainer?.(it) && loose.setDownChoices?.(actor)?.some(c => c.id === it.id) ) return loose.setDown(tok.document, [it.id]);
         return viaGM({ op: "leave", from: actor.id, item: it.id, scene: tok.scene.id, x: tok.center.x, y: tok.center.y }, doLeave);
+      }
+      case "pick-up": {
+        const tok = actor.getActiveTokens?.()?.[0];
+        if ( !tok ) return ui.notifications.warn("Put the character's token on the map first.");
+        const loose = game.modules.get("wodx-interactables")?.active ? game.modules.get("wodx-interactables").api?.loose : null;
+        if ( !loose?.openPickUp ) return ui.notifications.warn("Picking things up needs WoDX Interactables on.");
+        return loose.openPickUp(tok.document);
       }
       case "add-coins": return addCoins(actor);
     }
@@ -778,6 +789,15 @@ export function setup() {
   installHistory();
   installChanges();
   Hooks.once("ready", installSocket);
+  // B7838: a Ledger change (an entry come due, kept or paid) redraws the open sheets of the people it names, so the Due badge shows
+  Hooks.on("updateSetting", setting => {
+    if ( setting?.key !== "wodx-storyteller.ledger" ) return;
+    let entries = [];
+    try { entries = game.settings.get("wodx-storyteller", "ledger")?.entries ?? []; } catch (e) { return; }
+    const ids = new Set(entries.flatMap(e => [e?.from?.id, e?.to?.id]).filter(Boolean));
+    const apps = [...Object.values(ui.windows ?? {}), ...(foundry.applications?.instances?.values?.() ?? [])];
+    for ( const app of new Set(apps) ) if ( app?.rendered && app.actor && ids.has(app.actor.id) ) app.render(false);
+  });
   // Header buttons on every WoDX sheet
   Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {
     if ( !sheet.constructor?.name?.startsWith?.("Wodx") ) return;

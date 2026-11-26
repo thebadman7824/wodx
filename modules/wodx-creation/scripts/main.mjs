@@ -45,6 +45,8 @@ import * as SCR from "../../wodx-rules/creation/supporting-cast-rules.mjs";
 import * as SCM from "./supporting-cast.mjs";
 import * as DDR from "../../wodx-rules/creation/dac-demons-rules.mjs";
 import * as DDM from "./dac-demons.mjs";
+import * as kit from "./kit.mjs";
+import * as kitRules from "./kit-rules.mjs";
 
 /** Runs only in a WoDX world with WoDX Chronicle active (its approval queue and clock are needed). */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -103,6 +105,7 @@ function start() {
     if ( message?.type === "xp.request" ) await xp.onRequest(message.payload);
     if ( message?.type === "vitae.request" ) await feedVitae.onRequest(message.payload);
     if ( message?.type === "animal.retainer" ) await animalStock.onRequest(message.payload);
+    if ( message?.type === "kit.npc" ) await kit.onKitRequest(message.payload);
     if ( message?.type === "vitae.shown" && message.payload?.sceneId === canvas?.scene?.id ) feedVitae.showDrink(canvas.scene.tokens.get(message.payload.tokenId));
   });
   const api = {
@@ -112,6 +115,8 @@ function start() {
     lines: {of: lines.splatOf, info: lines.lineInfo, family: lines.familyOf, label: lines.labelOf, keys: lines.KEYS},
     learn: {rules: learnRules, choices: learn.choicesFor, resolve: learn.resolveSource, begin: learn.begin, records: learn.recordsOf, needsSource: learn.needsSource,
       waived: learn.waived, setWaived: learn.setWaived, terms: learn.teacherTerms, rating: learn.ratingOf, reconcile: learn.reconcile, onTaskDone: learn.onTaskDone, choose: learn.chooseSource},
+    // Desk picks inv1 and inv2 (26 Nov): a starting kit, and an NPC's things at first meeting
+    kit: {rules: kitRules, load: kit.loadKit, of: kit.kitFor, take: kit.takeKit, ensure: kit.ensureKit, shop: kit.shopList},
     passYears: () => PassYearsApp.open(),
     runSkipTest,
     open: () => CreationApp.open(),

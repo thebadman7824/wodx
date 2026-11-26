@@ -115,10 +115,18 @@ test("#2492: a player's dragged token walks round a wall on the NPCs' path finde
   assert.match(M, /register\(MOD, "walkRound", \{[\s\S]{0,400}scope: "client"/);
 });
 
-test("#2509: Aim at replaces Targeting when the target has parts to aim at", () => {
+test("#2509: Aim at is the one control, with an item they hold; Targeting is gone", async () => {
   const M = src("modules/wodx-combat/scripts/main.js");
-  assert.match(M, /const aimField = aim \? `\$\{aim\}<input type="hidden" name="targeting" value="none"\/>` : "";/);
-  assert.match(M, /\$\{aimField \|\| `<div class="form-group"><label>Targeting<\/label>/);
+  assert.match(M, /const aimField = `\$\{aimHtml\(target\)\}<input type="hidden" name="targeting" value="none"\/>`;/);
+  assert.doesNotMatch(M, /<label>Targeting<\/label>/, "no Targeting select left");
+  assert.match(M, /<optgroup label="An item they hold">/);
+  assert.match(M, /if \(hit && fd\.aimType === "item"\)/, "an item aimed at has no hit location");
+  const R = await import(pathToFileURL(join(root, "modules/wodx-combat/scripts/rules.js")));
+  assert.equal(R.heldAim("held:medium"), "medium");
+  assert.equal(R.heldAim("held:precise"), "precise");
+  assert.equal(R.heldAim("head"), null);
+  assert.equal(R.heldAim(""), null);
+  for ( const h of R.HELD_AIMS ) assert.ok(R.TARGETING[h.size], `${h.id} has a book size`);
 });
 
 test("#2508: conditions say what they do, on the sheet and on a look at someone else's token", async () => {
@@ -140,6 +148,14 @@ test("#2510: the time dial puts noon at the top and midnight at the foot", async
   assert.equal(v.icon, "fa-moon");
   assert.match(v.title, /22:00, night; the moon: full moon/);
   assert.match(src("modules/wodx-chronicle/scripts/main.mjs"), /installTimeDial\(\);/);
+  // Desk pick: the date and season under the hour, turned round south of the equator
+  const d = D.dialView({hour: 9, day: 12, month: 3, monthName: "March", year: 1197, latitude: 49.2, timeLabel: "09:00", dateLabel: "Wednesday, 12 March 1197"});
+  assert.equal(d.date, "12 March 1197, spring");
+  assert.match(d.title, /Wednesday, 12 March 1197, spring/);
+  assert.equal(D.seasonOf(1, 49), "winter");
+  assert.equal(D.seasonOf(1, -33), "summer");
+  assert.equal(D.dialView({day: 1, month: 7, monthName: "July", year: -311, latitude: 30}).date, "1 July 312 BCE, summer", "astronomical year -311 is 312 BCE");
+  assert.match(src("modules/wodx-chronicle/scripts/time-dial.mjs"), /<span class="wodx-dial-date">\$\{esc\(v\.date\)\}<\/span>/);
 });
 
 test("#2506: a player may ask for a trait at once, and the Storyteller's approval grants it with no study", () => {
@@ -171,7 +187,7 @@ test("#2505: a lifepath may begin before the common era", async () => {
   const p = L.newPath({line: "vampire", birthYear: -500, turnYear: -470});
   assert.equal(p.birthYear, -500);
   const F = src("modules/wodx-creation/scripts/lifepath.mjs");
-  assert.match(F, /min="\$\{s\.line === "mortal" \? 1100 : -4000\}"/);
+  assert.match(F, /min="\$\{R\.earliestBirth\(s\.line, yearNow\(\)\)\}"/);
   assert.match(F, /birthYear: yearIn\(f\.birthYear\.value, this\.setup\.birthYear\)/);
 });
 
@@ -193,8 +209,93 @@ test("#2499: the Elder Powers' each-turn rules run on the turn engine (V20 Dark 
   assert.match(src("modules/wodx-actions/scripts/turns.js"), /const levels = step\.levels === "counter" \? n\(rec\.counter\?\.value\)/);
 });
 
+test("#2506 desk pick: a world setting makes every study twice or four times as fast", async () => {
+  const L = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/learn-rules.mjs")));
+  const p = {kind: "ability", label: "Melee", key: "melee", current: 1, next: 2};
+  const full = L.planFor(p, {kind: "practice"});
+  assert.equal(full.goal, 4);
+  assert.equal(L.planFor(p, {kind: "practice"}, {speed: "half"}).goal, 2);
+  assert.equal(L.planFor(p, {kind: "practice"}, {speed: "quarter"}).goal, 1);
+  assert.equal(L.planFor(p, {kind: "practice"}, {speed: "nonsense"}).goal, 4, "an unknown speed is the book's pace");
+  assert.equal(L.planFor(p, {kind: "teacher", name: "Old Jan", rating: 1}, {speed: "quarter"}).ok, false, "a teacher still needs the level");
+  const M = src("modules/wodx-creation/scripts/learn.mjs");
+  assert.match(M, /register\(MODULE_ID, "learnSpeed", \{[\s\S]{0,200}scope: "world"/);
+  assert.equal((M.match(/L\.planFor\(q, src, \{speed: speedNow\(\)\}\)/g) ?? []).length, 2);
+});
+
 test("#2508: the look card's install mark doesn't clash with Chronicle's token looks (token._wodxLook)", () => {
   const N = src("modules/wodx-npc/scripts/main.mjs");
   assert.doesNotMatch(N, /prototype\._wodxLook\b/, "a mark on Token.prototype named _wodxLook made every token's look state the boolean true");
   assert.match(src("modules/wodx-chronicle/scripts/token-looks.mjs"), /token\._wodxLook \?\? \(token\._wodxLook = /);
+});
+
+test("#2506 desk pick: Find a teacher asks around town and names the best one there", async () => {
+  const L = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/learn-rules.mjs")));
+  assert.equal(L.askPool({charisma: 3, streetwise: 0, etiquette: 2}), 5);
+  assert.equal(L.askPool({charisma: 2, streetwise: 3, etiquette: 1}), 5);
+  assert.equal(L.askPool({}), 1);
+  assert.deepEqual(L.countSuccesses([6, 7, 1, 3], 6), {successes: 1, botch: false});
+  assert.deepEqual(L.countSuccesses([1, 3], 6), {successes: 0, botch: true});
+  const cands = [
+    {id: "a", name: "Abbot Vit", rating: 4, will: "price", sameTown: true},
+    {id: "b", name: "Brother Jan", rating: 2, will: "teach", sameTown: true},
+    {id: "c", name: "Far Teacher", rating: 5, will: "teach", sameTown: false},
+    {id: "d", name: "Proud Ota", rating: 5, will: "refuse", sameTown: true},
+    {id: "e", name: "Novice", rating: 1, will: "teach", sameTown: true}
+  ];
+  assert.equal(L.askAroundPick(cands, 2).id, "b", "a willing one in town first; never a refuser, one too far off, or one who knows too little");
+  assert.equal(L.askAroundPick(cands, 3).id, "a");
+  assert.equal(L.askAroundPick(cands, 6), null);
+  const M = src("modules/wodx-creation/scripts/learn.mjs");
+  assert.match(M, /known\.has\(a\.id\)/, "a teacher heard of is listed though the sheet is closed");
+  assert.match(M, /if \( result\.find \) \{[\s\S]{0,160}return chooseSource\(actor, p\);/);
+});
+
+test("#2508 desk pick: the look card says what the character knows of them: the tie, their manner, tales heard", () => {
+  const N = src("modules/wodx-npc/scripts/main.mjs");
+  assert.match(N, /const known = lookKnows\(doc, lookerOf\(\)\);/);
+  assert.match(N, /people\.ties\.of\(me\)\.filter\(e => e\.uuid === base\?\.uuid \|\| e\.to\?\.id === id\)/);
+  assert.match(N, /attitude\.of\(them, me\)/);
+  assert.match(N, /rumours\?\.heardBy\?\.\(me\.id\)/, "only tales this character heard, never every rumour");
+  assert.match(N, /if \( !me \|\| !them \|\| !id \|\| me\.id === id \) return out;/);
+});
+
+test("#2505a: lines that age like mortals can't be born past a mortal lifespan; the undying keep the long range", async () => {
+  const R = await import("../../modules/wodx-creation/scripts/lifepath-rules.mjs");
+  assert.equal(R.earliestBirth("mage", 1197), 1127);
+  assert.equal(R.earliestBirth("werewolf", 1197), 1127);
+  assert.equal(R.earliestBirth("mortal", 1197), 1127);
+  assert.equal(R.earliestBirth("vampire", 1197), -4000);
+  assert.equal(R.earliestBirth("wraith", 1197), -4000);
+  assert.deepEqual(R.clampYears("mage", {birthYear: 900, turnYear: 950}, 1197), {birthYear: 1127, turnYear: 1127});
+  assert.deepEqual(R.clampYears("mage", {birthYear: 1160, turnYear: 1180}, 1197), {birthYear: 1160, turnYear: 1180});
+  assert.deepEqual(R.clampYears("vampire", {birthYear: -500, turnYear: 100}, 1197), {birthYear: -500, turnYear: 100});
+});
+
+test("#2475: a player's token sees a few squares outdoors and nothing in an unlit interior; a power's sight is left alone", async () => {
+  const S = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/solo-rules.mjs")));
+  assert.equal(S.sightFor({indoor: false, gridDistance: 1}), 6);
+  assert.equal(S.sightFor({indoor: true, gridDistance: 1}), 0);
+  assert.equal(S.sightFor({indoor: false, gridDistance: 5, range: 0}), 30, "coming back out of doors gives the squares back");
+  assert.equal(S.sightFor({indoor: true, gridDistance: 1, visionMode: "darkvision"}), null, "Eyes of the Beast and the like keep their sight");
+  assert.equal(S.sightFor({indoor: true, gridDistance: 1, range: 20}), null, "a range set by hand stays");
+  const A = src("modules/wodx-solo/scripts/arrival.mjs");
+  assert.match(A, /Hooks\.on\("updateToken", \(tok, ch\) => \{ tokenSight\(tok, ch\)/);
+  assert.match(src("modules/wodx-senses/scripts/main.mjs"), /indoorAt: \(scene, p\) => R\.isIndoor\(placeAt\(scene, p\)\)/);
+});
+
+test("Action priority: a busy character can't start a lesser action; the one they are busy with is taken up too", async () => {
+  const B = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/busy-rules.js")));
+  const now = 1_000_000;
+  const feeding = {kind: "feeding", with: "Actor.v", withName: "Jana", since: now};
+  assert.equal(B.busyWhy({name: "Ota", mine: feeding, action: "trade", now}), "Ota is feeding from Jana. Stop that first.");
+  assert.equal(B.busyWhy({name: "Ota", mine: feeding, action: "defend", now}), "", "defending gets through");
+  assert.equal(B.busyWhy({name: "Ota", mine: feeding, action: "power", now}), "", "a power outranks feeding");
+  assert.equal(B.busyWhy({name: "Ota", mine: null, action: "trade", theirs: {name: "Jana", rec: {kind: "fed", with: "Actor.x", withName: "Mirek", since: now}, me: "Actor.o"}, now}),
+    "Jana is being fed from by Mirek just now.");
+  assert.equal(B.busyWhy({name: "Ota", mine: {...feeding, since: now - B.STALE_MS - 1}, action: "trade", now}), "", "a stale record is ignored");
+  const S = src("modules/wodx-actions/scripts/social.js");
+  assert.match(S, /LIM\.refuseBusy\(actor, act === "trade" \? "trade"/);
+  assert.match(S, /LIM\.whileBusy\(actor, "trading", npc/);
+  assert.match(src("modules/wodx-actions/scripts/main.js"), /LIM\.whileBusy\(actor, "feeding", vessel, \(\) => dialog\("WoDX Feed"/);
 });

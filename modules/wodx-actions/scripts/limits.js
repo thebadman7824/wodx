@@ -7,6 +7,7 @@ import * as AFC from "./after-costs.js";
 import * as ACR from "../../wodx-rules/actions/after-cost-rules.js";
 import * as PM from "./power-mods.js";
 import * as TH from "./trait-hooks.js";
+import * as BZ from "./busy-rules.js";
 
 const MOD = "wodx-actions";
 const FLAG = "limits";
@@ -252,4 +253,51 @@ export function conditionMods(actor, {sight = false} = {}) {
     out.parts.push(`Drained +${drainedDiff(actor)}`);
   }
   return out;
+}
+
+/* ---------------- Busy with something: action priority (busy-rules.js) ---------------- */
+
+export const busyRules = BZ;
+const BUSY_FLAG = "busy";
+/** The actor's live busy record, or null. */
+export const busyOf = actor => { try { return BZ.liveBusy(actor?.getFlag?.(MOD, BUSY_FLAG) ?? null); } catch (e) { return null; } };
+const canWrite = actor => !!actor && (game.user?.isGM || actor.isOwner);
+/** Mark the actor busy (kind from BZ.BUSY), with the other one taken up by it. Only the actor's owner or the Storyteller writes it. */
+export async function setBusy(actor, kind, other = null) {
+  if ( !canWrite(actor) || !BZ.BUSY[kind] ) return null;
+  const rec = {kind, with: other?.uuid ?? other?.id ?? "", withName: other?.name ?? "", since: Date.now()};
+  await actor.setFlag(MOD, BUSY_FLAG, rec);
+  return rec;
+}
+export async function clearBusy(actor) {
+  if ( !canWrite(actor) || !actor.getFlag?.(MOD, BUSY_FLAG) ) return;
+  await actor.unsetFlag(MOD, BUSY_FLAG);
+}
+/** Is another actor taking this one up (a vampire feeding from it)? The record seen from its side, or null. */
+export function takenUpBy(target) {
+  if ( !target ) return null;
+  const ids = new Set([target.uuid, target.id, target.token?.uuid].filter(Boolean));
+  for ( const a of game.actors ?? [] ) {
+    const r = busyOf(a);
+    if ( r && ids.has(r.with) ) return {kind: r.kind === "feeding" ? "fed" : r.kind, with: a.uuid, withName: a.name, since: r.since};
+  }
+  return null;
+}
+/**
+ * Why the actor can't start this action now: out cold first (cannotAct), then busy. other: the one acted on.
+ * A player is told and refused; the Storyteller is not.
+ */
+export function refuseBusy(actor, action = "social", other = null) {
+  if ( !actor || game.user?.isGM ) return false;
+  const why = cannotAct(actor) || BZ.busyWhy({name: actor.name, mine: busyOf(actor), action,
+    theirs: other ? {name: other.name, rec: busyOf(other) ?? takenUpBy(other), me: actor.uuid} : null});
+  if ( !why ) return false;
+  ui.notifications?.warn(why);
+  return true;
+}
+/** Run fn while the actor is busy with kind (a window that stands for the action's turns); cleared however it ends. */
+export async function whileBusy(actor, kind, other, fn) {
+  await setBusy(actor, kind, other).catch(() => null);
+  try { return await fn(); }
+  finally { await clearBusy(actor).catch(() => null); }
 }

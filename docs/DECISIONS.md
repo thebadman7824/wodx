@@ -466,7 +466,7 @@ Next free block: B8140
 | B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7807) | Rothenstein, Chronicle, Otherworlds |
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
-| B7830-B7839 | Scorecard gaps: the Orpheus Spectral arsenal (used B7831-B7833) | Actions |
+| B7830-B7839 | Scorecard gap 9: the Ledger's due date shows on the sheet (used B7831-B7838) | NPC, Sheets |
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
 | B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
 | B7860-B7909 | Splat depth build: a Dark Ages mage's household and standing (desk item mage-household) (used B7860-B7909) | Actions, Chronicle |
@@ -478,7 +478,9 @@ Next free block: B8140
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 | B8020-B8029 | Merge rules: release notes of a stamped branch are read inside a train batch (used B8020-B8026) | tools (release) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
+| B8090-B8099 | Solo test desk picks: action priority, item tags, lifespan, dark interiors, teachers, time dial (used B8090-B8098) | Actions, Chronicle, Combat, Creation, Library, NPC, Senses, Solo |
 | B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
+| B8120-B8129 | Inventory desk picks: starting kit, NPC things at first meeting, drop and pick up with icons (used B8120-B8122) | Creation, Actions, Interactables, Sheets |
 | B8130-B8139 | Fewer merge train ejects: push guard, review-list fragments, conflicts the train settles, label on green (used B8130-B8134) | tools (git hooks, release, pcq) |
 <!-- decision-index:end -->
 
@@ -16120,6 +16122,75 @@ aims at whom across the Shroud; Immolate's Stealth difficulty is the Spectre's o
 
 Reverse: remove orpheus-spectres.js, the spectre window in orpheus.js, orphSpectre in main.js and the menu entry.
 
+## B7834. The creed books' edges join the core 35 (2026-11-26)
+WoDX Actions. Hunter: The Reckoning's core book gives 35 edges; the eight creed books (Hunter Book: Avenger, Defender,
+Hermit, Innocent, Judge, Martyr, Redeemer, Wayward) give five more each, and WoDX had none of them. reckoning-rules.js
+now lists 39 more, read from the page images, each with its path, level, roll, difficulty, Conviction cost, book and
+page, in short and in our own words. They show in Use an edge like the core ones, and their card names the creed book
+and page. The Hermit and Wayward books give the Vision creeds their own paths, Hermit and Deviance; a hunter of another
+creed needs Vision 4 to learn them, as the books say. Each new edge has keywords for the effects card.
+House readings: the scan of Hunter Book: Innocent has no printed p. 81, so Innocence's fifth edge and the end of Bond
+are missing: Bond is listed from what p. 80 gives, and Innocence stops at four creed-book edges until the page is read.
+The Wayward scan crops its printed page numbers, so its edges cite the PDF page. The Hermit and Wayward creeds' starting
+Conviction is not set (only their paths are added); the Creed list keeps its seven. Fool's Luck is at difficulty 8 and
+Imprison's difficulty is the creature's Stamina + 3, as the pages give; the derangement other creeds take for each
+Hermit or Deviance edge is the Storyteller's from the card. Spiral's whirlwind is worked each turn (lethal levels equal to the successes to everyone within a yard and a half a success, soaked as usual); its Stamina roll to stay standing is on the card. Each new edge has a target tag for the aim panel.
+
+Reverse: remove the rows with a book (the ninth field) from EDGES, the hermit and deviance PATHS and EDGE_BOOKS in
+reckoning-rules.js, and their entries in power-keywords-lines.js.
+
+## B7835. Twelve more gates join the clean smoke set (2026-11-26)
+Tools. The clean smoke set (gate-map-extra.json "clean", run in wodx-clean after the nightly) held seven gates, so most
+features were proven only in rothenstein-wodx, where a chronicle is in play. Twelve gates that make their own scene,
+actors and cards were run in the clean world on cloud lane 9 and all passed: gatealarmbell, gatemakeresidents,
+gategatheringgift, gatefactionend, gatesummontime, gatesecondsight, gatearchetypehours, gateprowlmark,
+gatekeepanachronism, gatekinbring, gatestainclaws, gatespectrethorn (about 20 minutes together). They join the set.
+
+Reverse: take the twelve names out of "clean" in tools/lanes/gate-map-extra.json.
+
+## B7836. The core book's rotes are ready in the Cast window (2026-11-26)
+WoDX Actions. Mage 20th listed only its nine Spheres at five levels; the rotes, Adjustments and Procedures of Chapter
+Ten, Part VIII (pp. 601-611) were missing. m20-rotes.js lists all 17, in short and in our own words, each with the
+least Spheres it needs (Data as Correspondence, Dimensional Science as Spirit), the Spheres a mage may add, whether the
+book usually rules it coincidental or vulgar, and its page. In the Cast window, A rote now offers them after the
+caster's own saved rotes, only those the caster's Spheres allow; picking one fills in its Spheres, keywords and kind
+and shows what it does with its page. Saving it under a name keeps it as the caster's own.
+House readings: each rote's keywords are the nearest of the Cast window's (Talons is Shape, Right-Click is Know,
+Golden Gunman is Hasten, the Bullet-Catch is a Ward). What they cannot hold stays in the rote's text for the
+Storyteller: the hacking rolls Black Card allows, Hot-Shotting's lower difficulty, the Bullet-Catch's dodge against
+gunfire, the Dimension Bomb's Gauntlet difficulty, and every limit on the Vampiric Lawn Chair. Hot-Shotting and the
+Dimension Bomb have no near keyword and are Free Effects. How Do You DO That? is not in the book text, so its rotes
+wait.
+
+Reverse: remove m20-rotes.js, the bookRotes line in m20.js's cast and the rote note in effects.js's fieldset and wire.
+
+## B7837. How Do You DO That?'s named feats join the book rotes (2026-11-26)
+WoDX Actions. How Do You DO That? (the M20 guide to Effects) names many feats and techniques but has few rotes as such.
+m20-rotes.js now lists 96 of its named feats beside the core book's 17, in short and in our own words, each with the
+least Spheres the book gives, the options, coincidental or vulgar as the book usually rules, and its page: elemental
+tricks (Blackout!, Shooting Around Corners, the Storm-Cocoon), Energy-Work, perception, the martial arts (the
+Chi-Fire Punch, the Delayed-Death Touch, the Neo), travel, necromancy, wards, time and influence. The Cast window offers
+them as "Name (HDYDT p. N)" when the caster's Spheres allow, the same way as the core book's.
+House readings: a feat the book gives with several Sphere paths is listed under its lowest or most usual one, with the
+others under options. Headings that are rules, not feats (successes needed, paradox, resistance), are left out, and so
+are the feats the book leaves wholly to other books or charts (Ghost-Calling, the Location Portal, Moving Mountains,
+the Psychic Ward, Binding Oaths, Losing My Religion). Each feat's keywords are the nearest of the Cast window's; a feat
+with none is a Free Effect the Storyteller works from its text.
+
+Reverse: remove HD_ROTES and ALL_ROTES from m20-rotes.js and point bookRotes and roteOf back at ROTES.
+
+## B7838. A Ledger debt, boon or oath come due shows Due on both characters' sheets (2026-11-26)
+WoDX NPC and WoDX Sheets. Until now a dated Ledger entry coming due showed only as a whispered card to the
+Storyteller, so the troupe saw nothing change. An open debt, boon or oath the Ledger has announced as come due now
+marks its tie, and the Relationships tab of both people shows a small Due badge beside the other's name. Players
+see it as well as the Storyteller (the tie itself was already shown to them). Marking the entry kept, paid or broken,
+or moving its date on, takes the badge away. A change to the Ledger redraws the open sheets of the people it names.
+House reading: the badge is shown to the troupe, not only the Storyteller, because a debt everyone at the table knows
+is due is a story hook (show, don't tell); the card stays whispered.
+
+Reverse: drop the due flag from the Ledger edges in ties-rules.mjs (edges) and the wodx-tie-due span in
+extras-html.mjs (relationsHtml). For a Storyteller-only badge, show the span only when gm is true.
+
 ## B7840. Revenant families in every era (2026-11-23)
 WoDX Creation, revenant-rules.mjs. Twenty family lines, each with the years it lives in the chronicle and the reason. The eight V20 Dark Ages families (pp. 453-454: Basarab, Bratovich, Danislav, Grimaldi, Obertus, Szantovich, Vlaszy, Khavi) and the Krevcheski of Dark Ages: Vampire p. 289 use their Dark Ages write-up before 1837; the twelve V20 Ghouls and Revenants families take over from 1837, and those with no Dark Ages write-up use it in every year. The three "other families" of Ghouls and Revenants p. 113 (Marijava, Keskinen, Katayama) have no Disciplines in the book, so any may be taken at birth. Years the books do not give are house readings (listed in docs/PENDING-REVIEW.md): the Danislav, Vlaszy and Khavi end in 1493, the Basarab by 1700, the Krevcheski become the Ducheski in 1250, the Szantovich take the name Zantosa in 1494, the Servants of Anushin-Rawan begin in 1500, the Rossellini in 1550, the Oprichniki in 1565 (the oprichnina), the Katayama in 1950. The revenant window lists only the families alive in the chronicle's year; a birth keeps the family's mark (what its weakness does) on the sheet, and the Dark Ages Grimaldi hold 8 blood points.
 
@@ -16767,6 +16838,51 @@ WoDX Creation, WoDX Actions. Birth and turn years go down to -4000 (minus is BCE
 
 Reverse: set the year minimum back to 1100.
 
+## B8090. Aim at is the one control; Targeting is gone (2026-11-26)
+WoDX Combat. Aim at lists the target's parts and, in its own group, an item they hold: a large one like a shield or sword, a small one like a knife, a tiny one like a ring, at the sizes the book gives (V20 Dark Ages p. 346). A blow aimed at an item lands on it, and the Storyteller says what it does. The separate Targeting list is dropped, the owner's desk pick of 25 November (#2509).
+
+Reverse: put the Targeting select back when Aim at has no parts, and drop HELD_AIMS.
+
+## B8091. The time dial shows the date and season (2026-11-26)
+WoDX Chronicle. Under the hour the dial reads the day, month and season from the chronicle's calendar (#2510, desk pick). A failed draw is caught, so the dial can never stop Chronicle's start.
+
+Reverse: drop the date line from dialView.
+
+## B8092. A world setting makes every study faster (2026-11-26)
+WoDX Creation. Setting "learnSpeed": the book's pace, twice as fast or four times as fast. The goal in successes is cut to that share, so the weeks shrink with it. House rule: the book leaves the pace to the Storyteller (V20 Dark Ages p. 185) (#2506, desk pick).
+
+Reverse: set learnSpeed to the book's pace.
+
+## B8093. Find a teacher asks around town (2026-11-26)
+WoDX Creation. A study's source list has Find a teacher: Charisma + Streetwise or Etiquette, the better of the two, at the source's difficulty. A success names the best willing teacher in the same town who knows enough; that teacher joins the ones the character knows of. A botch costs the evening and nothing else (#2506, desk pick).
+
+Reverse: drop the find entry from chooseSource.
+
+## B8094. The look card shows what the character knows of them (2026-11-26)
+WoDX NPC. Under what can be seen, the look card lists the ties between the two, how the person is toward the looking character (or that they have not met), and up to three tales the character has heard about them (#2508, desk pick).
+
+Reverse: drop lookKnows from lookCard.
+
+## B8095. Lines that age like mortals are born within a mortal lifespan (2026-11-26)
+WoDX Creation. Mortals, mages, werewolves, hunters, changelings, demons and the Orpheus line can't be born more than 70 years before the chronicle's year; vampires, ghouls, revenants, wraiths, mummies and Kuei-jin keep the range back to 4000 BCE. The owner's call of 25 November (#2505).
+
+Reverse: set MORTAL_LIFESPAN to the full range.
+
+## B8096. Unlit interiors are dark; a few squares of sight out of doors (2026-11-26)
+WoDX Solo, WoDX Senses. A player's basic-vision token sees 6 squares out of doors and none indoors; a lit room, a carried light and the token's own light still show, as Foundry draws lights in view. The seat fits the range when the token stops somewhere new. A power's darkvision or a range set by hand is left alone. The book: a Cainite with no powers sees like a human, pitch dark adds 2 to difficulty (V20 Dark Ages p. 346), and Eyes of the Beast sees in it (p. 240) (#2475).
+
+Reverse: drop the updateToken hook and use sightRange alone.
+
+## B8097. Action priority: a busy character can't start a lesser action (2026-11-26)
+WoDX Actions. Feeding, being fed from, a clinch and trading take a character up. While taken up, an action starts only if it ranks higher or the busy kind lets it through (stopping, defending, breaking free, frenzy). The other one is taken up too: no one trades with a vessel while it is fed from. A record older than 15 minutes counts as gone. The owner's ask of 25 November; a feeding lasts its turns at up to three points a turn (V20 Dark Ages p. 341). Clinches are named but not wired yet.
+
+Reverse: make refuseBusy return false.
+
+## B8098. Items carry tags: station, style, material, trade and where (2026-11-26)
+WoDX Library. Clothing, tools, arms and coin goods carry station (peasant to noble), style, material and, for tools, whose trade they serve, with 27 new place rules; 181 gear names carry a station. Character creation can build a region's kit from them later. The 2,039 goods and 389 gear are kept, not rewritten, the owner's call of 25 November.
+
+Reverse: drop goods-tags.mjs from goods.mjs.
+
 ## B8100. A new character, a new NPC and a kept figure or look ask for their sprite by themselves (2026-11-26, #2491)
 WoDX Paperdoll. B8053 put a drawn sprite on its tokens, but a character with no drawn sprite yet waited until someone ran the sprite batch, so new characters and NPCs stayed plain pictures and a kept figure changed nothing (the solo test). Now, with the world setting "New and changed characters get their sprite by themselves" (on), the Storyteller's computer asks the PC sprite drawer (B6144) half a minute after the last new actor or kept figure or look; many changes close together make one request. The drawer draws only the new and changed characters, and when it is done the scene in view puts the new sprites on, and later tokens take them as they come (B8053). Asked this way the game shows no notice unless something was drawn.
 Reverse: set the setting off, or remove the createActor hook and askSoon in sprites.mjs and its call in main.mjs.
@@ -16774,6 +16890,21 @@ Reverse: set the setting off, or remove the createActor hook and askSoon in spri
 ## B8101. The solo world is the one that draws, and no gate lane does (2026-11-26)
 PC job runner. A gate makes characters, and with B8100 each would start a drawing on a gate lane, so runner.json's spriteData is now empty and the New PC's (runner.new_pc_lebrun.json) names only the solo world, D:/WoDX/FoundryData-solo. The New PC's python is its system Python 3.12 (%LOCALAPPDATA%/Programs/Python/Python312, numpy and Pillow already there); a runner whose Python is missing says so once in its log and draws nothing. gatespritecheck turns the new setting off while it runs and checks the ask with it on, taking the ask back before it is sent.
 Reverse: put the lane folders back in spriteData.
+
+## B8120. A starting kit chosen inside a budget (2026-11-26)
+WoDX Creation. The wizard's What they carry page suggests a kit from the character's station, land and Abilities: the clothes they stand up in (free, as the book says a character with no Resources still has enough clothing to get by, V20 Dark Ages p. 181), the tools of the trade their best Ability points to, a weapon for a fighter and the small things anyone carries. The player drops or adds things; bought things come out of one month of the Resources allowance, a house rule, and what is left goes into the purse. Everything is checked against what is in use in that land and year. The owner's desk pick inv1 of 26 November.
+
+Reverse: drop the kit page from pagesFor; Ready then takes nothing.
+
+## B8121. An NPC's things are made the first time someone deals with them (2026-11-26)
+WoDX Creation and Actions. An NPC who carries nothing gets the kit of their station and land the first time a character deals with them through the NPC menu, cut to what their purse allows: under a week's wage keeps the clothes and one thing, under a month's keeps half. The things are kept from then on. Off-screen life (purses, shop tills, the fates of time jumps) runs on coin and never reads what an NPC holds, so making the things late changes nothing that went before. Desk pick inv2, approved with that reading.
+
+Reverse: drop the ensure call in social.js withPerson.
+
+## B8122. Drop and Pick up on the sheet; piles show an icon per kind (2026-11-26)
+WoDX Sheets and Interactables. Each thing on Possessions has Drop, which puts it on the pile at the character's feet (a container with things in it still goes down as a box). Pick up lists what lies on the character's square and the eight around it; the player ticks what to take, or takes everything, and each thing comes back as the item it was. A player's pick-up goes through the Storyteller's computer, and taking from someone else's pile counts as taking from their container. A pile is drawn as one small pixel icon for each kind of thing in it (weapon, armor, clothing, coin, food, drink, tool, light, paper, bag, other), at most four, until the object art is drawn. Desk pick inv3.
+
+Reverse: draw piles with heapOf again, and point Drop back at the box.
 
 ## B8130. A clone refuses a push to a pull request in the merge train (2026-11-26)
 Tools. Of the 32 pull requests the train ejected from 17 to 25 November, 9 left because of a push while labelled: 3 were

@@ -85,7 +85,7 @@ export function fieldset(known = {}, rotes = []) {
     const can = E.spheresFor([k], known).missing.length === 0;
     return `<label class="wodx-kw${can ? "" : " wodx-kw-off"}" title="${esc(K.does)}"><input type="checkbox" name="kw-${k}"${can ? "" : " disabled"}/> ${esc(K.label)}</label>`;
   };
-  const roteRow = rotes.length ? `<div class="form-group"><label>A saved rote</label>${rotes.length > 5 ? searchBox("select[name=kw-rote]", "Search rotes…", "Search rotes") : ""}<select name="kw-rote"><option value="">(none)</option>${rotes.map((r, i) => `<option value="${i}">${esc(r.name)}</option>`).join("")}</select></div>` : "";
+  const roteRow = rotes.length ? `<div class="form-group"><label>A rote</label>${rotes.length > 5 ? searchBox("select[name=kw-rote]", "Search rotes…", "Search rotes") : ""}<select name="kw-rote"><option value="">(none)</option>${rotes.map((r, i) => `<option value="${i}"${r.text ? ` title="${esc(r.text)}"` : ""}>${esc(r.name)}</option>`).join("")}</select></div><div class="wodx-rote-note hint"></div>` : "";
   return `<fieldset class="wodx-keywords"><legend>What the Effect does (keywords)</legend>${roteRow}
     <div class="wodx-kw-list" data-fixed>${Object.entries(E.KEYWORDS).map(box).join("")}</div>
     <p class="hint">Each keyword fills in the Spheres it needs. Each one past the first needs one more success (house rule); an Effect on someone else needs at least two (Mage 20th p. 502).</p>
@@ -143,6 +143,9 @@ export function wire(root, known = {}, rotes = []) {
   for ( const k of Object.keys(E.KEYWORDS) ) root.querySelector(`[name="kw-${k}"]`)?.addEventListener("change", sync);
   root.querySelector('[name="kw-rote"]')?.addEventListener("change", ev => {
     const r = rotes[n(ev.currentTarget.value)];
+    // B7836: a book rote shows what it does, in short, with its page
+    const note = root.querySelector(".wodx-rote-note");
+    if ( note ) note.textContent = r?.text && ev.currentTarget.value !== "" ? `${r.name}: ${r.text}` : "";
     if ( ev.currentTarget.value === "" || !r ) return;
     fill(root, r);
   });

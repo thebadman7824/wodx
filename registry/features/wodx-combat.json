@@ -63,7 +63,8 @@
     }
    },
    "open": [
-    "book: the code cites VtDA20 p. 322-323 (successes) and the soak models in rules.js; not checked against the book text yet"
+    "book: the code cites VtDA20 p. 322-323 (successes) and the soak models in rules.js; not checked against the book text yet",
+    "Aim at an item they hold (B8090, V20 Dark Ages p. 346): a gate step that aims at a held item and checks the difficulty"
    ],
    "deferred": [],
    "faults": [],

@@ -448,8 +448,10 @@ const RX = await import(join(root, "modules/wodx-actions/scripts/reckoning.js"))
 
 test("the imbued: creeds, 35 edges in seven paths, edge levels follow the Virtue, risking, cashing in, derangements", () => {
   assert.equal(Object.keys(KR2.CREEDS).length, 7);
-  assert.equal(KR2.EDGES.length, 35);
-  for ( const p of Object.keys(KR2.PATHS) ) assert.deepEqual(KR2.EDGES.filter(e => e.path === p).map(e => e.level), [1, 2, 3, 4, 5], p);
+  // the core book's 35 (the creed books' edges, B7834, are counted in hunter-creed-edges.test.mjs)
+  const core = KR2.EDGES.filter(e => !e.book);
+  assert.equal(core.length, 35);
+  for ( const p of Object.keys(KR2.PATHS).filter(p => !KR2.PATHS[p].book) ) assert.deepEqual(core.filter(e => e.path === p).map(e => e.level), [1, 2, 3, 4, 5], p);
   assert.equal(KR2.edgeAllowed(KR2.edgeFor("Cleave"), {zeal: 1}), true);
   assert.equal(KR2.edgeAllowed(KR2.edgeFor("Smite"), {zeal: 3}), false);
   assert.equal(KR2.edgeDifficulty(KR2.edgeFor("Burden"), {t: {stamina: 4}}), 7);

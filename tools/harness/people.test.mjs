@@ -240,3 +240,14 @@ test("the windows are wired into the API, the sheet and the People window", () =
   assert.match(when, /a\.does === "secret"/); assert.match(when, /ratings:/);
   assert.match(src("modules/wodx-npc/scripts/factions.mjs"), /hooks: openHooks\(\)/);
 });
+
+test("an open Ledger entry come due marks both ends of the tie, and the sheet shows a Due badge to everyone", () => {
+  const entry = {kind: "debt", status: "open", from: {id: H, name: "Hana"}, to: {id: P, name: "Petr"}, what: "ten marks"};
+  const quiet = TR.edges(world(), {ledger: [entry]});
+  assert.ok(!quiet.some(x => x.source === "ledger" && x.due), "not due until the Ledger announces it");
+  const due = TR.edges(world(), {ledger: [{...entry, announced: true}]}).filter(x => x.source === "ledger");
+  assert.ok(due.length === 2 && due.every(x => x.due), "the debtor's and the creditor's ends");
+  const row = {...due[0], label: "Owes", groupLabel: "Debts", name: "Petr", kindText: "", xpSpent: null};
+  assert.match(XH.relationsHtml([row], {editable: false, gm: false}), /class="wodx-tie-due"[^>]*>Due</);
+  assert.doesNotMatch(XH.relationsHtml([{...row, due: false}], {editable: false, gm: false}), /wodx-tie-due/);
+});

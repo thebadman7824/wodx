@@ -12,6 +12,7 @@
  */
 import * as LIM from "./limits.js";
 import * as M from "../../wodx-rules/actions/m20-rules.js";
+import * as BR from "./m20-rotes.js";
 import { floatOver } from "./daysleep.js";
 import { aim, castIntent } from "./aim.js";
 import * as C from "../../wodx-rules/actions/consensus-rules.js";
@@ -72,6 +73,8 @@ export function build(ctx) {
         const roteItem = typeof o.rote === "string" ? actor.items?.get(o.rote) : o.rote;
         const preset = roteItem ? EF.E.roteOfItem(roteItem) : null;
         const i = info(actor);
+        // B7836: the caster's own rotes, then the core book's that the caster's Spheres allow
+        const rotes = [...EF.rotesOf(actor), ...BR.bookRotes(i.spheres)];
         const sg = suggest(actor), W = C.WORDS[sg.age.key];
         // Sleepers who can see the caster (3.42.0): only they make vulgar magick witnessed
         const seen = ctx.observersOf?.(actor) ?? null;
@@ -83,7 +86,7 @@ export function build(ctx) {
           <div class="form-group"><label>The caster's style</label><input type="text" name="style" value="${esc(i.f.style ?? "")}" placeholder="Hermetic, Christian miracles, witchcraft, Taoist"/></div>
           ${seen ? `<p class="hint">${seen.breach.length ? `Sleepers who can see: ${seen.breach.map(t => esc(t.name)).join(", ")}.` : "No Sleeper can see the caster."}${seen.startled.length ? ` Others who would notice vulgar magick: ${seen.startled.map(t => esc(t.name)).join(", ")}.` : ""}</p>` : ""}
           <p class="hint">${esc(sg.age.label)}${sg.why ? `: ${esc(sg.why)}` : "."}${sg.age.key === "dark" ? " A Dark Ages mage uses the Dark Ages cast." : ""} (${esc(sg.age.ref)})</p>
-          ${EF.fieldset(i.spheres, EF.rotesOf(actor))}
+          ${EF.fieldset(i.spheres, rotes)}
           <div class="form-group"><label>The feat</label><select name="feat" data-fixed>${M.FEATS.map(f => `<option value="${f.need}">${esc(f.label)}: ${f.need}</option>`).join("")}</select></div>
           <div class="form-group"><label>More successes declared (targets, damage, duration)</label><input type="number" name="extra" min="0" max="20" value="0"/></div>
           <fieldset><legend>Modifiers (net ±3)</legend>${Object.entries(M.MODIFIERS).map(([k, m]) => `<div class="form-group"><label><input type="checkbox" name="m-${k}"/> ${esc(m.label)} (${m.mod > 0 ? "+" : ""}${m.mod})</label></div>`).join("")}
@@ -141,7 +144,7 @@ export function build(ctx) {
             // B3545: other modules hear that magick was worked (WoDX Senses marks vulgar strain for Prime sight)
             Hooks.callAll("wodxMagickWorked", actor, { kind: fd.kind, highest: plan.highest, age: sg.age.key, botch: !!r.botch, spheres: used.map(x => x.sphere) });
             return post(actor, `${actor.name} works magick`, body, [r.roll].filter(Boolean), fxData?.items.length ? fxData : undefined);
-        }, { width: 560, render: root => { EF.wire(root, i.spheres, EF.rotesOf(actor)); if (preset) EF.fill(root, preset); return aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }); } });
+        }, { width: 560, render: root => { EF.wire(root, i.spheres, rotes); if (preset) EF.fill(root, preset); return aim(root, { actor, cast: { from: r => castIntent({ spheres: Object.fromEntries(M.SPHERES.map(k => [k, Number(r.querySelector(`[name=s-${k}]`)?.value) || 0])) }) } }); } });
     }
 
     async function backlashRoll(actor) {

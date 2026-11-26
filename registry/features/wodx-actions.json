@@ -35,7 +35,8 @@
    },
    "open": [
     "book: VtDA20 dice pools and difficulties (rules.js); not checked against the book text yet",
-    "The wraith menu's Danger group has the Haunt, a night in it and going into it (B7901)"
+    "The wraith menu's Danger group has the Haunt, a night in it and going into it (B7901)",
+    "feed (main.js) checks action priority before its window and holds the feeding busy record while it is open (B8097)"
    ],
    "deferred": [],
    "faults": [],
@@ -431,7 +432,8 @@
    "core": true,
    "files": [
     "modules/wodx-actions/scripts/social.js",
-    "modules/wodx-rules/actions/social-rules.js"
+    "modules/wodx-rules/actions/social-rules.js",
+    "modules/wodx-actions/scripts/busy-rules.js"
    ],
    "steps": {
     "built": {
@@ -450,7 +452,8 @@
     }
    },
    "open": [
-    "book: V20 social rolls; not checked against the book text yet"
+    "book: V20 social rolls; not checked against the book text yet",
+    "action priority (B8097): a gate step that trades with a vessel mid-feed and checks the refusal; clinches (held) not wired yet"
    ],
    "deferred": [],
    "faults": [],
@@ -700,7 +703,9 @@
      "step": "1. a used once-a-scene Gift is greyed in the Gift window"
     }
    },
-   "open": [],
+   "open": [
+    "busy records (B8097) live here: setBusy, clearBusy, refuseBusy, whileBusy; gated with actions.social"
+   ],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -1600,7 +1605,7 @@
    ],
    "steps": {
     "built": {
-     "pr": null,
+     "pr": 2594,
      "decisions": "B7833"
     },
     "wired": {
@@ -1616,6 +1621,70 @@
    },
    "open": [
     "book: Orpheus pp. 267-269; summaries read from the book text, not yet checked line by line"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
+  },
+  {
+   "id": "actions.hunter-creed-edges",
+   "name": "Hunter: the creed books' edges, beside the core 35",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-rules/actions/reckoning-rules.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": 2602,
+     "decisions": "B7834"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/reckoning.js:useEdge"
+    },
+    "shown": {
+     "what": "Use an edge offers the creed books' edges; the card names the creed book and page"
+    },
+    "gated": {
+     "gate": "tools/gate/gatecreededge.mjs",
+     "step": "1. Use an edge, Protect: a Conviction spent, the card names Hunter Book: Defender p. 76"
+    }
+   },
+   "open": [
+    "book: Hunter Book: Innocent printed p. 81 missing from the scan (Innocence level 5 and the end of Bond)",
+    "Hermit and Wayward creeds: paths only, no starting Conviction in CREEDS"
+   ],
+   "deferred": [],
+   "faults": [],
+   "prs": []
+  },
+  {
+   "id": "actions.m20-rotes",
+   "name": "Mage 20th: the core book's rotes in the Cast window",
+   "module": "wodx-actions",
+   "core": false,
+   "files": [
+    "modules/wodx-actions/scripts/m20-rotes.js"
+   ],
+   "steps": {
+    "built": {
+     "pr": null,
+     "decisions": "B7836"
+    },
+    "wired": {
+     "reader": "modules/wodx-actions/scripts/m20.js:cast"
+    },
+    "shown": {
+     "what": "the Cast window's A rote list offers the book rotes with their page; picking one fills in Spheres and keywords and shows its text"
+    },
+    "gated": {
+     "gate": "tools/gate/gatem20rote.mjs",
+     "step": "1. Cast an Effect, A rote: Talons fills in Life 3, Shape, and the page"
+    }
+   },
+   "open": [
+    "book: M20 pp. 601-611; summaries read from the book text, not yet checked line by line",
+    "book: How Do You DO That? (B7837), 96 named feats; summaries read from the book text, not yet checked line by line"
    ],
    "deferred": [],
    "faults": [],

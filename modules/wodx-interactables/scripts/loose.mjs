@@ -122,6 +122,78 @@ export async function openSetDown(tok) {
   return ids?.length ? setDown(doc, ids) : null;
 }
 
+/* ------------------------------------------------------------------ */
+/*  Picking things up from the sheet (desk pick inv3, 26 Nov)          */
+/* ------------------------------------------------------------------ */
+
+/** The piles a token can reach: its own square and the eight around it. [{tile, rows: [{i, name, kg}]}] */
+export function pilesNear(tokDoc) {
+  tokDoc = docOf(tokDoc);
+  const scene = tokDoc?.parent;
+  if ( !scene ) return [];
+  const g = num(scene.grid?.size) || 100;
+  const c = {x: num(tokDoc.x) + num(tokDoc.width || 1) * g / 2, y: num(tokDoc.y) + num(tokDoc.height || 1) * g / 2};
+  const sq = L.squareOf(c, g);
+  return tilesOf(scene).filter(t => {
+    const f = t.flags?.[MOD] ?? {};
+    if ( !L.isPile(f) || f.taken || (t.hidden && !game.user?.isGM) ) return false;
+    return Math.abs(num(t.x) - sq.x) <= g + 1 && Math.abs(num(t.y) - sq.y) <= g + 1;
+  }).map(tile => ({tile, rows: heapRows(tile.flags?.[MOD] ?? {}).map((r, i) => ({i, name: r.name, kg: r.kg}))}))
+    .filter(p => p.rows.length);
+}
+
+/** Active Storyteller: hand some of a pile's things to the character. picks: indexes of the pile's lines. */
+export async function pickUp(tokDoc, tileId, picks = []) {
+  tokDoc = docOf(tokDoc);
+  const actor = tokDoc?.actor, scene = tokDoc?.parent;
+  if ( !actor || !scene || !picks.length ) return null;
+  if ( !isActiveGM() ) { game.socket?.emit?.(SOCKET, {action: "loose", op: "pickup", user: game.user.id, who: tokDoc.uuid, tile: String(tileId), picks: picks.map(Number)}); return null; }
+  const near = pilesNear(tokDoc).find(p => p.tile.id === tileId);
+  if ( !near ) return null;
+  const f = near.tile.flags?.[MOD] ?? {};
+  const out = L.takeFromPile(f, picks);
+  if ( !out.taken.length ) return null;
+  const data = [];
+  for ( const t of out.taken ) {
+    if ( t.data ) { const o = foundry.utils.deepClone(t.data); delete o._id; data.push(o); }
+    else data.push({name: t.line, type: "Item", flags: {[MOD]: {from: t.line, plain: true}}});
+  }
+  const made = await actor.createEmbeddedDocuments("Item", data);
+  await near.tile.update({[`flags.${MOD}.items`]: out.flags.items, [`flags.${MOD}.loose`]: out.flags.loose, [`flags.${MOD}.taken`]: out.flags.taken});
+  const names = out.taken.map(t => t.line);
+  await ChatMessage.create({speaker: {alias: tokDoc.name, scene: scene.id, token: tokDoc.id},
+    content: `<div class="vta-card wodx-x wix-loose"><header class="vta-head"><h3 style="background:none!important;border:0!important;box-shadow:none!important;color:inherit!important">Picks up</h3></header><div class="vta-body"><p><b>${esc(tokDoc.name)}</b> picks up ${esc(listWords(names))}.${out.flags.taken ? "" : " Something is left on the ground."}</p></div></div>`,
+    flags: {[MOD]: {looseCard: true}}});
+  // WoDX Storyteller marks what was taken as stolen when the pile was someone else's, as with any container
+  if ( made.length ) Hooks.callAll("wodxItemsTaken", {actor, items: made.map(m => m.id), doc: near.tile, scene});
+  try { deps.mapEvent?.("pickup", {scene, doc: near.tile, tokDoc, noise: "quiet", object: "gear on the ground", extra: {items: names}}); } catch (e) { /* no map events */ }
+  draw();
+  return made;
+}
+
+/** The window: tick what to pick up from the piles in reach. */
+export async function openPickUp(tok) {
+  const doc = docOf(tok), actor = doc?.actor;
+  if ( !actor || !doc.isOwner ) return null;
+  const piles = pilesNear(doc);
+  if ( !piles.length ) { ui.notifications?.info?.(`There is nothing on the ground within ${doc.name}'s reach.`); return null; }
+  const W = weights();
+  const body = piles.map((p, n) => `<fieldset style="margin:0 0 6px"><legend>${esc(piles.length > 1 ? `Pile ${n + 1}` : "On the ground")}</legend>`
+    + p.rows.map(r => `<label style="display:block"><input type="checkbox" name="p" value="${esc(p.tile.id)}:${r.i}"> ${esc(r.name)} <span class="hint">(${esc(W?.words?.(r.kg) ?? "")})</span></label>`).join("")
+    + `</fieldset>`).join("");
+  let picked = null;
+  await foundry.applications.api.DialogV2.wait({rejectClose: false, classes: ["wodx-dialog", "wix-loose"], window: {title: `Pick up: ${doc.name}`},
+    content: `<p class="hint">Tick what ${esc(doc.name)} picks up.</p><div class="wix-loose-list" style="max-height:340px;overflow-y:auto">${body}</div>`,
+    buttons: [{action: "ok", label: "Pick up", default: true, callback: (ev, btn) => { picked = [...btn.form.querySelectorAll("input[name=p]:checked")].map(x => x.value); }},
+      {action: "all", label: "Everything", callback: () => { picked = piles.flatMap(p => p.rows.map(r => `${p.tile.id}:${r.i}`)); }},
+      {action: "close", label: "Cancel"}]});
+  if ( !picked?.length ) return null;
+  const byTile = new Map();
+  for ( const v of picked ) { const [t, i] = v.split(":"); byTile.set(t, [...(byTile.get(t) ?? []), Number(i)]); }
+  for ( const [t, list] of byTile ) await pickUp(doc, t, list);
+  return true;
+}
+
 /** Pick-up: the item data a pile's line came from, for WoDX Interactables' giveItems. */
 export const looseFor = (f = {}, lines = []) => L.matchLoose(lines, f.loose ?? []);
 
@@ -171,8 +243,15 @@ function redraw() {
     const g = new PIXI.Graphics();
     // a soft shadow under the heap, then the blocks, each with a dark edge so they read as pixels
     g.beginFill?.(0x000000, 0.25); g.drawEllipse?.(size / 2, size - size / 10, size * 0.38, size / 12); g.endFill?.();
-    for ( const b of L.heapOf(rows, size) ) {
-      g.beginFill?.(b.colour, 1); g.lineStyle?.(1, 0x1a1410, 0.8); g.drawRect?.(b.x, b.y, b.w, b.h); g.endFill?.();
+    // Desk pick inv3 (26 Nov): one simple pixel icon for each kind of thing in the pile, until the object art is drawn
+    for ( const ic of L.iconsOf(rows, size) ) {
+      g.lineStyle?.(0);
+      g.beginFill?.(0x1a1410, 0.9);
+      for ( const [cx, cy] of ic.cells ) g.drawRect?.(ic.x + cx * ic.px - 1, ic.y + cy * ic.px - 1, ic.px + 2, ic.px + 2);
+      g.endFill?.();
+      g.beginFill?.(ic.colour, 1);
+      for ( const [cx, cy] of ic.cells ) g.drawRect?.(ic.x + cx * ic.px, ic.y + cy * ic.px, ic.px, ic.px);
+      g.endFill?.();
     }
     g.position.set(num(t.x), num(t.y));
     g.zIndex = 5;
@@ -206,7 +285,8 @@ export function setupLoose(d = {}) {
     if ( msg?.action !== "loose" || !isActiveGM() ) return;
     const user = game.users.get(msg.user), who = sync(msg.who);
     if ( !who?.actor || !user || !who.actor.testUserPermission?.(user, "OWNER") ) return;
+    if ( msg.op === "pickup" ) { await pickUp(who, String(msg.tile ?? ""), Array.isArray(msg.picks) ? msg.picks.slice(0, 200) : []).catch(e => console.error(`${MOD} | pick up`, e)); return; }
     if ( msg.op === "setdown" ) await setDown(who, Array.isArray(msg.ids) ? msg.ids : [], {at: msg.at ?? null, how: typeof msg.how === "string" ? msg.how.slice(0, 300) : ""}).catch(e => console.error(`${MOD} | set down`, e));
   }));
-  return {rules: L, contentsKg, gearKg, setDown, openSetDown, setDownChoices, pileAt, heapRows, looseFor, draw};
+  return {rules: L, contentsKg, gearKg, setDown, openSetDown, setDownChoices, pileAt, heapRows, looseFor, draw, pilesNear, pickUp, openPickUp};
 }

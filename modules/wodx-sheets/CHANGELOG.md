@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.26.0 (Relationships: a Due badge for a Ledger entry come due (B7838))
+- 0.25.0 (Drop and Pick up on the sheet (B8122), the owner's desk pick inv3)
 - 0.24.2 (The Orpheus sheet's Stains row and buttons open Call up a Stain (B7832))
 - 0.24.1 (Fixes from the first solo test (B8058): each condition on the in-play strip says what it does, on hover, on focus and to a screen reader (#2508))
 - 0.24.0 (The Road and the domain at a glance on the Bio tab (B7754))
