@@ -475,7 +475,7 @@ Next free block: B8060
 | B7980-B7989 | gates: gatemarketgoods scenes by name, gate7b runner back at its start before the path steps (used B7980-B7981) | tools (gates) |
 | B8000-B8009 | The New PC drives the merge train, the Main PC is its backup (used B8000) | tools |
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
-| B8020-B8029 | Book overlap: reword the prose that matched source books, and a gate that keeps new book text out (used B8020-B8023) | Actions, Chronicle, Combat, Creation, Interactables, Library, NPC, Otherworlds, Storyteller, system fork, tools (books) |
+| B8020-B8029 | Book overlap: the matches the daily gate found after the late Wraith OCR (used B8020-B8024) | Actions, Library, Otherworlds, tools (books) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
 <!-- decision-index:end -->
 
@@ -16541,6 +16541,11 @@ Reverse: remove a hash; that run fails again.
 Tools. tools/books/overlap-gate.mjs runs the overlap check and fails on any run that is not a term (B8021) or allowlisted (B8022). It prints locations and hashes only; `--show` adds the words for the thread doing the rewrite. tools/quality-check.sh runs it on the files changed since origin/main wherever the book text is (cloud threads); GitHub's runners do not hold the books, so there it says skipped. A daily scheduled run (02:41 UTC) checks all of main against /mnt/project-files/book-text and sends failing locations to the coordinator. Harness: tools/harness/overlap-gate.test.mjs.
 
 Reverse: take the Book overlap step out of tools/quality-check.sh and switch off the daily scheduled task.
+
+## B8024. Matches with the late Wraith books are reworded or allowlisted (2026-11-26)
+All modules. The first daily overlap gate run (26 Nov, main 06d57d9) found 4 distinct runs against Wraith books whose text arrived after B8020: three prose lines (realm-places.mjs, arcanoi-gw.json, wr20.json) are now in WoDX's own words, and the fourth is the title of a novel (in world-history.mjs and four era-timelines research files), so its hash goes on the allowlist (B8022).
+
+Reverse: revert the commit; remove the hash noted "novel title" from tools/books/overlap-allow.json.
 
 ## B8030. Report a problem sits outside the panel's fold (2026-11-25)
 WoDX Solo. The solo panel draws Report a problem as its own button under the main one, not in the folded More part, so a player who meets a fault can press it at once (#2467). The fold's summary no longer lists it.
