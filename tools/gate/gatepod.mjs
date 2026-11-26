@@ -65,6 +65,8 @@ async function runGate(K) {
       await until(() => !!cardWith("heel"));
       const high = api().exposure(CITY).value, court = cardWith("heel");
       const pressed = await press(court);
+      // B8171: after gatecleanworld the box is busy (lane 9, 26 Nov: exposure still 12 after a fixed 800 ms), so wait for the drop
+      if ( pressed ) await until(() => api().exposure(CITY).value < high, 8000);
       const after = api().exposure(CITY).value;
       ok("2 exposure", high >= 10 && !!court && (!pressed || after === high - 3), {high, after, pressed, band: api().exposure(CITY).band.key});
       if ( !pressed ) R.notes.push("The court card's button was not in the chat log; the drop was not checked.");

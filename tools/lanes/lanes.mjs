@@ -297,11 +297,19 @@ try {
           const late = await waitApis(b.page);
           if ( late.length ) throw new Error(`No api after the modules went on: ${late.join(", ")}`);
           made = await b.page.evaluate(START, CLEAN_START);
+          // B8171: WoDX Chronicle puts its shipped Roll Tables into the world 1.5 s after start-up, about 420 of them.
+          // Stopping before that left the clean copy without them, so every gate's sign-in made them again and run-gate
+          // deleted them after, which kept the box busy into the next gate (gatethreads and gatepod after gatecleanworld
+          // on lane 9, 26 Nov). Wait for the install so the copy holds them.
+          made.tables = await b.page.evaluate(async () => {
+            const r = await game.modules.get("wodx-chronicle")?.api?.gen?.installTables?.().catch(e => ({error: e.message}));
+            return {...(r ?? {}), now: game.tables.size};
+          });
         } finally { await b.browser.close(); }
         if ( made.error ) throw new Error(`Start a chronicle: ${made.error}`);
         const on = mods.chronicles.filter(id => made.active.includes(id));
         if ( on.length || made.inPlay || made.chronicleMods.length ) throw new Error(`A chronicle is on in the clean world (${[...on, made.inPlay, ...made.chronicleMods].filter(Boolean).join(", ")}).`);
-        console.log(`Start a chronicle ran (${made.done.join(", ") || "nothing to change"}); ${made.active.length} modules on, no chronicle in play.`);
+        console.log(`Start a chronicle ran (${made.done.join(", ") || "nothing to change"}); ${made.active.length} modules on, no chronicle in play; ${made.tables?.now ?? "?"} Roll Tables in the world${made.tables?.error ? ` (table install: ${made.tables.error})` : ""}.`);
         await stop(lane);
         // B7762: setup-clean on several lanes of one PC take turns writing the shared clean copy
         await withKnownGoodWrite(cfg.knownGood, `setup-clean on lane ${lane.id}`, () => {
