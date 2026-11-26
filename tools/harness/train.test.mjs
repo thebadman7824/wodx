@@ -11,9 +11,9 @@ import {decide, line, statusOf, checkOf, othersFailed, isFrontJob, step, prepare
 const H = 3600e3;
 const ready = {draft: false, mergeable: true, behind: 0, fragments: 0, ownBranch: true, checks: "success", mergeRules: "success", gates: "success", frontFor: 0};
 
-test("decide: conflict leaves, draft is marked ready, behind or unstamped is prepared, green merges", () => {
+test("decide: a conflict is prepared (B8132: the train settles what it can), draft is marked ready, behind or unstamped is prepared, green merges", () => {
   assert.equal(decide(ready).action, "merge");
-  assert.equal(decide({...ready, mergeable: false}).action, "leave");
+  assert.equal(decide({...ready, mergeable: false}).action, "prepare");
   assert.equal(decide({...ready, ownBranch: false}).action, "leave");
   assert.equal(decide({...ready, draft: true}).action, "ready");
   assert.equal(decide({...ready, mergeable: null}).action, "wait");

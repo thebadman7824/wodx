@@ -14,6 +14,8 @@ import * as DOM from "../../wodx-rules/actions/domain-da-rules.js";
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 /** B6850: a Blessing or Curse key, the plain one or a standing scoped one ("wodx-effect-fortune:<name>:<tags>"). */
 const isFortune = k => k === "wodx-effect-fortune" || String(k ?? "").startsWith("wodx-effect-fortune:");
+/** B7832: a Boost key, the plain one or one held to some rolls ("wodx-effect-boost:<name>:<tags>"). */
+const isBoost = k => k === "wodx-effect-boost" || String(k ?? "").startsWith("wodx-effect-boost:");
 
 /** The keys, as WoDX Chronicle's timed effects carry them. */
 export const KEYS = {ward: "wodx-effect-ward", boost: "wodx-effect-boost", fortune: "wodx-effect-fortune", calm: "wodx-effect-calm", hasten: "wodx-effect-hasten",
@@ -53,7 +55,7 @@ export function timedData(out = {}) {
   const d = {};
   if ( out.difficulty ) d.difficulty = n(out.difficulty);
   if ( out.key === "ward" ) { d.dice = n(out.dice); if ( out.against ) d.against = String(out.against); }
-  if ( out.key === "boost" ) { d.dice = n(out.dice); d.on = String(out.on ?? "physical"); }
+  if ( out.key === "boost" ) { d.dice = n(out.dice); d.on = String(out.on ?? "physical"); if ( d.on === "tags" && Array.isArray(out.tags) ) d.tags = out.tags.map(String); }
   // B6850: a standing shift (a demon's Lordly Mien: Charisma and Manipulation 2 easier while the form lasts) is not spent,
   // and tags hold it to the rolls it names; "defend", "defend-ranged" and "defend-close" are attacks against the bearer
   if ( out.key === "fortune" ) { d.shift = n(out.shift); d.once = out.once !== false; if ( Array.isArray(out.tags) && out.tags.length ) d.tags = out.tags.map(String); }
@@ -66,6 +68,8 @@ export function timedData(out = {}) {
 export function keyFor(out = {}) {
   if ( out.key === "fear" && (out.name === "Calmed" || out.name === "Roused") ) return KEYS.calm;
   // B6850: a standing, scoped shift keeps its own key, so two of them (Lordly Mien, Enhanced Senses) and a plain Blessing stand together
+  // B7832: a Boost held to some rolls (a Stain's three Stealth dice) keeps its own key too
+  if ( out.key === "boost" && out.on === "tags" && Array.isArray(out.tags) && out.tags.length ) return `${KEYS.boost}:${String(out.name ?? out.label ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-")}:${out.tags.join("-")}`;
   if ( out.key === "fortune" && Array.isArray(out.tags) && out.tags.length ) return `${KEYS.fortune}:${String(out.name ?? out.label ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-")}:${out.tags.join("-")}`;
   return `wodx-effect-${out.key}`;
 }
@@ -98,11 +102,12 @@ export function modsFrom(effects = [], ctx = {}) {
     if ( e.key === KEYS.ward && ctx.soak && wardHolds(d.against, ctx.harm ?? {}) ) {
       // The stronger of two Wards counts (effects-rules KEYWORDS.ward)
       if ( n(d.dice) > ward ) { ward = n(d.dice); wardName = e.name; }
-    } else if ( e.key === KEYS.boost && n(d.dice) ) {
+    } else if ( isBoost(e.key) && n(d.dice) ) {
       const on = d.on ?? "physical";
       // B6553: "all" reaches every roll but soak and Initiative (Rain-Strike, Nightmares: dice off every pool)
       const hit = (on === "soak" && ctx.soak) || (on === "initiative" && ctx.initiative) || (on === "all" && tags.size > 0 && !ctx.soak && !ctx.initiative)
-        || ((BOOST_TAGS[on] ?? []).some(t => tags.has(t)) && !ctx.soak && !ctx.initiative);
+        || ((BOOST_TAGS[on] ?? []).some(t => tags.has(t)) && !ctx.soak && !ctx.initiative)
+        || (on === "tags" && Array.isArray(d.tags) && d.tags.some(t => tags.has(String(t).toLowerCase())) && !ctx.soak && !ctx.initiative);
       if ( hit ) { dice += n(d.dice); parts.push(`${e.name} ${n(d.dice) > 0 ? "+" : ""}${n(d.dice)}`); }
     } else if ( isFortune(e.key) && n(d.shift) && roll && !ctx.soak && !ctx.initiative
       && (!Array.isArray(d.tags) || (!d.tags.some(t => DEFEND.has(t)) && d.tags.some(t => tags.has(String(t).toLowerCase())))) ) {

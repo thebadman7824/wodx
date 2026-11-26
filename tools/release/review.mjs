@@ -15,6 +15,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import {ROOT, REVIEW_DIR, MIN_HOW, gitIn, changedFiles, branchReviews, reviewProblems, isStamped, isScript, hashOf} from "./merge-rules.mjs";
+import {installHooks} from "../git-hooks/install.mjs";
+
+installHooks(); // B8130: the merge-train push guard
 
 const args = process.argv.slice(2), cmd = args[0];
 const valued = new Set(["how", "verdict", "base", "glob"]);

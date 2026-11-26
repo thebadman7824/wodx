@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B8110
+Next free block: B8140
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -466,19 +466,20 @@ Next free block: B8110
 | B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7807) | Rothenstein, Chronicle, Otherworlds |
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
-| B7830-B7839 | Scorecard gaps: Changing Breeds starting Traits, registry rows gated through the real clock (used B7831) | Creation |
+| B7830-B7839 | Scorecard gaps: the Orpheus Spectral arsenal (used B7831-B7833) | Actions |
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
 | B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
 | B7860-B7909 | Splat depth build: a Dark Ages mage's household and standing (desk item mage-household) (used B7860-B7909) | Actions, Chronicle |
 | B7910-B7919 | PC runners: the New PC first for pull request gate runs (used B7911) | tools (pcq) |
 | B7920-B7959 | Splat depth build, part 2: the infernal thrall of Dark Ages: Devil's Due (desk item infernal-voss); a mage's wonders and Tass (desk item mage-wonders); the missing merits, flaws, Blessings and Curses of the Dark Ages line books (desk item fill-lists) (used B7920-B7940) | Actions, Chronicle, Storyteller, Rothenstein |
 | B7960-B7969 | Merge train and PC runner fixes for issues 2121 and 2393 (used B7960-B7961) | PC tools |
-| B7980-B7989 | gates: gatemarketgoods scenes by name, gate7b runner back at its start before the path steps (used B7980-B7981) | tools (gates) |
+| B7980-B7989 | gates: gatemarketgoods scenes by name, gate7b runner back at its start, gateaftercare waits for the walk, gateplayerview names its cards (used B7980-B7983) | tools (gates) |
 | B8000-B8009 | The New PC drives the merge train, the Main PC is its backup (used B8000) | tools |
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
-| B8020-B8029 | Book overlap: the matches the daily gate found after the late Wraith OCR (used B8020-B8024) | Actions, Library, Otherworlds, tools (books) |
+| B8020-B8029 | Merge rules: release notes of a stamped branch are read inside a train batch (used B8020-B8026) | tools (release) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
 | B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
+| B8130-B8139 | Fewer merge train ejects: push guard, review-list fragments, conflicts the train settles, label on green (used B8130-B8134) | tools (git hooks, release, pcq) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -1408,7 +1409,7 @@ House rule. The Storyteller picks the ground each turn: open country, a road, to
 Reverse: GROUNDS and LIT_FROM in chase-rules.mjs.
 
 ## B913. Flat out, falls and crashes in a chase (2026-11-11)
-Going flat out is +3 difficulty, the books' "fast while losing pursuers" (V20 core printed p. 258, V20 Dark Ages printed p. 335). A motor vehicle flat out goes 30 mph past its safe speed, never past its top: the book's +1 difficulty for each 10 mph over the safe speed is taken as the same +3, not added to it (house reading). Anything else flat out is half as fast again (house rule). The books give no crash damage. A botch on a horse, a mule, a bicycle or a motorcycle throws the rider; in a car or a motorboat it is a crash; both roll as falling (V20 core printed p. 296): one die of bashing for each 10 mph, one to ten, and ten dice are lethal, as a fall of 100 feet (house reading). The Storyteller applies the damage from a button on the card. A rider who catches someone gets +1 damage die for each turn spent at speed, five at most, on the first blow (mounted combat, V20 Dark Ages printed p. 398); the card says so.
+Going flat out is +3 difficulty, the books' "fast while losing pursuers" (V20 core printed p. 258, V20 Dark Ages printed p. 335). A motor vehicle flat out goes 30 mph past its safe speed, never past its top: the book's +1 difficulty per 10 mph above the safe speed is taken as the same +3, not added to it (house reading). Anything else flat out is half as fast again (house rule). The books give no crash damage. A botch on a horse, a mule, a bicycle or a motorcycle throws the rider; in a car or a motorboat it is a crash; both roll as falling (V20 core printed p. 296): one die of bashing for each 10 mph, one to ten, and ten dice are lethal, as a fall of 100 feet (house reading). The Storyteller applies the damage from a button on the card. A rider who catches someone gets +1 damage die for each turn spent at speed, five at most, on the first blow (mounted combat, V20 Dark Ages printed p. 398); the card says so.
 
 Reverse: OVER_SAFE, crashDice and crashType in chase-rules.mjs; FLAT_OUT for the difficulty.
 
@@ -4715,7 +4716,7 @@ By default it is not kept in Russia and Central Asia from 1929 to 1990 (the Sovi
 Reverse: empty WORSHIP_HIDDEN in routine-rules.mjs.
 
 ## B3000. The wizard works out the Traits that follow from the others (2026-11-13)
-WoDX Creation 0.26.0, the next item on Ben's ranked list after the wizard. The Virtues page and the last look show a table of the derived Traits: what the book gives, what the sheet has, how it is worked out, and a Set button (or Set all). Rules per line, in WoDX's own words, from each line's creation pages in creation-totals.mjs: Humanity (or a Path) from the two moral Virtues and Willpower from Courage for V20, ghouls and revenants; a Road from the two Road Virtues for the Dark Ages; Rage by auspice, Gnosis by breed and Willpower by tribe for Garou; Arete 1, Willpower 5 and Quintessence equal to the Avatar for Mage; Willpower 5 and Quintessence 5 (or Cray + Fount) for the Dark Ages Mage; Corpus 10, Pathos 5 + Memoriam and Willpower 5 for Wraith; Willpower 4, Glamour 4 and Banality 3 for Changeling; Willpower 4 for the Dark Ages fae; Courage + Zeal for inquisitors; Willpower 3 for the imbued; Faith 3, Torment by House and the two highest Virtues for Demon; Balance, Sekhem equal to Balance and Willpower 5 for Mummy; Willpower from Hun, 5 at least, for the Kuei-jin. What the wizard cannot work out (seeming, creed, Direction, Orpheus Shades) is named as a note for the Storyteller.
+WoDX Creation 0.26.0, the next item on Ben's ranked list after the wizard. The Virtues page and the last look show a table of the derived Traits: what the book gives, what the sheet has, how it is worked out, and a Set button (or Set all). Rules per line, in WoDX's own words, from each line's creation pages in creation-totals.mjs: Humanity (or a Path) from the two moral Virtues and Willpower from Courage for V20, ghouls and revenants; a Road from the two Road Virtues for the Dark Ages; Rage by auspice, Gnosis by breed and Willpower by tribe for Garou; for Mage, Arete 1, Willpower 5 and as much Quintessence as the Avatar rating; Willpower 5 and Quintessence 5 (or Cray + Fount) for the Dark Ages Mage; Corpus 10, Pathos 5 + Memoriam and Willpower 5 for Wraith; Willpower 4, Glamour 4 and Banality 3 for Changeling; Willpower 4 for the Dark Ages fae; Courage + Zeal for inquisitors; Willpower 3 for the imbued; Faith 3, Torment by House and the two highest Virtues for Demon; Balance, Sekhem equal to Balance and Willpower 5 for Mummy; Willpower from Hun, 5 at least, for the Kuei-jin. What the wizard cannot work out (seeming, creed, Direction, Orpheus Shades) is named as a note for the Storyteller.
 
 Reverse: drop #derived from wizard.mjs; the old "Still to set by hand" line was the starting-value text.
 
@@ -16088,6 +16089,37 @@ Garou's (a house rule, in docs/PENDING-REVIEW.md).
 
 Reverse: remove FERA_STARTS, feraOf and the fera branch of the w20 case in derivedTraits.
 
+## B7832. Orpheus Stains are listed and called up at will (2026-11-26)
+WoDX Actions. The powers scorecard counted ten Orpheus powers, the ten Horrors; the twenty Stains of the core book
+(pp. 195-199) were only a name on the sheet. orpheus-stains.js lists them, each with its page, what shows, what it
+gives and what it costs, in short and in our own words. Call up a Stain (the Orpheus menu, and the Stains row and
+button on the sheet) follows p. 195: Spite 4 or more, Spite points tapped, a die a point at difficulty 7, a miss adds
+a Spite point and a botch two, and the Stain shows for a turn a point. While it shows, its Ward, Boost or Blessing goes
+on the effects card where the dice read it (a Boost held to named rolls is new in power-mods.js: Chameleon Skin's
+three Stealth dice), its night sight on the token, and its natural weapon on the sheet (Claws, Hawk's Beak, Dagger
+Tongue), taken off when the turns run out. Stains whose gain no roll can read (Leper, Martyred, Gossamer Webs and the
+like) are the Storyteller's from the card. House readings: Bristling Hide's one die of lethal is one lethal level,
+soaked as usual; Carapace's soak die from behind, Man-o'-War's halved bashing and Withered's extra bashing dice stay on
+the card; Dagger Tongue is a reaching Brawl attack.
+
+Reverse: remove orpheus-stains.js, the stain window in orpheus.js, orphStain and the stainEnd reverter in main.js, the
+menu and sheet entries, and the tagged Boost in power-mods.js.
+
+## B7833. A Spectre's Thorns and Horrors are listed and used (2026-11-26)
+WoDX Actions. Orpheus gives Spectres their own arsenal (pp. 267-269), and WoDX had none of it. orpheus-spectres.js
+lists the five Thorns (Carapace, Claws, Envelop, Maw, Tentacles) and the eight Spectral Horrors (Chill, Flicker, Flit,
+Hive-Mind, Immolate, Manifest, Rend, Virus), each with its page and a line for each amount of Spite, in short and in
+our own words. A Spectre's Horror or Thorn (the Orpheus menu) follows p. 267: a Spectre taps its Spite rating and never
+spends it; in a scene it taps no more than its rating, and each Willpower point spent buys three more. A Thorn a roll
+reads goes on the sheet: Carapace as armour by kind (Hide 1, Scales 3, Chitin 5), Claws as Strength + 1 lethal, Maw as
+Strength + 2 lethal. Chill puts bashing harm on the effects card for each one near, a level a Spite; Immolate burns
+whoever touches it for one level more than the Spite tapped (the book's example) and makes its own Stealth harder, for
+the scene. House readings: Chill's area is the Spectre's permanent Willpower in yards, soaked as usual; Flicker, Flit,
+Hive-Mind, Manifest, Rend, Virus, Envelop and Tentacles are the Storyteller's from the card, since no roll knows who
+aims at whom across the Shroud; Immolate's Stealth difficulty is the Spectre's own.
+
+Reverse: remove orpheus-spectres.js, the spectre window in orpheus.js, orphSpectre in main.js and the menu entry.
+
 ## B7840. Revenant families in every era (2026-11-23)
 WoDX Creation, revenant-rules.mjs. Twenty family lines, each with the years it lives in the chronicle and the reason. The eight V20 Dark Ages families (pp. 453-454: Basarab, Bratovich, Danislav, Grimaldi, Obertus, Szantovich, Vlaszy, Khavi) and the Krevcheski of Dark Ages: Vampire p. 289 use their Dark Ages write-up before 1837; the twelve V20 Ghouls and Revenants families take over from 1837, and those with no Dark Ages write-up use it in every year. The three "other families" of Ghouls and Revenants p. 113 (Marijava, Keskinen, Katayama) have no Disciplines in the book, so any may be taken at birth. Years the books do not give are house readings (listed in docs/PENDING-REVIEW.md): the Danislav, Vlaszy and Khavi end in 1493, the Basarab by 1700, the Krevcheski become the Ducheski in 1250, the Szantovich take the name Zantosa in 1494, the Servants of Anushin-Rawan begin in 1500, the Rossellini in 1550, the Oprichniki in 1565 (the oprichnina), the Katayama in 1950. The revenant window lists only the families alive in the chronicle's year; a birth keeps the family's mark (what its weakness does) on the sheet, and the Dark Ages Grimaldi hold 8 blood points.
 
@@ -16540,6 +16572,21 @@ Gates. Nightly job 2448 failed "the way round the wall" and "a large NPC (2x2)":
 
 Reverse: take the runnerBefore record and the T.runner.document.update out of the way-round step in tools/gate/gate7b.mjs.
 
+## B7982. gateaftercare waits for the tended tokens to walk in (2026-11-26)
+Gates. Nightly job 2565 (main c4a50ffe) failed step 2 "a shared NPC's token is tended as itself": the tending had picked
+this scene's hospital, but the token stood at (16, 8), still walking there. The step waited only for the place to be
+set, not for the token to arrive. It now also waits up to 12 seconds for both tokens to stand inside the hospital
+before it checks.
+
+Reverse: take the arrived wait out of step 2 in tools/gate/gateaftercare.mjs.
+
+## B7983. gateplayerview names the chat cards it counts (2026-11-26)
+Gates. The same nightly failed step 17 "what can I do now" with 2 chat cards after Look around, where 1 is expected. The
+detail now lists each new card (speaker, flavor, text, whether it holds a roll, its flag scopes), so the next failure
+says where the extra card came from. The check itself is unchanged.
+
+Reverse: drop `which` from the step 17 detail.
+
 ## B8000. The Main PC stops driving the merge train (2026-11-25)
 tools/pcq/runner.json has `train: false`. Ben asked on 25 November for the merge train to move to the New PC, with
 the Main PC kept as a backup driver. Only one runner may drive the train (B7202), and both PCs are running, so the move
@@ -16587,6 +16634,16 @@ Reverse: take the Book overlap step out of tools/quality-check.sh and switch off
 All modules. The first daily overlap gate run (26 Nov, main 06d57d9) found 4 distinct runs against Wraith books whose text arrived after B8020: three prose lines (realm-places.mjs, arcanoi-gw.json, wr20.json) are now in WoDX's own words, and the fourth is the title of a novel (in world-history.mjs and four era-timelines research files), so its hash goes on the allowlist (B8022).
 
 Reverse: revert the commit; remove the hash noted "novel title" from tools/books/overlap-allow.json.
+
+## B8025. Matches from the full 1,644-book check are reworded or allowlisted (2026-11-26)
+All modules. The Secondary PC ran the overlap gate against every oWoD book (26 Nov, main 06d57d9) and found 52 distinct runs. 4 were already fixed by B8024. 32 were prose and are now in WoDX's own words, in 35 files (including the encyclopedia, Gift and power data, rules scripts, docs/DECISIONS.md and the era-timelines research files). 16 were names, trait or Ability lists, a stat line and two cost tables, so their hashes go on the allowlist (B8022), each noted with B8025.
+
+Reverse: revert the commit; remove the hashes noted B8025 from tools/books/overlap-allow.json.
+
+## B8026. Stamped release notes are found inside a train batch (2026-11-26)
+Tools. When the train stamps a pull request and then batches it, the batch's merge commits hid the commit that removed each release note, so rule 1 read the note as empty and failed the batch ("no front matter") twice for PR 2562. The look-up now uses the full history without merge commits, as the decision look-up already did. A harness test builds the batch case.
+
+Reverse: revert the commit.
 
 ## B8030. Report a problem sits outside the panel's fold (2026-11-25)
 WoDX Solo. The solo panel draws Report a problem as its own button under the main one, not in the folded More part, so a player who meets a fault can press it at once (#2467). The fold's summary no longer lists it.
@@ -16717,3 +16774,56 @@ Reverse: set the setting off, or remove the createActor hook and askSoon in spri
 ## B8101. The solo world is the one that draws, and no gate lane does (2026-11-26)
 PC job runner. A gate makes characters, and with B8100 each would start a drawing on a gate lane, so runner.json's spriteData is now empty and the New PC's (runner.new_pc_lebrun.json) names only the solo world, D:/WoDX/FoundryData-solo. The New PC's python is its system Python 3.12 (%LOCALAPPDATA%/Programs/Python/Python312, numpy and Pillow already there); a runner whose Python is missing says so once in its log and draws nothing. gatespritecheck turns the new setting off while it runs and checks the ask with it on, taking the ask back before it is sent.
 Reverse: put the lane folders back in spriteData.
+
+## B8130. A clone refuses a push to a pull request in the merge train (2026-11-26)
+Tools. Of the 32 pull requests the train ejected from 17 to 25 November, 9 left because of a push while labelled: 3 were
+the train's own commits (fixed by B7390), and 6 were threads that pushed a fix or merged main after labelling. A
+pre-push hook (tools/git-hooks/pre-push.mjs) now asks GitHub for the branch's open pull request and refuses the push
+when it carries `merge-train`, saying to take the label off first. Commits that all carry `Merge-Train: yes` (the
+train's) go through, `WODX_PUSH_GUARD=off` passes one push, and a push GitHub cannot be asked about goes through, so
+the guard never blocks work offline; the train's own eject (B7332) still catches what it misses. review.mjs, claim.mjs
+and merge-stamp.mjs set `core.hooksPath` to tools/git-hooks on first run (only when it is unset), so each thread's
+clone has the guard before it labels.
+
+Reverse: `git config --unset core.hooksPath` in a clone, or take the installHooks calls out of the three scripts.
+
+## B8131. Review-list rows are fragments, stamped at merge (2026-11-26)
+Tools. Of the 13 pull requests the train ejected for a merge conflict from 17 to 25 November, docs/PENDING-REVIEW.md
+clashed in about 8 of the 11 whose files could be read, because every branch appended rows to the same table end and
+the daily auto-approval moved rows on main. A branch now writes its rows in changes/pending-review/<name>.md, one
+four-cell table row per line; merge-stamp checks each row (four cells, a date first) and appends them to the end of
+the Waiting for review table, skipping a row the table already holds. docs/PENDING-REVIEW.md joins the files the
+stamp writes, so it needs no file review of its own.
+
+Reverse: write rows into docs/PENDING-REVIEW.md by hand again and drop the pending-review branch of readFragments.
+
+## B8132. The train settles conflicts in the review list and generated files (2026-11-26)
+Tools. When main does not merge in cleanly and every conflicted file is docs/PENDING-REVIEW.md, docs/FEATURES.md or
+the api-paths fixture, the train settles them itself instead of ejecting: the review list is main's file plus the
+table rows the branch added (rows main moved to an approved section stay there), docs/FEATURES.md is written again
+from registry/features/, and the api-paths fixture is main's (the stamp writes it again). The merge commit keeps the
+`Merge-Train: yes` trailer. A pull request GitHub calls unmergeable is now prepared rather than ejected at once, and a
+conflict in any other file still ejects it, now naming the files. It changes tools/pcq/train.mjs outside the PC helper
+because the coordinator asked this thread to fix the train's ejects ahead of other work (26 November).
+
+Reverse: put back the "leave" for mergeable false in decide() and empty SETTLED in tools/pcq/train.mjs.
+
+## B8133. Label for the train only on green checks (2026-11-26)
+Tools. Two pull requests left the train on red checks from 17 to 25 November (1836 and 2272; on 2272 one harness test
+failed on the head). The train cannot tell a thread's red head from one main broke, so the rule is on the thread:
+label only once `checks` is green on the head and merge-stamp --check lists nothing but fragments to stamp
+(docs/WORKFLOW.md, section 6). The gate side needs no change: since 21 November a gate that fails only on order or
+fails on main too already passes the gate status (B7441, B7521), and the recheck asymmetry of #2163 was fixed on 20
+November (B7540).
+
+Reverse: take the sentence out of docs/WORKFLOW.md, section 6.
+
+## B8134. The push guard never stops the train's own push (2026-11-26)
+Tools. At 05:59Z the train ejected PR 2568 because the push guard (B8130) refused the train's own merge-and-stamp push:
+the guard read every commit new to the branch, and a merge of main brings main's commits, which never carry the
+train's trailer. The guard now reads first-parent commits only (the merge and the stamp, both with
+`Merge-Train: yes`), and the train pushes with `--no-verify`, so the guard is for threads only. The runner's PCs got
+the hook because merge-stamp set core.hooksPath in the runner's clone.
+
+Reverse: drop `--no-verify` from the pushes in tools/pcq/train.mjs and `--first-parent` from newMessages in
+tools/git-hooks/pre-push.mjs.

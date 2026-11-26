@@ -74,6 +74,9 @@ export async function run() {
       await fightEnds([ta, sc.tokens.get(tHurtU.id), sc.tokens.get(tCrowd1.id), sc.tokens.get(tStranger.id)]);
       const away = id => sc.tokens.get(id)?.actor?.getFlag(MOD, "tokenAway") ?? null;
       await waitFor(() => !!hurt.getFlag(MOD, "duties")?.tend && !!hurtU.getFlag(MOD, "duties")?.tend && away(tCrowd1.id)?.place && away(tStranger.id)?.place, 12000);
+      // B7982: the tokens walk in after the place is set; nightly 2565 read the shared token at (16, 8), still on its way
+      const arrived = id => { const t = sc.tokens.get(id); return !!t && !t.hidden && t.x >= 8 * S && t.x < 13 * S && t.y >= 1 * S && t.y < 6 * S; };
+      await waitFor(() => arrived(tCrowd1.id) && arrived(tStranger.id), 12000).catch(() => null);
       G.ok("2. goes to the hospital when the fight ends", hurt.getFlag(MOD, "duties")?.tend?.place === R("Hospital"), {d: hurt.getFlag(MOD, "duties")});
       G.ok("2. an unlinked NPC goes to be tended too", hurtU.getFlag(MOD, "duties")?.tend?.place === R("Hospital"), {d: hurtU.getFlag(MOD, "duties") ?? null});
       G.ok("2. an NPC sharing its actor with other tokens keeps its routine", !crowd.getFlag(MOD, "duties")?.tend, {d: crowd.getFlag(MOD, "duties") ?? null});

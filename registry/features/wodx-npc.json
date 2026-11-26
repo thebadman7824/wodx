@@ -166,11 +166,13 @@
     },
     "shown": {
      "what": "guards and townsfolk turn toward the trouble and the scene stays on alarm for an hour"
+    },
+    "gated": {
+     "gate": "tools/gate/gatealarmbell.mjs",
+     "step": "1. walking into an alarm trigger: on alarm, the Alert zone's lamp lit"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -233,11 +235,13 @@
     },
     "shown": {
      "what": "the holder's banners and colours on the scene, changing when the place changes hands"
+    },
+    "gated": {
+     "gate": "tools/gate/gatefactionend.mjs",
+     "step": "1. End in the Factions window: the banners leave the canvas"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -364,11 +368,13 @@
     },
     "shown": {
      "what": "the regard on the Relationships tab and the reasons behind it for the Storyteller"
+    },
+    "gated": {
+     "gate": "tools/gate/gatefoughtregard.mjs",
+     "step": "1. the fight ends: the NPC's regard names the character with Fought them"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -538,11 +544,13 @@
     },
     "shown": {
      "what": "each building's household made as NPCs on the map, and the Settlements window"
+    },
+    "gated": {
+     "gate": "tools/gate/gatemakeresidents.mjs",
+     "step": "1. Make them, then the clock: the residents stand in their buildings on the canvas"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -719,11 +727,13 @@
     },
     "shown": {
      "what": "ties grouped on the sheet's Relationships tab, with hidden ties and secrets kept from players"
+    },
+    "gated": {
+     "gate": "tools/gate/gatetiehide.mjs",
+     "step": "1. the eye button hides a tie: marked for the Storyteller, gone from a player's view"
     }
    },
-   "open": [
-    "gated: gatepeople '10. sheet' is graded marker and the rest are direct calls"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -749,10 +759,13 @@
     },
     "shown": {
      "what": "trust on the sheet, betrayal and boon cards, and a hidden loyalty named to its owner"
+    },
+    "gated": {
+     "gate": "tools/gate/gateboonkept.mjs",
+     "step": "1. Kept or paid in the Ledger window: the holder's Relationships tab reads Inclined to trust"
     }
    },
    "open": [
-    "gated: gatetrust '8. sheet' is graded marker and the rest are direct calls",
     "boon scale is a labelled house rule: V20 Dark Ages has no prestation"
    ],
    "deferred": [],
@@ -844,11 +857,13 @@
     },
     "shown": {
      "what": "the family tree window with the line's living members in the current year"
+    },
+    "gated": {
+     "gate": "tools/gate/gatekinbring.mjs",
+     "step": "1. Bring into play in the tree: the member's own sheet opens"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -1079,11 +1094,13 @@
     },
     "shown": {
      "what": "a cult's members gathering at its place of worship and serving the character"
+    },
+    "gated": {
+     "gate": "tools/gate/gategatheringgift.mjs",
+     "step": "1. Hold a gathering: the founder's Faith rises by the cult's Followers"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -1109,11 +1126,13 @@
     },
     "shown": {
      "what": "a robber's token closing in on a lone character and a card to pay, talk or fight"
+    },
+    "gated": {
+     "gate": "tools/gate/gateprowlmark.mjs",
+     "step": "1. 23:00: the footpad closes in on the lone character, with a card to pay, talk or fight"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -1140,11 +1159,13 @@
     },
     "shown": {
      "what": "each NPC's temperament and routine follow its archetype"
+    },
+    "gated": {
+     "gate": "tools/gate/gatearchetypehours.mjs",
+     "step": "1. 10:00 on a weekday: the cutpurse stands in the market"
     }
    },
-   "open": [
-    "gated: no gate step drives it and checks the effect yet (tools/registry/strength.mjs grades its steps direct-call or marker)"
-   ],
+   "open": [],
    "deferred": [],
    "faults": [],
    "prs": [

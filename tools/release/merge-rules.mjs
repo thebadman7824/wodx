@@ -60,7 +60,7 @@ export const REVIEW_DIR = "docs/reviews";
 
 /** Files merge-stamp writes, or that hold the notes and reviews themselves: never need their own review. */
 export const STAMPED = [/^changes\/[^/]+\//, /^docs\/reviews\/[^/]+\.jsonl$/, /^modules\/[\w-]+\/CHANGELOG\.md$/, /^docs\/MODULES\.md$/,
-  /^docs\/DECISIONS\.md$/, /^tools\/gate\/fixtures\/api-paths\.json$/];
+  /^docs\/DECISIONS\.md$/, /^tools\/gate\/fixtures\/api-paths\.json$/, /^docs\/PENDING-REVIEW\.md$/];
 export const isStamped = f => STAMPED.some(r => r.test(f));
 /** Files whose change can change a gate result (the inputs of gate-map's touched()). */
 export const gateInput = f => /^(modules|system)\//.test(f) || /^tools\/gate\//.test(f);
@@ -109,12 +109,13 @@ export function branchNotes(g, base, head) {
   const out = [];
   for ( const file of [...added].sort() ) {
     const m = /^changes\/([\w-]+)\/([^/]+\.md)$/.exec(file);
-    if ( !m || m[1] === "decisions" || m[2] === "README.md" ) continue;
+    if ( !m || m[1] === "decisions" || m[1] === "pending-review" || m[2] === "README.md" ) continue;
     let text = g.show(head, file);
     if ( text === null ) {
       // Gone at the head (merge-stamp removed it): the last commit on the branch that touched it removed it, so its
-      // first parent holds the note's last form.
-      const last = g.tryRun("rev-list", "-1", `${base}..${head}`, "--", file);
+      // first parent holds the note's last form. B8026: --full-history --no-merges, or a train batch (the stamped branch
+      // merged into a batch branch) hides that commit and the note reads as empty.
+      const last = g.tryRun("rev-list", "-1", "--full-history", "--no-merges", `${base}..${head}`, "--", file)?.trim();
       text = last ? g.show(`${last}^1`, file) : null;
     }
     out.push({file, module: m[1], frag: text === null ? null : parseFragment(text)});

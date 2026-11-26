@@ -4,7 +4,7 @@ Each Monday, approved sections more than a week old move to docs/archive/pending
 
 Ben's standing rule (9 November 2026): Claude doesn't wait for an answer. It takes the option it recommends, keeps working, and logs each such choice here so Ben can review it later. Deletions and changes to the Live world still wait for Ben.
 
-New entries go at the end of the "Waiting for review" table, which is last in this file.
+New entries go at the end of the "Waiting for review" table, which is last in this file. A branch writes them as a fragment, changes/pending-review/<name>.md, which the merge stamp appends here (B8131, changes/README.md).
 
 Tiers (Finish-Line Desk, item w5, 17 November 2026). Classify each question before logging it:
 - Low: reversible and inside a design Ben already approved. Take the recommendation and log a row here. It never goes on the daily decisions desk; the Monday review lists these rows for Ben to skim.
@@ -461,7 +461,9 @@ Rows dated 18 and 24 November that Ben had not approved or disapproved by 25 Nov
 | 2026-11-24 | When does a spiteful household helper's harm come? | A Ledger consequence due a week after it turns (B7867) | Change the 7 days in fae-oaths.mjs slightHelper |
 | 2026-11-24 | Spring fae pity a human tricked into breaking an oath (DA:Fae p. 67): no punishment at all? | The punishment in shame is waived and the card says so; the shield is still lost (B7866) | Keep the punishment in fae-oaths-rules.mjs breakOath |
 
-## Waiting for review
+## Approved by auto-approval, 26 November 2026, 06:00 UTC
+
+Rows dated 24 and 25 November that Ben had not approved or disapproved by 26 November 06:00 UTC. None deletes anything or changes the Live world; each lists how to reverse it. The two 23 November rows that record deletes stay in Waiting.
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -472,8 +474,6 @@ Rows dated 18 and 24 November that Ben had not approved or disapproved by 25 Nov
 | 2026-11-26 | Move the rules of WoDX Targeting and WoDX Voices? | No: Targeting is dropped (desk item 2509) and Voices is shelved (B7134) (B8064) | Take them off stay in tools/harness/rules-core-baseline.json and run the move |
 | 2026-11-26 | Move the rules files one module per pull request? | No: every rules file not held by open work moves in one pull request (347 files), the held ones after the solo-fix design PR, then the re-exports go; each pull request costs a full PC gate run (B8065) | Move files back with git mv, a module at a time |
 | 2026-11-26 | The PC gate queue job timed out on a pull request of 1,251 files: what changes? | Its "only main moved?" check stops at the first file the branch changed, and a network fault on a GitHub call is tried once more and names the call (B8066) | Drop first: true in tools/pcq/pr-gates.mjs sinceRun and the retry in api() |
-| 2026-11-23 | New PC solo world: what is a clean world? | The 17 Nov known-good Rothenstein world, renamed rothenstein-solo, with 136 test items deleted (131 actors in the test-pack and era-test folders, 3 gate scenes, 1 gate table, 1 era-test journal); folders and users kept. Main 56c5a8c deployed with rc.mjs (MD5 clean, label rc-2026-11-23, a setup build, not the picked test build); wodx-rothenstein and The Lone Chronicle switched on, Voices off. Rothenstein art copied from the Main PC's solo Data. First-login walk 14/14. Backups: D:\WoDX\Backups\rothenstein-solo-*. The arrival lands on "Dolany Village (gridless trial)", left for the solo ship thread (B7722). | Restore the template world from D:\WoDX\Backups\rothenstein-solo-template-before-testbed-copy-*.zip. |
-| 2026-11-23 | Deletes: transfer copies for the New PC | Deleted the re-split copies in the shared folder (private/cloud-foundry/newpc/ and private/newpc-art/; the originals stay in private/cloud-foundry/ and on the Main PC). The joined zips and parts in D:\WoDX\incoming on the New PC go after the integration check. All are generated copies. | Re-split from private/cloud-foundry/ or the Main PC. |
 | 2026-11-24 | When do the church bells ring for Echoes (DA:Fae p. 113 names the sound of bells)? | At 6, 12 and 18 on any scene with a house of worship (B7871) | Change BELL_HOURS in fae-da-rules.js |
 | 2026-11-24 | How close must a carried horseshoe, cross or charm be to set off a fae's Echo? | Within two squares of where the fae's move ends, once in ten minutes of the clock for the same thing (B7871) | Change reach and the 600 seconds in wodx-interactables echoesOnMove and echoPrompt |
 | 2026-11-24 | Inquisitors "risk Conviction on Echo rolls" (DA:Fae p. 182): how? | As DA:I p. 160 risks it: 1 to 3 dice, success gives one back, failure loses them, a botch all; spent Conviction adds a success each (B7873) | Change the Conviction lines in fae-da.js echo() |
@@ -544,3 +544,12 @@ Rows dated 18 and 24 November that Ben had not approved or disapproved by 25 Nov
 | 2026-11-25 | Solo test #2505: years before the common era | Birth and turn years go down to -4000 for every line but mortals, a minus year read as BCE; the lifepath's medieval tables stand in for older years (B8059) | Set the minimum back to 1100 in lifepath.mjs |
 | 2026-11-25 | Solo test #2499: the Elder Power and Necromancy path entries | All 167 placeholders written in WoDX's own words, under 220 characters; always-on powers carry t "passive" and passive: true, as the finished passive entries do (B8059) | Remove the passive field from those entries in disciplines-daw.json |
 | 2026-11-25 | Solo test #2503 (plain words everywhere) and #2505 part 2 (lifepath text that assumes Bohemia) | Not done in this round: both are large text passes. Planned as follow-up work after the second solo test, one module at a time, starting with WoDX Actions' menu labels and the lifepath's base scenes (tagging the Bohemian ones to that land) | None yet |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-23 | New PC solo world: what is a clean world? | The 17 Nov known-good Rothenstein world, renamed rothenstein-solo, with 136 test items deleted (131 actors in the test-pack and era-test folders, 3 gate scenes, 1 gate table, 1 era-test journal); folders and users kept. Main 56c5a8c deployed with rc.mjs (MD5 clean, label rc-2026-11-23, a setup build, not the picked test build); wodx-rothenstein and The Lone Chronicle switched on, Voices off. Rothenstein art copied from the Main PC's solo Data. First-login walk 14/14. Backups: D:\WoDX\Backups\rothenstein-solo-*. The arrival lands on "Dolany Village (gridless trial)", left for the solo ship thread (B7722). | Restore the template world from D:\WoDX\Backups\rothenstein-solo-template-before-testbed-copy-*.zip. |
+| 2026-11-23 | Deletes: transfer copies for the New PC | Deleted the re-split copies in the shared folder (private/cloud-foundry/newpc/ and private/newpc-art/; the originals stay in private/cloud-foundry/ and on the Main PC). The joined zips and parts in D:\WoDX\incoming on the New PC go after the integration check. All are generated copies. | Re-split from private/cloud-foundry/ or the Main PC. |
+| 2026-11-26 | Orpheus Stains (pp. 195-199): how the gains no roll reads are run | Bristling Hide's one die of lethal is one lethal level, soaked; Carapace's soak die from behind, Man-o'-War's halved bashing and Withered's extra bashing dice stay on the card for the Storyteller; Dagger Tongue is a reaching Brawl attack (B7832) | Change the fx and weapon entries in modules/wodx-actions/scripts/orpheus-stains.js |
+| 2026-11-26 | Orpheus Spectral arsenal (pp. 267-269): how the Horrors no roll reads are run | Chill's area is the Spectre's permanent Willpower in yards, soaked as usual; Flicker, Flit, Hive-Mind, Manifest, Rend, Virus, Envelop and Tentacles stay on the card for the Storyteller; Immolate's +2 Stealth difficulty is the Spectre's own (B7833) | Change horrorResults and thornItem in modules/wodx-actions/scripts/orpheus-spectres.js |

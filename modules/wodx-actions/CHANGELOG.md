@@ -2,6 +2,9 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.127.0 (Orpheus: a Spectre's arsenal, the five Thorns and eight Spectral Horrors of the core book, with their page (B7833))
+- 3.126.0 (Orpheus: the twenty Stains of the core book, called up at will from Spite 4, with their page, gain and cost (B7832))
+- 3.125.2 (Book overlap rewording (B8025): lines that shared 8 words with a book in the full check of all 1,644 books (26 Nov) are now in WoDX's own words. Their meaning, numbers and page references are unchanged)
 - 3.125.1 (Book overlap rewording (B8024): one more line that shared 8 words with a Wraith book (found after the late Wraith OCR) is now in WoDX's own words. Its meaning and page reference are unchanged)
 - 3.125.0 (Fixes from the first solo test (B8042 to B8047, B8054, B8058): feeding on a target the player does not own marks it through the Storyteller's computer, a drained vessel rolls no Stamina, the feed window takes the vessel from the target read-only, Hunt takes 1 to 12 hours, Give my blood to target, the Road's name on the sheet, a player's read-only view of the Road, a plainer Sun and haven window, unfit actions kept behind Show every action, and the Elder Powers and Necromancy paths described in WoDX's own words (#2499))
 - 3.124.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)

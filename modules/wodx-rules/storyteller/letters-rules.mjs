@@ -8,7 +8,7 @@
  * Storyteller can rewrite, hold or lose that answer on the way, or write one by hand.
  * House figures: the books give no delivery times. The telephone date matches WoDX NPC's alarm carriers.
  *
- * Storyteller 0.59.0 (B2700 to B2704): a letter goes from one part of the world to another (WoDX Chronicle's world
+ * Storyteller 0.59.0 (B2700 to B2704): a letter travels between places anywhere in the world (WoDX Chronicle's world
  * regions) and takes the world map's journey time for the year, by the way the sender picks: a messenger (riders,
  * relays, ships, a courier by air), a traveller going that way, the post, a telegram, a call, an e-mail or the Net,
  * each only where and when that land has it. The Storyteller sees what is on the way and can lose it, delay it or
@@ -139,7 +139,7 @@ export function plan(how, reach, year, {future = false, region = null, internet 
 const relayOf = (a, b, year) => RELAYS.find(r => r.regions.includes(a) && r.regions.includes(b) && year >= r.from && year <= r.to) ?? null;
 
 /**
- * Storyteller 0.59.0 (B2700): a letter from one part of the world to another, on the world map's journey for the
+ * Storyteller 0.59.0 (B2700): a letter between two parts of the world, on the world map's journey for the
  * year. how: carrier id; from, to: world region ids; year; j: the world map's journey(from's middle, to's middle,
  * {year, known}); internet: {from, to} years the internet reached each end (WoDX Chronicle's REGION_MEDIA).
  * Same part of the world: plan() with reach (near or region). Returns {ok, why, seconds, days, words: [lines]}.
