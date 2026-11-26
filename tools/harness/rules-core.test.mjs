@@ -97,6 +97,8 @@ test("B8068: Chronicle's old copies are gone, its calendar keeps only the Foundr
     if ( /wodx-chronicle\/scripts\/(terms|calendar-math)\.mjs/.test(fs.readFileSync(f, "utf8").replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "")) ) old.push(path.relative(ROOT, f));
     // a pure name taken from Chronicle's calendar must come from the core
     if ( /from\s*["'][^"']*wodx-chronicle\/scripts\/calendar\.mjs["']/.test(fs.readFileSync(f, "utf8")) && !/makeCalendar(Class|Config)/.test(s) ) old.push(path.relative(ROOT, f));
+    // a gate's in-page import by URL (B8068 follow-up: eight gates read getEngine through Chronicle's calendar)
+    if ( /import\(\s*[`"']\/modules\/[^`"']*\/scripts\/(calendar|terms|calendar-math)\.mjs/.test(fs.readFileSync(f, "utf8")) ) old.push(path.relative(ROOT, f));
   }
   assert.deepEqual(old, [], "Import terms and the calendar from modules/wodx-rules/core (B8068).");
 });
