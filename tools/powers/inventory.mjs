@@ -177,7 +177,7 @@ for ( const l of Object.values(D.LORES) ) for ( const nm of [...(l.form ?? []), 
 /* -- Hunter: the Reckoning edges (reckoning.js) */
 for ( const e of R.EDGES ) {
   const kw = PK.keywordsOf("htr", `${e.path}-${e.id}`);
-  add("Hunter (HtR)", `${R.PATHS?.[e.path]?.label ?? e.path}`, e.name, { src: e, status: kw && (kw.passive ? noRollKw(kw.keywords) : applyingKw(kw.keywords)) ? "applies" : e.e ? "card" : "roll", kw: kw?.keywords ?? [], page: `HtR p. ${e.p}`, how: "edge roll and Conviction, effect line, and its keywords on the effects card" });
+  add("Hunter (HtR)", `${R.PATHS?.[e.path]?.label ?? e.path}${e.book ? " (creed book)" : ""}`, e.name, { src: e, status: kw && (kw.passive ? noRollKw(kw.keywords) : applyingKw(kw.keywords)) ? "applies" : e.e ? "card" : "roll", kw: kw?.keywords ?? [], page: e.book ? e.ref : `HtR p. ${e.p}`, how: "edge roll and Conviction, effect line, and its keywords on the effects card" });
 }
 /* -- Hunters Hunted II Numina and hedge sorcery, True Faith (hunter.js) */
 for ( const [key, d] of Object.entries(H.NUMINA) ) for ( let l = 1; l <= (d.levels?.length ?? 5); l++ ) {
