@@ -466,7 +466,7 @@ Next free block: B8140
 | B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7807) | Rothenstein, Chronicle, Otherworlds |
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
-| B7830-B7839 | Scorecard gaps: the M20 core book's rotes (used B7831-B7836) | Actions |
+| B7830-B7839 | Scorecard gap 9: the Ledger's due date shows on the sheet (used B7831-B7838) | NPC, Sheets |
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
 | B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
 | B7860-B7909 | Splat depth build: a Dark Ages mage's household and standing (desk item mage-household) (used B7860-B7909) | Actions, Chronicle |
@@ -16163,6 +16163,33 @@ Dimension Bomb have no near keyword and are Free Effects. How Do You DO That? is
 wait.
 
 Reverse: remove m20-rotes.js, the bookRotes line in m20.js's cast and the rote note in effects.js's fieldset and wire.
+
+## B7837. How Do You DO That?'s named feats join the book rotes (2026-11-26)
+WoDX Actions. How Do You DO That? (the M20 guide to Effects) names many feats and techniques but has few rotes as such.
+m20-rotes.js now lists 96 of its named feats beside the core book's 17, in short and in our own words, each with the
+least Spheres the book gives, the options, coincidental or vulgar as the book usually rules, and its page: elemental
+tricks (Blackout!, Shooting Around Corners, the Storm-Cocoon), Energy-Work, perception, the martial arts (the
+Chi-Fire Punch, the Delayed-Death Touch, the Neo), travel, necromancy, wards, time and influence. The Cast window offers
+them as "Name (HDYDT p. N)" when the caster's Spheres allow, the same way as the core book's.
+House readings: a feat the book gives with several Sphere paths is listed under its lowest or most usual one, with the
+others under options. Headings that are rules, not feats (successes needed, paradox, resistance), are left out, and so
+are the feats the book leaves wholly to other books or charts (Ghost-Calling, the Location Portal, Moving Mountains,
+the Psychic Ward, Binding Oaths, Losing My Religion). Each feat's keywords are the nearest of the Cast window's; a feat
+with none is a Free Effect the Storyteller works from its text.
+
+Reverse: remove HD_ROTES and ALL_ROTES from m20-rotes.js and point bookRotes and roteOf back at ROTES.
+
+## B7838. A Ledger debt, boon or oath come due shows Due on both characters' sheets (2026-11-26)
+WoDX NPC and WoDX Sheets. Until now a dated Ledger entry coming due showed only as a whispered card to the
+Storyteller, so the troupe saw nothing change. An open debt, boon or oath the Ledger has announced as come due now
+marks its tie, and the Relationships tab of both people shows a small Due badge beside the other's name. Players
+see it as well as the Storyteller (the tie itself was already shown to them). Marking the entry kept, paid or broken,
+or moving its date on, takes the badge away. A change to the Ledger redraws the open sheets of the people it names.
+House reading: the badge is shown to the troupe, not only the Storyteller, because a debt everyone at the table knows
+is due is a story hook (show, don't tell); the card stays whispered.
+
+Reverse: drop the due flag from the Ledger edges in ties-rules.mjs (edges) and the wodx-tie-due span in
+extras-html.mjs (relationsHtml). For a Storyteller-only badge, show the span only when gm is true.
 
 ## B7840. Revenant families in every era (2026-11-23)
 WoDX Creation, revenant-rules.mjs. Twenty family lines, each with the years it lives in the chronicle and the reason. The eight V20 Dark Ages families (pp. 453-454: Basarab, Bratovich, Danislav, Grimaldi, Obertus, Szantovich, Vlaszy, Khavi) and the Krevcheski of Dark Ages: Vampire p. 289 use their Dark Ages write-up before 1837; the twelve V20 Ghouls and Revenants families take over from 1837, and those with no Dark Ages write-up use it in every year. The three "other families" of Ghouls and Revenants p. 113 (Marijava, Keskinen, Katayama) have no Disciplines in the book, so any may be taken at birth. Years the books do not give are house readings (listed in docs/PENDING-REVIEW.md): the Danislav, Vlaszy and Khavi end in 1493, the Basarab by 1700, the Krevcheski become the Ducheski in 1250, the Szantovich take the name Zantosa in 1494, the Servants of Anushin-Rawan begin in 1500, the Rossellini in 1550, the Oprichniki in 1565 (the oprichnina), the Katayama in 1950. The revenant window lists only the families alive in the chronicle's year; a birth keeps the family's mark (what its weakness does) on the sheet, and the Dark Ages Grimaldi hold 8 blood points.

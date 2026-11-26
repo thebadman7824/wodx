@@ -89,7 +89,7 @@ export function edges(actors = [], {ledger = [], vinculum = {}, lines = []} = {}
   for ( const a of list ) if ( a.type === "Vampire" && !byName.has(low(a.name)) ) byName.set(low(a.name), a);
   const out = [], seen = new Map();
   const name = (ref) => (ref?.id && byId.get(ref.id)?.name) || ref?.name || "";
-  const add = (fromId, to, kind, {note = "", source = "", hidden = false, uuid = null, back = true, hand = null, foundBy = null} = {}) => {
+  const add = (fromId, to, kind, {note = "", source = "", hidden = false, uuid = null, back = true, hand = null, foundBy = null, due = false} = {}) => {
     if ( !fromId || !to || (!to.id && !to.name && !uuid) || to.id === fromId ) return;
     const k = kindOf(kind);
     const key = `${fromId}|${to.id ?? uuid ?? low(to.name)}|${k}`;
@@ -98,13 +98,15 @@ export function edges(actors = [], {ledger = [], vinculum = {}, lines = []} = {}
       if ( note && !e.note ) e.note = note;
       if ( hidden && source === "hand" ) e.hidden = true;
       if ( hand ) e.hand = hand;
+      if ( due ) e.due = true;
       return;
     }
     const e = {from: fromId, to: {id: to.id ?? null, name: name(to)}, uuid: uuid ?? (to.id ? `Actor.${to.id}` : null), kind: k, note: String(note ?? ""), source, hidden: !!hidden, secret: null, hand, rule: BR.RULE_OF[k] ?? ""};
     if ( foundBy?.length ) e.foundBy = [...foundBy];
+    if ( due ) e.due = true;
     seen.set(key, e); out.push(e);
     const b = KINDS[k]?.back;
-    if ( back && b && to.id && byId.has(to.id) ) add(to.id, {id: fromId, name: byId.get(fromId)?.name ?? ""}, b, {note, source, hidden, back: false, foundBy});
+    if ( back && b && to.id && byId.has(to.id) ) add(to.id, {id: fromId, name: byId.get(fromId)?.name ?? ""}, b, {note, source, hidden, back: false, foundBy, due});
   };
   for ( const a of list ) {
     const l = a.flags?.["wodx-creation"]?.lineage ?? {};
@@ -157,7 +159,8 @@ export function edges(actors = [], {ledger = [], vinculum = {}, lines = []} = {}
     if ( !e || (e.status ?? "open") !== "open" || !["debt", "boon", "oath"].includes(e.kind) ) continue;
     if ( !e.from?.id || !e.to?.id ) continue;
     const what = e.kind === "boon" ? `${e.size ?? "minor"} boon${e.what ? `: ${e.what}` : ""}` : e.what || e.kind;
-    add(e.from.id, who(e.to), "owes", {note: String(what).slice(0, 120), source: "ledger"});
+    // B7838: an entry the Ledger has announced as come due marks the tie, so the sheet can show it
+    add(e.from.id, who(e.to), "owes", {note: String(what).slice(0, 120), source: "ledger", due: !!e.announced});
   }
   // NPC 0.57.0: a hidden loyalty is a tie only the Storyteller sees, to the faction's leader when one is named
   for ( const a of list ) {

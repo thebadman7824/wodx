@@ -44,3 +44,22 @@ test("the Cast window lists the book's rotes after the caster's own, and shows w
   assert.match(read("modules/wodx-actions/scripts/m20.js"), /\[\.\.\.EF\.rotesOf\(actor\), \.\.\.BR\.bookRotes\(i\.spheres\)\]/);
   assert.match(read("modules/wodx-actions/scripts/effects.js"), /wodx-rote-note/);
 });
+
+test("How Do You DO That?'s named feats: 96, each with Spheres the keywords can use, a page and a short text (B7837)", () => {
+  assert.equal(BR.HD_ROTES.length, 96);
+  assert.equal(new Set(BR.ALL_ROTES.map(r => r.id)).size, BR.ALL_ROTES.length, "ids unique");
+  assert.equal(new Set(BR.ALL_ROTES.map(r => r.name)).size, BR.ALL_ROTES.length, "names unique");
+  for ( const r of BR.HD_ROTES ) {
+    assert.equal(r.book, "HDYDT", r.id);
+    assert.match(r.page, /^pp?\. \d{2,3}(-\d{2,3})?$/, `${r.id}: page`);
+    assert.ok(Object.keys(r.spheres).every(s => M.SPHERES.includes(s)), `${r.id}: Spheres`);
+    for ( const k of r.keywords.filter(k => k !== "free") ) {
+      assert.ok(E.KEYWORDS[k].opts.some(o => Object.entries(o).every(([s, v]) => s === "self" || s === "any" || (r.spheres[s] ?? 0) >= v)), `${r.id}: ${k} reachable with its Spheres`);
+    }
+    assert.doesNotMatch(r.text, /\b(each|every) (turn|round)\b/i, `${r.id}: no each-turn text`);
+    assert.equal(BR.roteOf(r.name), r, `${r.id}: found by name`);
+  }
+  const chi = BR.bookRotes({life: 3, prime: 2}).find(r => /^Chi Healing/.test(r.name));
+  assert.equal(chi.name, "Chi Healing (HDYDT p. 65)");
+  assert.deepEqual(chi.keywords, ["mend"]);
+});

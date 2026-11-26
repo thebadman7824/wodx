@@ -20,7 +20,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-senses | not yet | 0 | 0 | 0 |
 | wodx-sheets | yes | 20 | 0 | 0 |
 | wodx-solo | not yet | 0 | 0 | 0 |
-| wodx-storyteller | not yet | 4 | 0 | 1 |
+| wodx-storyteller | not yet | 4 | 0 | 0 |
 | wodx-targeting | not yet | 0 | 0 | 0 |
 | wodx-voices | not yet | 0 | 0 | 0 |
 
@@ -205,5 +205,5 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | --- | --- | --- | --- | --- |
 | Great events and war at home in the sky over the towns (`storyteller.event-looks`) | core | gated | 1 | gatedatedplay 5 |
 | Market news: dated events and trade move the markets, applied from a card (`storyteller.market-news`) | core | gated |  | gatedatedplay 4 |
-| The Ledger: a dated debt, oath or boon comes due as the clock passes it (`storyteller.ledger-due`) | core | shown | 2 |  |
+| The Ledger: a dated debt, oath or boon comes due as the clock passes it (`storyteller.ledger-due`) | core | gated | 1 | gateledgerdue 1. a debt come due shows Due on both Relationships tabs |
 | An inquisitor cell to live in: the daily round and chapter, rector and officers, the chapter-house, the Flock, confession, retreats (`storyteller.inquisitor-cell`) |  | gated | 2 | gateinqcell 3. Holy Ground 2 at the chapter-house: on the sheet, and two Willpower on waking |

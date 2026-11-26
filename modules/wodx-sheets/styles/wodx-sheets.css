@@ -83,6 +83,7 @@
 .wodx-sheet .wodx-tie { flex-wrap: wrap; }
 .wodx-sheet .wodx-tie-rule { flex-basis: 100%; font-size: 0.85em; padding: 0 0 3px 2px; }
 .wodx-sheet .wodx-tie-role { flex: 0 0 110px; }
+.wodx-sheet .wodx-tie-due { display: inline-block; padding: 0 6px; border-radius: 8px; background: #7a1f1f; color: #fff; font-size: 0.8em; font-weight: bold; }
 .wodx-sheet .wodx-tie-role select { width: 100%; }
 .wodx-sheet .wodx-tie-name { flex: 0 1 auto; font-weight: bold; cursor: pointer; }
 .wodx-sheet .wodx-tie-note { flex: 1 1 auto; min-width: 0; }
