@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.133.0 (Plain words (B8180, #2503): every action's description in the WoDX Actions menu is one plain line saying what happens, and sixteen button names that were a slash or a bare list now say what the button does; Plain words (B8181, #2503): the last long or technical setting names and hints are reworded to say plainly what they do)
 - 3.132.2 (M20 rotes: the Warp-Gate summary and the file's opening note are reworded in our own words, with the mechanics unchanged; the book overlap gate had found two runs that matched the books word for word)
 - 3.132.1 (This module's rules files moved to the rules core, modules/wodx-rules/actions (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 3.132.0 (Show what fits (B8140, #2504): the quick check menu leaves out checks the character could not make in this year, and the exorcism and domain checks only show for a character with the trait. Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
