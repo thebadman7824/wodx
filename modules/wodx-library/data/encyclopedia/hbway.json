@@ -242,7 +242,7 @@
     ]
    },
    {
-    "text": "Impart takes one action, works once per scene and lasts for the rest of the scene even if the recipients move away.",
+    "text": "Impart takes one action, works once per scene, and the effect holds until the scene ends even if the recipients move away.",
     "tier": "stated",
     "refs": [
      {
@@ -469,7 +469,7 @@
   "summary": "Rules for designing and building improvised weapons.",
   "claims": [
    {
-    "text": "Building a scratch-made weapon starts with a design stage that settles what it is made of and how it does damage.",
+    "text": "Building a scratch-made weapon starts with a design stage that fixes its materials and the way it deals damage.",
     "tier": "stated",
     "refs": [
      {
@@ -565,7 +565,7 @@
     ]
    },
    {
-    "text": "Painful ways of marking may cost a level of bashing damage that cannot be soaked, and they usually leave scars.",
+    "text": "Painful ways of marking may cost one unsoakable bashing health level, and they usually leave scars.",
     "tier": "stated",
     "refs": [
      {

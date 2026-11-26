@@ -52,9 +52,11 @@ async function openPr(branch) {
   } catch { return undefined; } finally { clearTimeout(t); }
 }
 
-function newMessages(push) {
+export function newMessages(push, cwd = undefined) {
   const range = ZERO.test(push.remote) ? [push.local, "--not", "--remotes=origin"] : [`${push.remote}..${push.local}`];
-  try { return execFileSync("git", ["log", "--format=%B%x00", ...range], {encoding: "utf8"}).split("\0").map(s => s.trim()).filter(Boolean); }
+  // B8134: first parent only. A merge of main brings main's own commits into the range, and those never carry the
+  // train's trailer, so without it the guard refused the train's merge-and-stamp push (PR 2568, 26 Nov 05:59Z).
+  try { return execFileSync("git", ["log", "--first-parent", "--format=%B%x00", ...range], {encoding: "utf8", cwd}).split("\0").map(s => s.trim()).filter(Boolean); }
   catch { return []; }
 }
 

@@ -79,7 +79,7 @@ export function riseDifficulty(level, { optional = false } = {}) {
 export function rise({ successes = 0, botch = false } = {}) {
     if (botch) return { cleared: false, hobgoblin: true, worse: false, text: "the delusion takes shape as a hobgoblin" };
     const s = n(successes);
-    if (s >= 3) return { cleared: true, hobgoblin: false, worse: false, text: "a clear head for the rest of the scene, and a Paradox point gone" };
+    if (s >= 3) return { cleared: true, hobgoblin: false, worse: false, text: "a clear head until the scene ends, and a Paradox point gone" };
     if (s >= 1) return { cleared: false, hobgoblin: false, worse: true, text: "one or two successes only make the delusion seem more real" };
     return { cleared: false, hobgoblin: false, worse: false, text: "nothing changes" };
 }
