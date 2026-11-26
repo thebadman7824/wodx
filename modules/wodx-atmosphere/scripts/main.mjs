@@ -27,7 +27,7 @@ import * as Mood from "./mood.mjs";
 import {DAY} from "../../wodx-rules/core/terms.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.18.8";
+const VERSION = "0.18.9";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);

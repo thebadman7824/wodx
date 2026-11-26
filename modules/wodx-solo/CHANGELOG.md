@@ -2,6 +2,7 @@
 
 Newest first.
 
+- 0.17.4 (Imports of the shared terms and the calendar point at the rules core, modules/wodx-rules/core, instead of Chronicle's old copies (B8068). Nothing changes in play)
 - 0.17.3 (Plain words (B8181, #2503): the solo panel's More line is cut to a few words)
 - 0.17.2 (This module's rules files moved to the rules core, modules/wodx-rules/solo (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 0.17.1 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)

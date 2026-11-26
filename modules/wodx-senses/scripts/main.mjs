@@ -30,7 +30,7 @@ import * as TERMS from "../../wodx-rules/core/terms.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.15.9";
+const VERSION = "0.15.10";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
