@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B8150
+Next free block: B8180
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -483,6 +483,7 @@ Next free block: B8150
 | B8120-B8129 | Inventory desk picks: starting kit, NPC things at first meeting, drop and pick up with icons (used B8120-B8122) | Creation, Actions, Interactables, Sheets |
 | B8130-B8139 | Fewer merge train ejects: push guard, review-list fragments, conflicts the train settles, label on green (used B8130-B8134) | tools (git hooks, release, pcq) |
 | B8140-B8149 | Solo test fixes part 4: what fits, region lifepath, plain settings, NPC pace, 1197 clothing (used B8140-B8144) | Actions, Creation, Combat, NPC, Library, Chronicle, Senses, Sheets, Solo, Storyteller and others (setting hints) |
+| B8170-B8179 | Merge train batches of up to five (used B8170) | Repository workflow |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16993,3 +16994,12 @@ Reverse: pass no yards to walkTo and walkToRegion, and drop the gmHand check in 
 WoDX Library and Creation. 22 garments the goods list lacked: braies, a coif, leg wraps, a dyed tunic, the bliaut, a corded mantle, a ring brooch, a shoulder hood, felt and straw hats, the pointed Jewish hat, ankle and riding boots, a fur-lined over-tunic, a sheepskin coat, a linen veil, a silk headband, Slavic temple rings, a tablet-woven belt, hose garters, an alb and a work smock. Each carries station, style and material tags and WoDX's own description. Before 1800 a starting kit picks the period's own clothes before the loosely dated borrowed list. The owner's Tags desk note, 26 Nov.
 
 Reverse: remove the 22 rows and the year preference in suggestKit.
+
+## B8170. Merge train batches hold up to five pull requests (2026-11-26)
+Repository workflow, the owner's choice ("You have my approval to go from 3 to 5 per batch", 13:12Z), once the eject
+fixes (B8130-B8134) had merged. BATCH_MAX in tools/pcq/train.mjs goes from 3 to 5, and the runner's default
+(`trainBatch` unset in runner.json) now follows BATCH_MAX instead of its own 3. The train looks up to 10 pull requests
+behind the front for members (BATCH_LOOK, was 6), so a line with a few ineligible ones can still fill a batch. The
+halving retry is unchanged: a red batch of five is followed by at most three, then two, then the front alone.
+
+Reverse: set BATCH_MAX back to 3 and BATCH_LOOK to 6, or set "trainBatch": 3 in runner.json.
