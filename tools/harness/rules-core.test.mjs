@@ -45,6 +45,7 @@ test("every rules file lives in the package, apart from the ones not moved yet",
   const listed = new Set([...base.notMoved, ...base.stay]);
   assert.deepEqual(r.outside.filter(f => !listed.has(f)), [],
     `New rules files go in ${PKG}/<module>/ (docs/RULES-CORE.md), not in the module's own scripts folder.`);
+  assert.deepEqual([...listed].filter(f => f.startsWith(`${PKG}/`)), [], "Files in the package are not waiting to move: take them off the baseline lists.");
   const gone = [...listed].filter(f => !fs.existsSync(path.join(ROOT, f)));
   assert.deepEqual(gone, [], "These files moved or went: take them off notMoved or stay in tools/harness/rules-core-baseline.json.");
 });
