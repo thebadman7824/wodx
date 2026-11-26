@@ -6,7 +6,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Module | Seeded | Rows | Verified | Half-built |
 | --- | --- | --- | --- | --- |
 | system | not yet | 0 | 0 | 0 |
-| wodx-actions | yes | 48 | 0 | 1 |
+| wodx-actions | yes | 49 | 0 | 1 |
 | wodx-atmosphere | not yet | 0 | 0 | 0 |
 | wodx-chronicle | not yet | 3 | 0 | 0 |
 | wodx-combat | yes | 16 | 0 | 0 |
@@ -65,6 +65,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Demonic pacts, infernal investments and the Supplicium (`actions.infernal-pacts`) |  | gated | 1 | gatedainfernal 1. the window records a pact and buys Armor |
 | Fomor powers and spirit Charms (`actions.fomor-charms`) |  | gated | 1 | gatefomor 6. Regeneration closes a lethal level each new round |
 | Hunter: the creed books' edges, beside the core 35 (`actions.hunter-creed-edges`) |  | gated | 2 | gatecreededge 1. Use an edge, Protect: a Conviction spent, the card names Hunter Book: Defender p. 76 |
+| Mage 20th: the core book's rotes in the Cast window (`actions.m20-rotes`) |  | gated | 2 | gatem20rote 1. Cast an Effect, A rote: Talons fills in Life 3, Shape, and the page |
 | Mages of the later eras: Arete, Spheres, Paradox and the Quiet (`actions.m20`) |  | gated | 1 | gate6m countermagick: Arete at 7 |
 | Orpheus: a Spectre's Thorns and Horrors, from Spite tapped (`actions.orpheus-spectres`) |  | gated | 1 | gatespectrethorn 1. Thorn: Claws, Use it: Claws (Thorn) on the sheet |
 | Orpheus: the Stains, called up at will from Spite (`actions.orpheus-stains`) |  | gated | 1 | gatestainclaws 1. Call up a Stain, Claws, two Spite: Claws (Stain) on the sheet |
