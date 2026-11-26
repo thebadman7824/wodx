@@ -17,7 +17,7 @@
  * changes, "4>1600:2>1850:1" (tier 4, from 1600 tier 2, from 1850 tier 1). source defaults by category.
  */
 
-import {WAYS, WAY_ROWS, LOCAL_COIN, REDATED, REDATED_WAYS, inUseAt, firstYearAt} from "./goods-ways.mjs";
+import {WAYS, WAY_ROWS, LOCAL_COIN, REDATED, REDATED_WAYS, inUseAt, firstYearAt} from "../../wodx-rules/library/data/goods-ways.mjs";
 import {TAG_WAYS, tagsOf} from "./goods-tags.mjs";
 export {WAYS, LOCAL_COIN, inUseAt, firstYearAt};
 

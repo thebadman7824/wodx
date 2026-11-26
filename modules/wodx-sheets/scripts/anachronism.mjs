@@ -19,7 +19,7 @@
 import * as AR from "../../wodx-rules/sheets/anachronism-rules.mjs";
 import {MOD} from "../../wodx-rules/sheets/extras-rules.mjs";
 import {look, loadGoods} from "./extras.mjs";
-import {isLiveWorld} from "../../wodx-chronicle/scripts/live-worlds.mjs";
+import {isLiveWorld} from "../../wodx-rules/chronicle/live-worlds.mjs";
 
 const isLive = () => isLiveWorld(game.world); // B7564: the one shared list
 const isActiveGM = () => !!game.user?.isGM && (game.users?.activeGM ? game.users.activeGM.id === game.user.id : true);

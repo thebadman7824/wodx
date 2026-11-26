@@ -89,7 +89,7 @@ export async function run() {
       const table = g.lookup(ctx)("people.trade");
       const drawn = Array.from({length: 12}, (_, row) => ppl.generate({batch: 990001, row, culture: "egypt"}).trade);
       const euro = ["knight", "village priest", "member of a religious house"];
-      const sheets = await import(`/modules/wodx-creation/data/people.mjs?${Date.now()}`);
+      const sheets = await import(`/modules/wodx-rules/creation/data/people.mjs?${Date.now()}`);
       ok("5. trades of Egypt", /Egypt|Levant|Anatolia|Arabia|Maghreb/.test(table?.name ?? "") && !drawn.some(t => euro.includes(t)) && drawn.every(t => sheets.TRADE_SHEETS[t]),
         {table: table?.name, drawn});
     });
@@ -99,7 +99,7 @@ export async function run() {
       ok("6. other modules", !bad.length, {missingApi: bad});
     });
     await step("7. local looks", async () => {
-      const LL = await import(`/modules/wodx-npc/scripts/passerby-local.mjs?${Date.now()}`);
+      const LL = await import(`/modules/wodx-rules/npc/passerby-local.mjs?${Date.now()}`);
       const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       const ys = [1300, 1600, 1850, 1950, 2000, 2050];
       const fezIsfahan = ys.filter(y => same(PR.streetTable(y, "persia"), PR.streetTable(y, "maghreb")));

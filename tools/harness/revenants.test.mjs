@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import * as RR from "../../modules/wodx-rules/creation/revenant-rules.mjs";
 import {FAMILIES} from "../../modules/wodx-rules/creation/states-rules.mjs";
-import {SPLATS} from "../../modules/wodx-creation/data/lifepaths-splats.mjs";
+import {SPLATS} from "../../modules/wodx-rules/creation/data/lifepaths-splats.mjs";
 
 const src = f => readFileSync(new URL(`../../modules/${f}`, import.meta.url), "utf8");
 

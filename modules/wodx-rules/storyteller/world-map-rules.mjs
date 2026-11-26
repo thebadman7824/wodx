@@ -13,7 +13,7 @@
  * Speeds and the years each way of travel arrives are a house reading of history, rounded for play; no book gives
  * them. The map is rough on purpose: a square is about 100 km across.
  */
-import * as W from "../../wodx-storyteller/data/world.mjs";
+import * as W from "./data/world.mjs";
 
 export const COLS = W.COLS, ROWS = W.ROWS;
 export const GROUND_WORDS = {"~": "open sea", l: "a great lake", i: "ice", M: "mountains", P: "high plateau", D: "desert", T: "tundra", p: "open plain", w: "wetland", ".": "settled and wooded land"};

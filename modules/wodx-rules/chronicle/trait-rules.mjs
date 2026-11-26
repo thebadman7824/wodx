@@ -11,7 +11,7 @@
  * where the books say so: a ghoul is also a mortal, a revenant is a ghoul, a Kinfolk is a mortal.
  */
 import {BITES} from "./trait-bite-rules.mjs";
-import {BACKGROUND_HOOKS as BACKGROUND_HOOKS_TEXT, MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD, BODY} from "../../wodx-chronicle/data/trait-effects.mjs";
+import {BACKGROUND_HOOKS as BACKGROUND_HOOKS_TEXT, MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD, BODY} from "./data/trait-effects.mjs";
 import {DAY} from "../core/terms.mjs";
 
 export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD};

@@ -164,8 +164,8 @@ test("B7005: a soft warning when a thread does by hand work that ROUTING.md send
   const routes = R.readRoutes(fs.readFileSync(path.join(R.ROOT, "docs/ROUTING.md"), "utf8"));
   assert.ok(routes.length >= 2 && routes.every(r => r.kind && r.home && r.paths?.length), "docs/ROUTING.md has its routes block");
   assert.deepEqual(R.readRoutes("no block here"), []);
-  const names = [{file: "modules/wodx-creation/data/people-maya.mjs"}], thread = [{author: "Claude", body: "More names"}];
-  routes.push({kind: "name lists", home: "the local-agent queue", paths: ["modules/wodx-creation/data/people-*.mjs"]}); // sample route: the real one is paused
+  const names = [{file: "modules/wodx-rules/creation/data/people-maya.mjs"}], thread = [{author: "Claude", body: "More names"}];
+  routes.push({kind: "name lists", home: "the local-agent queue", paths: ["modules/wodx-rules/creation/data/people-*.mjs"]}); // sample route: the real one is paused
   assert.match(R.routeWarnings(names, routes, thread).join(), /name lists .*local-agent queue/);
   assert.deepEqual(R.routeWarnings(names, routes, [...thread, {author: "openhands", body: "x"}]), [], "a local agent did it");
   assert.deepEqual(R.routeWarnings(names, routes, [{author: "Claude", body: "x\n\nrouted-by-hand: the PC was off"}]), []);

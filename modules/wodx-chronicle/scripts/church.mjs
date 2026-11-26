@@ -9,7 +9,7 @@ import {describeTime} from "../../wodx-rules/core/calendar.mjs";
 import * as R from "../../wodx-rules/chronicle/church-rules.mjs";
 import * as F from "../../wodx-rules/chronicle/faith-rules.mjs";
 import * as place from "./place.mjs";
-import * as chronicleData from "./chronicle-data.mjs";
+import * as chronicleData from "../../wodx-rules/chronicle/chronicle-data.mjs";
 import * as Local from "../../wodx-rules/chronicle/chronicle-local-rules.mjs";
 
 export function registerChurchSettings() {

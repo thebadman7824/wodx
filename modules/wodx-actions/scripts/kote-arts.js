@@ -6,7 +6,7 @@
  * (mage-da-effects.js helpers). chk: the scan of that heading is damaged, so the name is the power's use; check the
  * page. Pure: no Foundry calls.
  */
-import { H, T, C, N, S, MV, HL, outcomesOf, P as PT } from "./mage-da-effects.js";
+import { H, T, C, N, S, MV, HL, outcomesOf, P as PT } from "../../wodx-rules/actions/mage-da-effects.js";
 
 const P = (art, l, name, p, roll, diff, cost, fx, spec, o = {}) => ({ art, l, name, p, roll, diff, cost, fx, spec, ...o });
 const sc = "scene";

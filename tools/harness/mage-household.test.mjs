@@ -10,7 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 const H = await imp("modules/wodx-rules/actions/mage-household-rules.js");
-const L = await imp("modules/wodx-chronicle/data/trait-lines.mjs");
+const L = await imp("modules/wodx-rules/chronicle/data/trait-lines.mjs");
 const T = await imp("modules/wodx-rules/chronicle/trait-rules.mjs");
 
 test("B7904: the chantry's points, the flaws rule, Aura on the grounds, and the commoners' talk", () => {

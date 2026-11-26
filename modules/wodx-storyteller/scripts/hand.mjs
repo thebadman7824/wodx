@@ -14,7 +14,7 @@ import * as C from "./core.mjs";
 import {lineFor} from "../../wodx-rules/storyteller/prelude-rules.mjs";
 import {CHECKS, GROUPS} from "../../wodx-rules/actions/checks-rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {isLiveWorld} from "../../wodx-chronicle/scripts/live-worlds.mjs";
+import {isLiveWorld} from "../../wodx-rules/chronicle/live-worlds.mjs";
 
 const {MOD, esc} = C;
 const all = c => c?.contents ?? [...(c?.values?.() ?? c ?? [])];

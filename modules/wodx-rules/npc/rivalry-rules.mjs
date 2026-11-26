@@ -11,7 +11,7 @@
  * with real history for the mortal powers of the Czech lands. Steps, years and odds are WoDX readings, house rules,
  * logged in docs/PENDING-REVIEW.md. Page references wait on a book check (see docs/RIVALRIES.md).
  */
-import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
+import {canon} from "../chronicle/data/canon/index.mjs";
 
 export const STEP_WORDS = {"-3": "Hunts", "-2": "Hostile", "-1": "Tense", "0": "No quarrel"};
 export const stepWord = s => STEP_WORDS[String(Math.max(-3, Math.min(0, Math.round(Number(s) || 0))))] ?? "No quarrel";

@@ -5,7 +5,7 @@
  */
 import {esc} from "./actor-data.mjs";
 import {TOTALS, checkCreation} from "../../wodx-rules/creation/totals-rules.mjs";
-import {defaultLine} from "../data/creation-totals.mjs";
+import {defaultLine} from "../../wodx-rules/creation/data/creation-totals.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const {ApplicationV2} = foundry.applications.api;

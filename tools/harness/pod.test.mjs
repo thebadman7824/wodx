@@ -93,7 +93,7 @@ test("opening goals by line and age", () => {
 });
 
 test("the Followers of Set keep their name and nothing comes from the mod's 5th edition material", () => {
-  const src = readFileSync(new URL("../../modules/wodx-chronicle/data/pod.mjs", import.meta.url), "utf8");
+  const src = readFileSync(new URL("../../modules/wodx-rules/chronicle/data/pod.mjs", import.meta.url), "utf8");
   assert.ok(!/Ministry|Banu Haqim|Hecata|Thin-blood|Second Inquisition/i.test(src));
 });
 

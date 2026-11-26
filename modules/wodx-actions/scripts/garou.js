@@ -20,7 +20,7 @@ import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as BR from "./book-rituals.js";
-import { outcomesOf } from "./mage-da-effects.js";
+import { outcomesOf } from "../../wodx-rules/actions/mage-da-effects.js";
 import * as FOM from "./fomor.js";
 import {DAY} from "../../wodx-rules/core/terms.mjs";
 

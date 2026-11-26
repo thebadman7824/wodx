@@ -66,7 +66,7 @@ test("0.22.0: ways in and out and located dangers are places; a traveller arrive
 });
 
 test("0.23.0: the book lookup's named places stand on the maps with what they are and their page; the notes come with the map", async () => {
-  const {PLACES, LAYOUT, CHANGE} = await import("../../modules/wodx-otherworlds/scripts/realm-places.mjs");
+  const {PLACES, LAYOUT, CHANGE} = await import("../../modules/wodx-rules/otherworlds/realm-places.mjs");
   assert.deepEqual(Object.keys(PLACES).sort(), [...RW.REALM_IDS].sort());
   let n = 0;
   for ( const id of RW.REALM_IDS ) {

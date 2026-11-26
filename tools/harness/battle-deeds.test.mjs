@@ -6,8 +6,8 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const B = await import(join(root, "modules/wodx-rules/storyteller/battle-rules.mjs"));
-const BD = await import(join(root, "modules/wodx-storyteller/scripts/battle-deeds.mjs"));
-const BA = await import(join(root, "modules/wodx-storyteller/scripts/battle-aftermath.mjs"));
+const BD = await import(join(root, "modules/wodx-rules/storyteller/battle-deeds.mjs"));
+const BA = await import(join(root, "modules/wodx-rules/storyteller/battle-aftermath.mjs"));
 const L = await import(join(root, "modules/wodx-rules/chronicle/legends-rules.mjs"));
 const DR = await import(join(root, "modules/wodx-rules/otherworlds/drift-rules.mjs"));
 

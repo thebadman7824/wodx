@@ -1,12 +1,12 @@
 /**
  * Writes tools/mapgen/country.json from the Storyteller's country map, so the map generators (Python) stand on the
- * same ground a trip crosses. Run after any change to modules/wodx-storyteller/data/country.mjs:
+ * same ground a trip crosses. Run after any change to modules/wodx-rules/storyteller/data/country.mjs:
  *   node tools/mapgen/export_country.mjs
  * The harness (country.test.mjs) fails when the file is out of date.
  */
 import {writeFileSync} from "node:fs";
 import * as C from "../../modules/wodx-rules/storyteller/country-rules.mjs";
-import * as D from "../../modules/wodx-storyteller/data/country.mjs";
+import * as D from "../../modules/wodx-rules/storyteller/data/country.mjs";
 
 export function build() {
   const g = C.grid();

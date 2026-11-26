@@ -10,7 +10,7 @@
  * Pure rules, no Foundry.
  */
 import {REALMS, realmEra} from "./realm-maps-rules.mjs";
-import {PLACES, LAYOUT, CHANGE} from "../../wodx-otherworlds/scripts/realm-places.mjs";
+import {PLACES, LAYOUT, CHANGE} from "./realm-places.mjs";
 import {DAY} from "../core/terms.mjs";
 
 export const W = 200, H = 110;

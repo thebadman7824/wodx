@@ -68,7 +68,7 @@ import * as waiting from "./waiting.mjs";
 import * as age from "./age.mjs";
 import * as gender from "./gender.mjs";
 import * as waitingRules from "../../wodx-rules/chronicle/waiting-rules.mjs";
-import * as chronicleData from "./chronicle-data.mjs";
+import * as chronicleData from "../../wodx-rules/chronicle/chronicle-data.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;

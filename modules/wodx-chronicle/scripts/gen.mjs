@@ -4,7 +4,7 @@
  * here and send their results to the approval queue.
  */
 import {MODULE_ID, isActiveGM, log} from "./util.mjs";
-import * as G from "./gen-core.mjs";
+import * as G from "../../wodx-rules/chronicle/gen-core.mjs";
 import * as WR from "../../wodx-rules/chronicle/world-rules.mjs";
 
 const SOURCES = new Map(); // source -> [table definitions]

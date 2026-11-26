@@ -15,7 +15,7 @@
  * docs/PENDING-REVIEW.md. Never V5.
  */
 import {FAMILIES} from "./states-rules.mjs";
-import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
+import {canon} from "../chronicle/data/canon/index.mjs";
 
 /** The last year of the Dark Ages lines: the Convention of Thorns, read from the canon. */
 const THORNS = canon("convention-of-thorns").from;

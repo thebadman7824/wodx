@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 
 const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
-const { outcomesOf } = await import("../../modules/wodx-actions/scripts/mage-da-effects.js");
+const { outcomesOf } = await import("../../modules/wodx-rules/actions/mage-da-effects.js");
 const G = await import("../../modules/wodx-rules/actions/garou-rules.js");
 const GIFTS = JSON.parse(fs.readFileSync(new URL("../../modules/wodx-actions/data/gifts-fera.json", import.meta.url), "utf8")).gifts;
 const FERA = JSON.parse(fs.readFileSync(new URL("../../modules/wodx-actions/data/fera.json", import.meta.url), "utf8")).breeds;

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.112.6 (The book tables and helpers the rules package reads (the outside list: Creation, Chronicle, Library, NPC, Storyteller, Otherworlds and Actions data) moved into modules/wodx-rules, and every import points at their new place (B8069). Nothing changes in play)
 - 0.112.5 (Imports of the shared terms and the calendar point at the rules core, modules/wodx-rules/core, instead of Chronicle's old copies (B8068). Nothing changes in play)
 - 0.112.4 (Plain words (B8181, #2503): the last long or technical setting names and hints are reworded to say plainly what they do)
 - 0.112.3 (Off-screen lives: a one-year Pass the years now makes the Off-screen lives card (B8161, #2627))

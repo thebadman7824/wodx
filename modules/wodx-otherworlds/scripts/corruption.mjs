@@ -16,7 +16,7 @@
  */
 import * as R from "../../wodx-rules/otherworlds/corruption-rules.mjs";
 import * as Local from "../../wodx-rules/chronicle/chronicle-local-rules.mjs";
-import {isLiveWorld} from "../../wodx-chronicle/scripts/live-worlds.mjs";
+import {isLiveWorld} from "../../wodx-rules/chronicle/live-worlds.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {T_DRIFT} from "./drift.mjs";
 import {sheetNature} from "./senses.mjs";

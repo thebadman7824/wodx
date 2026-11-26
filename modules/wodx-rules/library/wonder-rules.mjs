@@ -7,8 +7,8 @@
  * Actions' fetish window attunes and wakes, talens marked as one use, a weapon for war fetishes, and the silver the
  * carrier pays in Gnosis. Werewolf and the Changing Breeds come first; other lines add a LINES entry and rows.
  */
-import {FETISH_POWERS} from "../../wodx-library/data/wonder-fetish-powers.mjs";
-import {WONDERS, MAKES, MAKERS, TALEN_EXTRA, byKey} from "../../wodx-library/data/wonders.mjs";
+import {FETISH_POWERS} from "./data/wonder-fetish-powers.mjs";
+import {WONDERS, MAKES, MAKERS, TALEN_EXTRA, byKey} from "./data/wonders.mjs";
 
 export {WONDERS, MAKES, MAKERS, TALEN_EXTRA, byKey};
 

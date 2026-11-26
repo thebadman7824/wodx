@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const M = await import(join(root, "modules/wodx-rules/actions/mage-da-rules.js"));
-const G = await import(join(root, "modules/wodx-actions/scripts/mage-da-grimoire.js"));
+const G = await import(join(root, "modules/wodx-rules/actions/mage-da-grimoire.js"));
 
 test("the Grimoire's rotes join the core book's: every fellowship, every Pillar its own, unique ids, Grimoire pages", () => {
   assert.ok(G.GRIMOIRE_ROTES.length >= 70);

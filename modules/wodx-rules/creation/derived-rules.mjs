@@ -5,7 +5,7 @@
  * Dots bought with freebies in the wizard and the prelude's Willpower gains are added on top. Book rules in WoDX's
  * own words; the page refs are each line's creation pages in creation-totals.mjs. No Foundry here.
  */
-import {TOTALS} from "../../wodx-creation/data/creation-totals.mjs";
+import {TOTALS} from "./data/creation-totals.mjs";
 import {startingTempers} from "../actions/c20-rules.js";
 
 const n = v => Math.max(0, Math.trunc(Number(v) || 0));

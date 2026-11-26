@@ -7,9 +7,9 @@ import {dirname, join} from "node:path";
 /* The Banyarwanda and Barundi in the People generator (B5030 to B5032): court names alone before 1800, a church name and an own name after */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
-const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
+const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-rules/creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
 const CA = W.cultureOf("central-africa");
 const people = (era, n = 200) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("banyarwanda", era, i),

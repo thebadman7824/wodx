@@ -7,8 +7,8 @@ import {dirname, join} from "node:path";
 /* Names made by pattern (B5600): only the same people's recorded parts, kept apart from the recorded names */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const PW = await import(join(root, "modules/wodx-creation/data/people-world.mjs"));
-const {PATTERNED} = await import(join(root, "modules/wodx-creation/data/people-patterned.mjs"));
+const PW = await import(join(root, "modules/wodx-rules/creation/data/people-world.mjs"));
+const {PATTERNED} = await import(join(root, "modules/wodx-rules/creation/data/people-patterned.mjs"));
 const table = id => PW.WORLD_PEOPLE_TABLES.find(t => t.id === id);
 const own = (o, sex) => (table(`names.native.${sex}.${o}`)?.results ?? []).map(r => r.text).filter(s => !s.includes("{"));
 

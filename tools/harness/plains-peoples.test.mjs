@@ -7,15 +7,15 @@ import {dirname, join} from "node:path";
 /* The Plains peoples in the People generator (B3820 to B3824): own names and band bynames before 1800, family names after */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
-const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
+const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-rules/creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
 // Names made by pattern from the same people's recorded parts (B5600) count as the people's own
-const {PATTERNED} = await import(join(root, "modules/wodx-creation/data/people-patterned.mjs"));
+const {PATTERNED} = await import(join(root, "modules/wodx-rules/creation/data/people-patterned.mjs"));
 const made = (o, sex) => PATTERNED[o]?.[sex] ?? [];
-const PL = await import(join(root, "modules/wodx-creation/data/people-plains.mjs"));
-const HN = await import(join(root, "modules/wodx-creation/data/people-haudenosaunee.mjs"));
+const PL = await import(join(root, "modules/wodx-rules/creation/data/people-plains.mjs"));
+const HN = await import(join(root, "modules/wodx-rules/creation/data/people-haudenosaunee.mjs"));
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const WEST = W.cultureOf("north-america-west");
 const people = (era, origin, n = 300) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("pl", origin, i),

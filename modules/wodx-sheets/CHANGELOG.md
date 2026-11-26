@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.26.3 (The book tables and helpers the rules package reads (the outside list: Creation, Chronicle, Library, NPC, Storyteller, Otherworlds and Actions data) moved into modules/wodx-rules, and every import points at their new place (B8069). Nothing changes in play)
 - 0.26.2 (This module's rules files moved to the rules core, modules/wodx-rules/sheets (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 0.26.1 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.26.0 (Relationships: a Due badge for a Ledger entry come due (B7838))

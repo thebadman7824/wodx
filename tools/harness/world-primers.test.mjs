@@ -10,7 +10,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const P = await imp("modules/wodx-storyteller/data/primers-world.mjs");
+const P = await imp("modules/wodx-rules/storyteller/data/primers-world.mjs");
 const S = await imp("modules/wodx-rules/storyteller/setup-rules.mjs");
 const W = await imp("modules/wodx-rules/chronicle/world-rules.mjs");
 

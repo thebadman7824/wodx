@@ -8,7 +8,7 @@
  */
 import {ACTIVITY as MAT_ACTIVITY, ACTIVITY_KEYS as MAT_KEYS, pointsFor as matPoints, SOURCE as MAT_SOURCE} from "./maturation-rules.mjs";
 import {DECLINE, THICK_BLOOD, DRIFT, YEARS_XP, BACKGROUNDS, ABILITY_CONVERSION, ROAD_TO_PATH, DA_ERAS, LINE_YEARS,
-  LOST_TRIBES, FAE_CROSSING, DA_RECORDS} from "../../wodx-creation/data/advance.mjs";
+  LOST_TRIBES, FAE_CROSSING, DA_RECORDS} from "./data/advance.mjs";
 
 const cap = s => String(s ?? "").replace(/^./, c => c.toUpperCase());
 const ATTR_LABEL = {strength: "Strength", dexterity: "Dexterity", stamina: "Stamina"};

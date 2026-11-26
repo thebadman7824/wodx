@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const G = await imp("modules/wodx-library/data/goods.mjs");
-const L = await imp("modules/wodx-library/data/goods-ways.mjs");
+const L = await imp("modules/wodx-rules/library/data/goods-ways.mjs");
 const T = await imp("modules/wodx-library/data/goods-text.mjs");
 const F = await imp("modules/wodx-rules/interactables/fill-rules.mjs");
 const W = await imp("modules/wodx-rules/chronicle/world-rules.mjs");

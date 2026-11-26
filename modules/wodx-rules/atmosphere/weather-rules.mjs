@@ -14,7 +14,7 @@
  * Climate figures are rounded long-run averages for a typical city in each region, written for play, not research.
  * 0.14.0: climates for the whole world, north and south of the equator; each world region names its own.
  */
-import {stream, hash128} from "../../wodx-chronicle/scripts/gen-core.mjs";
+import {stream, hash128} from "../chronicle/gen-core.mjs";
 import {jdnToGregorian, gregorianToJDN} from "../core/calendar-math.mjs";
 import {regionOf} from "../chronicle/world-rules.mjs";
 

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import * as M from "../../modules/wodx-rules/creation/maturation-rules.mjs";
 import {propose} from "../../modules/wodx-rules/creation/advance-rules.mjs";
-import {SWITCHES} from "../../modules/wodx-creation/data/advance.mjs";
+import {SWITCHES} from "../../modules/wodx-rules/creation/data/advance.mjs";
 import * as PM from "../../modules/wodx-actions/scripts/profile-menus.js";
 import * as TR from "../../modules/wodx-rules/actions/theme-rules.js";
 
@@ -95,7 +95,7 @@ test("the Maturation window is on the Kindred menu and wired to WoDX Creation", 
 
 /* B7691: elder Cainites, Dark Ages Storytellers Companion (2002) printed p. 76 */
 test("elder creation: the book's totals, the Road less 2, two dice of blood", async () => {
-  const {TOTALS} = await import("../../modules/wodx-creation/data/creation-totals.mjs");
+  const {TOTALS} = await import("../../modules/wodx-rules/creation/data/creation-totals.mjs");
   const D = await import("../../modules/wodx-rules/creation/derived-rules.mjs");
   const e = TOTALS.daelder;
   assert.deepEqual([e.attributes, e.abilities, e.backgrounds, e.powers[0].dots, e.virtues, e.freebies], [[10, 7, 5], [20, 12, 8], 15, 10, 7, 30]);
@@ -111,7 +111,7 @@ test("elder creation: the book's totals, the Road less 2, two dice of blood", as
 test("the Road of Night: found by name, ten sins, a parish and the Path of Night after the Dark Ages", async () => {
   const K = await import("../../modules/wodx-rules/actions/kindred-rules.js");
   const {FLOCKS} = await import("../../modules/wodx-rules/npc/road-flock-rules.mjs");
-  const {ROAD_TO_PATH} = await import("../../modules/wodx-creation/data/advance.mjs");
+  const {ROAD_TO_PATH} = await import("../../modules/wodx-rules/creation/data/advance.mjs");
   const ROADS = JSON.parse(src("modules/wodx-actions/data/roads-daw.json"));
   for ( const name of ["Road of Night", "Via Noctis", "Redeemers"] ) assert.equal(K.roadFor(ROADS, name).key, "night", name);
   assert.equal(ROADS.roads.night.sins.length, 10);

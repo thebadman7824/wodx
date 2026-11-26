@@ -9,7 +9,7 @@ import * as ACT from "./acts.js";
 import * as BIND from "./binds.js";
 import * as E from "../../wodx-rules/actions/effects-rules.js";
 import * as KRG from "../../wodx-rules/actions/kindred-rules.js";
-import * as DAE from "./mage-da-effects.js";
+import * as DAE from "../../wodx-rules/actions/mage-da-effects.js";
 import * as PE from "./path-effects.js";
 import * as PW from "./power-effects.js";
 import * as PM from "./power-mods.js";
@@ -25,7 +25,7 @@ import { ask, detectProfile } from "./profiles.js";
 import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
 export { E, W };
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
-import { isLiveWorld } from "../../wodx-chronicle/scripts/live-worlds.mjs";
+import { isLiveWorld } from "../../wodx-rules/chronicle/live-worlds.mjs";
 
 const MOD = "wodx-actions";
 const TYPE = "wodx-actions.effect";

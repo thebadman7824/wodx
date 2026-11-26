@@ -7,12 +7,12 @@ import {dirname, join} from "node:path";
 /* Canada's first nations in the People generator (B4160 to B4163): Cree and Anishinaabe by division and town, Haida and Tlingit clans */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
-const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
+const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-rules/creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
-const C = await import(join(root, "modules/wodx-creation/data/people-canada.mjs"));
-const HN = await import(join(root, "modules/wodx-creation/data/people-haudenosaunee.mjs"));
+const C = await import(join(root, "modules/wodx-rules/creation/data/people-canada.mjs"));
+const HN = await import(join(root, "modules/wodx-rules/creation/data/people-haudenosaunee.mjs"));
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const CA = W.cultureOf("canada");
 const people = (era, origin, n = 200) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("ca", origin + era, i),

@@ -10,7 +10,7 @@ import {award, requestSpend, writeLogPage} from "./xp.mjs";
 import {needsSource, waived, setWaived, recordsOf, IMG} from "./learn.mjs";
 import {openLearning} from "../../wodx-rules/creation/learn-rules.mjs";
 import {writeLineageJournal, ordinal} from "./lineage.mjs";
-import {XP} from "../data/vampire.mjs";
+import {XP} from "../../wodx-rules/creation/data/vampire.mjs";
 import * as LX from "../../wodx-rules/creation/lines-xp-rules.mjs";
 import * as CP from "../../wodx-rules/creation/change-points-rules.mjs";
 import {splatOf, labelOf} from "./lines.mjs";

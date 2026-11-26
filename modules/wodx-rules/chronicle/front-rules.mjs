@@ -8,7 +8,7 @@
  *   courier: {rider, stopped}}.
  * Context: {now, played: [chapter keys], twists: the twist web's state}.
  */
-import {FRONTS, JUDGEMENTS, ROLES, COURIER_GAP, CLUES, CHAPTERS, WEEK} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
+import {FRONTS, JUDGEMENTS, ROLES, COURIER_GAP, CLUES, CHAPTERS, WEEK} from "./chronicle-data.mjs";
 import {DAY} from "../core/terms.mjs";
 export {FRONTS, JUDGEMENTS, ROLES, COURIER_GAP, CLUES, CHAPTERS, WEEK, DAY};
 

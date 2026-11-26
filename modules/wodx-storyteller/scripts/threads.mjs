@@ -24,7 +24,7 @@ import * as SR from "../../wodx-rules/storyteller/signals-rules.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, setting, mutate} from "./core.mjs";
 import {getLinesVeils} from "../../wodx-chronicle/scripts/journals.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {current as chronicleInPlay} from "../../wodx-chronicle/scripts/chronicle-data.mjs";
+import {current as chronicleInPlay} from "../../wodx-rules/chronicle/chronicle-data.mjs";
 
 const TYPE = `${MOD}.threads`;
 const FOLDER = "Threads of Fate";

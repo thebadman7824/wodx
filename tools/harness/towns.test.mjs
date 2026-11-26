@@ -177,7 +177,7 @@ test("the town wiring: settings, hooks, approval, windows", () => {
 test("talk and crowds follow the town (NPC, B3320, B3321)", async () => {
   const O = await imp("modules/wodx-rules/npc/overheard-rules.mjs");
   const P = await imp("modules/wodx-rules/npc/passerby-rules.mjs");
-  const {OVERHEARD} = await imp("modules/wodx-npc/data/grammar/overheard.mjs");
+  const {OVERHEARD} = await imp("modules/wodx-rules/npc/data/grammar/overheard.mjs");
   const t = TR.normTown({id: "brno", people: 1000});
   assert.equal(O.townTopic(TR.view(t), 1400), null, "an ordinary town gives nothing");
   assert.equal(O.townTopic(TR.view({...t, struck: {key: "x", name: "Plague", weeks: 3, share: 0.01}}), 1400), "plague");

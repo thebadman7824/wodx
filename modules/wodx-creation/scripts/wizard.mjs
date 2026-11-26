@@ -16,7 +16,7 @@ import * as Q from "../../wodx-rules/creation/quick-start-rules.mjs";
 import * as D from "../../wodx-rules/creation/derived-rules.mjs";
 import {traitNote} from "../data/trait-notes.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import {MERITS_FLAWS, BACKGROUNDS} from "../../wodx-chronicle/data/trait-effects.mjs";
+import {MERITS_FLAWS, BACKGROUNDS} from "../../wodx-rules/chronicle/data/trait-effects.mjs";
 import * as Beasts from "./animal-stock.mjs";
 import * as KIT from "./kit.mjs";
 import * as K from "../../wodx-rules/creation/kit-rules.mjs";

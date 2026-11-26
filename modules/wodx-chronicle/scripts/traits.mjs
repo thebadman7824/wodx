@@ -7,7 +7,7 @@ import * as TB from "../../wodx-rules/chronicle/trait-bite-rules.mjs";
 import {applyTimed} from "./timed.mjs";
 import {rollEffects as sigRollEffects, bruisedFor, fewerFor} from "./signatures.mjs";
 import {conditionsOf, senseEffectsOf} from "./conditions.mjs";
-import {MERITS_FLAWS, BACKGROUNDS} from "../data/trait-effects.mjs";
+import {MERITS_FLAWS, BACKGROUNDS} from "../../wodx-rules/chronicle/data/trait-effects.mjs";
 
 /**
  * WoDX Chronicle 0.18.0: the trait effect table on the Foundry side. The rules are in trait-rules.mjs.

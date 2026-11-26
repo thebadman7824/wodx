@@ -31,8 +31,8 @@
  */
 import {handsOnStart} from "./kit.mjs";
 // The same module the engines import, so a chronicle registered here is the one WoDX NPC reads
-const CD = () => import("/modules/wodx-chronicle/scripts/chronicle-data.mjs");
-const {isLiveWorld} = await import("/modules/wodx-chronicle/scripts/live-worlds.mjs");
+const CD = () => import("/modules/wodx-rules/chronicle/chronicle-data.mjs");
+const {isLiveWorld} = await import("/modules/wodx-rules/chronicle/live-worlds.mjs");
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const MOD = "wodx-npc";
 const npc = () => game.modules.get(MOD).api, FX = () => npc().factions;

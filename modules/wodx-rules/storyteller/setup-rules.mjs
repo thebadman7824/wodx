@@ -6,8 +6,8 @@
  * makes or updates, by a flag and never twice: the Storyteller screen, the era primer for the players, the group actor,
  * Session Zero and the Chronicle Rules (through WoDX Chronicle). A dry run shows the plan first.
  */
-import {canon} from "../../wodx-chronicle/data/canon/index.mjs";
-import {worldPrimer} from "../../wodx-storyteller/data/primers-world.mjs";
+import {canon} from "../chronicle/data/canon/index.mjs";
+import {worldPrimer} from "./data/primers-world.mjs";
 
 export const TEMPLATE_VERSION = 1;
 

@@ -8,7 +8,7 @@
  *   the log      what the seat decided, kept from the player until asked for
  */
 import {DAY} from "../core/terms.mjs";
-import {LIVE_WORLDS} from "../../wodx-chronicle/scripts/live-worlds.mjs";
+import {LIVE_WORLDS} from "../chronicle/live-worlds.mjs";
 export const NAME = "The Lone Chronicle";
 /** Worlds the mode never acts in, whatever the setting says. */
 /** B7564: the one shared Live list (WoDX Chronicle live-worlds.mjs). */

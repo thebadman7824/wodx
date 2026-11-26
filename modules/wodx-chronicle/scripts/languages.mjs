@@ -2,7 +2,7 @@ import {MODULE_ID, esc, setting} from "./util.mjs";
 import {searchBox} from "./search.mjs";
 import {LANGUAGES, linguisticsAllows, languagesFromMerits, understands, scramble, parseInCommand, norm, allowance, listAllowed, kinOf, GIST} from "../../wodx-rules/chronicle/languages-rules.mjs";
 import * as TERMS from "../../wodx-rules/core/terms.mjs";
-import * as chronicleData from "./chronicle-data.mjs";
+import * as chronicleData from "../../wodx-rules/chronicle/chronicle-data.mjs";
 import * as Local from "../../wodx-rules/chronicle/chronicle-local-rules.mjs";
 import {currentYear} from "./eras.mjs";
 

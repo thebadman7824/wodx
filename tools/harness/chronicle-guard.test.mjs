@@ -3,7 +3,7 @@ import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {check, compare, loadBaseline, countMarks, chronicles} from "./chronicle-guard.mjs";
-import * as CD from "../../modules/wodx-chronicle/scripts/chronicle-data.mjs";
+import * as CD from "../../modules/wodx-rules/chronicle/chronicle-data.mjs";
 
 test("no shared module names a chronicle's own words (move it into the chronicle's module)", async () => {
   const {fresh} = compare(await check(), loadBaseline());
@@ -56,7 +56,7 @@ test("a registered chronicle goes into play, and another can be put in play in i
 
 test("a saga left running with its chronicle module off is found, and the one in play is not", async () => {
   const S = await import("../../modules/wodx-rules/chronicle/saga-rules.mjs");
-  const CD = await import("../../modules/wodx-chronicle/scripts/chronicle-data.mjs");
+  const CD = await import("../../modules/wodx-rules/chronicle/chronicle-data.mjs");
   const chains = [{key: "saga:rothenstein:red-stone"}, {key: "saga:rothenstein:second"}, {key: "lp:abc"}, {key: "saga:other:x"}];
   const was = CD.currentId();
   try {

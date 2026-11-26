@@ -7,8 +7,8 @@ import {dirname, join} from "node:path";
 /* Trait effects step 11 (Chronicle 0.24.0): the other lines' merits and flaws in the table */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const D = await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/trait-effects.mjs")));
-const L = await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/trait-lines.mjs")));
+const D = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/data/trait-effects.mjs")));
+const L = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/data/trait-lines.mjs")));
 const T = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/trait-rules.mjs")));
 const KINDS = ["any", "kindred", "ghoul", "mortal", "hunter", "lupine", "mage", "fae", "wraith", "spirit", "beast", "demon", "mummy", "exalted", ...Object.keys(T.ALSO)];
 const feat = (name, kind = "merit") => ({id: name, name, kind, value: 1});

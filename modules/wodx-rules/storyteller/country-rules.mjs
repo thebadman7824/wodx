@@ -11,7 +11,7 @@
  * Every figure here is a house figure (B2330 to B2339). The books give no travel speeds, fares or day's marches.
  */
 import * as Road from "./road-rules.mjs";
-import * as D from "../../wodx-storyteller/data/country.mjs";
+import * as D from "./data/country.mjs";
 import {HOUR} from "../core/terms.mjs";
 
 const {west, east, south, north, cell: CELL} = D.BOUNDS;

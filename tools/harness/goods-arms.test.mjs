@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const A = await imp("modules/wodx-rules/library/arms-rules.mjs");
-const D = await imp("modules/wodx-library/data/goods-arms.mjs");
+const D = await imp("modules/wodx-rules/library/data/goods-arms.mjs");
 const G = await imp("modules/wodx-library/data/goods.mjs");
 const U = await imp("modules/wodx-rules/library/use-rules.mjs");
 const on = name => ({name, type: "Item", system: {isequipped: true}});

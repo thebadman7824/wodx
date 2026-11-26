@@ -2,11 +2,11 @@
  * The People generator's rules (Phase 7a): one person from a seeded stream and the chronicle's tables. Pure, so the
  * harness can test it; the Foundry side (people.mjs) makes the sheet.
  */
-import {draw, between, pick, shuffled, stream, drawResult, expand} from "../../wodx-chronicle/scripts/gen-core.mjs";
+import {draw, between, pick, shuffled, stream, drawResult, expand} from "../chronicle/gen-core.mjs";
 import {sexFromDraw} from "../chronicle/gender-rules.mjs";
-import {TRADE_SHEETS} from "../../wodx-creation/data/people.mjs";
-import {FAMILY_FIRST} from "../../wodx-creation/data/people-order.mjs";
-import {customFor, NOBLE_TRADE, PATTERN, suffixPatrons} from "../../wodx-creation/data/name-customs.mjs";
+import {TRADE_SHEETS} from "./data/people.mjs";
+import {FAMILY_FIRST} from "./data/people-order.mjs";
+import {customFor, NOBLE_TRADE, PATTERN, suffixPatrons} from "./data/name-customs.mjs";
 
 export const ATTRS = {physical: ["strength", "dexterity", "stamina"], social: ["charisma", "manipulation", "appearance"], mental: ["perception", "intelligence", "wits"]};
 const GROUP = {p: "physical", s: "social", m: "mental"};

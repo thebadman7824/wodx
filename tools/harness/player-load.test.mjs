@@ -36,7 +36,7 @@ const entries = readdirSync(mods).flatMap(m => {
 const graph = [...staticGraph(entries)].map(f => f.slice(root.length + 1).replaceAll("\\", "/"));
 
 const HEAVY = ["modules/wodx-chronicle/data/world-history.mjs", "modules/wodx-chronicle/data/future-events.mjs", "modules/wodx-chronicle/data/future-world.mjs",
-  "modules/wodx-storyteller/data/threads-cards.mjs", "modules/wodx-creation/data/people-world.mjs", "modules/wodx-creation/data/people.mjs",
+  "modules/wodx-storyteller/data/threads-cards.mjs", "modules/wodx-rules/creation/data/people-world.mjs", "modules/wodx-rules/creation/data/people.mjs",
   "modules/wodx-rothenstein/data/cards.mjs"];
 
 test("no module's start-up imports pull in the large tables", () => {
@@ -79,7 +79,7 @@ test("the People tables load on first use, with the feminine family names", asyn
   assert.ok(d.tables.length > 500, "the name tables are read");
   assert.equal(typeof d.person, "function");
   assert.ok(Object.keys(P.feminine()).length > 3, "the feminine forms come with them");
-  const PW = await import(join(root, "modules/wodx-creation/data/people-world.mjs"));
+  const PW = await import(join(root, "modules/wodx-rules/creation/data/people-world.mjs"));
   assert.ok(PW.FAMILY_FIRST.has("chinese"), "people-world still names who puts the family name first");
 });
 

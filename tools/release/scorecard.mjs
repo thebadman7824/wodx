@@ -48,7 +48,7 @@ async function main() {
   execFileSync(process.execPath, [join(root, "tools/powers/inventory.mjs"), "--out", inv]);
   const byLine = JSON.parse(readFileSync(inv, "utf8")).byLine;
   const history = (await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/world-history.mjs")).href)).default;
-  const totals = (await import(pathToFileURL(join(root, "modules/wodx-creation/data/creation-totals.mjs")).href)).TOTALS;
+  const totals = (await import(pathToFileURL(join(root, "modules/wodx-rules/creation/data/creation-totals.mjs")).href)).TOTALS;
   const gateDir = join(root, "tools/gate");
   const gates = readdirSync(gateDir).filter(f => /^gate.*\.mjs$/.test(f)).map(f => readFileSync(join(gateDir, f), "utf8").toLowerCase());
   const wikiFile = arg("--wiki");

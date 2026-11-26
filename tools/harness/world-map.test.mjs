@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import {existsSync, readFileSync} from "node:fs";
 import * as WM from "../../modules/wodx-rules/storyteller/world-map-rules.mjs";
 import * as D from "../../modules/wodx-rules/storyteller/discovery-rules.mjs";
-import * as W from "../../modules/wodx-storyteller/data/world.mjs";
+import * as W from "../../modules/wodx-rules/storyteller/data/world.mjs";
 import * as CH from "../../modules/wodx-rules/otherworlds/worlds-chart-rules.mjs";
 import {REALMS} from "../../modules/wodx-rules/otherworlds/realm-maps-rules.mjs";
 

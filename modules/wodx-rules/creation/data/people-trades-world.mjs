@@ -7,7 +7,7 @@
  * village imam, the knight a mamluk), the trades it never had taken out, and trades of its own added. Tables are
  * keyed by the people generator's culture, so every region of a culture shares them. House readings (B2673).
  */
-import {WORLD_REGIONS, cultureOf, sphereFor} from "../../wodx-rules/chronicle/world-rules.mjs";
+import {WORLD_REGIONS, cultureOf, sphereFor} from "../../chronicle/world-rules.mjs";
 
 const tr = (text, weight, a, k) => ({text, weight, a, k});
 /** The year that stands for each era group when a region's way of life is read. */

@@ -7,11 +7,11 @@ import {dirname, join} from "node:path";
 /* Filipinos in the People generator (B4750 to B4753): own names before 1565, church names after, family names from 1800 */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
+const G = await import(join(root, "modules/wodx-rules/chronicle/gen-core.mjs"));
 const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
-const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
+const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-rules/creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
-const A = await import(join(root, "modules/wodx-creation/data/people-filipino.mjs"));
+const A = await import(join(root, "modules/wodx-rules/creation/data/people-filipino.mjs"));
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const NU = W.cultureOf("philippines");
 const people = (era, n = 200) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("filipino", era, i),

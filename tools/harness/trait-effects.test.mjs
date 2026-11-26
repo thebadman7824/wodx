@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const T = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/trait-rules.mjs")));
-const D = await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/trait-effects.mjs")));
+const D = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/data/trait-effects.mjs")));
 const W = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/when-rules.mjs")));
 
 const feat = (name, kind = "merit", value = 0, flagKey = null) => ({id: name, name, kind, value, flagKey});

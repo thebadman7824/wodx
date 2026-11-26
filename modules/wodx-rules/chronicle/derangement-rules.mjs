@@ -8,7 +8,7 @@
  * roll Courage. A derangement gained from a Virtue loss (a frenzy botch, a Conscience or Humanity botch) is written
  * into the sheet's Derangements box. The difficulties and roll effects are house readings of the books' prose.
  */
-import {DERANGEMENTS} from "../../wodx-chronicle/data/signatures.mjs";
+import {DERANGEMENTS} from "./data/signatures.mjs";
 import {SCENE_SECONDS} from "../core/terms.mjs";
 export {SCENE_SECONDS};
 

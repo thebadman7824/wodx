@@ -9,7 +9,7 @@ import { join, dirname } from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
 const S = await load("modules/wodx-rules/chronicle/signature-rules.mjs");
-const D = await load("modules/wodx-chronicle/data/signatures.mjs");
+const D = await load("modules/wodx-rules/chronicle/data/signatures.mjs");
 
 test("soak dice come from the feature and its condition", () => {
   assert.equal(S.sigSoak({ ahroun: true, crinos: true, wyrmFoe: true }).dice, 1);
@@ -42,7 +42,7 @@ test("counts, verdicts and triggers", () => {
 });
 
 test("the feature texts no longer leave the point to the Storyteller", () => {
-  const src = readFileSync(join(root, "modules/wodx-chronicle/data/signatures.mjs"), "utf8");
+  const src = readFileSync(join(root, "modules/wodx-rules/chronicle/data/signatures.mjs"), "utf8");
   for (const gone of ["which the Storyteller adds", "the Storyteller counts", "the Storyteller can call for", "the Storyteller says when", "the Storyteller's call)"]) assert.ok(!src.includes(gone), gone);
   assert.ok(D);
 });

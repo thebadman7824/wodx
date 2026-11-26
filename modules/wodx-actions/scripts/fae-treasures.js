@@ -16,7 +16,7 @@
  *         (Charisma + Performance, 8), weapon (a hit with it does more), passive (works while carried), unleash
  *   oath  the bargain an oathcrafted Treasure keeps: {every: seconds, what}; let it lapse and the bound essence is free
  */
-import { H, T, C, K, P, HL, outcomesOf } from "./mage-da-effects.js";
+import { H, T, C, K, P, HL, outcomesOf } from "../../wodx-rules/actions/mage-da-effects.js";
 import * as CA from "./c20-arts.js";
 import * as DC from "./fae-da-cantrips.js";
 import {DAY} from "../../wodx-rules/core/terms.mjs";
