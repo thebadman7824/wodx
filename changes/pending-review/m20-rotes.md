@@ -1,1 +1,0 @@
-| 2026-11-26 | M20 core-book rotes (B7836): the keyword each rote fills in | Talons Shape, Right-Click Know, Golden Gunman Hasten, the Bullet-Catch Ward, Hands of Death and Witch's Vengeance Harm; Hot-Shotting and the Dimension Bomb are Free Effects; the rest of each system stays in the rote's text (B7836) | Change keywords in ROTES in modules/wodx-actions/scripts/m20-rotes.js |

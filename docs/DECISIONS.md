@@ -466,7 +466,7 @@ Next free block: B8140
 | B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7807) | Rothenstein, Chronicle, Otherworlds |
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
-| B7830-B7839 | Scorecard gap 1: more gates in the clean world (used B7831-B7835) | Tools |
+| B7830-B7839 | Scorecard gaps: the M20 core book's rotes (used B7831-B7836) | Actions |
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
 | B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
 | B7860-B7909 | Splat depth build: a Dark Ages mage's household and standing (desk item mage-household) (used B7860-B7909) | Actions, Chronicle |
@@ -16147,6 +16147,22 @@ gategatheringgift, gatefactionend, gatesummontime, gatesecondsight, gatearchetyp
 gatekeepanachronism, gatekinbring, gatestainclaws, gatespectrethorn (about 20 minutes together). They join the set.
 
 Reverse: take the twelve names out of "clean" in tools/lanes/gate-map-extra.json.
+
+## B7836. The core book's rotes are ready in the Cast window (2026-11-26)
+WoDX Actions. Mage 20th listed only its nine Spheres at five levels; the rotes, Adjustments and Procedures of Chapter
+Ten, Part VIII (pp. 601-611) were missing. m20-rotes.js lists all 17, in short and in our own words, each with the
+least Spheres it needs (Data as Correspondence, Dimensional Science as Spirit), the Spheres a mage may add, whether the
+book usually rules it coincidental or vulgar, and its page. In the Cast window, A rote now offers them after the
+caster's own saved rotes, only those the caster's Spheres allow; picking one fills in its Spheres, keywords and kind
+and shows what it does with its page. Saving it under a name keeps it as the caster's own.
+House readings: each rote's keywords are the nearest of the Cast window's (Talons is Shape, Right-Click is Know,
+Golden Gunman is Hasten, the Bullet-Catch is a Ward). What they cannot hold stays in the rote's text for the
+Storyteller: the hacking rolls Black Card allows, Hot-Shotting's lower difficulty, the Bullet-Catch's dodge against
+gunfire, the Dimension Bomb's Gauntlet difficulty, and every limit on the Vampiric Lawn Chair. Hot-Shotting and the
+Dimension Bomb have no near keyword and are Free Effects. How Do You DO That? is not in the book text, so its rotes
+wait.
+
+Reverse: remove m20-rotes.js, the bookRotes line in m20.js's cast and the rote note in effects.js's fieldset and wire.
 
 ## B7840. Revenant families in every era (2026-11-23)
 WoDX Creation, revenant-rules.mjs. Twenty family lines, each with the years it lives in the chronicle and the reason. The eight V20 Dark Ages families (pp. 453-454: Basarab, Bratovich, Danislav, Grimaldi, Obertus, Szantovich, Vlaszy, Khavi) and the Krevcheski of Dark Ages: Vampire p. 289 use their Dark Ages write-up before 1837; the twelve V20 Ghouls and Revenants families take over from 1837, and those with no Dark Ages write-up use it in every year. The three "other families" of Ghouls and Revenants p. 113 (Marijava, Keskinen, Katayama) have no Disciplines in the book, so any may be taken at birth. Years the books do not give are house readings (listed in docs/PENDING-REVIEW.md): the Danislav, Vlaszy and Khavi end in 1493, the Basarab by 1700, the Krevcheski become the Ducheski in 1250, the Szantovich take the name Zantosa in 1494, the Servants of Anushin-Rawan begin in 1500, the Rossellini in 1550, the Oprichniki in 1565 (the oprichnina), the Katayama in 1950. The revenant window lists only the families alive in the chronicle's year; a birth keeps the family's mark (what its weakness does) on the sheet, and the Dark Ages Grimaldi hold 8 blood points.
