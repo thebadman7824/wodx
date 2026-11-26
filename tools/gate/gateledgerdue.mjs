@@ -34,6 +34,8 @@ export async function run() {
   const writtenBefore = Object.fromEntries(WRITTEN.map(k => [k, stored(k)?.toObject?.() ?? null]));
   const saved = {held: !!ch?.isHeld?.(), ledger: foundry.utils.deepClone(game.settings.get(ST, "ledger"))};
   const sheets = [];
+  // what the released clock's night work makes is removed before the log goes back (a removal writes to the log)
+  const had = Object.fromEntries(["actors", "items", "journal", "tables", "scenes"].map(k => [k, new Set(game[k].map(d => d.id))]));
   try {
     await G.step("1. a debt come due shows Due on both Relationships tabs", async () => {
       const year = Number(ch?.eras?.currentYear?.()) || 1197;
@@ -43,7 +45,7 @@ export async function run() {
         {name: "Gate Ledger Lender", type: "Mortal", flags: {"wodx-creation": {...born}}}]);
       await ch.hold(true);
       const e = await st.ledger.save({kind: "debt", from: {id: debtor.id, name: debtor.name}, to: {id: lender.id, name: lender.name},
-        what: "Gate debt of ten groschen", due: game.time.worldTime + 3600});
+        what: "Gate debt of ten groschen", due: game.time.worldTime + 60});
       // what the players see: the tie to the other on each Relationships tab
       const open = async (who, other) => {
         const sheet = game.actors.get(who.id).sheet; sheets.push(sheet);
@@ -56,7 +58,7 @@ export async function run() {
       const before = [onDebtor(), onLender()];
       // the trigger: the clock passes the date; the sheets redraw on their own when the Ledger marks it
       await ch.hold(false); await sleep(1500);
-      await game.time.advance(2 * 3600);
+      await game.time.advance(120);
       await waitFor(() => onDebtor() && onLender(), 60000);
       const after = [onDebtor(), onLender()];
       const announced = !!game.settings.get(ST, "ledger").entries.find(x => x.id === e?.id)?.announced;
@@ -78,6 +80,13 @@ export async function run() {
       if ( ids.length ) await ChatMessage.deleteDocuments(ids);
       await ch.hold(saved.held);
       await ch?.nightwork?.settle?.();
+      // the kit's own cleanup (what the released clock's night work made, flags it touched) goes first: it can write to
+      // the Storyteller's log, which is put back last
+      try { await G.cleanup(); } catch (e) { G.R.notes.push(`cleanup: ${e?.message ?? e}`); }
+      for ( const [key, ids] of Object.entries(had) ) {
+        const extra = game[key].contents.filter(d => !ids.has(d.id)).map(d => d.id);
+        if ( extra.length ) { try { await game[key].documentClass.deleteDocuments(extra); } catch (e) { G.R.notes.push(`${key}: ${e?.message ?? e}`); } }
+      }
       await settle(() => WRITTEN.map(k => JSON.stringify(stored(k)?.value ?? null)).join());
       for ( const s of sheets ) { try { if ( s.rendered ) await s.close(); } catch (e) { /* closed */ } }
       for ( const k of WRITTEN ) {
