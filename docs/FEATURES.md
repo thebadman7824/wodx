@@ -13,7 +13,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-creation | yes | 23 | 0 | 1 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
-| wodx-npc | yes | 34 | 0 | 4 |
+| wodx-npc | yes | 34 | 0 | 3 |
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
@@ -170,7 +170,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Trust, betrayal, boons in every line, blackmail and hidden loyalties (`npc.trust`) | core | gated | 1 | gateboonkept 1. Kept or paid in the Ledger window: the holder's Relationships tab reads Inclined to trust |
 | What comes after: the law, wounds tended, after the Kiss, mourning, carried home, mended by its own power (`npc.aftercare`) | core | gated | 1 | gateaftercare 3. after the Kiss |
 | Family lines that outlive the character, and ties after a jump in time (`npc.kin`) |  | gated |  | gatekinbring 1. Bring into play in the tree: the member's own sheet opens |
-| Off-screen lives of supernatural NPCs across a jump in time (`npc.fates`) |  | shown | 1 |  |
+| Off-screen lives of supernatural NPCs across a jump in time (`npc.fates`) |  | gated | 2 | gatefateswake 1. a year passes and the sleeper's sheet no longer shows Torpor |
 | Past lives, lines of teaching, the web of every tie and scene ideas from ties (`npc.legacy`) |  | gated |  | gatementorgone 1. the Move button on the teacher's death card puts the Mentor points on another Background |
 | Who holds a place, shown on its scene (`npc.faction-looks`) |  | gated |  | gatefactionend 1. End in the Factions window: the banners leave the canvas |
 
