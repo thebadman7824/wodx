@@ -66,7 +66,7 @@ export function applyLook(doc = globalThis.document) {
 export function registerThemeSettings() {
   const onChange = () => applyLook();
   game.settings.register(MODULE_ID, "look", {
-    name: "WoDX look", hint: "How WoDX windows and chat cards look on this computer. The era's own look follows the chronicle's era (manuscript for the Dark Ages, typewriter for the Great War, neon for the Modern nights). Plain leaves Foundry's own look.",
+    name: "WoDX look", hint: "How WoDX windows and chat cards look on this computer: the era's own look, or Foundry's plain one.",
     scope: "client", config: true, type: String, choices: LOOKS, default: "era", onChange
   });
   game.settings.register(MODULE_ID, "textSize", {

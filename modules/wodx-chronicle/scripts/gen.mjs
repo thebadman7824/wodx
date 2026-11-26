@@ -18,7 +18,7 @@ export function registerGenSettings() {
   game.settings.register(MODULE_ID, "genSeed", {scope: "world", config: false, type: String, default: ""});
   game.settings.register(MODULE_ID, "peopleCulture", {
     name: "Where the chronicle's people come from",
-    hint: "Names and people the generators make, anywhere in the world. Each era gives its own names. A scene given its own region (the sun on a scene) uses that region's people instead.",
+    hint: "Generated people get names that fit their land and era.",
     scope: "world", config: true, type: String, choices: CULTURES, default: "bohemia", onChange: () => { cache = null; }
   });
   for ( const h of ["createRollTable", "updateRollTable", "deleteRollTable", "createTableResult", "updateTableResult", "deleteTableResult"] ) Hooks.on(h, () => { cache = null; });

@@ -55,14 +55,14 @@ function registerSettings() {
     const s = (key, name, hint, type, def, extra = {}) =>
         game.settings.register(MOD, key, { name, hint, scope: "world", config: true, type, default: def, ...extra });
     s("autoApply", "Apply damage automatically",
-        "Write damage to the target's health track as soon as the attack resolves. Off: the chat card shows an Apply button.",
+        "Damage goes on the target's health track as soon as the attack lands. Off: the card shows an Apply button.",
         Boolean, true);
     s("spendResources", "Deduct Willpower and blood",
         "Remove the Willpower and blood points spent in the attack and soak options from the character sheet.",
         Boolean, true);
     // B3921: Knocked down is read at the start of the fallen character's turn
     s("standUpRoll", "Roll to stand up when knocked down",
-        "At the start of a knocked-down character's turn, roll Dexterity + Athletics at difficulty 6 (V20 Dark Ages p. 348): a success stands them up at -2 Initiative next turn; a failure keeps them down and loses the action.", Boolean, true);
+        "A knocked-down character rolls to stand up at the start of their turn. A failure keeps them down and costs the action.", Boolean, true);
     s("celerityDice", "Celerity adds dice to Dexterity rolls",
         "Add Celerity dots to Dexterity-based attack and defense pools (never to Initiative, V20 p. 142).", Boolean, true);
     s("potenceDice", "Potence adds dice to Strength damage",
@@ -79,32 +79,32 @@ function registerSettings() {
         Boolean, false);
     // B7694
     s("companion2002Maneuvers", "Offer the Dark Ages Companion (2002) maneuvers",
-        "Add Choke Hold, Gobbet Rend, Joint Break, Neck Snap and Tendon Slice to the maneuver list, each with its prerequisites and what it leaves (optional rules in that book).",
+        "Adds Choke Hold, Gobbet Rend, Joint Break, Neck Snap and Tendon Slice to the maneuver list.",
         Boolean, true);
     s("showKindMenus", "Show actor-type options",
         "Show the attacker/defender type selectors and the type-specific options (Rage, Glamour, Pathos, banes...) in the attack dialog.",
         Boolean, true);
     s("autoInitiative", "Roll initiative automatically",
-        "Roll everyone's initiative (d10 + Dexterity + Wits) when a fight starts, or at the start of every turn as VtDA20 does (printed p. 343).",
+        "Rolls everyone's initiative when a fight starts, or at the start of every turn as the book does.",
         String, "round", { choices: { round: "Every turn", start: "When the fight starts", off: "Off" } });
     s("flavorText", "Flavor text on attack cards",
-        "Add one short line of description under the dice of each attack card, picked to fit the outcome (miss, hit, heavy hit, soaked, botch). Edit the lines in scripts/flavor.js.",
+        "Adds one short line describing what happened to each attack card.",
         String, "all", { choices: { all: "Shown to everyone", gm: "Whispered to the GM", off: "Off" } });
     game.settings.register(MOD, "countShots", { name: "Count shots and reloads (house rule)",
-        hint: "Each shot uses one round from a ranged weapon that has a capacity on its sheet; an empty weapon must be reloaded first (one turn for a firearm, V20 p. 278; a crossbow takes longer). Bows and slings are never counted.",
+        hint: "Each shot uses a round, and an empty gun or crossbow has to be reloaded. Bows and slings are not counted.",
         scope: "world", config: true, type: Boolean, default: false });
     s("blackPowder", "Black powder misfires and wet powder",
-        "Matchlocks, wheellocks and flintlocks misfire on a botch, and on any 1 in rain or standing in water; heavy rain puts out a match and a misfire there wets the powder until the gun is reloaded. A gun that names no lock takes the lock of the year. Percussion caps and cartridges use the plain botch rule.",
+        "Old guns can misfire on a botch or in the wet, and rain puts out a lit match.",
         Boolean, true);
     s("movementLimit", "Movement in a fight",
-        "Count each token's movement in yards during its turn of a fight (walk 7, jog 12 + Dexterity, run 20 + 3 × Dexterity, Celerity added, wounds limiting it; VtDA20 pp. 333, 351). Works on gridless scenes. By default a player's move past the running speed (or a carrying or dragging pace) is stopped, and a player's attack after moving more than half the running speed is refused (the GM is never stopped, and only warned). Show the pace only to make both warnings.",
+        "Counts how far each token moves on its turn, and stops a move past its running speed. The Storyteller can hold Alt to move an NPC further.",
         String, "block", { choices: { block: "Show it, stop moves past the running speed and attacks after a long move", note: "Show the pace only (warnings)", off: "Off" } });
     s("turnMoves", "Moves out of turn",
-        "In a fight, players move a character's token only on that character's turn (a character holding the action steps in first). The Storyteller can always move any token, for a dodge, a shove or a fall.",
+        "Players can move a token only on that character's turn. The Storyteller can always move any token.",
         String, "off", { choices: CR.TURN_MOVES });
     // B6020
     s("conditionsHold", "Conditions hold the token",
-        "A player cannot move the token of a character who is Held, Completely immobilized, Staked, in Torpor, Incapacitated or Asleep, in a fight or out of one; Numbed moves at three-quarter pace. The Storyteller moves any token freely.",
+        "A player can't move a character who is held, staked, asleep or otherwise helpless.",
         Boolean, true);
 }
 const setting = k => game.settings.get(MOD, k);
@@ -2291,7 +2291,7 @@ Hooks.once("init", () => {
     GM.init({ rollPool, markFollow, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind });
     SW.hooks();
     const api = { daw: { taunt: (a, t, o) => GM.taunt(a, t, o), harry: (c, p, o) => GM.harry(c, p, o), afterHit: GM.afterHit, gnarlOf: GM.gnarlOf, savagedBy: GM.savagedBy, tauntedDice: GM.tauntedDice }, swarm: { make: k => SW.make(k), turn: t => SW.turn(t), dodge: a => SW.dodge(a), victimsOf: t => SW.victimsOf(t), spider: (t, o) => SW.spider(t, o), rules: SWR }, body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.52.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.52.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, cannotActWhy, followOn: R.followOn, markFollow, breakFree, relayHook, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml }, _onSocket: onSocket };
     game.wodxCombat = api;
@@ -2421,7 +2421,11 @@ Hooks.on("preUpdateToken", (doc, changes, options, userId) => {
     const total = (prev?.tag === tag ? Number(prev.yards) || 0 : 0) + yards;
     const cap = way.limit === null ? lim.run : way.limit;
     const p = way.limit === null ? AU.pace(total, lim) : (total <= cap + 1e-6 ? way.mode : "over");
-    if (p === "over" && mode === "block" && !game.user.isGM) {
+    // #2485: an NPC the Storyteller drags (or moves with the keys) keeps to the same running speed as a player's
+    // character; Alt held while moving lets the Storyteller past it for a shove, a fall or a power
+    const method = options?.movement?.[doc.id]?.method ?? options?.movement?.method ?? "";
+    const gmHand = game.user.isGM && !doc.actor.hasPlayerOwner && ["dragging", "keyboard"].includes(method) && !game.keyboard?.isModifierActive?.("Alt");
+    if (p === "over" && mode === "block" && (!game.user.isGM || gmHand)) {
         ui.notifications.warn(`${doc.name}: ${Math.round(total)} yards is past their ${way.limit === null ? "running speed" : `${MV_LABEL(way.mode).toLowerCase()} limit`} this turn (${cap}${way.note ? `; ${way.note}` : lim.note ? `; ${lim.note}` : ""}).`);
         return false;
     }

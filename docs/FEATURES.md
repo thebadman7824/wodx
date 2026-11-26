@@ -31,7 +31,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | A long roll's time moves the clock (`actions.spend-time`) | core | gated |  | gatespendtime 1. an extended roll rolled until done moves the clock by its time |
 | A power's effect keywords on the effects card, and powers that apply or reach the world themselves (`actions.power-effects`) | core | gated | 1 | gatepowers 6 V20 Discipline library |
 | Building a domain: the manor's aspects, holdings and fealty (`actions.domain`) | core | gated | 1 | gatedadomain2 1. the Domain window saves the manor's aspects |
-| Common checks: noticing, reading a person, keeping one's feet, resisting (`actions.common-checks`) | core | gated | 1 | gatechecks 4 notice |
+| Common checks: noticing, reading a person, keeping one's feet, resisting (`actions.common-checks`) | core | gated | 2 | gatechecks 4 notice |
 | Day sleep: Cainites sleep while the sun is up and rise at their own hour (`actions.daysleep`) | core | gated | 1 | gatedaysleep 4. rises at the hour, heals with blood |
 | Debts and oaths, the Blood Hunt, and the marks of the Beast, low Humanity and diablerie (`actions.debts-marks`) | core | gated | 1 | gatedebtsmarks a. Blood Hunt |
 | Disciplines you can see on the map (`actions.discipline-looks`) | core | book |  | gatedalooks 1. Dread Gaze marks the token |
@@ -102,7 +102,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The ambush: Dexterity + Stealth against Perception + Alertness for a free attack (`combat.ambush`) | core | gated | 1 | gateambush 1. a hidden attacker's Attack rolls the ambush with the sheets' pools |
 | The body plan: shapes, parts, held gear coming off, where blows land, the maiming card (`combat.body-plan`) | core | book |  | gatebody the maiming card |
 | Turns that move on by themselves: NPC turns, player turns with a countdown, Hold and Act next (`combat.turn-conductor`) | core | gated | 1 | gate7b1 Everyone: the hero's action is spent, a countdown, then the turn ends with no click |
-| Ways of moving: flying, swimming, climbing, into the ground, held breath and drowning, falls (`combat.movement-modes`) | core | gated | 1 | gatemove drowning in a fight |
+| Ways of moving: flying, swimming, climbing, into the ground, held breath and drowning, falls (`combat.movement-modes`) | core | gated | 2 | gatemove drowning in a fight |
 | Black powder: misfires, wet powder and the lock of the year (`combat.black-powder`) |  | gated | 1 | gatepowder 1. wet powder will not fire from the attack window |
 | Fighting with and around vehicles: shelter, the hull's Durability and Structure, ramming (`combat.vehicles`) |  | gated | 1 | gatetruthcombat 10. a quick attack on a vehicle's token comes off its sheet's Structure |
 | The Garou maneuvers and pack tactics of Dark Ages: Werewolf (`combat.garou-maneuvers`) |  | gated |  | gatedawfill 2 |
@@ -117,7 +117,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Ghouled animals: blood pool by size, the domitor's mark, feeding vitae from the token menu (`creation.animal-ghouls`) | core | gated | 1 | gateanimalghoul 4. Feed vitae on the token menu |
 | Giving vitae: a mortal or an animal drinks, ghouls and blood bonds follow (`creation.give-vitae`) | core | gated | 1 | gateghoulclicks 2. Drink makes a ghoul |
 | Learning from a source: a teacher, a book, a school or practice, with the rise at the end of a long task (`creation.learning`) | core | gated | 2 | gatelearning 3. the study ends and the trait rises |
-| Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open (`creation.lifepath`) | core | book | 1 | gateplayercreation 4. short lifepath |
+| Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open (`creation.lifepath`) | core | book | 2 | gateplayercreation 4. short lifepath |
 | Revenant families in every era: the year's families at birth, their weaknesses in play, aging on their own vitae (`creation.revenant-families`) | core | book |  | gatedarevenants 2. the Khavi in direct sunlight takes bashing damage, soaked with Stamina and Fortitude |
 | Spending experience: the cost by line, the Storyteller's approval, Mentors and the Moment of Truth (`creation.xp-spend`) | core | gated | 1 | gatedaroad 2. a Mentor at 9 dots and the Moment of Truth: the Road dot costs 4, and buying it spends the Moment |
 | The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | gated | 1 | gatecreationaward 1. the Creation window's Award button gives the ticked character 3 experience |
@@ -125,7 +125,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | The group sheet: a coterie, pack or cabal with its members and pooled Backgrounds (`creation.group-sheet`) | core | gated | 1 | gategroupsheet 1. a member's dots typed on the Group sheet pool into the coterie |
 | The People generator: mortals and ghouls for the era and homeland, with ready sheets (`creation.people`) | core | gated |  | gatepeoplemake 1. Make them now gives the sheet the window's Nature, Demeanor and Willpower |
 | The prelude runner, troupe ties, and the world seeded at sign-off (`creation.prelude-seed`) | core | shown | 1 |  |
-| The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 4 | gatewizard 10 derived traits |
+| The step-by-step character wizard, the quick start and the derived traits (`creation.wizard`) | core | gated | 5 | gatewizard 10 derived traits |
 | The Storyteller characters of V20 Dark Ages as ready sheets (`creation.book-people`) | core | gated | 1 | gatebookpeople 1. Make in People of the book gives the sheet the book's numbers |
 | Changes of state that keep the character: death into a wraith, the Awakening, revenants, the Chrysalis, the Fallen (`creation.changes-of-state`) |  | gated | 2 | gatemorebuilds 3. HH2: two Numina dots cost 14 freebies |
 | Maturation: a Dark Ages Cainite's years become points, with Tempting Fate, the Sleep of Ages and the Thirst of Caine (`creation.maturation`) |  | gated | 1 | gatedamaturation 2. the Maturation window buys a dot of Strength |
@@ -160,7 +160,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | NPCs who talk to each other where a character can overhear (`npc.overheard`) | core | shown | 1 |  |
 | One ledger for every bond that makes one person serve another, and servants the world makes (`npc.servants`) | core | gated | 1 | gateservants4 6b. the pact gift answers |
 | Passers-by and animals on the map, by age and the world's ways of life, and the crowd as a resource (`npc.passersby`) | core | book |  | gateworldways 7. local looks |
-| Places, routines on the clock, duties and what an NPC does after its first reaction (`npc.routines`) | core | book |  | gateduties 7. the duty moves the token on the clock |
+| Places, routines on the clock, duties and what an NPC does after its first reaction (`npc.routines`) | core | book | 1 | gateduties 7. the duty moves the token on the clock |
 | Pregnancy and birth by century and place, child sheets and growing up (`npc.family`) | core | gated |  | gatebirth 1. the clock passing the due date brings the birth and the child's sheet |
 | Relationships and lineage read from both ends, secrets and hooks (`npc.ties-secrets`) | core | gated |  | gatetiehide 1. the eye button hides a tie: marked for the Storyteller, gone from a player's view |
 | Residents of generated towns and settlements (`npc.residents`) | core | gated |  | gatemakeresidents 1. Make them, then the clock: the residents stand in their buildings on the canvas |

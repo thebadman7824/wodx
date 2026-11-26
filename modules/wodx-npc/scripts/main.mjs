@@ -66,7 +66,7 @@ import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.111.0";
+const VERSION = "0.112.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -86,7 +86,7 @@ function registerSettings() {
     scope: "world", config: true, type: String, default: "suggest", choices: NR.MODES
   });
   game.settings.register(MOD, "walkRound", {
-    name: "My token walks round walls", hint: "When you drag your own token to a spot a wall stands in the way of, it walks a path round the walls and through open doors instead of stopping at the wall. Not in a fight, where each move is counted.",
+    name: "My token walks round walls", hint: "A token dragged to a spot behind a wall walks round it instead of stopping. Not in a fight.",
     scope: "client", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "gridless", {
@@ -98,7 +98,7 @@ function registerSettings() {
     scope: "world", config: true, type: Number, default: 40, range: {min: 5, max: 200, step: 5}
   });
   game.settings.register(MOD, "pickPowers", {
-    name: "NPCs choose their own powers", hint: "When an NPC uses a power, it picks one that fits the moment (heal when hurt, escape when losing, call help when outnumbered, else its strongest attack) and rolls it. Off: the actions menu opens for the Storyteller to pick. An NPC's Behaviour window can switch this off for that NPC alone.",
+    name: "NPCs choose their own powers", hint: "An NPC picks and rolls the power that fits the moment. Off: the Storyteller picks. An NPC's Behaviour window can turn it off for that NPC alone.",
     scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "options", {

@@ -2,6 +2,7 @@
 
 Newest first. Add each new release at the top.
 
+- 0.3.5 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.3.4 (Off means off (B6763). While WoDX Voices is switched off, its settings other than the on switch, its voice cache menu and the Voiced and Not voiced entries in the actor menu no longer show, and it no longer browses its voice files when the world starts. Turning it on reloads the world and shows the voice settings again)
 - 0.3.3 (Plot NPCs now speak their talk-sheet answers aloud (B6171): the voice reads the answer line WoDX NPC's talk card writes (its "wnpc-said" paragraph), not only a plain paragraph, which no real talk card had; a card with nothing to say stays silent)
 - 0.3.2 (spoken lines find a browser voice for 37 languages)

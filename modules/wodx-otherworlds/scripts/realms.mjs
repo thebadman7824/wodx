@@ -32,7 +32,7 @@ const diceLine = d => d.length ? `<span class="wodx-quiet">(${d.join(", ")})</sp
 export function registerRealmSettings() {
   game.settings.register(MODULE_ID, "avatarStorm", {name: "The Avatar Storm", hint: "By the date follows the chronicle's dated events (the Avatar Storm fires in 1999 on the classic branch). M20 calls the Storm optional.",
     scope: "world", config: true, type: String, choices: RR.STORM_MODES, default: "auto"});
-  game.settings.register(MODULE_ID, "layerSound", {name: "Sound of the other worlds", hint: "When your token stands in the Penumbra, the Shadowlands, the Near Dreaming or the Net, play that world's loop on this computer, from the folder of the other worlds' loops. WoDX ships no loops yet: nothing plays until penumbra.ogg, shadowlands.ogg, dreaming.ogg or net.ogg is put in that folder.",
+  game.settings.register(MODULE_ID, "layerSound", {name: "Sound of the other worlds", hint: "Plays a world's sound loop on this computer when your token is in the Penumbra, Shadowlands, Dreaming or Net. WoDX ships no loops yet: nothing plays until penumbra.ogg, shadowlands.ogg, dreaming.ogg or net.ogg is put in that folder.",
     scope: "client", config: true, type: Boolean, default: true, onChange: () => layerSoundSoon()});
   game.settings.register(MODULE_ID, "layerVolume", {name: "Volume of the other worlds", scope: "client", config: true, type: Number, range: {min: 0, max: 1, step: 0.05}, default: 0.4, onChange: () => layerSoundSoon(true)});
   game.settings.register(MODULE_ID, "layerRoot", {name: "Folder of the other worlds' loops", hint: "In the Data folder: penumbra.ogg, shadowlands.ogg, dreaming.ogg and net.ogg. A missing file plays nothing.",

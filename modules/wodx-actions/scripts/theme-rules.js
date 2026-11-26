@@ -389,7 +389,10 @@ export const FITS = {
     "api:pactGift": f => /\bpact\b|infernal|investment/.test(f.text),
     "api:thrall": f => /thrall|\bpact\b|infernal/.test(f.text),
     "api:fomorPower": f => /fomor|taint|bane/.test(f.text),
-    "api:kinfolk": f => /kinfolk|kin-fetch|\bgnosis\b/.test(f.text)
+    "api:kinfolk": f => /kinfolk|kin-fetch|\bgnosis\b/.test(f.text),
+    // Exorcism is a rite a character has to learn (V20 Dark Ages); the manor needs a Domain or holdings on the sheet
+    "api:exorcise": f => /exorcis/.test(f.text),
+    "api:domainDA": f => /\bdomain\b|\bmanor\b|holdings/.test(f.text)
 };
 /** Does an action fit a character (facts as above)? */
 export const fits = (spec, facts = {}) => { const t = FITS[spec]; return !t || !!t({ text: String(facts.text ?? "").toLowerCase() }); };

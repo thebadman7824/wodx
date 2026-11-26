@@ -37,7 +37,7 @@ let castPlan = null;
 
 export function registerOtherSight() {
   game.settings.register(MOD, "otherAuto", {
-    name: "My character's own eyes", hint: "A wraith sees the living scene from the Shadowlands and a changeling (or an enchanted mortal) sees the chimerical world without pressing My sight. Off: only the sights I choose.",
+    name: "My character's own eyes", hint: "A wraith sees the living world and a changeling the chimerical one without pressing My sight. Off: only the sights I choose.",
     scope: "client", config: true, type: Boolean, default: true, onChange: () => Hooks.callAll("sightRefresh")
   });
 }

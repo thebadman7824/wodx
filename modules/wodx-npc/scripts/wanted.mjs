@@ -32,7 +32,7 @@ export function build(ctx) {
   async function save(next) { await game.settings.set(MOD, "descriptions", W.prune(next, now())); }
 
   function registerSettings() {
-    game.settings.register(MOD, "culpritDescriptions", {name: "Descriptions that spread", hint: "When a breach, a fight or a crime has witnesses, WoDX writes down what they saw of the culprit. Word spreads by the means of the year and fades; NPCs who have heard it may know the culprit again. Storyteller cards only.",
+    game.settings.register(MOD, "culpritDescriptions", {name: "Descriptions that spread", hint: "Witnesses remember what they saw of a culprit, and word spreads so others may know them again.",
       scope: "world", config: true, type: Boolean, default: true});
     game.settings.register(MOD, "descriptions", {scope: "world", config: false, type: Array, default: []});
   }

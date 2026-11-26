@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.4.7 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.4.6 (Target tags for the 39 creed-book edges of Hunter (B7834), so the aim panel suggests a foe, a friend or the hunter for each)
 - 0.4.5 (Fixes from the first solo test (B8048): the area outline clears when the power is not an area one)
 - 0.4.4 (The Dark Ages Gift Survivor has its table tag: it works on the one using it (B7936))

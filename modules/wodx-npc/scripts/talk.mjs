@@ -51,12 +51,12 @@ export function build(ctx) {
     game.settings.register(MOD, "talkAskWait", {name: "\"Ask me first\": seconds before the NPC answers by itself",
       hint: "When an NPC is set to \"ask me first\" and you have not picked a line in this time, they say the first written line that fits, so the player is not left standing. A later pick still goes out. 0 waits for you however long it takes.",
       scope: "world", config: true, type: Number, default: 60, range: {min: 0, max: 600, step: 10}});
-    game.settings.register(MOD, "stockTalk", {name: "Stock talk", hint: "When nothing you wrote fits, NPCs greet, gossip, pass on rumours they have heard and talk of news, work and the way, in words suited to the era and to how they regard the character. Your lines always come first.",
+    game.settings.register(MOD, "stockTalk", {name: "Stock talk", hint: "NPCs greet, gossip and pass on news on their own when you haven't written a line for it.",
       scope: "world", config: true, type: Boolean, default: true});
     // NPC 0.45.0 (B1640): stock talk made by a grammar, in words of the era; off until the Storyteller turns it on
-    game.settings.register(MOD, "talkGrammar", {name: "Talk generator", hint: "With stock talk on, NPCs put their stock lines together from words of the era and of who they are, so they repeat less. Your lines always come first. Off: the hand-written stock lines alone.",
+    game.settings.register(MOD, "talkGrammar", {name: "Talk generator", hint: "NPCs build their stock lines from words of their era, so they repeat less.",
       scope: "world", config: true, type: Boolean, default: false});
-    game.settings.register(MOD, "passGreet", {name: "NPCs call out to passers-by (house rule)", hint: "When a player's character walks within talking distance, an NPC may greet them out loud, once a day of game time. Only greet lines marked aloud on a talk sheet are used; otherwise a stock greeting.",
+    game.settings.register(MOD, "passGreet", {name: "NPCs call out to passers-by (house rule)", hint: "An NPC may greet a character who walks close, once a day.",
       scope: "world", config: true, type: Boolean, default: false});
     game.settings.register(MOD, "passChance", {name: "Chance an NPC calls out", hint: "From 0 (never) to 1 (every time someone passes, once a day).",
       scope: "world", config: true, type: Number, default: 0.5, range: {min: 0, max: 1, step: 0.05}});

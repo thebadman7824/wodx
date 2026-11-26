@@ -481,7 +481,7 @@ function openTool(id) {
 export function registerStSettings() {
   game.settings.register(MOD, "st", {scope: "world", config: false, type: Object, default: R.ST_OFF()});
   game.settings.register(MOD, "stOffer", {name: "Offer Storyteller tools to the lone player",
-    hint: "A switch on the player's panel that shows them the Storyteller's cards, hidden tokens and a check of every system, and lets them give their character items. It works only while The Lone Chronicle is on and nobody else is playing.",
+    hint: "Lets the lone player see the Storyteller's cards and hidden tokens and give their character items.",
     scope: "world", config: true, type: Boolean, default: true});
 }
 

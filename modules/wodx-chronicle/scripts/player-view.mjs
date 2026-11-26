@@ -23,12 +23,12 @@ export function registerPlayerViewSettings() {
   });
   game.settings.register(MODULE_ID, "playerViewDefault", {
     name: "Players' view when nobody has picked one",
-    hint: "Beginner puts each player's WoDX buttons in a few labelled drawers and groups the token menu. Full shows every button as before. Each player can change their own view, and you can pick for each player in Player interface.",
+    hint: "Beginner groups each player's WoDX buttons into a few drawers, and Full shows them all. Each player can change their own.",
     scope: "world", config: true, type: String, choices: R.VIEWS, default: "full", onChange: () => { redraw(); applyBodyClass(); }
   });
   game.settings.register(MODULE_ID, "myView", {
     name: "My view",
-    hint: "Beginner puts the WoDX buttons in a few labelled drawers and groups the token menu; nothing is taken away, and Find anything (Ctrl+K) reaches every button. Full shows everything at once.",
+    hint: "Beginner groups the WoDX buttons into a few drawers (Ctrl+K still finds any of them), and Full shows them all.",
     scope: "client", config: true, type: String,
     choices: {"": "As the Storyteller set it", ...R.VIEWS}, default: "", onChange: () => { redraw(); applyBodyClass(); }
   });

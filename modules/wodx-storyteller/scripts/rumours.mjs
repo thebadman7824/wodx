@@ -25,7 +25,7 @@ export function registerRumourSettings() {
   game.settings.register(MOD, "rumourGarble", {name: "Rumours change in the telling", hint: "Each time someone passes a rumour on, it may twist a little. The rumour mill counts the twists for you to play; the words stay yours.",
     scope: "world", config: true, type: Boolean, default: false});
   // B3350: public deeds become tales that change as they are retold
-  game.settings.register(MOD, "tales", {name: "Deeds become tales", hint: "What characters do in public (a standing won or lost, a boon kept or broken) starts a tale that NPCs pass on and retell their own way. NPCs meet a character with the version they heard in mind.",
+  game.settings.register(MOD, "tales", {name: "Deeds become tales", hint: "What characters do in public becomes a rumour that NPCs pass on and remember.",
     scope: "world", config: true, type: Boolean, default: true});
 }
 const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { return 0; } };

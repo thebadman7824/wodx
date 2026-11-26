@@ -62,7 +62,7 @@ export async function planFor(how, {from, to, reach = "near", year = yearNow()} 
 export function registerLetterSettings() {
   game.settings.register(MOD, "letters", {scope: "world", config: false, type: Array, default: []});
   game.settings.register(MOD, "npcAnswers", {scope: "world", config: true, type: Boolean, default: true,
-    name: "NPCs answer letters", hint: "Someone you play writes back on their own when a letter reaches them, from their talk sheet and in the tone they hold toward the sender. The answer comes back the same long way; you can lose it, hold it, have it read or rewrite it on the way."});
+    name: "NPCs answer letters", hint: "NPCs answer letters on their own, in their own voice, and the answer takes as long to come back."});
 }
 const letters = () => L.normLetters(setting("letters"));
 const saveLetters = list => game.settings.set(MOD, "letters", L.prune(list, game.time.worldTime));

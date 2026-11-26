@@ -783,7 +783,7 @@ export async function afterDrop(target, made, data) {
 
 export function setup() {
   game.settings.register(MOD, "coinPlace", {
-    name: "Coin of which land", hint: "The coins the sheet offers by year: the German lands, England, the United States, or the chronicle's money, which follows WoDX Storyteller's money for every region of the world (on a scene abroad, that land's).",
+    name: "Coin of which land", hint: "Which coins the sheet offers: those of a land, or the chronicle's own money.",
     scope: "world", config: true, type: String, default: "german", choices: {...Object.fromEntries(Object.entries(XR.CURRENCIES).map(([k, v]) => [k, v.label])), [XR.CHRONICLE_COINS]: "The chronicle's money (every region, from WoDX Storyteller)"}
   });
   installHistory();

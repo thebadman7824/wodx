@@ -277,7 +277,7 @@ Hooks.once("init", () => {
   // B6763: while Voices is off (the default; voices are shelved), only this switch shows: the other settings, the cache
   // button and the actor menu's Voiced entries do nothing then, so they stay out of sight. Turning it on reloads.
   game.settings.register(MOD, "enabled", {name: "Voices", scope: "world", config: true, type: Boolean, default: false, requiresReload: true,
-    hint: "NPCs speak their talk answers, greetings and farewells aloud, and the Storyteller's lines when chatting in character as an NPC. Each NPC keeps a voice of its own. Only the people who see a line hear it. Turning it on shows the voice settings.",
+    hint: "NPCs speak their lines aloud, each in a voice of its own, to the people who see them.",
     onChange: () => loadEngine()});
   const on = !!setting("enabled");
   const reg = (k, o) => game.settings.register(MOD, k, o.config ? {...o, config: on} : o);

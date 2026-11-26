@@ -39,7 +39,7 @@ export function suits(stations, letter) {
 const SLOT_WORDS = [
   ["feet", /\b(shoes|boots|sandals|clogs|slippers|moccasins|sneakers|foot (?:rags|wraps)|geta)\b/],
   ["legs", /\b(hose|breeches|pants|trousers|leggings|jeans|skirt|loincloth)\b/],
-  ["body", /\b(shift|tunic|shirt|doublet|dress|gown|robe|kirtle|jerkin|cassock|surcoat|t-shirt|sweatshirt|blouse|thawb|abaya)\b/],
+  ["body", /\b(shift|tunic|shirt|doublet|dress|gown|robe|kirtle|bliaut|jerkin|cassock|surcoat|t-shirt|sweatshirt|blouse|thawb|abaya)\b/],
   ["outer", /\b(cloak|coat|jacket|mantle|poncho|cape|sheepskin)\b/],
   ["waist", /\b(belt)\b/],
   ["head", /\b(hood|cap|hat|coif|headscarf|wimple|beret|turban)\b/]
@@ -48,11 +48,11 @@ const SLOT_WORDS = [
 export const OUTFIT = ["body", "legs", "feet", "waist", "outer"];
 export function slotOf(name = "") {
   const n = String(name).toLowerCase();
-  if ( /\b(bolt|hank|needle|length of|strip of|crown|wedding|veil|eyepatch|cuffs|arm warmers|apron)\b/.test(n) ) return null;
+  if ( /\b(bolt|hank|needle|length of|strip of|crown|wedding|veil|eyepatch|cuffs|arm warmers|apron|garters)\b/.test(n) ) return null;
   for ( const [slot, re] of SLOT_WORDS ) if ( re.test(n) ) return slot;
   return null;
 }
-const COVERS_LEGS = /\b(dress|gown|robe|cassock|thawb|abaya)\b/;
+const COVERS_LEGS = /\b(dress|gown|bliaut|robe|cassock|thawb|abaya)\b/;
 
 /** Abilities that point to a trade (goods-tags.mjs trade words). The highest rated wins; ties go by this order. */
 export const ABILITY_TRADES = [
@@ -102,7 +102,7 @@ export const BASICS = [
  * Returns [{key, name, kind, from: "good"|"gear", good?, item?, price, free, why}] in the order a player reads them.
  */
 export function suggestKit({goods = [], gear = [], inUse = () => true, gearHere = () => true, price = () => 0, station = "c",
-  abilities = {}, gearStation = () => null, seed = "wodx"} = {}) {
+  abilities = {}, gearStation = () => null, seed = "wodx", year = null} = {}) {
   const rand = seeded(seed);
   const out = [], have = new Set();
   const add = (row, why, free = false) => {
@@ -118,7 +118,10 @@ export function suggestKit({goods = [], gear = [], inUse = () => true, gearHere 
   let legsCovered = false;
   for ( const slot of OUTFIT ) {
     if ( slot === "legs" && legsCovered ) continue;
-    const pick = pickOne(wear.filter(g => slotOf(g.name) === slot), rand);
+    // Before 1800 the clothes of the period come first: the long list borrowed from Cataclysm: DDA (source "cdda") is
+    // dated loosely and is the fallback there
+    const fits = wear.filter(g => slotOf(g.name) === slot), period = year != null && year < 1800 ? fits.filter(g => g.source !== "cdda") : [];
+    const pick = pickOne(period.length ? period : fits, rand);
     if ( !pick ) continue;
     if ( slot === "body" && COVERS_LEGS.test(pick.name.toLowerCase()) ) legsCovered = true;
     add({from: "good", good: pick}, "what they stand up in", true);

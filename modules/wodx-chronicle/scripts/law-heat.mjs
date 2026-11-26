@@ -18,7 +18,7 @@ const traitHas = (a, k) => Number(game.modules.get(MODULE_ID)?.api?.traits?.has?
 
 export function registerHeatSettings() {
   game.settings.register(MODULE_ID, "lawHeat", {scope: "world", config: false, type: Object, default: {regions: {}}});
-  game.settings.register(MODULE_ID, "lawHeatOn", {name: "The law looks for criminals", hint: "Crimes that witnesses see raise the law's heat on the culprit in that land. A warrant and then a manhunt follow, and the watch come for the culprit (with WoDX Storyteller on).",
+  game.settings.register(MODULE_ID, "lawHeatOn", {name: "The law looks for criminals", hint: "Crimes seen by witnesses bring a warrant, then a manhunt, and the watch comes for the culprit.",
     scope: "world", config: true, type: Boolean, default: true});
 }
 const on = () => setting("lawHeatOn") !== false;

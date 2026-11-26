@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.118.4 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.118.3 (Book overlap rewording (B8025): lines that shared 8 words with a book in the full check of all 1,644 books (26 Nov) are now in WoDX's own words. Their meaning, numbers and page references are unchanged)
 - 0.118.2 (Fixes from the first solo test (B8055, B8056): the watch stand on free spots in the open by the culprit, each answer to the law is told, a place with no landing spot is entered by its door (the Way back, any Way, a door or a public room), and a trip announces its time (wodxTravelled) for a table with one clock)
 - 0.118.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)

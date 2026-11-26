@@ -460,10 +460,10 @@ export function build(ctx) {
 /** Settings this part adds. */
 export function registerSettings() {
     game.settings.register(MOD, "bloodHunts", { scope: "world", config: false, type: Array, default: [] });
-    game.settings.register(MOD, "autoBloodHunt", { name: "The court calls Blood Hunts", hint: "At each faction turn (WoDX NPC), a Kindred with fresh marks of diablerie or a severe breach of the Masquerade (three or more witnesses who remember, where word spreads) is hunted: at once for a Storyteller's character, with Lift it on the card; through the approval queue for a player's.",
+    game.settings.register(MOD, "autoBloodHunt", { name: "The court calls Blood Hunts", hint: "A Kindred with fresh marks of diablerie or a bad Masquerade breach is hunted by the others.",
         scope: "world", config: true, type: Boolean, default: true });
-    game.settings.register(MOD, "beastToken", { name: "The Beast in a fight", hint: "When a player's vampire is in frenzy or Rötschreck during a fight: a card each turn of what the Beast wants, or the NPC planner moves the token for the Beast (WoDX NPC; every move can be undone). A Willpower point takes a turn back (V20 p. 310).",
+    game.settings.register(MOD, "beastToken", { name: "The Beast in a fight", hint: "In frenzy or Rötschreck during a fight, the Beast picks the character's moves. A Willpower point takes a turn back.",
         scope: "world", config: true, type: String, default: "card", choices: B.BEAST_MODES });
-    game.settings.register(MOD, "diablerieSoul", { name: "A diablerized soul can push through", hint: "Optional (V20 p. 295 gives it as a rumour): a victim with Willpower 10 and much stronger blood may push through. At nightfall the diablerist rolls Willpower; a failure lets the victim's habits and wants through (house rule).",
+    game.settings.register(MOD, "diablerieSoul", { name: "A diablerized soul can push through", hint: "A strong victim of diablerie may push through: the diablerist rolls Willpower at nightfall or takes on their habits (house rule).",
         scope: "world", config: true, type: Boolean, default: false });
 }

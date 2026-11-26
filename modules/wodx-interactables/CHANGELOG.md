@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.57.1 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.57.0 (Pick up from the sheet and icons on piles (B8122), the owner's desk pick inv3)
 - 0.56.2 (Fixes from the first solo test (B8049): a player lights only a light the character carries; the Storyteller may light any)
 - 0.56.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)

@@ -70,6 +70,9 @@ export const WAYS = {
 
   // Clothes
   "a kippah": JEW, "a tallit gadol": JEW, "a tallit katan": JEW, "a kittel": JEW,
+  "a pointed Jewish hat": {latin: null},
+  "a pair of temple rings": {moravia: null, "poland-baltic": null, "carpathians-balkans": null},
+  "a linen alb": XN,
   "a hijab": MUSLIM, "a niqab": MUSLIM, "an abaya": MUSLIM, "a thawb": MUSLIM,
   "a keffiyeh": {islamic: null},
   "a turban": {islamic: null, indic: null, sahel: null, swahili: null},
