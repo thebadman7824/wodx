@@ -37,7 +37,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Disciplines you can see on the map (`actions.discipline-looks`) | core | book |  | gatedalooks 1. Dread Gaze marks the token |
 | Feeding: what the Kiss does to the vessel, clan and bloodline palates, and the night's hunt (`actions.feeding`) | core | gated | 1 | gatefeed 2 feed on an unlinked mortal |
 | Frenzy and Rötschreck checks, by hand and when provoked (`actions.frenzy`) | core | gated | 3 | gatetruthactions 9. Destiny rolls a failed frenzy check again |
-| How often a power may be used, and the costs it pays when it ends (`actions.limits-costs`) | core | gated |  | gategiftused 1. a used once-a-scene Gift is greyed in the Gift window |
+| How often a power may be used, and the costs it pays when it ends (`actions.limits-costs`) | core | gated | 1 | gategiftused 1. a used once-a-scene Gift is greyed in the Gift window |
 | Inquisitors and True Faith: orders, Superior Virtues, Conviction, Piety and Blessings (`actions.inquisitors`) | core | gated | 4 | gateinqblessings 1. Wreathed in Shadows adds the Flock at once |
 | Merits, flaws and what other modules leave on a character reach the dice (`actions.trait-hooks`) | core | gated | 1 | gatedamerits 2. Thirteenth Generation makes a Discipline one harder |
 | Nature gives Willpower back when the character acts to it (`actions.nature`) | core | gated | 1 | gatetruthsheets 3. the Nature button on a plain mortal |
@@ -45,7 +45,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Rituals and path magic: Thaumaturgy, Necromancy and Koldunic sorcery on the effects card (`actions.rituals-paths`) | core | gated | 1 | gaterituals 2b. a Ward is armour on a weapon blow's soak too |
 | Sins against the Road: the hierarchy of sins, Conscience rolls and the loss of a Road dot (`actions.road-sins`) | core | gated | 2 | gatedasins 1. a lie told through the action window takes a Conscience dot |
 | Summoned beings and the rules every summoning lives by (`actions.summons`) | core | shown | 1 |  |
-| The action window, the profile menus and the WoDX card (`actions.action-window`) | core | gated | 2 | gate6e a card: header, roll, what changed with pips |
+| The action window, the profile menus and the WoDX card (`actions.action-window`) | core | gated | 3 | gate6e a card: header, roll, what changed with pips |
 | The actions that make servants: enchantment, oaths, bonds (`actions.servant-actions`) | core | gated |  | gateenchant 1. Enchant from the changeling's Actions menu spends Glamour and binds the mortal |
 | The ghosts of V20 Dark Ages: Passion as blood, manifesting (`actions.ghosts-da`) | core | gated | 1 | gateghostmanifest 1. Manifest from the ghost's Actions menu spends Passion and sets Strength |
 | The odds of a roll before it is made (`actions.odds`) | core | book |  | gatetable odds in the Action window |
@@ -55,7 +55,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Using a Discipline from the V20 Dark Ages library (`actions.disciplines`) | core | gated | 3 | gatedapowers 2. Creatio Ignis 3 works Campfire at difficulty 6 |
 | Walking a Road as a faith with people in it: rank, Mentor, the Moment of Truth, changing Roads (`actions.road-faith`) | core | gated | 1 | gatedaroad 4. a change of Road to the Road of the Beast |
 | Who an act startles and how far word of it goes (`actions.witness`) | core | shown | 2 |  |
-| With this person: dealing with one NPC face to face (`actions.social`) | core | gated | 1 | gatesocial 6 window |
+| With this person: dealing with one NPC face to face (`actions.social`) | core | gated | 2 | gatesocial 6 window |
 | A Dark Ages mage's everyday wonders (charms, elixirs, tools) enchanted as a craft, and Tass from creatures and the fae (`actions.mage-wonders`) |  | gated | 1 | gatemagewonders 1. unbreakable iron from the household window: the sword strikes +3 |
 | A Dark Ages mage's household and standing: chantry and its gossip, familiar, Destiny, Library, servants, talismans, degrees, the DA:Mage merits and flaws (`actions.mage-household`) |  | gated | 1 | gatemagehouse 1. the chantry with no community points: the commoners talk |
 | Changelings of the later eras: Arts, Realms, Nightmare, Imbalance and Banality (`actions.c20`) |  | gated | 1 | gate6h Nightmare at 10: it clears, an Imbalance is marked and a Glamour point returns |
@@ -87,7 +87,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Feature | Core | Status | Open | Gate |
 | --- | --- | --- | --- | --- |
 | A fight that starts by itself: sight, alarms, regions, frenzy, an attack outside a fight (`combat.fight-start`) | core | book |  | gatefight start the fight |
-| An attack: the roll, the defence, damage and soak by the target's kind (`combat.attack-soak`) | core | gated | 1 | gatetruthrelay a. the player's quick attack hits |
+| An attack: the roll, the defence, damage and soak by the target's kind (`combat.attack-soak`) | core | gated | 2 | gatetruthrelay a. the player's quick attack hits |
 | Animal swarms: one token that bites everyone inside it, dodges at 8, overrun at three levels (`combat.swarms`) | core | gated | 1 | gatedach8 5. a rat swarm overruns the one inside it |
 | Extra actions (Celerity) in a second pass at the end of the turn (`combat.extra-actions`) | core | gated | 1 | gate7b1 extra actions: a second pass at the end of the turn, in Initiative order, then the next turn |
 | Fighting from the saddle: the mount's Strength, its dodge, keeping the saddle, the lance, bows at a trot (`combat.mounted`) | core | gated | 1 | gatemounted 6. a bow at a trot |
@@ -112,8 +112,8 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Before the First Night: one hub per character with a card for each step, and the guided builder (`creation.first-night`) | core | book |  | gatefirstnight 4 build |
 | Ghouled animals: blood pool by size, the domitor's mark, feeding vitae from the token menu (`creation.animal-ghouls`) | core | gated | 1 | gateanimalghoul 4. Feed vitae on the token menu |
 | Giving vitae: a mortal or an animal drinks, ghouls and blood bonds follow (`creation.give-vitae`) | core | gated | 1 | gateghoulclicks 2. Drink makes a ghoul |
-| Learning from a source: a teacher, a book, a school or practice, with the rise at the end of a long task (`creation.learning`) | core | gated | 1 | gatelearning 3. the study ends and the trait rises |
-| Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open (`creation.lifepath`) | core | book |  | gateplayercreation 4. short lifepath |
+| Learning from a source: a teacher, a book, a school or practice, with the rise at the end of a long task (`creation.learning`) | core | gated | 2 | gatelearning 3. the study ends and the trait rises |
+| Lifepaths: the mortal years as a drill-down or a short path, and the threads they leave open (`creation.lifepath`) | core | book | 1 | gateplayercreation 4. short lifepath |
 | Revenant families in every era: the year's families at birth, their weaknesses in play, aging on their own vitae (`creation.revenant-families`) | core | book |  | gatedarevenants 2. the Khavi in direct sunlight takes bashing damage, soaked with Stamina and Fortitude |
 | Spending experience: the cost by line, the Storyteller's approval, Mentors and the Moment of Truth (`creation.xp-spend`) | core | gated | 1 | gatedaroad 2. a Mentor at 9 dots and the Moment of Truth: the Road dot costs 4, and buying it spends the Moment |
 | The Creation window: allies, patrons and the tools for each character (`creation.creation-window`) | core | gated |  | gatecreationaward 1. the Creation window's Award button gives the ticked character 3 experience |
@@ -150,7 +150,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | How each NPC regards each character, and why (`npc.attitude`) | core | shown | 1 |  |
 | Natural rivalries between kinds of NPC, and NPCs who start a fight by themselves (`npc.rivalry`) | core | book |  | gaterivals start the fight |
 | NPC archetypes: animals, criminals, combatants, townsfolk and supernatural NPCs by line (`npc.archetypes`) | core | shown | 1 |  |
-| NPC combat tactics: each NPC weighs what it could do on its turn and plans the best (`npc.tactics`) | core | book |  | gate7b an NPC's turn: a plan whispered to the Storyteller, best first, each with its reason |
+| NPC combat tactics: each NPC weighs what it could do on its turn and plans the best (`npc.tactics`) | core | book | 1 | gate7b an NPC's turn: a plan whispered to the Storyteller, best first, each with its reason |
 | NPC memory and grudges, and a description of a culprit that spreads and fades (`npc.memory-wanted`) | core | shown | 1 |  |
 | NPCs of every line refill their own pools the way their book says (`npc.line-refill`) | core | gated |  | gatenpcrefill 1. a changeling NPC's Sanctuary refills Glamour at the new night |
 | NPCs who talk to each other where a character can overhear (`npc.overheard`) | core | shown | 1 |  |
