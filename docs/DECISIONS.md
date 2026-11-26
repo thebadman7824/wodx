@@ -485,7 +485,7 @@ Next free block: B8190
 | B8130-B8139 | Fewer merge train ejects: push guard, review-list fragments, conflicts the train settles, label on green (used B8130-B8134) | tools (git hooks, release, pcq) |
 | B8140-B8149 | Solo test fixes part 4: what fits, region lifepath, plain settings, NPC pace, 1197 clothing (used B8140-B8144) | Actions, Creation, Combat, NPC, Library, Chronicle, Senses, Sheets, Solo, Storyteller and others (setting hints) |
 | B8160-B8169 | Off-screen lives on a one-year Pass the years (used B8160-B8161) | NPC |
-| B8170-B8179 | Merge train batches of up to five (used B8170) | Repository workflow |
+| B8170-B8179 | Merge train batches of up to five (used B8170-B8171) | Repository workflow |
 | B8180-B8189 | Plain words for action menus, module by module (#2503) (used B8180-B8181) | wodx-actions, wodx-chronicle, wodx-combat, wodx-library, wodx-npc, wodx-otherworlds, wodx-paperdoll, wodx-solo, wodx-storyteller |
 <!-- decision-index:end -->
 
@@ -17113,6 +17113,19 @@ behind the front for members (BATCH_LOOK, was 6), so a line with a few ineligibl
 halving retry is unchanged: a red batch of five is followed by at most three, then two, then the front alone.
 
 Reverse: set BATCH_MAX back to 3 and BATCH_LOOK to 6, or set "trainBatch": 3 in runner.json.
+
+## B8171. The clean world copy holds WoDX Chronicle's Roll Tables (2026-11-26)
+Repository workflow. On lane 9 the clean smoke set failed gatethreads step 8 (the guest beat's Undo) and gatepod step 2
+(the court card's button) after gatecleanworld, while both passed alone. setup-clean stopped the lane right after
+Start a chronicle, before WoDX Chronicle's table install (1.5 s after start-up) had written its Roll Tables, so the
+clean copy held 133 of 1,111. Every gate's sign-in then made about 420 tables again and run-gate deleted them after,
+which kept the box busy into the next gate, and the two clicks landed after their fixed 800 ms wait. setup-clean now
+awaits api.gen.installTables() and says how many tables the world holds; on lane 9 gatecleanworld went from 191 s to
+92 s and gatethreads from 170 s to 72 s with no leftover documents. gatethreads step 8 and gatepod step 2 also wait up
+to 8 s for the result instead of a fixed 800 ms, and run-gate names the collections of the leftover documents it
+deletes. A lane made before this needs `lanes.mjs setup-clean --lane N --again` to get the tables.
+
+Reverse: drop the installTables wait in lanes.mjs setup-clean and the two until() waits.
 
 ## B8180. The Actions menu in plain words (2026-11-26)
 WoDX Actions. Every action's description (on hover, and on its line in Beginner view) is one plain line saying what happens when it is used, with no page references or book names; those stay on the cards. Sixteen button names that were two terms with a slash, or a bare list, now say what the button does (Make a roll, Hurt by fire or a fall, Sneak or stalk). Game terms that are on the sheet (Willpower, Road, Discipline, Gnosis) stay as they are. Desk pick d2503 ("now": module by module, solo-facing first, a before-and-after list each), part of issue #2503.
