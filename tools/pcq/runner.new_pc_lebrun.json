@@ -11,6 +11,9 @@
   "minFreeGB": {"C": 15, "D": 50},
   "minFreeRamGB": 4,
   "watch": {"urls": ["https://wodx.online"], "everyMinutes": 5, "failsBeforeAlert": 3, "peerStatusTitle": "PC runner status", "peerSilentMinutes": 20},
+  "_sprites": "B8100: the solo world (D:/WoDX/FoundryData-solo) may ask for sprites from inside the game; no gate lane (gates make characters, and each would start a drawing). python is the system Python 3.12 there, which has numpy and Pillow (read 26 Nov 2026); if it is missing the runner draws none and says so once in its log.",
+  "spriteData": ["D:/WoDX/FoundryData-solo"],
+  "python": "%LOCALAPPDATA%/Programs/Python/Python312/python.exe",
   "train": true,
   "prGatesPreferPeer": null
 }

@@ -37,6 +37,12 @@ test("a placement far away is not a walk", () => {
   assert.equal(st.x, 900);
 });
 
+test("a long step while Foundry is still walking the token is a walk (B6147)", () => {
+  const st = SR.step(SR.start({x: 0, y: 0}, "left"), {x: 400, y: 0}, 100, 5, 140, true);
+  assert.equal(st.moving, true);
+  assert.equal(st.facing, "right");
+});
+
 test("every sheet is in the module, at the size the rules cut frames from", () => {
   for ( const name of Object.keys(SR.SHEETS) ) {
     for ( const [path, w, h] of [[SR.sheetPath(name), SR.FRAME_W * (SR.FRAMES + (SR.hasStand(name) ? 1 : 0)), SR.FRAME_H * 4], [SR.stillPath(name), SR.FRAME_W, SR.FRAME_H]] ) {
@@ -211,6 +217,8 @@ test("defences, work at a lock, jumping and crawling (B2615, B2616)", () => {
   assert.equal(SR.defenceFor("nobody", "parry"), null);
   assert.equal(SR.workFor("townsman-1888", "pick"), "pick");
   assert.equal(SR.workFor("townsman-1888", "listen"), "search");
+  assert.equal(SR.workFor("townsman-1888", "examine"), "search", "B6141: a close look is a search");
+  assert.ok(!SR.isOwnMove(SR.workFor("townsman-1888", "strike")) && SR.workFor("townsman-1888", "strike"), "B6141: striking a thing is a blow");
   assert.ok(!SR.isOwnMove(SR.workFor("townsman-1888", "smash")), "force is a blow");
   assert.equal(SR.workFor("townsman-1888", "open"), null);
   assert.equal(SR.gaitFor("townsman-1888", {action: "jump"}), "jump");
