@@ -105,3 +105,4 @@
 {"file":"registry/features/wodx-combat.json","verdict":"working","how":"Read the diff: only open items added and busy-rules.js added to actions.social files; registry check passes.","hash":"17bf4805ec66","at":"2026-11-26T02:51Z"}
 {"file":"registry/features/wodx-creation.json","verdict":"working","how":"Read the diff: only open items added and busy-rules.js added to actions.social files; registry check passes.","hash":"22df20871b23","at":"2026-11-26T02:51Z"}
 {"file":"registry/features/wodx-npc.json","verdict":"working","how":"Read the diff: only open items added and busy-rules.js added to actions.social files; registry check passes.","hash":"060f3eab796b","at":"2026-11-26T02:51Z"}
+{"file":"registry/features/wodx-npc.json","verdict":"working","how":"Re-read after the rebase onto main: one open item added to npc.tactics; registry check passes.","hash":"4818141ca149","at":"2026-11-26T02:52Z"}
