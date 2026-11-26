@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B8060
+Next free block: B8110
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -478,6 +478,7 @@ Next free block: B8060
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 | B8020-B8029 | Book overlap: the matches the daily gate found after the late Wraith OCR (used B8020-B8024) | Actions, Library, Otherworlds, tools (books) |
 | B8030-B8059 | Fixes from the first solo test (25 Nov): making the character, feeding, the Road, the law, travel and the design requests (used B8030-B8059) | Creation, Actions, Solo, Storyteller, Chronicle, Combat, NPC, Sheets, Interactables, Targeting, Paperdoll, Atmosphere, Senses |
+| B8100-B8109 | Sprite tokens resumed (PR 1597): new characters, NPCs and kept looks get their sprites by themselves (used B8100-B8101) | Paperdoll, PC job runner |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -16708,3 +16709,11 @@ Reverse: each is one change in its module, listed in docs/PENDING-REVIEW.md.
 WoDX Creation, WoDX Actions. Birth and turn years go down to -4000 (minus is BCE) for lines other than mortals (#2505). The 167 placeholder entries in disciplines-daw.json (the Elder Powers and the Necromancy paths) have descriptions, rolls and costs in WoDX's own words (#2499).
 
 Reverse: set the year minimum back to 1100.
+
+## B8100. A new character, a new NPC and a kept figure or look ask for their sprite by themselves (2026-11-26, #2491)
+WoDX Paperdoll. B8053 put a drawn sprite on its tokens, but a character with no drawn sprite yet waited until someone ran the sprite batch, so new characters and NPCs stayed plain pictures and a kept figure changed nothing (the solo test). Now, with the world setting "New and changed characters get their sprite by themselves" (on), the Storyteller's computer asks the PC sprite drawer (B6144) half a minute after the last new actor or kept figure or look; many changes close together make one request. The drawer draws only the new and changed characters, and when it is done the scene in view puts the new sprites on, and later tokens take them as they come (B8053). Asked this way the game shows no notice unless something was drawn.
+Reverse: set the setting off, or remove the createActor hook and askSoon in sprites.mjs and its call in main.mjs.
+
+## B8101. The solo world is the one that draws, and no gate lane does (2026-11-26)
+PC job runner. A gate makes characters, and with B8100 each would start a drawing on a gate lane, so runner.json's spriteData is now empty and the New PC's (runner.new_pc_lebrun.json) names only the solo world, D:/WoDX/FoundryData-solo. The New PC's python is its system Python 3.12 (%LOCALAPPDATA%/Programs/Python/Python312, numpy and Pillow already there); a runner whose Python is missing says so once in its log and draws nothing. gatespritecheck turns the new setting off while it runs and checks the ask with it on, taking the ask back before it is sent.
+Reverse: put the lane folders back in spriteData.
