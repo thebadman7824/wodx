@@ -10,6 +10,7 @@
  * Discipline to the level wanted). The times, difficulties and the table of books and schools are house figures
  * (B6232, B6233), logged in docs/PENDING-REVIEW.md.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const END = 9999;
 export const SOURCE_KINDS = {
@@ -196,7 +197,20 @@ const giftGoal = p => Math.max(2, 2 * (Number(p?.level) || 1));
  * The plan for one source (B6232): {kind, name, id, interval, diff, dice, goal, ok, why}.
  * src: {kind, id?, name?, rating? (a teacher's dots), quality? (a book or course), interval?}.
  */
-export function planFor(p, src = {}) {
+export function planFor(p, src = {}, {speed = "full"} = {}) {
+  const plan = planAtFull(p, src);
+  return SPEEDS[speed] && speed !== "full" && Number.isFinite(plan.goal) ? {...plan, goal: quicker(plan.goal, speed)} : plan;
+}
+
+/**
+ * Desk pick (#2506, 25 Nov): a world setting shortens every study. The book's pace is "full"; "half" and "quarter"
+ * need that share of the successes, so about that share of the weeks. House rule; the book sets no pace (V20 Dark Ages
+ * pdf 186: the Storyteller decides, and one dot per Trait a story).
+ */
+export const SPEEDS = {full: {label: "The book's pace", share: 1}, half: {label: "Twice as fast (half the time)", share: 0.5}, quarter: {label: "Four times as fast (a quarter of the time)", share: 0.25}};
+export const quicker = (goal, speed = "full") => Math.max(1, Math.ceil((Number(goal) || 1) * (SPEEDS[speed]?.share ?? 1)));
+
+function planAtFull(p, src = {}) {
   const goal = goalOf(p);
   const next = Number(p?.next) || 1, current = Number(p?.current) || 0;
   const base = {kind: src.kind, id: src.id ?? "", name: src.name ?? SOURCE_KINDS[src.kind] ?? "", goal, ok: true, why: ""};
@@ -301,4 +315,29 @@ export function priceFor(year, {kindred = false, next = 1} = {}) {
     : y < 2030 ? "tuition paid, or a favour done for the teacher"
     : "a contract: hours of work, data or a favour owed";
   return {kind: "debt", size: null, what};
+}
+
+/* -------------------------------------------------------------------- */
+/*  Find a teacher (desk pick, #2506, 25 Nov)                             */
+/* -------------------------------------------------------------------- */
+
+/**
+ * Asking around town for someone who teaches a trait: Charisma + the better of Streetwise and Etiquette, difficulty 6
+ * (house rule: the books set no roll for it; V20 Dark Ages has no Streetwise, so Etiquette there).
+ */
+export const ASK_DIFF = 6;
+export const askPool = ({charisma = 0, streetwise = 0, etiquette = 0} = {}) => Math.max(1, (Number(charisma) || 0) + Math.max(Number(streetwise) || 0, Number(etiquette) || 0));
+/** Successes from d10 faces at a difficulty, each one cancelling a success (V20 Dark Ages p. 322). botch: no success and a one. */
+export function countSuccesses(faces = [], diff = ASK_DIFF) {
+  const r = TERMS.successes(faces, diff);
+  return {successes: r.successes, botch: r.botch};
+}
+const WILL_ORDER = {teach: 0, price: 1, refuse: 2};
+/**
+ * Whom asking around turns up, best first: someone in the learner's town before anyone else, a willing teacher before
+ * one who asks a price, the more skilled first. A refuser is never named. cands: [{id, name, rating, will, sameTown}].
+ */
+export function askAroundPick(cands = [], next = 1) {
+  return cands.filter(c => (Number(c.rating) || 0) >= next && c.will !== "refuse" && c.sameTown)
+    .sort((a, b) => (WILL_ORDER[a.will] ?? 1) - (WILL_ORDER[b.will] ?? 1) || (Number(b.rating) || 0) - (Number(a.rating) || 0) || String(a.name).localeCompare(String(b.name)))[0] ?? null;
 }

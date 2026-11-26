@@ -139,7 +139,8 @@
     }
    },
    "open": [
-    "book: V20 pdf 131 (learning from a teacher); not checked against the book text yet"
+    "book: V20 pdf 131 (learning from a teacher); not checked against the book text yet",
+    "study speed (B8092) and Find a teacher (B8093): a gate step for Find a teacher in a town with a teacher"
    ],
    "deferred": [],
    "faults": [],
@@ -159,7 +160,9 @@
     "modules/wodx-creation/scripts/wizard.mjs",
     "modules/wodx-creation/scripts/wizard-rules.mjs",
     "modules/wodx-creation/scripts/derived-rules.mjs",
-    "modules/wodx-creation/scripts/quick-start-rules.mjs"
+    "modules/wodx-creation/scripts/quick-start-rules.mjs",
+    "modules/wodx-creation/scripts/kit-rules.mjs",
+    "modules/wodx-creation/scripts/kit.mjs"
    ],
    "steps": {
     "built": {
@@ -180,7 +183,8 @@
    "open": [
     "book: V20 Dark Ages character creation order and totals; not checked against the book text yet",
     "the five B7820 builds (HH2, mortal, sorcerer, Kinfolk, Kinain) have wizard power kinds and Background books; no gate walks the wizard through one yet",
-    "book: the Changing Breeds' starting Rage, Gnosis and Willpower come from W20 Changing Breeds (FERA_STARTS, B7831); the Mokole starting Rage is not in the book"
+    "book: the Changing Breeds' starting Rage, Gnosis and Willpower come from W20 Changing Breeds (FERA_STARTS, B7831); the Mokole starting Rage is not in the book",
+    "the What they carry page (B8120, desk pick inv1, kit-rules.mjs): no gate walks it to Ready yet; the second solo test checks it"
    ],
    "deferred": [],
    "faults": [],
@@ -223,7 +227,9 @@
      "none": "a WoDX creation aid (Improvement Desk cr1); the books have no lifepath tables"
     }
    },
-   "open": [],
+   "open": [
+    "mortal lifespan (B8095): a gate step that sets 1000 for a mage in 1197 and checks 1127"
+   ],
    "deferred": [],
    "faults": [],
    "prs": [
@@ -470,7 +476,9 @@
      "step": "1. the Creation window's Award button gives the ticked character 3 experience"
     }
    },
-   "open": [],
+   "open": [
+    "api.kit fills an NPC at first meeting (B8121, desk pick inv2): no gate checks it yet; the second solo test checks it"
+   ],
    "deferred": [],
    "faults": [],
    "prs": [

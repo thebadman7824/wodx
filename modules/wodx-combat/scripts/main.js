@@ -742,9 +742,8 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
         return `<div class="form-group vtc-kind" data-kinds="${bo.kinds.join(" ")}"><label>${bo.label}${extra} [${r.ok ? r.value : "—"}]</label>
           <input type="number" name="boost_${bo.id}" value="0" min="0" max="${bo.max}" style="width:4em"/></div>`;
     }).join("");
-    // #2509: Aim at names the part and sets the targeting size from it, so Targeting shows only when there are no parts
-    const aim = aimHtml(target);
-    const aimField = aim ? `${aim}<input type="hidden" name="targeting" value="none"/>` : "";
+    // #2509 (desk pick): Aim at is the one control: a part of the body, or an item they hold; Targeting is gone
+    const aimField = `${aimHtml(target)}<input type="hidden" name="targeting" value="none"/>`;
     return `
 <form class="vtc-form">
   <p class="vtc-head"><b>${attacker.name}</b> attacks <b>${target ? target.name : "(no target)"}</b></p>
@@ -758,7 +757,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
   <fieldset><legend>Attack</legend>
     <div class="form-group"><label>Weapon</label>${weapons.length > 5 ? searchBox("select[name=weapon]", "Search weapons…", "Search weapons") : ""}<select name="weapon">${wOpts}</select></div>
     <div class="form-group"><label>Maneuver</label><select name="maneuver" data-fixed>${opts(maneuverTable(attacker), "normal")}</select></div>
-    ${aimField || `<div class="form-group"><label>Targeting</label><select name="targeting" data-fixed>${opts(R.TARGETING, "none")}</select></div>`}
+    ${aimField}
     <div class="form-group"><label>Range (ranged)</label><select name="range" data-fixed>${opts(R.RANGE, "short")}</select></div>
     <div class="form-group"><label>Position</label><select name="flank" data-fixed>
        <option value="auto" selected>Automatic: from the tokens' facing</option><option value="">Front</option><option value="flank">Flank (+1 die)</option><option value="rear">Rear (+2 dice)</option></select></div>
@@ -976,7 +975,10 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const aKind = (fd.atkKind && fd.atkKind !== "auto") ? fd.atkKind : getKind(attacker);
     // Aiming at a part sets the targeting size the book gives for it (hit locations, house rule B1203)
     const tBody = target && setting("hitLocations") ? bodyOf(target) : null;
-    if (tBody && fd.aim) {
+    // #2509: an item they hold takes the book's size for it (V20DA p. 346) and hits the item, not a part
+    const held = R.heldAim(fd.aim);
+    if (held) { fd.targeting = held; fd.aimType = "item"; fd.aim = ""; }
+    else if (tBody && fd.aim) {
         const p = tBody.parts.find(x => x.id === fd.aim);
         const size = p ? BodyRules.PART_TYPES[p.type]?.size : null;
         if (size && R.TARGETING[size]) fd.targeting = size;
@@ -1232,7 +1234,10 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
 
     // ---- Where it lands (hit locations, house rule B1203)
     let location = null;
-    if (tBody && hit) {
+    if (hit && fd.aimType === "item") {
+        // #2509: the blow strikes the item; what it does to it, or to the grip, is the Storyteller's call (V20DA p. 346)
+        log.unshift(`<b>Lands on:</b> the item they hold (aimed). The Storyteller says what the blow does to it.`);
+    } else if (tBody && hit) {
         location = BodyRules.hitLocation(tBody, { aimed: fd.aim || (fd.targeting !== "none" ? fd.targeting : null) });
         if (location) log.unshift(`<b>Lands on:</b> ${esc(location.label.toLowerCase())}${location.aimed ? " (aimed)" : ""}.`);
     }
@@ -1858,12 +1863,13 @@ const TYPE_LABEL = { bashing: "bashing", lethal: "lethal", aggravated: "aggravat
 
 /** "Aim at" for the attack dialog: the target's parts (hit locations, house rule B1203). */
 function aimHtml(target) {
-    if (!target || !setting("hitLocations")) return "";
-    const b = bodyOf(target);
+    if (!target) return "";
+    const b = setting("hitLocations") ? bodyOf(target) : null;
     const parts = b ? BodyRules.aimOptions(b) : [];
-    if (!parts.length) return "";
     const size = { medium: "+1", small: "+2", precise: "+3" };
-    return `<div class="form-group"><label>Aim at</label><select name="aim" data-fixed><option value="">No part (the blow lands where it falls)</option>${parts.map(p => `<option value="${esc(p.id)}">${esc(p.label)} (${size[p.size]} diff)</option>`).join("")}</select></div>`;
+    const partOpts = parts.map(p => `<option value="${esc(p.id)}">${esc(p.label)} (${size[p.size]} diff)</option>`).join("");
+    const itemOpts = R.HELD_AIMS.map(h => `<option value="${esc(h.id)}">${esc(h.label)}</option>`).join("");
+    return `<div class="form-group"><label>Aim at</label><select name="aim" data-fixed><option value="">Nothing in particular (the blow lands where it falls)</option>${partOpts ? `<optgroup label="A part of them">${partOpts}</optgroup>` : ""}<optgroup label="An item they hold">${itemOpts}</optgroup></select></div>`;
 }
 
 function attackCard(c) {
@@ -2285,7 +2291,7 @@ Hooks.once("init", () => {
     GM.init({ rollPool, markFollow, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind });
     SW.hooks();
     const api = { daw: { taunt: (a, t, o) => GM.taunt(a, t, o), harry: (c, p, o) => GM.harry(c, p, o), afterHit: GM.afterHit, gnarlOf: GM.gnarlOf, savagedBy: GM.savagedBy, tauntedDice: GM.tauntedDice }, swarm: { make: k => SW.make(k), turn: t => SW.turn(t), dodge: a => SW.dodge(a), victimsOf: t => SW.victimsOf(t), spider: (t, o) => SW.spider(t, o), rules: SWR }, body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.51.2", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.52.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, cannotActWhy, followOn: R.followOn, markFollow, breakFree, relayHook, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml }, _onSocket: onSocket };
     game.wodxCombat = api;

@@ -18,6 +18,8 @@ import {traitNote} from "../data/trait-notes.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../../wodx-chronicle/data/trait-effects.mjs";
 import * as Beasts from "./animal-stock.mjs";
+import * as KIT from "./kit.mjs";
+import * as K from "./kit-rules.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const FLAG = "wizard";
@@ -90,7 +92,8 @@ export class WizardApp extends ApplicationV2 {
     position: {width: 680, height: "auto"},
     actions: {go: WizardApp.#onGo, step: WizardApp.#onStep, extra: WizardApp.#onExtra, other: WizardApp.#onOther, addItem: WizardApp.#onAddItem,
       removeItem: WizardApp.#onRemoveItem, addFeature: WizardApp.#onAddFeature, sheet: WizardApp.#onSheet, check: WizardApp.#onCheck, hub: WizardApp.#onHub,
-      derive: WizardApp.#onDerive, quick: WizardApp.#onQuick, blood: WizardApp.#onBlood, ready: WizardApp.#onReady, wilder: WizardApp.#onWilder, animal: WizardApp.#onAnimal}
+      derive: WizardApp.#onDerive, quick: WizardApp.#onQuick, blood: WizardApp.#onBlood, ready: WizardApp.#onReady, wilder: WizardApp.#onWilder, animal: WizardApp.#onAnimal,
+      kitDrop: WizardApp.#onKitDrop, kitAdd: WizardApp.#onKitAdd, kitTake: WizardApp.#onKitTake, kitReset: WizardApp.#onKitReset}
   };
 
   static openFor(actor, page = null) {
@@ -225,6 +228,7 @@ export class WizardApp extends ApplicationV2 {
       case "virtues": return this.#virtues(ctx);
       case "meritsFlaws": return this.#merits(ctx);
       case "freebies": return this.#freebies(ctx);
+      case "kit": return this.#kit(ctx);
       default: return this.#review(ctx);
     }
   }
@@ -496,6 +500,65 @@ export class WizardApp extends ApplicationV2 {
         <button type="button" data-action="other" data-d="1" ${led.left > 0 ? "" : "disabled"} aria-label="One point more">+</button></p>`;
   }
 
+  /** Desk pick inv1 (26 Nov): what they carry. A suggested kit, bought out of a month of Resources; the rest is coin. */
+  #kitState() {
+    if ( this.kitState ) return this.kitState;
+    const k = KIT.kitFor(this.actor);
+    if ( !k ) return null;
+    return this.kitState = {...k, chosen: K.fitBudget(k.rows, k.budget)};
+  }
+  #kit() {
+    const a = this.actor, taken = a.getFlag(MODULE_ID, "kit");
+    if ( taken?.taken ) return `<h3>What they carry</h3><p><i class="fa-solid fa-check"></i> ${esc(a.name)} has their things: ${taken.count} on the sheet${taken.left ? `, and ${esc(KIT.priceText(taken.left))} in the purse` : ""}.</p>`;
+    if ( !KIT.kitLoaded() ) { KIT.loadKit().then(() => this.rendered && this.render()); return `<h3>What they carry</h3><p>Looking out the goods of the land…</p>`; }
+    const k = this.#kitState();
+    if ( !k ) return `<h3>What they carry</h3><p>No goods could be found for this land and year.</p>`;
+    const t = K.tally(k.chosen, k.budget);
+    const rows = k.chosen.map(r => `<tr><td>${esc(r.name)}</td><td>${r.free ? "Free" : esc(KIT.priceText(r.price))}</td><td class="wodx-quiet">${esc(r.why)}</td>
+      <td><button type="button" data-action="kitDrop" data-key="${esc(r.key)}" aria-label="Leave it out" title="Leave it out"><i class="fa-solid fa-xmark"></i></button></td></tr>`).join("");
+    const have = new Set(k.chosen.map(r => r.key));
+    const shop = KIT.shopList(a).filter(r => !have.has(r.key) && r.price <= t.left);
+    const opts = shop.map(r => `<option value="${esc(r.key)}">${esc(r.name)}: ${esc(KIT.priceText(r.price))}</option>`).join("");
+    const where = k.place.region ? ` from ${esc(k.place.region.replace(/-/g, " "))}` : "";
+    return `<h3>What they carry</h3>
+      <p>A ${esc(K.STATION_WORD[k.station])} character${where} in ${k.year}. The clothes they stand up in are free. Everything else comes out of a month of their Resources (${k.dots} ${k.dots === 1 ? "dot" : "dots"}): ${esc(KIT.priceText(k.budget))}. What is left goes into the purse.</p>
+      <table class="wodx-table wodx-wz-kit"><thead><tr><th>Thing</th><th>Cost</th><th>Why</th><th></th></tr></thead><tbody>${rows || `<tr><td colspan="4">Nothing yet.</td></tr>`}</tbody></table>
+      <p>Spent ${esc(KIT.priceText(t.spent))}. Left for the purse: <b>${esc(KIT.priceText(t.left))}</b>.</p>
+      ${shop.length ? `<div class="form-group"><label>Buy something else</label>${searchBox("select[name=kit-add]", "Search goods…", "Search goods")}<select name="kit-add">${opts}</select>
+        <button type="button" data-action="kitAdd"><i class="fa-solid fa-plus"></i> Buy it</button></div>` : ""}
+      <div class="wodx-buttons"><button type="button" data-action="kitTake"><i class="fa-solid fa-sack-dollar"></i> Take these things</button>
+        <button type="button" data-action="kitReset"><i class="fa-solid fa-rotate-left"></i> Back to the suggestion</button></div>
+      <p class="wodx-quiet">If you go on without taking them, "This character is ready" takes the list as it stands.</p>`;
+  }
+
+  static async #onKitDrop(ev, el) {
+    const k = this.#kitState();
+    if ( !k ) return;
+    k.chosen = k.chosen.filter(r => r.key !== el.dataset.key);
+    this.render();
+  }
+  static async #onKitAdd() {
+    const k = this.#kitState(), key = this.element?.querySelector("select[name=kit-add]")?.value;
+    if ( !k || !key ) return;
+    const row = KIT.shopList(this.actor).find(r => r.key === key);
+    if ( !row ) return;
+    const next = [...k.chosen, row];
+    if ( K.tally(next, k.budget).over ) return ui.notifications.warn("That costs more than is left.");
+    k.chosen = next;
+    this.render();
+  }
+  static async #onKitTake() {
+    const k = this.#kitState();
+    if ( !k ) return;
+    const done = await KIT.takeKit(this.actor, k.chosen, k.budget);
+    if ( done ) ui.notifications.info(`${this.actor.name} takes ${done.count} ${done.count === 1 ? "thing" : "things"}${done.left ? `, and ${KIT.priceText(done.left)} goes into the purse` : ""}.`);
+    this.render();
+  }
+  static async #onKitReset() {
+    this.kitState = null;
+    this.render();
+  }
+
   #review(ctx) {
     const {L, led} = ctx;
     const rows = led.check.rows.map(r => `<tr><td>${esc(r.label)}</td><td>${r.allowed}</td><td>${r.have ?? "?"}</td><td>${r.have === null ? esc(r.note) : r.over ? `${r.over} over, ${r.cost} points` : r.under ? `<b>${r.under} unspent</b>` : "done"}</td></tr>`).join("");
@@ -532,6 +595,10 @@ export class WizardApp extends ApplicationV2 {
     const native = W.nativeFor(homeRegion());
     if ( !langsOf(a).length && native ) up["flags.wodx-chronicle.languages"] = [native];
     await a.update(up);
+    // Desk pick inv1: a player who never took the kit gets the list as it stands
+    if ( !a.getFlag(MODULE_ID, "kit")?.taken ) {
+      try { await KIT.loadKit(); const k = this.#kitState(); if ( k ) await KIT.takeKit(a, k.chosen, k.budget); } catch (e) { console.warn(`${MODULE_ID} | kit`, e); }
+    }
     ui.notifications.info(`${a.name} is ready. The night begins.`);
     Hooks.callAll("wodxCreationDone", a);
     await this.close();

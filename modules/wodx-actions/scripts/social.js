@@ -21,6 +21,8 @@ function condMods(actor, attr) {
  * (the Seduction action), or Use a power (the line's menu). The NPC's resisting roll goes to the Storyteller only;
  * the player's card says what happened. Attitude changes go through WoDX NPC (the approval queue for players).
  */
+import * as LIM from "./limits.js";
+
 export function build(ctx) {
     const { R, PRESETS, pickPool, readPool, woundPenalty, setting, road, rollPool, rollBlock, post, opponentPool, esc, dialog, opts,
         willpower, spendWillpower, seduction, menu, resolveActor, feed, kindOf } = ctx;
@@ -70,6 +72,9 @@ export function build(ctx) {
         if (!npcTok?.actor) { ui.notifications.warn("Target the person you want to deal with, or stand next to them."); return null; }
         if (npcTok.actor.hasPlayerOwner) { ui.notifications.info("That is a player's character: deal with them yourselves."); return null; }
         const npc = npcTok.actor, name = nameFor(npcTok);
+        // Desk pick inv2 (26 Nov): an NPC who carries nothing gets the things of their station and land at this first meeting
+        // Awaited, so the things are there before the window opens and nothing lands later on a token that has gone
+        try { await game.modules.get("wodx-creation")?.api?.kit?.ensure?.(npc); } catch (e) { console.warn("wodx-actions | kit", e); }
         const at = attitudeOf(npc, actor);
         const gmLine = game.user.isGM && at ? `<p class="vta-note">Storyteller: ${esc(name)} regards ${esc(actor.name)} as <b>${esc(at.word)}</b>${at.met ? "" : at.from ? ` (not met yet: from ${esc(at.from)})` : " (not met yet)"}.
             Set it: <select name="setAttitude" data-fixed><option value="">(leave)</option>${opts(Object.entries(npcApi().attitude.rules.STEPS).map(([k, w]) => [k, w]), "")}</select></p>` : "";
@@ -99,6 +104,10 @@ export function build(ctx) {
             if (game.user.isGM && fd.setAttitude !== undefined && fd.setAttitude !== "") await npcApi()?.attitude?.apply?.(npc, actor, { to: Number(fd.setAttitude), why: "Set by the Storyteller" });
             const act = fd.act;
             if (!act) return null;
+            // Action priority (busy-rules.js): nothing that needs the NPC's answer while either side is taken up, or the NPC is out cold
+            const asks = act === "talk" || act === "trade" || act === "charm" || !!SR.actByKey(act);
+            if (LIM.refuseBusy(actor, act === "trade" ? "trade" : act === "power" ? "power" : "social", asks ? npc : null)) return null;
+            if (asks && !game.user.isGM) { const out = LIM.cannotAct(npc); if (out) { ui.notifications.warn(`${name} can't deal with anyone just now. ${out}`); return null; } }
             if (act === "talk") return npcApi().openTalk(npcTok.document ?? npcTok);
             if (act === "charm") {
                 npcTok.setTarget?.(true, { releaseOthers: true });
@@ -108,7 +117,7 @@ export function build(ctx) {
             if (act === "power") { npcTok.setTarget?.(true, { releaseOthers: true }); return menu({ actor }); }
             if (act === "lift" || act === "plant") return lift(actor, npcTok, act);
             if (act === "lookover" || act === "askabout") return lookOver(actor, npcTok, act);
-            if (act === "trade") return tradeX().trade(actor, npcTok, "buy");
+            if (act === "trade") return LIM.whileBusy(actor, "trading", npc, () => tradeX().trade(actor, npcTok, "buy"));
             return social(actor, npcTok, act);
         }, { render, width: 520 });
     }

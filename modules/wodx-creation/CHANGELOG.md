@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.95.0 (Starting kit (B8120) and an NPC's things at first meeting (B8121), the owner's desk picks inv1 and inv2; Faster study (B8092), Find a teacher (B8093) and a mortal lifespan for lines that age like mortals (B8095))
 - 0.94.1 (Book overlap rewording (B8025): lines that shared 8 words with a book in the full check of all 1,644 books (26 Nov) are now in WoDX's own words. Their meaning, numbers and page references are unchanged)
 - 0.94.0 (Fixes from the first solo test (B8034 to B8041, B8058, B8059): Who they are comes after the book and writes to the sheet, a solo arrival's sheet waits for the Ready button, lists of tribes, kiths and the like come from the system, languages go through Chronicle, a lifepath may begin before the common era, and learning offers Ask the Storyteller to let it come at once (#2506))
 - 0.93.1 (Book overlap rewording (B8020): every line in this module that shared a run of 8 words with a source book is now in WoDX's own words. The rules, numbers and page references are unchanged; stat lines, trait lists and book or power names stay as they were)

@@ -66,7 +66,7 @@ import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.109.2";
+const VERSION = "0.110.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -1273,8 +1273,38 @@ export function lookCard(tok) {
     }
   } catch (e) { /* no statuses */ }
   rows.push(conds.length ? `<p><b>Conditions:</b></p><ul>${conds.map(c => `<li><b>${esc(c.name)}</b>${c.what ? `: ${esc(c.what)}` : ""}</li>`).join("")}</ul>` : "<p>No conditions you can see.</p>");
+  // Desk pick (#2508): what the looking character knows of them: the tie between them, how they seem, the tales heard
+  const known = lookKnows(doc, lookerOf());
+  if ( known.length ) rows.push(`<p><b>What you know of them:</b></p><ul>${known.map(k => `<li>${esc(k)}</li>`).join("")}</ul>`);
   rows.push(`<p class="hint">Target them (T) for the WoDX Actions on them: speak, aim, feed, carry.</p>`);
   return {name, html: rows.join("")};
+}
+/** The character a user looks with: the token they control, else their assigned character. */
+function lookerOf(user = game.user) {
+  const tok = (globalThis.canvas?.tokens?.controlled ?? []).find(t => t.actor?.testUserPermission?.(user, "OWNER"));
+  return tok?.actor ?? user?.character ?? null;
+}
+/** Lines of what a character knows of another token's person: the tie, their manner toward the character, tales heard. */
+export function lookKnows(doc, me) {
+  const out = [];
+  const them = doc?.actor;
+  const id = doc?.actorId ?? them?.id;
+  if ( !me || !them || !id || me.id === id ) return out;
+  try {
+    const base = game.actors?.get?.(id);
+    const ties = people.ties.of(me).filter(e => e.uuid === base?.uuid || e.to?.id === id);
+    for ( const t of ties ) out.push(`${t.label}${t.note ? `: ${t.note}` : ""}.`);
+  } catch (e) { /* no ties */ }
+  try {
+    const now = attitude.of(them, me);
+    if ( now?.met ) out.push(`How they are toward you: ${now.word || "hard to read"}.`);
+    else if ( now ) out.push("You have not met them.");
+  } catch (e) { /* no attitude */ }
+  try {
+    const heard = game.modules.get("wodx-storyteller")?.api?.rumours?.heardBy?.(me.id) ?? [];
+    for ( const r of heard.filter(r => (r.about?.id ?? r.about) === id).slice(0, 3) ) out.push(`You heard: ${r.text}`);
+  } catch (e) { /* no rumours */ }
+  return out;
 }
 function lookAt(tok) {
   const {name, html} = lookCard(tok);

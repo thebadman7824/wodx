@@ -119,3 +119,73 @@ export function pileLabel(title, kg) {
   const w = num(kg);
   return `${title || "Gear on the ground"}${w > 0 ? `, ${w < 1 ? "under a kilo" : `about ${w >= 10 ? Math.round(w) : Math.round(w * 10) / 10} kg`}` : ""}`;
 }
+
+/* ---------------------------------------------------------------- Simple icons and picking up (desk pick inv3, 26 Nov) */
+
+/**
+ * The kind of icon a thing shows on the ground. A pile shows one small icon for each kind it holds, until the object
+ * art is drawn: weapon, armor, clothing, coin, food, drink, tool, light, paper, bag, other.
+ */
+export const ICON_KINDS = ["weapon", "armor", "clothing", "coin", "food", "drink", "tool", "light", "paper", "bag", "other"];
+export function iconOf({kind = "", type = "", name = ""} = {}) {
+  const k = String(kind).toLowerCase(), n = String(name).toLowerCase();
+  if ( type === "Armor" || /^armor/.test(k) ) return "armor";
+  if ( type === "Melee Weapon" || type === "Ranged Weapon" || /melee|ranged|thrown|arms/.test(k) ) return "weapon";
+  if ( /coin|valuables/.test(k) || /\b(pennies|penny|coins?|denarii|groschen|shillings?|florins?|ducats?|dollars?)\b/.test(n) ) return "coin";
+  if ( /cloth|hygiene/.test(k) ) return "clothing";
+  if ( /papers|manuals|maps/.test(k) ) return "paper";
+  if ( /drink|medicine|drugs/.test(k) ) return "drink";
+  if ( /food|seeds/.test(k) ) return "food";
+  if ( /light|fuel/.test(k) ) return "light";
+  if ( /tools|traps|kitchen|tech|power|cyber/.test(k) ) return "tool";
+  if ( /containers|travel/.test(k) ) return "bag";
+  return "other";
+}
+/** 8 by 8 pixel icons, "#" filled. Plain shapes a player reads at a glance; full object art replaces them later. */
+export const ICONS = {
+  weapon: ["......##", ".....##.", "....##..", "#..##...", ".###....", "..#.....", ".#.#....", "#......."],
+  armor: ["##....##", "########", "########", ".######.", ".######.", ".######.", "..####..", "........"],
+  clothing: ["..#..#..", ".##..##.", "########", "#.####.#", "..####..", "..####..", "..####..", "........"],
+  coin: ["..####..", ".#....#.", "#..##..#", "#.#..#.#", "#.#..#.#", "#..##..#", ".#....#.", "..####.."],
+  food: ["....#...", "...#....", ".######.", "########", "########", "########", ".######.", "..####.."],
+  drink: ["...##...", "...##...", "..####..", ".######.", ".######.", ".######.", ".######.", "..####.."],
+  tool: ["###.....", "###.....", ".#......", ".##.....", "..##....", "...##...", "....##..", ".....##."],
+  light: ["...#....", "..###...", "..###...", "...#....", "..###...", "..###...", "..###...", ".#####.."],
+  paper: ["######..", "#....##.", "#.##..#.", "#.....#.", "#.###.#.", "#.....#.", "#.###.#.", "#######."],
+  bag: ["..####..", "...##...", ".######.", "########", "########", "########", "########", ".######."],
+  other: ["........", "..####..", ".#....#.", ".#....#.", ".#....#.", ".#....#.", "..####..", "........"]
+};
+/** The colour of each kind's icon, from the colours of what such things are made of. */
+export const ICON_COLOURS = {weapon: COLOURS.steel, armor: COLOURS.iron, clothing: COLOURS.cloth, coin: COLOURS.gold, food: COLOURS.food,
+  drink: COLOURS.glass, tool: COLOURS.wood, light: COLOURS.light, paper: COLOURS.paper, bag: COLOURS.leather, other: COLOURS.other};
+
+/**
+ * The icons of a pile inside a square of size px: [{kind, count, x, y, px, cells: [[cx, cy]...], colour}]. One icon for
+ * each kind, the commonest first, at most four (a two by two set); an icon is 8 pixels of size/32 each.
+ */
+export function iconsOf(rows = [], size = 100) {
+  const counts = new Map();
+  for ( const r of rows ) { const k = iconOf(r); counts.set(k, (counts.get(k) ?? 0) + 1); }
+  const kinds = [...counts.entries()].sort((a, b) => b[1] - a[1] || ICON_KINDS.indexOf(a[0]) - ICON_KINDS.indexOf(b[0])).slice(0, 4);
+  const px = Math.max(1, Math.round(size / 32)), icon = 8 * px, gap = px * 2;
+  const cols = kinds.length === 1 ? 1 : 2, rowsN = Math.ceil(kinds.length / cols);
+  const w = cols * icon + (cols - 1) * gap, h = rowsN * icon + (rowsN - 1) * gap;
+  const x0 = Math.round((size - w) / 2), y0 = Math.round((size - h) / 2);
+  return kinds.map(([kind, count], i) => {
+    const cells = [];
+    ICONS[kind].forEach((line, cy) => [...line].forEach((c, cx) => { if ( c === "#" ) cells.push([cx, cy]); }));
+    return {kind, count, x: x0 + (i % cols) * (icon + gap), y: y0 + Math.floor(i / cols) * (icon + gap), px, cells, colour: ICON_COLOURS[kind]};
+  });
+}
+
+/**
+ * Picking some things up from a pile, not all of them. picks: indexes into the pile's lines. Returns {flags, taken}:
+ * the pile's new flags (taken when nothing is left) and [{line, data}] for each thing picked up.
+ */
+export function takeFromPile(f = {}, picks = []) {
+  const lines = (Array.isArray(f.items) ? f.items : String(f.items ?? "").split(/\r?\n/)).map(s => String(s).trim()).filter(Boolean);
+  const matched = matchLoose(lines, f.loose ?? []);
+  const want = new Set(picks.map(Number).filter(i => Number.isInteger(i) && i >= 0 && i < lines.length));
+  const taken = matched.filter((_, i) => want.has(i)), left = matched.filter((_, i) => !want.has(i));
+  return {taken, flags: {items: left.map(m => m.line), loose: left.filter(m => m.data).map(m => ({name: m.line, data: m.data})), taken: left.length === 0}};
+}

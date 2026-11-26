@@ -30,7 +30,8 @@ export function pagesFor(lineId) {
   if ( (L.powers ?? []).length ) out.push({key: "powers", label: L.powers.map(p => p.label).join(" and ")});
   out.push({key: "backgrounds", label: "Backgrounds"});
   if ( L.virtues !== undefined ) out.push({key: "virtues", label: "Virtues"});
-  out.push({key: "meritsFlaws", label: "Merits and Flaws"}, {key: "freebies", label: "Freebie points"}, {key: "review", label: "Last look"});
+  // Desk pick inv1 (26 Nov): what they carry comes after the freebies, so the Resources it spends are settled
+  out.push({key: "meritsFlaws", label: "Merits and Flaws"}, {key: "freebies", label: "Freebie points"}, {key: "kit", label: "What they carry"}, {key: "review", label: "Last look"});
   return out;
 }
 

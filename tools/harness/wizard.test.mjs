@@ -35,7 +35,7 @@ test("ready", async () => {
 });
 
 test("pages follow the book's order and skip what a line lacks", () => {
-  assert.deepEqual(W.pagesFor("v20").map(p => p.key), ["book", "who", "attributes", "abilities", "powers", "backgrounds", "virtues", "meritsFlaws", "freebies", "review"]);
+  assert.deepEqual(W.pagesFor("v20").map(p => p.key), ["book", "who", "attributes", "abilities", "powers", "backgrounds", "virtues", "meritsFlaws", "freebies", "kit", "review"]);
   assert.ok(!W.pagesFor("w20").some(p => p.key === "virtues"), "W20 has no Virtues");
   assert.ok(!W.pagesFor("orpheus").some(p => p.key === "powers"), "Orpheus has no creation powers on the totals");
   assert.equal(W.nextPage(W.pagesFor("v20"), "review", 1), "review");
