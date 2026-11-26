@@ -97,3 +97,12 @@ test("wiring: setting off by default, the skip hook, the approval, the api", () 
   assert.match(m, /FATES\.registerSettings\(\);\n  FATES\.listen\(\);/);
   assert.match(m, /fates: \{plan: FATES\.planFor/);
 });
+
+test("#2627: a one-year Pass the years is a long jump, a calendar year short of 365.25 days included", () => {
+  const D = 86400;
+  assert.equal(F.isLongJump(0, 365 * D), true, "an ordinary calendar year");
+  assert.equal(F.isLongJump(0, 366 * D), true, "a leap year");
+  assert.equal(F.isLongJump(0, 365 * D - 3 * 3600), true, "a calendar year less the hours the running clock moved before the skip");
+  assert.equal(F.isLongJump(0, 300 * D), false, "ten months");
+  assert.equal(F.isLongJump(0, 30 * D), false, "a month wakes sleepers only");
+});

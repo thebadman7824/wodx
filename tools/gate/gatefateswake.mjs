@@ -75,14 +75,15 @@ export async function run() {
       let ask = null;
       await waitFor(() => (ask = apps().find(a => a.rendered && a !== win && (a.title ?? a.options?.window?.title) === "Pass the years")), 15000);
       how.ask = !!ask; how.askButtons = [...(elOf(ask)?.querySelectorAll("button") ?? [])].map(b => b.dataset.action ?? b.textContent.trim());
+      let span = null;
+      Hooks.once("wodxSkipStart", info => { span = Math.round((Number(info?.to) - Number(info?.from)) / 3600) / 24; });
       await ch.hold(false); await sleep(1500);
       elOf(ask)?.querySelector('button[data-action="yes"]')?.click();
       if ( !ask ) throw new Error(`no question after Pass the years: ${JSON.stringify(how)}`);
       await waitFor(() => api.time.yearOf(game.time.worldTime) >= y0 + 1 && !win.plan, 900000);
       if ( api.time.yearOf(game.time.worldTime) < y0 + 1 ) throw new Error(`the year did not pass: ${JSON.stringify(how)}`);
-      // A whole calendar year is a day short of the 365.25 days off-screen lives counts as a year, so a one-year Pass
-      // the years wakes the sleepers whose time is up at once (#2627). Should it make the Off-screen lives card
-      // instead, the Storyteller approves it in the approvals queue
+      // a one-year jump makes the Off-screen lives card (#2627); the Storyteller approves it in the approvals queue. A
+      // sleeper woken by a shorter path (no card) passes too
       const entry = () => ch.approvals.pending().find(p => String(p.key ?? "").startsWith("npc-fates:") && (p.data?.changes ?? {})[sleeper.id]?.wake);
       await waitFor(() => entry() || !game.actors.get(sleeper.id)?.getFlag(C, "chronology")?.torpor, 120000);
       const queued = !!entry();
@@ -97,11 +98,15 @@ export async function run() {
         await waitFor(() => !entry(), 300000);
       }
       await sheet.render({force: true});
-      await waitFor(() => !conds().includes("Torpor"), 60000);
+      // waking clears the condition first and the chronology flag after it, so wait for both
+      await waitFor(() => !conds().includes("Torpor") && !game.actors.get(sleeper.id)?.getFlag(C, "chronology")?.torpor, 60000);
       const after = conds();
       G.ok("1. a year passes and the sleeper's sheet no longer shows Torpor",
         before.includes("Torpor") && (!queued || pressed) && !after.includes("Torpor") && !game.actors.get(sleeper.id)?.getFlag(C, "chronology")?.torpor,
-        {before, queued, pressed, after, year: [y0, api.time.yearOf(game.time.worldTime)]});
+        {before, queued, pressed, after, skipDays: span, year: [y0, api.time.yearOf(game.time.worldTime)],
+          // a standing rule (auto-approve, light touch) can approve the card without the queue: it is then in the history
+          flag: game.actors.get(sleeper.id)?.getFlag(C, "chronology")?.torpor ?? null,
+          decided: ch.approvals.history?.().filter(h => String(h.key ?? "").startsWith("npc-fates:")).map(h => h.status ?? h.decision ?? "decided").slice(-3) ?? []});
     });
   } catch (e) {
     G.R.errors.push(`${e?.message ?? e}`);
