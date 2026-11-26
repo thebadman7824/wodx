@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
-import {isHold, parseGates, priorPass, marker} from "../pcq/pr-gates.mjs";
+import {isHold, parseGates, priorPass, headPassed, marker} from "../pcq/pr-gates.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
@@ -178,4 +178,13 @@ test("a train push that merges main in is the train's own, though main's commits
   assert.equal(isTrainPush(addedByPush([...push, c("x1", "Fix a test")], main)), false);
   assert.equal(isTrainPush(addedByPush([...main, c("x2", "Merge branch 'main' into claude/x")], main)), false, "a thread's own merge of main");
   assert.deepEqual(addedByPush(push, null).length, 6, "no main list: every commit counts, as before");
+});
+
+test("B8172: a head whose own gates passed is not gated again", () => {
+  assert.equal(headPassed([{context: "wodx/merge-rules", state: "success"}, {context: "wodx/gates", state: "success", description: "2 gate(s) passed (touched)"}]), true);
+  assert.equal(headPassed([{context: "wodx/gates", state: "failure"}]), false);
+  assert.equal(headPassed([{context: "wodx/gates", state: "pending"}]), false);
+  assert.equal(headPassed([{context: "wodx/merge-rules", state: "success"}]), false);
+  assert.equal(headPassed([]), false);
+  assert.equal(headPassed(undefined), false);
 });

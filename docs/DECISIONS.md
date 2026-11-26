@@ -485,7 +485,7 @@ Next free block: B8190
 | B8130-B8139 | Fewer merge train ejects: push guard, review-list fragments, conflicts the train settles, label on green (used B8130-B8134) | tools (git hooks, release, pcq) |
 | B8140-B8149 | Solo test fixes part 4: what fits, region lifepath, plain settings, NPC pace, 1197 clothing (used B8140-B8144) | Actions, Creation, Combat, NPC, Library, Chronicle, Senses, Sheets, Solo, Storyteller and others (setting hints) |
 | B8160-B8169 | Off-screen lives on a one-year Pass the years (used B8160-B8161) | NPC |
-| B8170-B8179 | Merge train batches of up to five (used B8170-B8171) | Repository workflow |
+| B8170-B8179 | Merge train batches of up to five (used B8170-B8172) | Repository workflow |
 | B8180-B8189 | Plain words for action menus, module by module (#2503) (used B8180-B8181) | wodx-actions, wodx-chronicle, wodx-combat, wodx-library, wodx-npc, wodx-otherworlds, wodx-paperdoll, wodx-solo, wodx-storyteller |
 <!-- decision-index:end -->
 
@@ -17136,6 +17136,16 @@ to 8 s for the result instead of a fixed 800 ms, and run-gate names the collecti
 deletes. A lane made before this needs `lanes.mjs setup-clean --lane N --again` to get the tables.
 
 Reverse: drop the installTables wait in lanes.mjs setup-clean and the two until() waits.
+
+## B8172. A head whose gates passed is not gated again when the pull request is marked ready (2026-11-26)
+Repository workflow. pc-gates.yml runs on ready_for_review and title edits as well as pushes, and pr-gates.mjs only
+looked for a passing wodx/gates status on the pull request's earlier commits (the commit list leaves the head out),
+so marking a draft ready queued the full touched gates again on a head that had just passed them: PR 2637 (#2657
+after #2655), PR 2660 (#2664 after #2661) and PR 2662 (#2668 after #2663) on 26 November. pr-gates.mjs now reads the
+head's own statuses first and queues nothing when its wodx/gates is green. A run started by hand (workflow_dispatch)
+still queues.
+
+Reverse: drop the headPassed check in tools/pcq/pr-gates.mjs main().
 
 ## B8180. The Actions menu in plain words (2026-11-26)
 WoDX Actions. Every action's description (on hover, and on its line in Beginner view) is one plain line saying what happens when it is used, with no page references or book names; those stay on the cards. Sixteen button names that were two terms with a slash, or a bare list, now say what the button does (Make a roll, Hurt by fire or a fall, Sneak or stalk). Game terms that are on the sheet (Willpower, Road, Discipline, Gnosis) stay as they are. Desk pick d2503 ("now": module by module, solo-facing first, a before-and-after list each), part of issue #2503.
