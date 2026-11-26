@@ -466,7 +466,7 @@ Next free block: B8140
 | B7800-B7809 | Book 1 on the omnibus calendar: two years, the Rudý Hospodář, one twist a month (used B7800-B7807) | Rothenstein, Chronicle, Otherworlds |
 | B7810-B7819 | Map blueprints: valley travel map, tier 2 hand pass (used B7810-B7811) | tools |
 | B7820-B7829 | Scorecard gaps: Mockery Breed healing, creation totals for Kinain, HH2, sorcerers, mortals, Kinfolk (used B7820-B7822) | Actions, Chronicle, Creation |
-| B7830-B7839 | Scorecard gaps: the Orpheus Spectral arsenal (used B7831-B7833) | Actions |
+| B7830-B7839 | Scorecard gap 1: more gates in the clean world (used B7831-B7835) | Tools |
 | B7840-B7849 | Revenant families in every era and their weaknesses in play (used B7840-B7848) | Creation, Actions, Chronicle, NPC |
 | B7850-B7859 | gates: gatedach8 step 5b victim back inside the swarm, detail for gatespritelife step 3 (used B7851-B7853) | tools (gates) |
 | B7860-B7909 | Splat depth build: a Dark Ages mage's household and standing (desk item mage-household) (used B7860-B7909) | Actions, Chronicle |
@@ -16119,6 +16119,32 @@ Hive-Mind, Manifest, Rend, Virus, Envelop and Tentacles are the Storyteller's fr
 aims at whom across the Shroud; Immolate's Stealth difficulty is the Spectre's own.
 
 Reverse: remove orpheus-spectres.js, the spectre window in orpheus.js, orphSpectre in main.js and the menu entry.
+
+## B7834. The creed books' edges join the core 35 (2026-11-26)
+WoDX Actions. Hunter: The Reckoning's core book gives 35 edges; the eight creed books (Hunter Book: Avenger, Defender,
+Hermit, Innocent, Judge, Martyr, Redeemer, Wayward) give five more each, and WoDX had none of them. reckoning-rules.js
+now lists 39 more, read from the page images, each with its path, level, roll, difficulty, Conviction cost, book and
+page, in short and in our own words. They show in Use an edge like the core ones, and their card names the creed book
+and page. The Hermit and Wayward books give the Vision creeds their own paths, Hermit and Deviance; a hunter of another
+creed needs Vision 4 to learn them, as the books say. Each new edge has keywords for the effects card.
+House readings: the scan of Hunter Book: Innocent has no printed p. 81, so Innocence's fifth edge and the end of Bond
+are missing: Bond is listed from what p. 80 gives, and Innocence stops at four creed-book edges until the page is read.
+The Wayward scan crops its printed page numbers, so its edges cite the PDF page. The Hermit and Wayward creeds' starting
+Conviction is not set (only their paths are added); the Creed list keeps its seven. Fool's Luck is at difficulty 8 and
+Imprison's difficulty is the creature's Stamina + 3, as the pages give; the derangement other creeds take for each
+Hermit or Deviance edge is the Storyteller's from the card. Spiral's whirlwind is worked each turn (lethal levels equal to the successes to everyone within a yard and a half a success, soaked as usual); its Stamina roll to stay standing is on the card. Each new edge has a target tag for the aim panel.
+
+Reverse: remove the rows with a book (the ninth field) from EDGES, the hermit and deviance PATHS and EDGE_BOOKS in
+reckoning-rules.js, and their entries in power-keywords-lines.js.
+
+## B7835. Twelve more gates join the clean smoke set (2026-11-26)
+Tools. The clean smoke set (gate-map-extra.json "clean", run in wodx-clean after the nightly) held seven gates, so most
+features were proven only in rothenstein-wodx, where a chronicle is in play. Twelve gates that make their own scene,
+actors and cards were run in the clean world on cloud lane 9 and all passed: gatealarmbell, gatemakeresidents,
+gategatheringgift, gatefactionend, gatesummontime, gatesecondsight, gatearchetypehours, gateprowlmark,
+gatekeepanachronism, gatekinbring, gatestainclaws, gatespectrethorn (about 20 minutes together). They join the set.
+
+Reverse: take the twelve names out of "clean" in tools/lanes/gate-map-extra.json.
 
 ## B7840. Revenant families in every era (2026-11-23)
 WoDX Creation, revenant-rules.mjs. Twenty family lines, each with the years it lives in the chronicle and the reason. The eight V20 Dark Ages families (pp. 453-454: Basarab, Bratovich, Danislav, Grimaldi, Obertus, Szantovich, Vlaszy, Khavi) and the Krevcheski of Dark Ages: Vampire p. 289 use their Dark Ages write-up before 1837; the twelve V20 Ghouls and Revenants families take over from 1837, and those with no Dark Ages write-up use it in every year. The three "other families" of Ghouls and Revenants p. 113 (Marijava, Keskinen, Katayama) have no Disciplines in the book, so any may be taken at birth. Years the books do not give are house readings (listed in docs/PENDING-REVIEW.md): the Danislav, Vlaszy and Khavi end in 1493, the Basarab by 1700, the Krevcheski become the Ducheski in 1250, the Szantovich take the name Zantosa in 1494, the Servants of Anushin-Rawan begin in 1500, the Rossellini in 1550, the Oprichniki in 1565 (the oprichnina), the Katayama in 1950. The revenant window lists only the families alive in the chronicle's year; a birth keeps the family's mark (what its weakness does) on the sheet, and the Dark Ages Grimaldi hold 8 blood points.
