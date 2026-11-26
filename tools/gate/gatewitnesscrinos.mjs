@@ -18,13 +18,16 @@ export async function run() {
   try {
     await game.settings.set(MOD, "autoDelirium", true);
     try { await game.settings.set(MOD, "autoWitness", true); } catch {}
-    const s = await G.scene({width: 2400, height: 1600});
+    // a world can set a longer witness range or another grid distance: this run sees 60 feet at 5 feet a square
+    await game.settings.set(MOD, "witnessRange", 60);
+    const s = await G.scene({width: 2400, height: 1600, grid: {size: 100, distance: 5}});
     const [beast, seer] = await G.make(Actor, [
       {name: "Gate Witness War Form", type: "Mortal"},
       {name: "Gate Witness Onlooker", type: "Mortal"}]);
     await seer.update({"system.advantages.willpower.permanent": 1, "system.advantages.willpower.temporary": 1});
-    // far apart: 60 feet of sight is 1,200 px on this grid
-    const [bt, st] = await G.tokens(s, [{actor: beast, x: 1, y: 1, actorLink: true}, {actor: seer, x: 21, y: 13, actorLink: true}]);
+    // just out of sight: 60 feet is 1,200 px on this grid, and they stand 13 squares apart; a short walk, so the
+    // move has finished drawing when the witness check looks (it looks 0.6 s after the move)
+    const [bt, st] = await G.tokens(s, [{actor: beast, x: 8, y: 13, actorLink: true}, {actor: seer, x: 21, y: 13, actorLink: true}]);
     await waitFor(() => bt.object && st.object, 10000);
     await bt.setFlag("wodx-paperdoll", "sprite", "garou-crinos");
     await new Promise(r => setTimeout(r, 2500));
@@ -34,14 +37,16 @@ export async function run() {
 
     await G.step("1. the war form walks into sight and the mortal falls still", async () => {
       const before = {still: still(), card: !!card()};
-      await canvas.tokens.get(bt.id).document.update({x: 1800, y: 1300});
+      await canvas.tokens.get(bt.id).document.update({x: 1700, y: 1300});
       await waitFor(() => still() && card(), 90000);
       const c = card();
       if ( c ) msgs.add(c.id);
       const row = (c?.content ?? "").match(/<li>.*?Gate Witness Onlooker.*?<\/li>/)?.[0]?.replace(/<[^>]+>/g, "") ?? "";
       G.ok("1. the war form walks into sight and the mortal falls still",
         !before.still && !before.card && still() && /Catatonic fear/i.test(row) && /falls still/.test(row) && c?.whisper?.every?.(id => game.users.get(id)?.isGM),
-        {before, still: still(), row, marks: canvas.tokens.get(st.id)?.actor?.effects?.map?.(e => `${e.name} [${[...(e.statuses ?? [])].join(",")}]`), at: [canvas.tokens.get(bt.id)?.document?.x, canvas.tokens.get(bt.id)?.document?.y]});
+        {before, still: still(), row, marks: canvas.tokens.get(st.id)?.actor?.effects?.map?.(e => `${e.name} [${[...(e.statuses ?? [])].join(",")}]`), grid: [canvas.scene?.grid?.size, canvas.scene?.grid?.distance, game.settings.get(MOD, "witnessRange")],
+          sees: (() => { try { return game.modules.get(MOD)?.api?.witnessesOf?.(canvas.tokens.get(bt.id), {profiles: ["mortal"]})?.map?.(t => t.name); } catch (e) { return `${e?.message ?? e}`; } })(),
+          at: [canvas.tokens.get(bt.id)?.document?.x, canvas.tokens.get(bt.id)?.document?.y]});
     });
   } catch (e) {
     G.R.errors.push(`${e?.message ?? e}`);
