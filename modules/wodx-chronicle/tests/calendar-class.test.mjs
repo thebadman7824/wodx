@@ -12,7 +12,7 @@ globalThis.foundry = {
       {name: "Fall", monthStart: 9, monthEnd: 11}, {name: "Winter", monthStart: 12, monthEnd: 2}]}}},
   utils: {deepClone: o => structuredClone(o)}
 };
-const C = await import("../scripts/calendar.mjs");
+const C = {...await import("../../wodx-rules/core/calendar.mjs"), ...await import("../scripts/calendar.mjs")};
 const Cls = C.makeCalendarClass();
 const cal = new Cls(C.makeCalendarConfig());
 
