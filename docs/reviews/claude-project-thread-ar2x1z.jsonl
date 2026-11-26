@@ -1,0 +1,2 @@
+{"file":"tools/pcq/watcher.mjs","verdict":"working","how":"read the OCR branch and the new OCR_RUN switch in full; ran watcher.test.mjs (22 pass) and pcq.test.mjs (37 pass)","hash":"e4da119703fc","at":"2026-11-26T03:44Z"}
+{"file":"tools/harness/watcher.test.mjs","verdict":"working","how":"read the OCR branch and the new OCR_RUN switch in full; ran watcher.test.mjs (22 pass) and pcq.test.mjs (37 pass)","hash":"d9aa3a4250f9","at":"2026-11-26T03:44Z"}

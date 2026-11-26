@@ -113,6 +113,8 @@ const carries = a => [...(a?.items ?? [])].some(i => ["Item", "Melee Weapon", "R
 /** Fill an NPC who carries nothing, once. On a player's computer the Storyteller's does it. */
 export async function ensureKit(npc) {
   if ( !isNPC(npc) || npc.getFlag?.(MODULE_ID, "kit")?.taken || carries(npc) ) return false;
+  // An unlinked token's things live on its scene: none for a token whose scene is gone or was never saved
+  if ( npc.isToken && !onSavedScene(npc) ) return false;
   if ( !game.user.isGM ) {
     if ( game.users.some(u => u.isGM && u.active) ) game.socket.emit(SOCKET, {type: "kit.npc", payload: {actor: npc.uuid}});
     return false;
@@ -123,6 +125,11 @@ export async function ensureKit(npc) {
   try { return await fillNpc(npc); } finally { FILLING.delete(npc.uuid); }
 }
 const FILLING = new Set();
+/** True while an unlinked token's actor still sits on a saved scene. */
+function onSavedScene(npc) {
+  const tok = npc.token, scene = tok?.parent;
+  return !!(tok?.id && scene?.id && game.scenes?.has?.(scene.id) && scene.tokens?.has?.(tok.id));
+}
 async function fillNpc(npc) {
   await loadKit();
   const k = kitFor(npc);

@@ -73,7 +73,8 @@ export function build(ctx) {
         if (npcTok.actor.hasPlayerOwner) { ui.notifications.info("That is a player's character: deal with them yourselves."); return null; }
         const npc = npcTok.actor, name = nameFor(npcTok);
         // Desk pick inv2 (26 Nov): an NPC who carries nothing gets the things of their station and land at this first meeting
-        try { game.modules.get("wodx-creation")?.api?.kit?.ensure?.(npc)?.catch?.(e => console.warn("wodx-actions | kit", e)); } catch (e) { /* no Creation */ }
+        // Awaited, so the things are there before the window opens and nothing lands later on a token that has gone
+        try { await game.modules.get("wodx-creation")?.api?.kit?.ensure?.(npc); } catch (e) { console.warn("wodx-actions | kit", e); }
         const at = attitudeOf(npc, actor);
         const gmLine = game.user.isGM && at ? `<p class="vta-note">Storyteller: ${esc(name)} regards ${esc(actor.name)} as <b>${esc(at.word)}</b>${at.met ? "" : at.from ? ` (not met yet: from ${esc(at.from)})` : " (not met yet)"}.
             Set it: <select name="setAttitude" data-fixed><option value="">(leave)</option>${opts(Object.entries(npcApi().attitude.rules.STEPS).map(([k, w]) => [k, w]), "")}</select></p>` : "";

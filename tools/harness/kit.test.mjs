@@ -83,3 +83,10 @@ test("the wizard has a What they carry page, and the NPC menu fills an NPC at fi
   const M = readFileSync(join(root, "modules/wodx-creation/scripts/main.mjs"), "utf8");
   assert.match(M, /message\?\.type === "kit\.npc"/);
 });
+
+test("an NPC's things at first meeting are in place before the window opens, and never on a token that has gone", () => {
+  const S = readFileSync(join(root, "modules/wodx-actions/scripts/social.js"), "utf8");
+  const KM = readFileSync(join(root, "modules/wodx-creation/scripts/kit.mjs"), "utf8");
+  assert.match(S, /await game\.modules\.get\("wodx-creation"\)\?\.api\?\.kit\?\.ensure\?\.\(npc\)/, "awaited, not left to land later");
+  assert.match(KM, /if \( npc\.isToken && !onSavedScene\(npc\) \) return false;/);
+});

@@ -82,6 +82,8 @@ async function tokenSight(tok, ch) {
   const mid = {x: Number(tok.x) + Number(tok.width || 1) * g / 2, y: Number(tok.y) + Number(tok.height || 1) * g / 2};
   const range = R.sightFor({indoor: indoorAt(scene, mid), gridDistance: scene?.grid?.distance, visionMode: tok.sight.visionMode, range: tok.sight.range});
   if ( range === null || Number(tok.sight.range) === range ) return;
+  // The token may have gone with its scene by the time this runs
+  if ( !scene?.id || !game.scenes?.has?.(scene.id) || !scene.tokens?.has?.(tok.id) ) return;
   await tok.update({"sight.range": range});
 }
 

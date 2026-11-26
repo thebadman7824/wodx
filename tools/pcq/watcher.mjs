@@ -51,6 +51,12 @@ export const LIMITS = {
 export const TRAIN_LABEL = "merge-train";
 /** Lanes that are down on purpose: 6 is kept for the local agents, which are paused (17 November 2026). */
 export const IGNORE_LANES = [6];
+/**
+ * B8110: is a book OCR run under way? The second OCR pass finished on 25 November 2026 (300 of 300 books) and its loop
+ * was stopped on purpose, but the loop's log does not say so, so the watcher kept an alert open for it. While this is
+ * false, OCR readings are listed as notes and never raise a problem. Set it to true when the next OCR run starts.
+ */
+export const OCR_RUN = false;
 
 /** The PCs: name in pc-status, runner status issue title, lanes. Lane 9 (the cloud lane) has no PC and no status. */
 export const PCS = [
@@ -102,7 +108,7 @@ export const statusStamp = body => /^Updated (\d{4}-\d\d-\d\dT\d\d:\d\dZ?)/m.exe
  * snap: {now, pcs: {main: json|null, ...}, statusIssues: [{number,title,updated_at,body}], jobs: [{number,title,
  * created_at, running, startedAt}], alerts: [{number,title,created_at}], local: {runner, watchdog, statusPush}|null}
  */
-export function assess(snap, prev = {}) {
+export function assess(snap, prev = {}, {ocrRun = OCR_RUN} = {}) {
   const now = snap.now, problems = [], notes = [], rows = [];
   const add = (key, text) => problems.push({key, text});
   const status = Object.fromEntries(PCS.map(p => [p.key, snap.statusIssues.find(i => i.title === p.statusTitle) ?? null]));
@@ -194,7 +200,8 @@ export function assess(snap, prev = {}) {
     }
     if ( o ) {
       sawOcr = true;
-      if ( o.loopUp === false && !o.stopped && !o.workers ) add(`${p.key}:ocr:loop`, `${p.label}: the book OCR loop is not running, and its log does not say it was stopped on purpose.`);
+      if ( !ocrRun ) notes.push(`${p.label}: book OCR ${o.workers ? `${o.workers} worker${o.workers > 1 ? "s" : ""} running` : "not running"}; no OCR run is under way, so the watcher does not check it (OCR_RUN in tools/pcq/watcher.mjs).`);
+      else if ( o.loopUp === false && !o.stopped && !o.workers ) add(`${p.key}:ocr:loop`, `${p.label}: the book OCR loop is not running, and its log does not say it was stopped on purpose.`);
       else if ( o.gaveUp ) add(`${p.key}:ocr:gaveup`, `${p.label}: the book OCR's log says it gave up${o.memWait ? " while waiting for memory" : ""}.`);
       else if ( o.workers > 0 && o.lastOutputMin !== null && o.lastOutputMin !== undefined && o.lastOutputMin > LIMITS.ocrStallMin )
         add(`${p.key}:ocr:stalled`, `${p.label}: the book OCR has ${o.workers} worker${o.workers > 1 ? "s" : ""} running but no new output for ${hm(o.lastOutputMin)}${o.memWait ? "; its log says it is waiting for memory" : ""}.`);

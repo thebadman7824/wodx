@@ -13,7 +13,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-creation | yes | 23 | 0 | 1 |
 | wodx-interactables | not yet | 0 | 0 | 0 |
 | wodx-library | not yet | 0 | 0 | 0 |
-| wodx-npc | yes | 34 | 0 | 16 |
+| wodx-npc | yes | 34 | 0 | 15 |
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
@@ -140,7 +140,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | Alarms: a place raised to alarm and how NPCs answer what happens on the map (`npc.alerts`) | core | shown | 1 |  |
 | An NPC uses its own powers in a fight, and holds back obvious ones while mortals watch (`npc.auto-powers`) | core | book |  | gatetruthnpc 5. Auto: an NPC whose best option is a power uses it on its own turn |
 | Bonds from the books as relationships, with what each one does: the blood bond, the Vinculum, Fetters (`npc.bonds`) | core | gated | 1 | gatebonds 7. sheet |
-| Courtship, marriage and the law, children, households and loved ones as a weak spot (`npc.hearts`) | core | shown | 1 |  |
+| Courtship, marriage and the law, children, households and loved ones as a weak spot (`npc.hearts`) | core | gated |  | gatewedding 1. Approve on the wedding card marries them, shown as Spouse on the Relationships tab |
 | Cults and congregations that gather around a character (`npc.cults`) | core | shown | 1 |  |
 | Faces you have met: a stranger's token shows a description until you learn the name (`npc.faces`) | core | shown | 1 |  |
 | Factions and domains: members, places held, faction turns, founding, politics and war (`npc.factions`) | core | shown | 1 |  |

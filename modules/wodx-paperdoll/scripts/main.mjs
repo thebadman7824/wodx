@@ -15,7 +15,7 @@ import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.32.4";
+export const VERSION = "0.33.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -409,7 +409,9 @@ Hooks.once("ready", () => {
     });
     let rosterSoon = null;
     Hooks.on("updateActor", (a, ch) => {
-      if ( !isBaker() || !foundry.utils.hasProperty(ch ?? {}, `flags.${MOD}.figure`) ) return;
+      if ( !isBaker() || !(foundry.utils.hasProperty(ch ?? {}, `flags.${MOD}.figure`) || foundry.utils.hasProperty(ch ?? {}, `flags.${MOD}.look`)) ) return;
+      // B8100: with the setting on, the PC sprite drawer is asked by itself (the request writes the roster too)
+      if ( S.askSoon?.() ) return;
       clearTimeout(rosterSoon);
       rosterSoon = setTimeout(() => S.saveRoster?.().catch(e => console.warn(`${MOD} | roster`, e)), 2000);
     });

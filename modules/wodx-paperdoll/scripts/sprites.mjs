@@ -20,7 +20,20 @@ export function registerSpriteSettings() {
     hint: "Tokens given a sprite face the way they move and step as they go. Off: they show the still figure.", type: Boolean, default: true});
   game.settings.register(MOD, "spriteLife", {scope: "world", config: true, name: "Figures live their routine on the map",
     hint: "NPC figures lie down to sleep, sit, kneel and carry loads as their routine goes.", type: Boolean, default: true});
+  // B8100 (#2491): a new character, a new NPC and a kept figure or look ask the PC sprite drawer by themselves
+  game.settings.register(MOD, "spriteAutoDraw", {scope: "world", config: true, name: "New and changed characters get their sprite by themselves",
+    hint: "New characters and changed looks get their sprites drawn on the PC by themselves.", type: Boolean, default: true});
+  // B6144: the Storyteller asks the PC to draw everyone's sprite, from inside the game. Foundry wants an application
+  // class for a menu: this one only opens the confirming window.
+  try {
+    const AppV2 = foundry.applications?.api?.ApplicationV2;
+    const DrawMenu = AppV2 ? class extends AppV2 { async render() { drawDialog().catch(e => console.warn(`${MOD} | draw sprites`, e)); return this; } }
+      : class { render() { drawDialog().catch(e => console.warn(`${MOD} | draw sprites`, e)); return this; } };
+    game.settings.registerMenu(MOD, "spriteDraw", {name: "Draw sprites", label: "Draw sprites now", icon: "fa-solid fa-person-walking",
+      hint: "Writes every character of the world for the sprite batch and asks the PC sprite drawer to draw the ones that are new or changed. Tokens put the new sprites on by themselves when it is done.", type: DrawMenu, restricted: true});
+  } catch (e) { console.warn(`${MOD} | draw sprites menu`, e); }
 }
+const autoDrawOn = () => { try { return game.settings.get(MOD, "spriteAutoDraw") !== false; } catch (e) { return true; } };
 const lifeOn = () => { try { return game.settings.get(MOD, "spriteLife") !== false; } catch (e) { return true; } };
 
 const crisp = tex => { const b = tex?.baseTexture ?? tex?.source; if ( b ) b.scaleMode = globalThis.PIXI?.SCALE_MODES?.NEAREST ?? "nearest"; return tex; };
@@ -57,7 +70,7 @@ function tick() {
     const name = seemingFor(own);   // a changeling's mortal seeming for those who cannot see the fae mien (B5819)
     seen.add(token.id);
     const pos = {x: token.position.x, y: token.position.y};
-    let st = SR.step(states.get(token.id) ?? SR.start(pos), pos, grid, now);
+    let st = SR.step(states.get(token.id) ?? SR.start(pos), pos, grid, now, 140, !!token.movementAnimationPromise);
     let tex = null;
     const a = acts.get(token.id);
     if ( a?.up ) {
@@ -73,6 +86,8 @@ function tick() {
     }
     else if ( a ) {
       // a pose that goes round (working, grazing) starts over for as long as the figure stays at it (B5664)
+      // a move whose sheet is still loading starts when it has loaded (for two seconds at most), so the first play is seen whole
+      if ( !a.up && !a.held && !base(name, a.act) && now - (a.asked ??= now) < 2000 ) a.start = now;
       const col = st.moving ? null : SR.actFrame(a.loop ? (now - a.start) % SR.actTotal(a.act) : now - a.start, a.act);
       if ( col === null && a.hold && !st.moving ) a.held = true;
       else if ( col === null ) acts.delete(token.id);
@@ -97,11 +112,19 @@ function tick() {
       if ( gait ) tex = frame(name, SR.frameOf(st, grid), gait);
     }
     tex ??= frame(name, SR.frameOf(st, grid, SR.hasStand(name)));
+    // B6145: a sprite turns by its rows, never by spinning the picture (a move with autoRotate turns the token itself)
+    upright(token);
     if ( tex && token.mesh.texture !== tex ) token.mesh.texture = tex;
     else if ( !tex ) crisp(token.mesh.texture);
     try { applyLooks(token, now); } catch (e) { console.warn(`${MOD} | line look`, e); }
   }
   for ( const id of states.keys() ) if ( !seen.has(id) ) { states.delete(id); acts.delete(id); const g = glows.get(id); if ( g ) { if ( !g.destroyed ) g.destroy(); glows.delete(id); } const c = covers.get(id); if ( c ) { if ( !c.destroyed ) c.destroy(); covers.delete(id); } }
+}
+
+/* B6145: the token's rotation is kept on the document (flanking reads it) but the figure is drawn upright. */
+function upright(token) {
+  const m = token?.mesh;
+  if ( m && m.rotation ) m.rotation = 0;
 }
 
 /* A power's effect, laid over the token while its casting move plays: one small picture on the token itself, in step
@@ -581,7 +604,11 @@ export function startSprites() {
   Hooks.on("wodxGhoulCraving", onCraving);
   Hooks.on("wodxInteractableWorked", onWorked);
   Hooks.on("createChatMessage", onSpoken);
-  loadOwn();
+  Hooks.on("createToken", fitMade);
+  // B8100: a character made in the world (by hand, by creation or by a routine bringing in an NPC) asks for its sprite
+  Hooks.on("createActor", () => { if ( mine() ) askSoon(); });
+  Hooks.on("refreshToken", t => { if ( on() && t?.document?.flags?.[MOD]?.sprite ) upright(t); });
+  loadOwn().then(() => resumeDraw()).catch(() => null);
   const every = globalThis.setInterval?.(() => { settle().catch(e => console.warn(`${MOD} | routine poses`, e)); }, 2500);
   every?.unref?.();   // under Node (the test stand-in) the timer must not keep the process alive
   Hooks.on("canvasReady", () => { states.clear(); glows.clear(); strides.clear(); acts.clear();
@@ -697,6 +724,72 @@ export async function markChild(actor, growth) {
   }
 }
 
+/* ---- drawing from inside the game (B6144): roster and request out, the PC runner draws, status.json back ---- */
+const readOwn = async file => { try { const r = await fetch(`${ownFolder()}/${file}?t=${Date.now()}`, {cache: "no-store"}); return r.ok ? r.json() : null; } catch (e) { return null; } };
+let watching = null;
+/** The window: how many characters there are and how many already have a sprite, and the button that asks. */
+export async function drawDialog() {
+  if ( !game.user?.isGM ) return null;
+  const all = game.actors?.size ?? 0, drawn = (game.actors ?? []).filter(a => SR.isOwn(SR.ownName(a.id))).length;
+  const st = await readOwn("status.json"), req = await readOwn("request.json");
+  const last = st?.state === "done" ? `Last drawn ${new Date(st.finished).toLocaleString()}: ${st.drawn} drawn, ${st.unchanged} unchanged.` : st?.state === "failed" ? `The last drawing failed: ${st.text}` : "";
+  const busy = req?.id && (st?.id !== req.id || st.state === "drawing");
+  const ok = await foundry.applications.api.DialogV2.confirm({window: {title: "Draw sprites"}, classes: ["wodx-dialog"], rejectClose: false,
+    content: `<p>${all} characters in the world; ${drawn} have a drawn sprite.</p><p>The PC sprite drawer draws the ones that are new or changed (clothes, gear, figure, age, the year) and leaves the rest. It takes a few seconds a character. Tokens put the new sprites on by themselves.</p>${last ? `<p class="wodx-quiet">${last}</p>` : ""}${busy ? `<p class="wodx-quiet">A drawing was asked for already and has not finished; asking again replaces it.</p>` : ""}`,
+    yes: {label: "Draw now"}, no: {label: "Cancel"}});
+  return ok ? requestDraw() : null;
+}
+/** Write the roster and a request; the PC runner draws. Returns the request id. quiet: asked by itself (B8100), so no notice now. */
+export async function requestDraw({quiet = false} = {}) {
+  if ( !game.user?.isGM ) return null;
+  const saved = await saveRoster(), id = `${Date.now().toString(36)}-${foundry.utils.randomID(6)}`;
+  const FP = foundry.applications?.apps?.FilePicker?.implementation ?? globalThis.FilePicker;
+  await FP.upload("data", ownFolder(), new File([JSON.stringify({id, world: game.world.id, at: new Date().toISOString(), by: game.user.name})], "request.json", {type: "application/json"}), {}, {notify: false});
+  if ( !quiet ) ui.notifications?.info(`Asked for ${saved?.actors ?? 0} characters' sprites. They appear on the map when the PC has drawn them.`);
+  watchDraw(id, {quiet});
+  return id;
+}
+/* B8100: many changes close together (a routine bringing in a crowd, a figure kept twice) make one request, half a minute after the last */
+let soon = null;
+export const AUTO_DELAY = 30000;
+export function askSoon(delay = AUTO_DELAY) {
+  if ( !game.user?.isGM || !autoDrawOn() ) return false;
+  clearTimeout(soon);
+  soon = setTimeout(() => { soon = null; requestDraw({quiet: true}).catch(e => console.warn(`${MOD} | draw sprites`, e)); }, delay);
+  soon?.unref?.();
+  return true;
+}
+export const askPending = () => soon !== null;
+export function cancelAsk() { clearTimeout(soon); soon = null; }
+/** Read status.json every 20 seconds until the request is answered (an hour at most); then learn the sprites and dress the scene. */
+export function watchDraw(id, {every = 20000, limit = 3600000, quiet = false} = {}) {
+  if ( watching ) clearInterval(watching.timer);
+  const t0 = Date.now();
+  let told = false;
+  const look = async () => {
+    const st = await readOwn("status.json");
+    if ( st?.id === id && st.state === "done" ) {
+      clearInterval(watching?.timer); watching = null; const n = await loadOwn();
+      // the scene in view puts the new sprites on at once (a token made later is dressed as it comes, B8053)
+      if ( globalThis.canvas?.ready ) await dress(canvas.scene).catch(e => console.warn(`${MOD} | dress`, e));
+      if ( !quiet || st.drawn ) ui.notifications?.info(`Sprites drawn: ${st.drawn} new or changed, ${st.unchanged} as they were; ${n} characters have one.`);
+      return;
+    }
+    if ( st?.id === id && st.state === "failed" ) { clearInterval(watching?.timer); watching = null; ui.notifications?.warn(`The sprite drawing failed: ${st.text}`); return; }
+    if ( !quiet && !told && Date.now() - t0 > 180000 && st?.id !== id ) { told = true; ui.notifications?.warn("No sprite drawer has answered yet. It runs on the PC with the job runner; the request waits for it."); }
+    if ( Date.now() - t0 > limit ) { clearInterval(watching?.timer); watching = null; }
+  };
+  watching = {id, timer: setInterval(() => { look().catch(() => null); }, every)};
+  watching.timer?.unref?.();
+  return watching;
+}
+/** On the Storyteller's computer at start: a request still waiting is watched again. */
+async function resumeDraw() {
+  if ( !mine() ) return;
+  const req = await readOwn("request.json"), st = await readOwn("status.json");
+  if ( req?.id && (st?.id !== req.id || st.state === "drawing") ) watchDraw(req.id);
+}
+
 /** Every character of the world as the batch needs it. */
 export function roster() {
   const actors = [], y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.();
@@ -720,9 +813,17 @@ export async function saveRoster() {
   return {path: `${ownFolder()}/roster.json`, actors: r.actors.length};
 }
 
+/* A token made from a prototype that carried a sprite but not its size and picture is fitted at once (B6140). A token of
+   a character with its own drawn sprite and none yet is dressed by WoDX Paperdoll's main (B8053). */
+function fitMade(doc) {
+  if ( !on() || !mine() ) return;
+  const has = doc?.flags?.[MOD]?.sprite;
+  if ( has && SR.SHEETS[has] && doc.texture?.src !== SR.stillPath(has) ) give(doc, has).catch(e => console.warn(`${MOD} | dress`, e));
+}
+
 /** Give every token of a scene its character's own sprite, where one was drawn and the token has none yet. */
 export async function dress(scene = canvas.scene) {
-  if ( !game.user?.isGM ) return 0;
+  if ( !game.user?.isGM || !scene ) return 0;
   let n = 0;
   for ( const t of scene?.tokens ?? [] ) {
     const name = SR.ownName(t.actorId);
@@ -736,4 +837,4 @@ export async function dress(scene = canvas.scene) {
   return n;
 }
 
-export const spriteApi = {flash, veil, lineWanted, faded: t => fades.get(t?.id ?? t)?.alpha ?? 1, looksOn: t => [...(looks.get(t?.id ?? t) ?? [])].map(l => l.kind), marked: t => !!marked.get(t?.id ?? t), seemingFor, shiftByStages, covered: t => { const c = covers.get(typeof t === "string" ? t : (t?.object?.id ?? t?.id)); return c && !c.destroyed ? {tint: c.tint, visible: c.visible, width: c.width} : null; }, ageOf, markChild, give, clear, pick, play, pose, rise, settle, lifeOf, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, squares: name => SR.squaresOf(name), fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
+export const spriteApi = {drawDialog, requestDraw, watchDraw, askSoon, askPending, cancelAsk, drawWatched: () => watching?.id ?? null, flash, veil, lineWanted, faded: t => fades.get(t?.id ?? t)?.alpha ?? 1, looksOn: t => [...(looks.get(t?.id ?? t) ?? [])].map(l => l.kind), marked: t => !!marked.get(t?.id ?? t), seemingFor, shiftByStages, covered: t => { const c = covers.get(typeof t === "string" ? t : (t?.object?.id ?? t?.id)); return c && !c.destroyed ? {tint: c.tint, visible: c.visible, width: c.width} : null; }, ageOf, markChild, give, clear, pick, play, pose, rise, settle, lifeOf, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, squares: name => SR.squaresOf(name), fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};

@@ -23,6 +23,7 @@ import fs from "node:fs";
 import path from "node:path";
 import {execFileSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
+import {installHooks} from "../git-hooks/install.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const args = process.argv.slice(2);
@@ -106,6 +107,7 @@ const save = r => { const tmp = `${REG}.tmp`; fs.writeFileSync(tmp, JSON.stringi
 const label = c => `B${c.lo}-B${c.hi}`;
 
 function main() {
+  installHooks(); // B8130: the merge-train push guard
   if ( args.includes("--list") ) {
     for ( const c of load().claims ) console.log(`${label(c).padEnd(12)} ${c.at.slice(0, 16)}  ${c.thread}  ${c.feature}`);
     return;

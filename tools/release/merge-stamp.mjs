@@ -18,6 +18,8 @@
  *                                         `what:` (a new "What it does" cell), then the note as one paragraph
  *   changes/decisions/<B-start>.md        a claimed decision block: front matter `block`, `feature`, `modules`, then
  *                                         the "## Bnnnn. Title (date)" sections
+ *   changes/pending-review/<name>.md      B8131: rows for the Waiting for review table of docs/PENDING-REVIEW.md, one
+ *                                         "| Date | Question | Choice made | How to reverse it |" line each
  * Several fragments for one module make one release: the largest bump, notes joined with "; ".
  */
 import fs from "node:fs";
@@ -109,23 +111,59 @@ export function checkDecisionFragment(f) {
   return out;
 }
 
+/**
+ * B8131: the table rows of a pending-review fragment (front matter, if any, is left out). PENDING-REVIEW.md was the
+ * file in most merge conflicts that ejected pull requests from the train (about 8 of 11, 17 to 25 November), since
+ * every branch appended rows to the same table end. Pure.
+ */
+export function pendingRows(text) {
+  const body = String(text ?? "").replace(/^\uFEFF/, "").replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+  return body.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+}
+/** Problems with a pending-review fragment's rows. Pure. */
+export function checkPendingRows(rows) {
+  if ( !rows.length ) return ["no table rows"];
+  const out = [];
+  for ( const r of rows ) {
+    const cells = r.startsWith("|") && r.endsWith("|") ? r.slice(1, -1).split("|") : null;
+    if ( !cells || cells.length !== 4 ) out.push(`not a four-cell table row (Date | Question | Choice made | How to reverse it): ${r.slice(0, 60)}`);
+    else if ( !/^\s*\d{4}-\d{2}-\d{2}\s*$/.test(cells[0]) ) out.push(`the first cell is not a date (YYYY-MM-DD): ${r.slice(0, 60)}`);
+  }
+  return out;
+}
+/**
+ * Append rows to the end of the "Waiting for review" table, which is last in docs/PENDING-REVIEW.md; rows the table
+ * already holds are not added twice. Pure.
+ */
+export function stampPending(src, rows) {
+  const at = src.lastIndexOf("\n## Waiting for review");
+  if ( at < 0 ) throw new Error("docs/PENDING-REVIEW.md has no Waiting for review section");
+  const have = new Set(src.split("\n").map(l => l.trim()));
+  const add = rows.filter(r => !have.has(r.trim()));
+  if ( !add.length ) return src;
+  return src.replace(/\s*$/, "\n") + add.join("\n") + "\n";
+}
+
 /** Read every fragment under changes/. */
 export function readFragments(root = ROOT) {
   const dir = path.join(root, "changes");
-  const modules = [], decisions = [];
-  if ( !fs.existsSync(dir) ) return {modules, decisions};
+  const modules = [], decisions = [], pending = [];
+  if ( !fs.existsSync(dir) ) return {modules, decisions, pending};
   for ( const sub of fs.readdirSync(dir, {withFileTypes: true}) ) {
     if ( !sub.isDirectory() ) continue;
     for ( const f of fs.readdirSync(path.join(dir, sub.name)) ) {
       if ( !f.endsWith(".md") || f === "README.md" ) continue;
       const file = path.join("changes", sub.name, f);
-      const frag = parseFragment(fs.readFileSync(path.join(root, file), "utf8"));
+      const text = fs.readFileSync(path.join(root, file), "utf8");
+      if ( sub.name === "pending-review" ) { pending.push({file, rows: pendingRows(text)}); continue; }
+      const frag = parseFragment(text);
       (sub.name === "decisions" ? decisions : modules).push({file, module: sub.name, frag});
     }
   }
   modules.sort((a, b) => a.file.localeCompare(b.file));
   decisions.sort((a, b) => (blockRange(a.frag?.meta.block)?.lo ?? 0) - (blockRange(b.frag?.meta.block)?.lo ?? 0));
-  return {modules, decisions};
+  pending.sort((a, b) => a.file.localeCompare(b.file));
+  return {modules, decisions, pending};
 }
 
 /* ---- text edits, pure so the harness can test them ---- */
@@ -207,6 +245,7 @@ function versionAt(ref, mod) {
 }
 
 async function main() {
+  (await import("../git-hooks/install.mjs")).installHooks(); // B8130: the merge-train push guard
   const args = new Set(process.argv.slice(2));
   const check = args.has("--check"), dry = args.has("--dry");
   if ( !args.has("--no-fetch") ) {
@@ -217,7 +256,8 @@ async function main() {
   if ( tryGit("merge-base", "--is-ancestor", "origin/main", "HEAD") === null )
     problems.push("the branch does not hold the newest main: git merge origin/main first (then run this again)");
 
-  const {modules: mf, decisions: df} = readFragments();
+  const {modules: mf, decisions: df, pending: pf} = readFragments();
+  for ( const x of pf ) for ( const p of checkPendingRows(x.rows) ) problems.push(`${x.file}: ${p}`);
   for ( const x of mf ) {
     if ( !fs.existsSync(path.join(ROOT, "modules", x.module, "module.json")) ) problems.push(`${x.file}: no module ${x.module}`);
     for ( const p of checkModuleFragment(x.frag) ) problems.push(`${x.file}: ${p}`);
@@ -256,13 +296,13 @@ async function main() {
       console.log(MR.report(r).split("\n").map(l => `  ${l}`).join("\n"));
       if ( !r.bensOwn ) for ( const k of ["note", "review", ...(r.gateUnread ? [] : ["gates"])] ) for ( const x of r.rules[k] ) problems.push(`merge rule: ${x}`);
     } catch (e) { console.log(`  merge rules not checked: ${e.message}`); }
-    if ( mf.length || df.length ) problems.push(`${mf.length + df.length} fragment(s) wait to be stamped: run node tools/release/merge-stamp.mjs`);
+    if ( mf.length || df.length || pf.length ) problems.push(`${mf.length + df.length + pf.length} fragment(s) wait to be stamped: run node tools/release/merge-stamp.mjs`);
     for ( const p of problems ) console.log(`  ${p}`);
     console.log(problems.length ? `Not ready to merge: ${problems.length} problem(s).` : "Ready to merge: nothing waits to be stamped.");
     process.exit(problems.length ? 1 : 0);
   }
   if ( problems.length ) { for ( const p of problems ) console.log(`  ${p}`); console.log("Nothing was stamped."); process.exit(1); }
-  if ( !mf.length && !df.length ) { console.log("No fragments under changes/: nothing to stamp."); process.exit(0); }
+  if ( !mf.length && !df.length && !pf.length ) { console.log("No fragments under changes/: nothing to stamp."); process.exit(0); }
 
   const writes = new Map(), put = (p, s) => writes.set(p, s), get = p => writes.get(p) ?? read(p);
   for ( const [mod, list] of Object.entries(byMod) ) {
@@ -284,15 +324,19 @@ async function main() {
     put("docs/DECISIONS.md", stampDecisions(get("docs/DECISIONS.md"), x.frag));
     console.log(`decisions: ${x.frag.meta.block}, ${sectionNumbers(x.frag.body).length} section(s)`);
   }
+  if ( pf.length ) {
+    put("docs/PENDING-REVIEW.md", stampPending(get("docs/PENDING-REVIEW.md"), pf.flatMap(x => x.rows)));
+    console.log(`pending review: ${pf.reduce((n, x) => n + x.rows.length, 0)} row(s) from ${pf.length} fragment(s)`);
+  }
   // B6200: the list of cross-module api paths that gateapipaths walks on the testbed follows the code at every merge
   try {
     const {collect} = await import("../audit/api-paths.mjs");
     const f = "tools/gate/fixtures/api-paths.json", next = JSON.stringify(collect(), null, 1) + "\n";
     if ( !fs.existsSync(path.join(ROOT, f)) || read(f) !== next ) put(f, next);
   } catch (e) { console.log(`  api paths not refreshed: ${e.message}`); }
-  if ( dry ) { console.log(`--dry: ${writes.size} file(s) would change, ${mf.length + df.length} fragment(s) would go.`); process.exit(0); }
+  if ( dry ) { console.log(`--dry: ${writes.size} file(s) would change, ${mf.length + df.length + pf.length} fragment(s) would go.`); process.exit(0); }
   for ( const [p, s] of writes ) fs.writeFileSync(path.join(ROOT, p), s);
-  for ( const x of [...mf, ...df] ) fs.rmSync(path.join(ROOT, x.file));
+  for ( const x of [...mf, ...df, ...pf] ) fs.rmSync(path.join(ROOT, x.file));
 
   const tests = ["versions-agree", "modules-table", "decisions-index", "changes-fragments"].map(t => `${t}.test.mjs`)
     .filter(t => fs.existsSync(path.join(ROOT, "tools/harness", t)));
@@ -300,7 +344,7 @@ async function main() {
   if ( r.status ) { console.log(r.stdout.split("\n").filter(l => /^not ok|^\s+(error|expected|actual):/.test(l)).join("\n")); console.log("Stamped, but the checks failed: fix before committing."); process.exit(1); }
   console.log(`Stamped ${writes.size} file(s); version, table and decision checks pass.`);
   if ( args.has("--commit") ) {
-    spawnSync("git", ["add", "--", ...writes.keys(), ...[...mf, ...df].map(x => x.file.split(path.sep).join("/"))], {cwd: ROOT, stdio: "inherit"});
+    spawnSync("git", ["add", "--", ...writes.keys(), ...[...mf, ...df, ...pf].map(x => x.file.split(path.sep).join("/"))], {cwd: ROOT, stdio: "inherit"});
     const c = spawnSync("git", ["commit", "-q", "-m", "Stamp versions, changelogs and decisions for merge"], {cwd: ROOT, stdio: "inherit"});
     if ( c.status ) process.exit(1);
     console.log("Committed. Push, wait for the check, then merge.");

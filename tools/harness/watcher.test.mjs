@@ -2,7 +2,7 @@
    train and the alerts into problems and notes, and only looks and reports. */
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import {assess, report, parseTrain, statusStamp, greenAt, trainSource, LIMITS, PCS, TRAIN_LABEL} from "../pcq/watcher.mjs";
+import {assess, report, parseTrain, statusStamp, greenAt, trainSource, LIMITS, PCS, TRAIN_LABEL, OCR_RUN} from "../pcq/watcher.mjs";
 import {comfyFrom, ocrLogState} from "../pcq/status-push.mjs";
 
 const NOW = Date.parse("2026-11-18T03:00:00Z");
@@ -137,14 +137,24 @@ test("renders: work in ComfyUI with nothing finished for over the limit is a pro
 
 test("OCR: gave up or workers with no output past the limit are problems; waiting for memory alone is a note", () => {
   const withOcr = ocr => healthy({pcs: {...healthy().pcs, secondary: pc("secondary", 2, {ocr})}});
-  assert.ok(assess(withOcr({workers: 1, lastOutputMin: 5, memWait: true, gaveUp: true})).problems.some(p => p.key === "secondary:ocr:gaveup"));
-  const st = assess(withOcr({workers: 2, lastOutputMin: LIMITS.ocrStallMin + 1, memWait: true, gaveUp: false})).problems.find(p => p.key === "secondary:ocr:stalled");
+  const assessRun = (snap, prev = {}) => assess(snap, prev, {ocrRun: true});
+  assert.ok(assessRun(withOcr({workers: 1, lastOutputMin: 5, memWait: true, gaveUp: true})).problems.some(p => p.key === "secondary:ocr:gaveup"));
+  const st = assessRun(withOcr({workers: 2, lastOutputMin: LIMITS.ocrStallMin + 1, memWait: true, gaveUp: false})).problems.find(p => p.key === "secondary:ocr:stalled");
   assert.ok(st); assert.match(st.text, /waiting for memory/);
-  assert.ok(assess(withOcr({workers: 0, loopUp: false, lastOutputMin: 900, memWait: true, gaveUp: false, stopped: false})).problems.some(p => p.key === "secondary:ocr:loop"), "a dead loop");
-  assert.equal(assess(withOcr({workers: 0, loopUp: false, lastOutputMin: 900, memWait: false, gaveUp: false, stopped: true})).problems.length, 0, "stopped on purpose");
-  assert.equal(assess(withOcr({workers: 0, loopUp: true, lastOutputMin: 900, memWait: true, gaveUp: false, stopped: false})).problems.length, 0, "the loop waiting between batches");
-  const ok = assess(withOcr({workers: 1, lastOutputMin: 10, memWait: true, gaveUp: false}));
+  assert.ok(assessRun(withOcr({workers: 0, loopUp: false, lastOutputMin: 900, memWait: true, gaveUp: false, stopped: false})).problems.some(p => p.key === "secondary:ocr:loop"), "a dead loop");
+  assert.equal(assessRun(withOcr({workers: 0, loopUp: false, lastOutputMin: 900, memWait: false, gaveUp: false, stopped: true})).problems.length, 0, "stopped on purpose");
+  assert.equal(assessRun(withOcr({workers: 0, loopUp: true, lastOutputMin: 900, memWait: true, gaveUp: false, stopped: false})).problems.length, 0, "the loop waiting between batches");
+  const ok = assessRun(withOcr({workers: 1, lastOutputMin: 10, memWait: true, gaveUp: false}));
   assert.equal(ok.problems.length, 0); assert.ok(ok.notes.some(n => /book OCR 1 worker running.*waiting for memory/.test(n)));
+});
+
+test("B8110: with no OCR run under way, a stopped OCR loop is a note, not a problem", () => {
+  assert.equal(OCR_RUN, false, "the OCR pass finished on 25 November 2026");
+  const snap = healthy({pcs: {...healthy().pcs, secondary: pc("secondary", 2, {ocr: {workers: 0, loopUp: false, lastOutputMin: 900, memWait: false, gaveUp: true, stopped: false}})}});
+  const a = assess(snap);
+  assert.equal(a.problems.filter(p => /:ocr:/.test(p.key)).length, 0);
+  assert.ok(a.notes.some(n => /no OCR run is under way/.test(n)));
+  assert.ok(assess(snap, {}, {ocrRun: true}).problems.some(p => p.key === "secondary:ocr:loop" || p.key === "secondary:ocr:gaveup"));
 });
 
 test("status push: ComfyUI's queue and history become counts and minutes", () => {
