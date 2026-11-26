@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import * as B from "../../modules/wodx-combat/scripts/body-rules.js";
+import * as B from "../../modules/wodx-rules/combat/body-rules.js";
 import * as D from "../../modules/wodx-sheets/scripts/doll-draw.mjs";
 import { bodyHtml, dollHtml } from "../../modules/wodx-sheets/scripts/body-html.mjs";
 

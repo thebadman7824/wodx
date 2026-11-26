@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import {PEOPLE, GROUPS, BOOK} from "../../modules/wodx-creation/data/vtda-people.mjs";
-import * as BR from "../../modules/wodx-creation/scripts/book-people-rules.mjs";
+import * as BR from "../../modules/wodx-rules/creation/book-people-rules.mjs";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 const SYS = ["alertness", "athletics", "awareness", "brawl", "empathy", "expression", "intimidation", "leadership", "streetwise", "subterfuge",

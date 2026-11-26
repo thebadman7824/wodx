@@ -13,9 +13,9 @@
  * State in podState.saga.encounters. Storyteller only; the saga window holds the list.
  */
 import {MODULE_ID, esc, isActiveGM, podTurn} from "./util.mjs";
-import * as E from "./encounter-rules.mjs";
-import * as F from "./front-rules.mjs";
-import * as S from "./saga-rules.mjs";
+import * as E from "../../wodx-rules/chronicle/encounter-rules.mjs";
+import * as F from "../../wodx-rules/chronicle/front-rules.mjs";
+import * as S from "../../wodx-rules/chronicle/saga-rules.mjs";
 import * as Fronts from "./fronts.mjs";
 import {getEngine} from "./calendar.mjs";
 

@@ -5,7 +5,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const L = await import(join(root, "modules/wodx-chronicle/scripts/legends-rules.mjs"));
+const L = await import(join(root, "modules/wodx-rules/chronicle/legends-rules.mjs"));
 
 // A plain calendar for the tests: one year is 1000 seconds from 1197
 const dateOf = t => ({year: 1197 + Math.floor(t / 1000), month: 1 + Math.floor((t % 1000) / 100), day: 1});

@@ -58,7 +58,7 @@ export async function run() {
 
     await G.step("5. a Bastet's own tribe's Gifts", async () => {
       const [cat] = await G.make(Actor, [{name: "Gate V20 Paths Bagheera", type: "Changing Breed", system: {changingbreed: "Bastet", tribe: "wod.bio.tribename.bagheera"}}]);
-      const GR = await import("/modules/wodx-actions/scripts/garou-rules.js");
+      const GR = await import("/modules/wodx-rules/actions/garou-rules.js");
       const i = A.garouRules.info(cat);
       const fera = A.garouRules.feraGifts?.() ?? [];
       const own = GR.feraGiftIsOwn(fera.find(g => g.breed === "Bastet" && g.sub === "Bagheera"), i);

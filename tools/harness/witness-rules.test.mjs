@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as W from "../../modules/wodx-actions/scripts/witness-rules.js";
+import * as W from "../../modules/wodx-rules/actions/witness-rules.js";
 
 /* WoDX Actions 3.42.0: who an act startles, and how far word goes by place (B980-B984) */
 
@@ -69,6 +69,6 @@ test("Feeding in Elysium breaks the Prince's peace; talk does not", () => {
 });
 
 test("Every place mode default names a real kind of place", async () => {
-  const R = await import("../../modules/wodx-npc/scripts/routine-rules.mjs");
+  const R = await import("../../modules/wodx-rules/npc/routine-rules.mjs");
   for ( const k of Object.keys(W.MODE_OF_KIND) ) assert.ok(R.PLACE_KINDS[k], k);
 });

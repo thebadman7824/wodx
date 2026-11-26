@@ -6,7 +6,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const L = await import(join(root, "modules/wodx-interactables/scripts/loose-rules.mjs"));
+const L = await import(join(root, "modules/wodx-rules/interactables/loose-rules.mjs"));
 
 test("each kind of thing has its own icon", () => {
   assert.equal(L.iconOf({type: "Melee Weapon", name: "Sword"}), "weapon");

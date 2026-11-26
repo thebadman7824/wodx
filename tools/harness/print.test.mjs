@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as PR from "../../modules/wodx-atmosphere/scripts/print-rules.mjs";
-import * as K from "../../modules/wodx-atmosphere/scripts/kits-rules.mjs";
+import * as PR from "../../modules/wodx-rules/atmosphere/print-rules.mjs";
+import * as K from "../../modules/wodx-rules/atmosphere/kits-rules.mjs";
 
 /* WoDX Atmosphere 0.9.0: printable props. */
 test("a journal prints each page on its own sheet, handouts without an extra heading, pictures as images", () => {

@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const SR = await import(join(root, "modules/wodx-actions/scripts/summon-rules.js"));
+const SR = await import(join(root, "modules/wodx-rules/actions/summon-rules.js"));
 
 test("servants beyond Retainers are over; a second familiar is over; NPC masters have no cap", () => {
   assert.equal(SR.servantCap({rating: 2, have: 1, adding: 1}).over, false);

@@ -1,4 +1,4 @@
-import * as D from "./dreams-rules.mjs";
+import * as D from "../../wodx-rules/storyteller/dreams-rules.mjs";
 import {MOD, esc, chron, isActiveGM, setting, mutate} from "./core.mjs";
 import {getEngine, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";

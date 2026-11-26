@@ -8,7 +8,7 @@
  *   character with the rolls, applies bashing through WoDX Combat, and Undo takes it back. Nothing runs on players'
  *   machines. The Hardship window (Upkeep) marks who has eaten, drunk and slept, and sets the weather.
  */
-import * as H from "./hardship-rules.mjs";
+import * as H from "../../wodx-rules/storyteller/hardship-rules.mjs";
 import * as TownLooks from "./town-looks.mjs";
 import {MOD, esc, isActiveGM, setting, isPC, chron} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";

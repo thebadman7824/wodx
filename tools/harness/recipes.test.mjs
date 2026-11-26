@@ -10,8 +10,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 const G = await imp("modules/wodx-library/data/goods.mjs");
-const R = await imp("modules/wodx-library/scripts/recipe-rules.mjs");
-const T = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const R = await imp("modules/wodx-rules/library/recipe-rules.mjs");
+const T = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 const good = n => G.GOODS.find(g => g.name === n);
 const yearOf = g => Math.min(g.to, Math.max(g.from, 1990));
 

@@ -7,10 +7,10 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const MU = await import("../../modules/wodx-actions/scripts/mummy-rules.js");
+const MU = await import("../../modules/wodx-rules/actions/mummy-rules.js");
 const MH = await import("../../modules/wodx-actions/scripts/mummy-hekau.js");
 const PK = await import("../../modules/wodx-actions/scripts/power-keywords.js");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
 
 test("every listed Hekau has a card, and every path has spells at every level (B3745)", () => {
   for ( const id of Object.keys(PK.LINE_KEYWORDS.mummy) ) assert.ok(MH.SPELLS[id], `${id} has no card`);

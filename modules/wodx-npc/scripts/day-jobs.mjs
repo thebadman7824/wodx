@@ -11,9 +11,9 @@
  * Stored on the actor carrying the task: flags.wodx-npc.dayJobs.<taskId> = {job, channel, sphere, scene, place,
  * master, faction, agent}. Hook out: wodxDayJobDone {master, agent, job, status, faction}.
  */
-import * as J from "./day-jobs-rules.mjs";
-import * as F from "./faction-rules.mjs";
-import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
+import * as J from "../../wodx-rules/npc/day-jobs-rules.mjs";
+import * as F from "../../wodx-rules/npc/faction-rules.mjs";
+import {faithFor} from "../../wodx-rules/chronicle/faith-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export function build(ctx) {

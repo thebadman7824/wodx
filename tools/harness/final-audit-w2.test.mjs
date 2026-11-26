@@ -22,7 +22,7 @@ globalThis.game ??= {modules: new Map(), settings: {get() { throw new Error("not
 globalThis.ui ??= {notifications: {warn() {}, info() {}}};
 globalThis.Hooks ??= {callAll() {}, on() {}, off() {}, once() {}};
 
-const E = await imp("modules/wodx-actions/scripts/effects-rules.js");
+const E = await imp("modules/wodx-rules/actions/effects-rules.js");
 const EF = await imp("modules/wodx-actions/scripts/effects.js");
 const PW = await imp("modules/wodx-actions/scripts/power-effects.js");
 const PK = await imp("modules/wodx-actions/scripts/power-keywords.js");
@@ -94,7 +94,7 @@ test("B6734: a wraith whose Shadow won Catharsis has each move go to the Storyte
 test("B6737: a woken fetish puts its keywords on the effects card", async () => {
   const PW = await imp("modules/wodx-actions/scripts/power-effects.js");
   const PK = await imp("modules/wodx-actions/scripts/power-keywords.js");
-  const {KEYWORDS} = await imp("modules/wodx-actions/scripts/effects-rules.js");
+  const {KEYWORDS} = await imp("modules/wodx-rules/actions/effects-rules.js");
   const lib = await imp("modules/wodx-library/data/wonders.mjs");
   const all = Object.values(lib).find(v => Array.isArray(v) && v[0]?.key);
   const keys = new Set(all.filter(w => w.line === "garou").map(w => w.key));
@@ -177,7 +177,7 @@ test("B6851: the apocalyptic form's powers go on the effects card and its claws 
 
 test("B6852: the evocations that were card or Storyteller only now apply", async () => {
   const DE = await imp("modules/wodx-actions/scripts/demon-evocations.js");
-  const D = await imp("modules/wodx-actions/scripts/demon-rules.js");
+  const D = await imp("modules/wodx-rules/actions/demon-rules.js");
   const WE = await imp("modules/wodx-actions/scripts/world-effects.js");
   for ( const [id, l] of Object.entries(D.LORES) ) for ( const [k, e] of (l.evo ?? []).entries() ) {
     const res = DE.evocationResults(id, k + 1, 3, {faith: 3, name: e.name});
@@ -221,7 +221,7 @@ test("B6856: a Storyteller's spec that names a working keyword gives that keywor
 });
 
 test("B6857: Dark Ages rotes and cantrips, Kuei-jin arts, Orpheus Horrors and Totem Gift that only told now apply, or say why not", async () => {
-  const M = await imp("modules/wodx-actions/scripts/mage-da-rules.js");
+  const M = await imp("modules/wodx-rules/actions/mage-da-rules.js");
   const D = await imp("modules/wodx-actions/scripts/mage-da-effects.js");
   const rote = id => D.daOutcomes(M.ROTES.find(r => r.id === id), 3)[0];
   assert.equal(rote("g-slumber").out.condition, "incapacitated");
@@ -246,7 +246,7 @@ test("B6857: Dark Ages rotes and cantrips, Kuei-jin arts, Orpheus Horrors and To
 
 test("B6858: hedge magic, Numina, True Faith, Changing Breeds Gifts and pact gifts that only told now apply, or say why not", async () => {
   const PE = await imp("modules/wodx-actions/scripts/path-effects.js");
-  const H = await imp("modules/wodx-actions/scripts/hunter-rules.js");
+  const H = await imp("modules/wodx-rules/actions/hunter-rules.js");
   const c5 = PE.numinaOutcomes("curses", 5, 4, H.NUMINA.curses);
   assert.deepEqual(c5.map(o => [o.key, o.out.shift ?? o.out.dice, o.out.duration]), [["fortune", 4, "one week"], ["boost", -2, "one week"]]);
   assert.equal(PE.numinaOutcomes("healing", 2, 3, H.NUMINA.healing)[0].out.painless, true);
@@ -261,6 +261,6 @@ test("B6858: hedge magic, Numina, True Faith, Changing Breeds Gifts and pact gif
   const fera = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/gifts-fera.json"), "utf8")).gifts;
   const read = ["ghost-caress", "skys-beneficence", "mynahs-touch", "waken", "umekochis-mouth", "blessings-of-the-nest", "emperors-clothes", "hyperattenuation", "gulp", "enter-seas-soul", "hathors-blessing", "uproot"];
   for ( const g of fera.filter(g => read.includes(g.kw)) ) assert.ok(/W20 CB p\. \d+/.test(g.story ?? "") || (g.spec.kw !== "free" && g.spec.kind === "st"), `${g.n} applies or says why not`);
-  const D = await imp("modules/wodx-actions/scripts/demon-rules.js");
+  const D = await imp("modules/wodx-rules/actions/demon-rules.js");
   for ( const g of D.GIFTS ) assert.ok(g.k === "offering" || /p\. 253/.test(g.story), g.k);
 });

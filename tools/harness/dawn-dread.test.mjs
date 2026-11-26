@@ -7,7 +7,7 @@ import {readFileSync, existsSync} from "node:fs";
 
 /* WoDX Atmosphere 0.3.0: dawn dread, the mirror of the Sunset cue. */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const K = await import(join(root, "modules/wodx-atmosphere/scripts/kits-rules.mjs"));
+const K = await import(join(root, "modules/wodx-rules/atmosphere/kits-rules.mjs"));
 
 test("dawn dread runs the last half hour before sunrise and grows toward it", () => {
   assert.equal(K.dawnDread(1801), null);

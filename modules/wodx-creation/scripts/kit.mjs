@@ -8,7 +8,7 @@
  *                         Off-screen life (purses, shop tills, the fates of time jumps) runs on coin and never reads
  *                         what an NPC holds, so making the things at first meeting changes nothing that went before.
  */
-import * as K from "./kit-rules.mjs";
+import * as K from "../../wodx-rules/creation/kit-rules.mjs";
 import {MODULE_ID} from "./actor-data.mjs";
 import {isNPC} from "../../wodx-chronicle/scripts/terms.mjs";
 
@@ -24,7 +24,7 @@ let DATA = null, LOADED = null;
 export function loadKit() {
   return DATA ??= Promise.all([
     import("../../wodx-library/data/goods.mjs"), import("../../wodx-library/data/goods-ways.mjs"), import("../../wodx-library/data/goods-tags.mjs"),
-    import("../../wodx-library/scripts/gear-rules.mjs"),
+    import("../../wodx-rules/library/gear-rules.mjs"),
     fetch(`modules/${LIB}/data/gear.json`).then(r => (r.ok ? r.json() : {items: []})).catch(() => ({items: []}))
   ]).then(([G, W, T, GR, gear]) => (LOADED = {goods: G.GOODS ?? [], ways: W, tags: T, gearRules: GR, gear: gear?.items ?? []}))
     .catch(e => { console.warn(`${MODULE_ID} | kit data`, e); DATA = null; return null; });

@@ -8,9 +8,9 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
-const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/chronicle/world-rules.mjs"));
 const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
-const PR = await import(join(root, "modules/wodx-creation/scripts/people-rules.mjs"));
+const PR = await import(join(root, "modules/wodx-rules/creation/people-rules.mjs"));
 const people = (origin, region, era, n = 200) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream(`jw:${origin}`, era, i),
   tables: id => G.resolveTable(PEOPLE_TABLES, id, {era, culture: W.cultureOf(region)}), origin, sex: i % 2 ? "female" : "male"}));
 const origin = (region, era) => G.resolveTable(PEOPLE_TABLES, "people.origin", {era, culture: W.cultureOf(region)})?.results.map(r => r.text) ?? [];

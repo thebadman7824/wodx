@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 /* WoDX Solo, step 3 of The Lone Chronicle: the oracle, the Leads page and night encounters (B5980 to B5985) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const W = await import(pathToFileURL(join(root, "modules/wodx-solo/scripts/world-rules.mjs")));
+const W = await import(pathToFileURL(join(root, "modules/wodx-rules/solo/world-rules.mjs")));
 
 test("the oracle: each step of the odds is two faces of the die", () => {
   const yeses = k => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter(f => W.ANSWERS[W.oracleAnswer(k, f)].yes).length;

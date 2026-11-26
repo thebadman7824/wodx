@@ -4,7 +4,7 @@ import {existsSync, readFileSync} from "node:fs";
 import {dirname, join} from "node:path";
 import {fileURLToPath} from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const SR = await import(join(root, "modules/wodx-paperdoll/scripts/sprite-rules.mjs"));
+const SR = await import(join(root, "modules/wodx-rules/paperdoll/sprite-rules.mjs"));
 
 test("a token faces the way it moves and keeps its facing near a diagonal", () => {
   assert.equal(SR.facingOf(10, 1), "right");

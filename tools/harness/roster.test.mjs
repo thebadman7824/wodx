@@ -8,8 +8,8 @@ import {dirname, join} from "node:path";
 /* A roster of characters for each player (B3534 to B3536): the tie, the state, the order, and when to prompt. */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const RR = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/roster-rules.mjs")).href);
-const Q = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/approvals-rules.mjs")).href);
+const RR = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/roster-rules.mjs")).href);
+const Q = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/approvals-rules.mjs")).href);
 
 test("the tie follows the books' names, the sheet's role words where they name one", () => {
   assert.equal(RR.tieOf({main: true, ghoul: true}), "main");

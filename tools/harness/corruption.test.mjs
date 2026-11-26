@@ -1,7 +1,7 @@
 // Spreading Wyrm corruption, the pure rules (WoDX Otherworlds, B3270-B3276).
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as R from "../../modules/wodx-otherworlds/scripts/corruption-rules.mjs";
+import * as R from "../../modules/wodx-rules/otherworlds/corruption-rules.mjs";
 
 const always = () => 0;      // every roll succeeds
 const never = () => 0.999;   // every roll fails

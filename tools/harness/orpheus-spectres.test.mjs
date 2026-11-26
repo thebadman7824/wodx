@@ -8,7 +8,7 @@ import {fileURLToPath} from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const OX = await import("../../modules/wodx-actions/scripts/orpheus-spectres.js");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
 
 test("five Thorns and eight Spectral Horrors, each with a page (B7833)", () => {
   assert.deepEqual(Object.keys(OX.THORNS), ["carapace", "claws", "envelop", "maw", "tentacles"]);

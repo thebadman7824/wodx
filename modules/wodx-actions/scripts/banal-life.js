@@ -10,7 +10,7 @@
  *
  * The count is the actor flag wodx-actions.banalLife {tally}; Autumn People carry wodx-actions.autumn.
  */
-import * as B from "./banal-life-rules.js";
+import * as B from "../../wodx-rules/actions/banal-life-rules.js";
 import * as P from "./profiles.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 

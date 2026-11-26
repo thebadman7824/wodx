@@ -56,7 +56,7 @@ function actor(name, {type = "Vampire", road = 6, roadName = "", virtues = [3, 3
 
 /* ---------------- Pure rules ---------------- */
 
-const K = await import(join(root, "modules/wodx-actions/scripts/kindred-rules.js"));
+const K = await import(join(root, "modules/wodx-rules/actions/kindred-rules.js"));
 const DISC = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/disciplines-daw.json"), "utf8"));
 const ROADS = JSON.parse(readFileSync(join(root, "modules/wodx-actions/data/roads-daw.json"), "utf8"));
 const FULL_T = Object.fromEntries([...ATTR, "willpower", "road", "conscience", "conviction", "selfcontrol", "instinct", "courage", "empathy", "alertness", "subterfuge", "stealth"].map(k => [k, 3]));
@@ -302,7 +302,7 @@ chron.conditions = {setCondition: async () => {}};
 
 const KX = await import(join(root, "modules/wodx-actions/scripts/kindred.js"));
 const GX = await import(join(root, "modules/wodx-actions/scripts/garou.js"));
-const R = await import(join(root, "modules/wodx-actions/scripts/rules.js"));
+const R = await import(join(root, "modules/wodx-rules/actions/rules.js"));
 const reg = (key, name, hint, type, def) => game.settings.register("wodx-actions", key, {name, hint, scope: "world", config: true, type, default: def});
 KX.registerSettings(reg);
 GX.registerSettings(reg);

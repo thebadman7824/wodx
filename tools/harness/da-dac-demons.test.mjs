@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import {DEMONS, GROUPS} from "../../modules/wodx-creation/data/dac-demons.mjs";
-import * as R from "../../modules/wodx-creation/scripts/dac-demons-rules.mjs";
+import * as R from "../../modules/wodx-rules/creation/dac-demons-rules.mjs";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 const KEYS = ["alertness", "athletics", "brawl", "empathy", "intimidation", "leadership", "legerdemain", "stealth", "subterfuge", "performance", "occult",

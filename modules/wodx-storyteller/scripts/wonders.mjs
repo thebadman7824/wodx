@@ -13,7 +13,7 @@
  */
 import {MOD, esc, isActiveGM, chron, log, isPC} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
-import * as NM from "./npc-makers-rules.mjs";
+import * as NM from "../../wodx-rules/storyteller/npc-makers-rules.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const T_WONDER = `${MOD}.wonder`;

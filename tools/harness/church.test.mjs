@@ -7,9 +7,9 @@ import {dirname, join} from "node:path";
 /* Feast and fast days (WoDX Chronicle 0.6.0): the church year, and what it does to the curfew and the hunt */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const C = await import(join(root, "modules/wodx-chronicle/scripts/church-rules.mjs"));
-const RR = await import(join(root, "modules/wodx-npc/scripts/routine-rules.mjs"));
-const F = await import(join(root, "modules/wodx-npc/scripts/faction-rules.mjs"));
+const C = await import(join(root, "modules/wodx-rules/chronicle/church-rules.mjs"));
+const RR = await import(join(root, "modules/wodx-rules/npc/routine-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/npc/faction-rules.mjs"));
 const {DateEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
 
 const engine = new DateEngine({epoch: [1197, 1, 1], reform: "bohemia-1584"});

@@ -10,8 +10,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
 const G = await imp("modules/wodx-library/data/goods.mjs");
-const U = await imp("modules/wodx-library/scripts/use-rules.mjs");
-const L = await imp("modules/wodx-library/scripts/link-rules.mjs");
+const U = await imp("modules/wodx-rules/library/use-rules.mjs");
+const L = await imp("modules/wodx-rules/library/link-rules.mjs");
 const good = n => G.GOODS.find(g => g.name === n);
 
 test("links: qualities come from the name, for goods and Gear alike", () => {
@@ -80,7 +80,7 @@ test("links: the five kits are separate goods, old ids kept on the first part", 
 
 test("links: wired into the Use window", () => {
   const u = src("modules/wodx-library/scripts/use.mjs");
-  assert.match(u, /import \* as L from "\.\/link-rules\.mjs"/);
+  assert.match(u, /import \* as L from "\.\.\/\.\.\/wodx-rules\/library\/link-rules\.mjs"/);
   assert.match(u, /whatIsMissing\(actor, item, good, ability\)/);
   assert.match(u, /Hooks\.on\("createItem", onCreateItem\)/);
   assert.match(u, /"_refill"/);

@@ -13,10 +13,10 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: kote-rules.js.
  */
-import * as NPW from "./npc-power-rules.js";
+import * as NPW from "../../wodx-rules/actions/npc-power-rules.js";
 import * as LIM from "./limits.js";
 import * as TH from "./trait-hooks.js";
-import * as K from "./kote-rules.js";
+import * as K from "../../wodx-rules/actions/kote-rules.js";
 import * as KA from "./kote-arts.js";
 import * as EF from "./effects.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";

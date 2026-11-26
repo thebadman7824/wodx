@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.18.8 (This module's rules files moved to the rules core, modules/wodx-rules/atmosphere (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 0.18.7 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.18.6 (Fixes from the first solo test (B8039): no heartbeat or hunger cue while the character is still being made, or while the blood pool has no size yet (#2473))
 - 0.18.5 (Comments no longer name the first chronicle (B7566))

@@ -3,7 +3,7 @@ import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as NM from "../../modules/wodx-storyteller/scripts/npc-makers-rules.mjs";
+import * as NM from "../../modules/wodx-rules/storyteller/npc-makers-rules.mjs";
 
 test("a month between looks", () => {
   assert.ok(NM.due(0, 5));

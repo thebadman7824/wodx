@@ -9,11 +9,11 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const C = await imp("modules/wodx-actions/scripts/inq-curses-rules.js");
-const RR = await imp("modules/wodx-storyteller/scripts/recipe-rules.mjs");
+const C = await imp("modules/wodx-rules/actions/inq-curses-rules.js");
+const RR = await imp("modules/wodx-rules/storyteller/recipe-rules.mjs");
 const {ROTHENSTEIN} = await imp("modules/wodx-rothenstein/data/recipe.mjs");
 const L = await imp("modules/wodx-chronicle/data/trait-lines.mjs");
-const T = await imp("modules/wodx-chronicle/scripts/trait-rules.mjs");
+const T = await imp("modules/wodx-rules/chronicle/trait-rules.mjs");
 
 test("B7883, B7934: 25 Curses of the core book and 20 of the Companion, stages 2-2-1 and 2-1-1, every category an order's", () => {
   assert.equal(C.CURSES.length, 45);

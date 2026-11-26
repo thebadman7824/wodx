@@ -9,11 +9,11 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
-const CR = await imp("modules/wodx-combat/scripts/rules.js");
-const CH = await imp("modules/wodx-interactables/scripts/chase-rules.mjs");
-const SR = await imp("modules/wodx-interactables/scripts/state-rules.mjs");
-const N = await imp("modules/wodx-storyteller/scripts/market-news-rules.mjs");
-const AR = await imp("modules/wodx-npc/scripts/alert-rules.mjs");
+const CR = await imp("modules/wodx-rules/combat/rules.js");
+const CH = await imp("modules/wodx-rules/interactables/chase-rules.mjs");
+const SR = await imp("modules/wodx-rules/interactables/state-rules.mjs");
+const N = await imp("modules/wodx-rules/storyteller/market-news-rules.mjs");
+const AR = await imp("modules/wodx-rules/npc/alert-rules.mjs");
 const src = p => readFileSync(join(root, p), "utf8");
 
 test("x2: guns and blasts are loud, a silenced gun, blades, fists and bows quiet", () => {

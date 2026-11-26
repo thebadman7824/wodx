@@ -7,7 +7,7 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const R = await import("../../modules/wodx-combat/scripts/rules.js");
+const R = await import("../../modules/wodx-rules/combat/rules.js");
 const C = await import("../../modules/wodx-chronicle/scripts/conditions.mjs");
 
 test("Sweep and Tackle knock down, Hold and Grapple hold, a stake with three successes stakes a vampire (B3754)", () => {

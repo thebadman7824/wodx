@@ -21,29 +21,29 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 const A = p => pathToFileURL(path.join(ROOT, "modules/wodx-actions", p)).href;
 const J = p => JSON.parse(fs.readFileSync(path.join(ROOT, "modules/wodx-actions/data", p), "utf8"));
 
-const E = await import(A("scripts/effects-rules.js"));
+const E = await import(A("../wodx-rules/actions/effects-rules.js"));
 const PK = await import(A("scripts/power-keywords.js"));
 const PE = await import(A("scripts/path-effects.js"));
 const DAE = await import(A("scripts/mage-da-effects.js"));
 const BR = await import(A("scripts/book-rituals.js"));
-const D = await import(A("scripts/demon-rules.js"));
+const D = await import(A("../wodx-rules/actions/demon-rules.js"));
 const DE = await import(A("scripts/demon-evocations.js"));
-const H = await import(A("scripts/hunter-rules.js"));
-const R = await import(A("scripts/reckoning-rules.js"));
-const O = await import(A("scripts/orpheus-rules.js"));
+const H = await import(A("../wodx-rules/actions/hunter-rules.js"));
+const R = await import(A("../wodx-rules/actions/reckoning-rules.js"));
+const O = await import(A("../wodx-rules/actions/orpheus-rules.js"));
 const OS = await import(A("scripts/orpheus-stains.js"));
 const OX = await import(A("scripts/orpheus-spectres.js"));
 const KA = await import(A("scripts/kote-arts.js"));
-const F = await import(A("scripts/fae-da-rules.js"));
-const MD = await import(A("scripts/mage-da-rules.js"));
-const M20 = await import(A("scripts/m20-rules.js"));
+const F = await import(A("../wodx-rules/actions/fae-da-rules.js"));
+const MD = await import(A("../wodx-rules/actions/mage-da-rules.js"));
+const M20 = await import(A("../wodx-rules/actions/m20-rules.js"));
 const M20R = await import(A("scripts/m20-rotes.js"));
-const MU = await import(A("scripts/mummy-rules.js"));
-const C20 = await import(A("scripts/c20-rules.js"));
+const MU = await import(A("../wodx-rules/actions/mummy-rules.js"));
+const C20 = await import(A("../wodx-rules/actions/c20-rules.js"));
 const CA = await import(A("scripts/c20-arts.js"));
 const MH = await import(A("scripts/mummy-hekau.js"));
 const OH = await import(A("scripts/orpheus-horrors.js"));
-const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-combat/scripts/rules.js")).href);
+const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-rules/combat/rules.js")).href);
 
 /** Keywords that only tell the user something; they do not change the game. B5788-B5790: Sense lays a detection sense on the
  * token, Know finds out a secret or pins a clue, and Speak opens talk with beasts and ghosts, so none is only a card now. */

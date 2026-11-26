@@ -8,7 +8,7 @@
  *   {a|b|c}         one of these, evenly
  *   {{name}}        a value given by the caller (vars)
  */
-import {CULTURE_BORROW} from "./world-rules.mjs";
+import {CULTURE_BORROW} from "../../wodx-rules/chronicle/world-rules.mjs";
 import * as TERMS from "./terms.mjs";
 
 /** A 128-bit hash of a string, as four 32-bit numbers (cyrb128). */

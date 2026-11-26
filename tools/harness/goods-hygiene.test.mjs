@@ -9,10 +9,10 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const H = await imp("modules/wodx-library/scripts/hygiene-rules.mjs");
-const L = await imp("modules/wodx-library/scripts/look-rules.mjs");
+const H = await imp("modules/wodx-rules/library/hygiene-rules.mjs");
+const L = await imp("modules/wodx-rules/library/look-rules.mjs");
 const G = await imp("modules/wodx-library/data/goods.mjs");
-const U = await imp("modules/wodx-library/scripts/use-rules.mjs");
+const U = await imp("modules/wodx-rules/library/use-rules.mjs");
 
 test("every hygiene good washes, grooms, is worn, or is a plain thing with no Use; none only posts a note", () => {
   for ( const g of G.GOODS.filter(x => x.kind === "hygiene") ) {

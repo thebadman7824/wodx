@@ -1,13 +1,13 @@
 import {splatOf} from "./lines.mjs";
 import {MODULE_ID, esc, lineOf, lineage, chronology, domitorOf, disciplinesOf, allyOf, isAnimal, animalKindOf} from "./actor-data.mjs";
-import * as AG from "./animal-ghoul-rules.mjs";
-import * as RR from "./revenant-rules.mjs";
-import {ghoulBloodMax, ghoulBloodSource, ghoulRuleEra, V20_ERAS, bondStage} from "./rules.mjs";
+import * as AG from "../../wodx-rules/creation/animal-ghoul-rules.mjs";
+import * as RR from "../../wodx-rules/creation/revenant-rules.mjs";
+import {ghoulBloodMax, ghoulBloodSource, ghoulRuleEra, V20_ERAS, bondStage} from "../../wodx-rules/creation/rules.mjs";
 import {setLineage, setChronology, writeLineageJournal} from "./lineage.mjs";
 import {MORTAL, GHOUL_AGING, BOND_FADE, TORPOR, BACKGROUND_REVIEW, ERA_SECONDARY, LINE_OF_TYPE, SECONDS_PER_MONTH} from "../data/time.mjs";
 import {getEngine, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {viewOf, switches as advanceSwitches, applyAdvance, snapshot, recordYears} from "./advance.mjs";
-import {propose} from "./advance-rules.mjs";
+import {propose} from "../../wodx-rules/creation/advance-rules.mjs";
 
 /** Lines in mortal bodies, who age as mortals (B6275): Kinfolk, sorcerers, kinain, hunters, the Garou and Fera, mages,
  * changelings in their mortal seeming, and the Fallen's hosts. */

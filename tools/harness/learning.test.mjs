@@ -5,7 +5,7 @@ import {test} from "node:test";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 import {installMock} from "./foundry-mock.mjs";
-import * as L from "../../modules/wodx-creation/scripts/learn-rules.mjs";
+import * as L from "../../modules/wodx-rules/creation/learn-rules.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const mock = installMock({dataRoot: root});

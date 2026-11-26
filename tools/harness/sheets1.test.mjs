@@ -8,7 +8,7 @@ import {readFileSync} from "node:fs";
 /* WoDX Sheets 0.2: the Dark Ages sheets (B74) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const SR = await import(join(root, "modules/wodx-sheets/scripts/sheet-rules.mjs"));
+const SR = await import(join(root, "modules/wodx-rules/sheets/sheet-rules.mjs"));
 const main = readFileSync(join(root, "modules/wodx-sheets/scripts/main.mjs"), "utf8");
 
 test("six Dark Ages sheets, each on its own actor type, with three header columns of fields", () => {

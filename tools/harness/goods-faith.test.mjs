@@ -10,9 +10,9 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const F = await imp("modules/wodx-library/scripts/faith-rules.mjs");
+const F = await imp("modules/wodx-rules/library/faith-rules.mjs");
 const G = await imp("modules/wodx-library/data/goods.mjs");
-const U = await imp("modules/wodx-library/scripts/use-rules.mjs");
+const U = await imp("modules/wodx-rules/library/use-rules.mjs");
 
 test("every faith and occult good has a Use that rolls or changes something, never a bare note", () => {
   const goods = G.GOODS.filter(g => ["faith", "occult"].includes(g.kind));

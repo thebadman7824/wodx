@@ -19,26 +19,26 @@
  *   menu / macros keep working from v1.x
  */
 
-import * as R from "./rules.js";
+import * as R from "../../wodx-rules/combat/rules.js";
 import * as P from "./profiles.js";
 import * as F from "./flavor.js";
 import * as AU from "./auto.js";
 import * as CD from "./conductor.js";
-import * as CR from "./conductor-rules.js";
+import * as CR from "../../wodx-rules/combat/conductor-rules.js";
 import * as ST from "./start.js";
 import * as FEnd from "./fight-end.js";
-import * as AM from "./ambush-rules.js";
+import * as AM from "../../wodx-rules/combat/ambush-rules.js";
 import * as MVJ from "./movement.js";
 import * as BD from "./body.js";
-import * as BodyRules from "./body-rules.js";
+import * as BodyRules from "../../wodx-rules/combat/body-rules.js";
 import * as AA from "./aftermath.js";
 import * as FTime from "./fight-time.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
-import * as PW from "./powder-rules.js";
+import * as PW from "../../wodx-rules/combat/powder-rules.js";
 import * as MTD from "./mounted.js";
 import * as VH from "./vehicles.js";
 import * as SW from "./swarm.js";
-import * as SWR from "./swarm-rules.js";
+import * as SWR from "../../wodx-rules/combat/swarm-rules.js";
 import * as GM from "./garou-maneuvers.js";
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const chronicle = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
@@ -2291,7 +2291,7 @@ Hooks.once("init", () => {
     GM.init({ rollPool, markFollow, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind });
     SW.hooks();
     const api = { daw: { taunt: (a, t, o) => GM.taunt(a, t, o), harry: (c, p, o) => GM.harry(c, p, o), afterHit: GM.afterHit, gnarlOf: GM.gnarlOf, savagedBy: GM.savagedBy, tauntedDice: GM.tauntedDice }, swarm: { make: k => SW.make(k), turn: t => SW.turn(t), dodge: a => SW.dodge(a), victimsOf: t => SW.victimsOf(t), spider: (t, o) => SW.spider(t, o), rules: SWR }, body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.52.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.52.2", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, cannotActWhy, followOn: R.followOn, markFollow, breakFree, relayHook, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml }, _onSocket: onSocket };
     game.wodxCombat = api;

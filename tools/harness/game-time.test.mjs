@@ -7,11 +7,11 @@ import {dirname, join} from "node:path";
 /* Game time (Game Time Desk, B1960-B1970): time apart, the table's clock, a scene's own place, fight length, realms */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const SR = await import(join(root, "modules/wodx-storyteller/scripts/spend-rules.mjs"));
-const PR = await import(join(root, "modules/wodx-chronicle/scripts/place-rules.mjs"));
-const PA = await import(join(root, "modules/wodx-chronicle/scripts/pace-rules.mjs"));
-const FT = await import(join(root, "modules/wodx-combat/scripts/fight-time-rules.js"));
-const J = await import(join(root, "modules/wodx-otherworlds/scripts/journey-rules.mjs"));
+const SR = await import(join(root, "modules/wodx-rules/storyteller/spend-rules.mjs"));
+const PR = await import(join(root, "modules/wodx-rules/chronicle/place-rules.mjs"));
+const PA = await import(join(root, "modules/wodx-rules/chronicle/pace-rules.mjs"));
+const FT = await import(join(root, "modules/wodx-rules/combat/fight-time-rules.js"));
+const J = await import(join(root, "modules/wodx-rules/otherworlds/journey-rules.mjs"));
 const {DateEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
 
 const where = (...pairs) => pairs.map(([id, scene]) => ({id, scene}));

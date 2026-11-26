@@ -7,7 +7,7 @@ import {dirname, join} from "node:path";
 /* Phase 6n: the Dark Ages: Mage Grimoire (WoDX Actions 3.14.0) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const M = await import(join(root, "modules/wodx-actions/scripts/mage-da-rules.js"));
+const M = await import(join(root, "modules/wodx-rules/actions/mage-da-rules.js"));
 const G = await import(join(root, "modules/wodx-actions/scripts/mage-da-grimoire.js"));
 
 test("the Grimoire's rotes join the core book's: every fellowship, every Pillar its own, unique ids, Grimoire pages", () => {

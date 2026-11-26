@@ -1,11 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import * as NPW from "../../modules/wodx-actions/scripts/npc-power-rules.js";
+import * as NPW from "../../modules/wodx-rules/actions/npc-power-rules.js";
 import * as MH from "../../modules/wodx-actions/scripts/mummy-hekau.js";
-import * as MR from "../../modules/wodx-actions/scripts/mage-da-rules.js";
+import * as MR from "../../modules/wodx-rules/actions/mage-da-rules.js";
 import * as CA from "../../modules/wodx-actions/scripts/c20-arts.js";
-import * as D from "../../modules/wodx-actions/scripts/demon-rules.js";
+import * as D from "../../modules/wodx-rules/actions/demon-rules.js";
 import * as DE from "../../modules/wodx-actions/scripts/demon-evocations.js";
 import * as KA from "../../modules/wodx-actions/scripts/kote-arts.js";
 import * as OH from "../../modules/wodx-actions/scripts/orpheus-horrors.js";

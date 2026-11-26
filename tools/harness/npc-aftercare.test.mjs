@@ -7,8 +7,8 @@ import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const AC = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/aftercare-rules.mjs")));
-const DU = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/duty-rules.mjs")));
+const AC = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/aftercare-rules.mjs")));
+const DU = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/duty-rules.mjs")));
 
 test("n1: held, then let go, served, banished or put to death", () => {
   assert.equal(AC.heldDuty("W").label, "Held for trial");

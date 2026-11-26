@@ -13,7 +13,7 @@
  *  - (0.13.0) a features card: every line feature in force, when it fires and when it last fired.
  * The pure parts are extras-rules.mjs and extras-html.mjs.
  */
-import * as XR from "./extras-rules.mjs";
+import * as XR from "../../wodx-rules/sheets/extras-rules.mjs";
 import * as XH from "./extras-html.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import { bodyHtml } from "./body-html.mjs";
@@ -61,7 +61,7 @@ export async function loadGoods() {
     GOODS = new Map();
     for ( const x of g.GOODS ?? [] ) for ( const n of [x.was, x.former, x.name] ) if ( n ) GOODS.set(n.toLowerCase(), x);
     GOODS_ERAS = g.ERAS ?? null;
-    try { USES = (await import("../../wodx-library/scripts/use-rules.mjs")).abilitiesOf; } catch (e) { USES = null; }
+    try { USES = (await import("../../wodx-rules/library/use-rules.mjs")).abilitiesOf; } catch (e) { USES = null; }
   } catch (e) { GOODS = new Map(); }
 }
 /** What the lists say of an item: its eras (or years), its goods entry and its value. */

@@ -7,7 +7,7 @@
  * through WoDX Chronicle's shared looks layer (api.looks.show) when it is there; without it, locked plain drawings stand
  * in. A clean place, or a scene taken out of corruption, has none. World setting wyrmLooks (on by default).
  */
-import * as L from "./corruption-look-rules.mjs";
+import * as L from "../../wodx-rules/otherworlds/corruption-look-rules.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {placeOf} from "./corruption.mjs";
 

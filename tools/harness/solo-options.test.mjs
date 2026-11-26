@@ -19,7 +19,7 @@ await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
 await import(join(root, "modules/wodx-storyteller/scripts/main.mjs"));
 await import(join(root, "modules/wodx-solo/scripts/main.mjs"));
 for ( const m of ["wodx-chronicle", "wodx-storyteller", "wodx-solo"] ) game.modules.set(m, {active: true});
-const R = await import(join(root, "modules/wodx-solo/scripts/solo-rules.mjs"));
+const R = await import(join(root, "modules/wodx-rules/solo/solo-rules.mjs"));
 const SOLO = () => game.modules.get("wodx-solo").api;
 
 test("set up: the Lone Chronicle is on", async () => {

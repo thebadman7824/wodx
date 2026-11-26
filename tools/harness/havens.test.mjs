@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const H = await imp("modules/wodx-storyteller/scripts/haven-rules.mjs");
-const I = await imp("modules/wodx-interactables/scripts/interact-rules.mjs");
+const H = await imp("modules/wodx-rules/storyteller/haven-rules.mjs");
+const I = await imp("modules/wodx-rules/interactables/interact-rules.mjs");
 
 test("havens: the record keeps owners, guests, security and who knows", () => {
   const h = H.normHaven({name: " The crypt ", owners: ["a", "a", "b"], security: 9, known: [{who: "The Sheriff", how: "followed"}, {how: "no name"}]});

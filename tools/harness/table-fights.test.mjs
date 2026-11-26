@@ -11,13 +11,13 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const imp = p => import(pathToFileURL(join(root, p)));
-const OD = await imp("modules/wodx-actions/scripts/odds-rules.js");
-const CR = await imp("modules/wodx-combat/scripts/rules.js");
-const TR = await imp("modules/wodx-actions/scripts/theme-rules.js");
+const OD = await imp("modules/wodx-rules/actions/odds-rules.js");
+const CR = await imp("modules/wodx-rules/combat/rules.js");
+const TR = await imp("modules/wodx-rules/actions/theme-rules.js");
 const T = await imp("modules/wodx-targeting/scripts/target-rules.mjs");
-const AR = await imp("modules/wodx-combat/scripts/aftermath-rules.js");
-const IR = await imp("modules/wodx-interactables/scripts/interact-rules.mjs");
-const SR = await imp("modules/wodx-senses/scripts/sight-rules.mjs");
+const AR = await imp("modules/wodx-rules/combat/aftermath-rules.js");
+const IR = await imp("modules/wodx-rules/interactables/interact-rules.mjs");
+const SR = await imp("modules/wodx-rules/senses/sight-rules.mjs");
 
 /** Every face of every die, counted by the roller's own rules: the odds must match exactly. */
 function brute(n, diff, opts) {

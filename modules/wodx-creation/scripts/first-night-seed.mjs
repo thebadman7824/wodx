@@ -7,7 +7,7 @@
  * The cards are worked out in first-night-rules.mjs (seedCards, suggestStanding).
  */
 import {MODULE_ID, esc} from "./actor-data.mjs";
-import * as R from "./first-night-rules.mjs";
+import * as R from "../../wodx-rules/creation/first-night-rules.mjs";
 import {makePeople, lifepathOf} from "./lifepath.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 

@@ -1,8 +1,8 @@
-import * as RV from "./rivalry-rules.mjs";
-import * as F from "./faction-rules.mjs";
-import * as FR from "./fight-rules.mjs";
-import * as AC from "./aftercare-rules.mjs";
-import * as Faces from "./faces-rules.mjs";
+import * as RV from "../../wodx-rules/npc/rivalry-rules.mjs";
+import * as F from "../../wodx-rules/npc/faction-rules.mjs";
+import * as FR from "../../wodx-rules/npc/fight-rules.mjs";
+import * as AC from "../../wodx-rules/npc/aftercare-rules.mjs";
+import * as Faces from "../../wodx-rules/npc/faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {onPlayerHook} from "./hook-relay.mjs";
 

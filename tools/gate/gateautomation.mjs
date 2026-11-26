@@ -76,7 +76,7 @@ async function body() {
     await sleep(300);
     const a2 = get(CH, "autoApprove") ?? {};
     // B3521: a player's own request, ticket or roster addition always waits, even Hands off
-    const {NEVER_AUTO} = await import("/modules/wodx-chronicle/scripts/approvals-rules.mjs");
+    const {NEVER_AUTO} = await import("/modules/wodx-rules/chronicle/approvals-rules.mjs");
     const kinds = C.approvals.types().filter(t => !NEVER_AUTO.includes(t.type));
     ok("4. Hands off", get("wodx-combat", "turnConductor") === "everyone" && get("wodx-targeting", "mode") === "everyone"
       && kinds.every(t => a2[t.type] === true) && NEVER_AUTO.every(t => a2[t] !== true),

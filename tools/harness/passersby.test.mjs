@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as PR from "../../modules/wodx-npc/scripts/passerby-rules.mjs";
-import * as RR from "../../modules/wodx-npc/scripts/routine-rules.mjs";
+import * as PR from "../../modules/wodx-rules/npc/passerby-rules.mjs";
+import * as RR from "../../modules/wodx-rules/npc/routine-rules.mjs";
 
 /* Passers-by and animals (WoDX NPC 0.27.0, B970 to B975) */
 
@@ -51,7 +51,7 @@ test("people of each age, gender-neutral, no children, and drunk or sick blood b
 test("animals: V20's blood for each kind, more of them in old towns, rats after dark", () => {
   const pools = {human: 10, cow: 5, dog: 2, cat: 1, bird: 0.5, rat: 0.25};
   assert.deepEqual(PR.VESSEL_POOL, pools);
-  const vessels = readFileSync(new URL("../../modules/wodx-actions/scripts/rules.js", import.meta.url), "utf8");
+  const vessels = readFileSync(new URL("../../modules/wodx-rules/actions/rules.js", import.meta.url), "utf8");
   for ( const [k, n] of Object.entries(pools) ) if ( k !== "human" ) assert.match(vessels, new RegExp(`${k}: \\{ label: "[^"]+", pool: ${n} \\}`), k);
   for ( const t of Object.values(PR.ANIMALS) ) for ( const p of Object.values(t) ) assert.ok(pools[p.vessel] !== undefined, p.who);
   assert.ok(PR.animalCount({year: 1300, hour: 11}) >= PR.animalCount({year: 1995, hour: 11}));
@@ -139,12 +139,12 @@ test("the crowd's place is WoDX NPC's own place tag: every kind draws a crowd pr
   assert.equal(PR.placeOf("elysium"), PR.PLACES.elysium);
   assert.ok(PR.PLACES.elysium.people.gentry > 1 && PR.PLACES.elysium.people.servant > 1 && !PR.PLACES.elysium.people.poor);
   const r = f => readFileSync(new URL(`../../modules/${f}`, import.meta.url), "utf8");
-  for ( const f of ["wodx-atmosphere/scripts/kits-rules.mjs", "wodx-interactables/scripts/adopt-rules.mjs"] ) assert.match(r(f), /"alley", "yard", "docks", "park"/, f);
+  for ( const f of ["wodx-rules/atmosphere/kits-rules.mjs", "wodx-rules/interactables/adopt-rules.mjs"] ) assert.match(r(f), /"alley", "yard", "docks", "park"/, f);
   assert.match(r("wodx-npc/scripts/passersby.mjs"), /place\.kind/);
 });
 
 test("map files carry the whole map's kind of place, and adopting tags the scene unless it already has one", async () => {
-  const A = await import("../../modules/wodx-interactables/scripts/adopt-rules.mjs");
+  const A = await import("../../modules/wodx-rules/interactables/adopt-rules.mjs");
   const base = {format: "wodx-map", version: 1, cells: [10, 10], openings: [], features: [], regions: [{id: "a", rect: [0, 0, 2, 2], place: {kind: "alley"}}]};
   const ok = A.parseSidecar(JSON.stringify({...base, place: {kind: "yard"}}));
   assert.equal(ok.ok, true);

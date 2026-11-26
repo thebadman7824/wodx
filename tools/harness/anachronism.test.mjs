@@ -7,8 +7,8 @@ import {dirname, join} from "node:path";
 /* The anachronism check (WoDX Sheets 0.8.0) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const A = await import(pathToFileURL(join(root, "modules/wodx-sheets/scripts/anachronism-rules.mjs")).href);
-const X = await import(pathToFileURL(join(root, "modules/wodx-sheets/scripts/extras-rules.mjs")).href);
+const A = await import(pathToFileURL(join(root, "modules/wodx-rules/sheets/anachronism-rules.mjs")).href);
+const X = await import(pathToFileURL(join(root, "modules/wodx-rules/sheets/extras-rules.mjs")).href);
 const G = await import(pathToFileURL(join(root, "modules/wodx-library/data/goods.mjs")).href);
 
 const ORDER = G.ERAS;
@@ -69,7 +69,7 @@ test("automatic is on everywhere but the Live world", () => {
 
 /* Things on the maps (WoDX Sheets 0.14.0, Interactables 0.34.0) */
 
-const IR = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/interact-rules.mjs")).href);
+const IR = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/interact-rules.mjs")).href);
 const thing = (id, f, extra = {}) => ({scene: "s1", sceneName: "Market square", id, wall: !!extra.wall, ...IR.datedParts(f, {wall: !!extra.wall}), kept: !!extra.kept, keptGoods: extra.keptGoods ?? []});
 const GOODS_INFO = {"flintlock pistol": {firstYear: 1600, lastYear: 1850}, "mobile phone": {firstYear: 1985}, "bread": null};
 const lookLine = line => { const ref = A.lineOf(line).ref; return {name: ref, eraInfo: GOODS_INFO[ref.toLowerCase()] ? {order: ORDER, eras: [], ...GOODS_INFO[ref.toLowerCase()]} : null}; };

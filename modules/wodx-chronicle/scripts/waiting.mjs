@@ -9,7 +9,7 @@
  * Storyteller only; nothing here reaches a player.
  */
 import {MODULE_ID, esc} from "./util.mjs";
-import * as WR from "./waiting-rules.mjs";
+import * as WR from "../../wodx-rules/chronicle/waiting-rules.mjs";
 import * as approvals from "./approvals.mjs";
 
 const SPAN = 12 * 3600 * 1000;

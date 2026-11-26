@@ -10,8 +10,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const R = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
-const P = await imp("modules/wodx-storyteller/scripts/projects-rules.mjs");
+const R = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
+const P = await imp("modules/wodx-rules/storyteller/projects-rules.mjs");
 const {DAY, WEEK} = R;
 
 test("projects: the new kinds fill in and older tasks keep their pace", () => {

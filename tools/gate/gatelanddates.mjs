@@ -21,8 +21,8 @@ export async function run() {
   const chron = () => game.modules.get(MOD)?.api;
   let ruleBefore = null, cardBefore = null;
   try {
-    const R = await import(`/modules/${MOD}/scripts/reckoning-rules.mjs`);
-    const L = await import(`/modules/${MOD}/scripts/local-reckoning-rules.mjs`);
+    const R = await import(`/modules/wodx-rules/chronicle/reckoning-rules.mjs`);
+    const L = await import(`/modules/wodx-rules/chronicle/local-reckoning-rules.mjs`);
     const {describeTime} = await import(`/modules/${MOD}/scripts/calendar.mjs`);
     const lat = () => game.settings.get(MOD, "latitude");
     try { ruleBefore = game.settings.get(MOD, "rule.eraReckoning"); await game.settings.set(MOD, "rule.eraReckoning", true); } catch (e) { G.R.notes.push(`rule: ${e.message}`); }

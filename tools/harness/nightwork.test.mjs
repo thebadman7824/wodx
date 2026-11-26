@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 /* The night's work (B6220-B6229): what the Hand did, listed and taken back in one Undo. */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/nightwork-rules.mjs")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/nightwork-rules.mjs")));
 const src = p => readFileSync(join(root, p), "utf8");
 
 /** A small world of plain documents, changed the way Foundry changes them, for the rules to read. */

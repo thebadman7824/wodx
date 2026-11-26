@@ -9,7 +9,7 @@ import {fileURLToPath, pathToFileURL} from "node:url";
 import {join, dirname} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(pathToFileURL(join(root, "modules/wodx-combat/scripts/rules.js")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/combat/rules.js")));
 const main = readFileSync(join(root, "modules/wodx-combat/scripts/main.js"), "utf8");
 
 test("B7120: Combat's count takes a success a point past 10, and keeps a count held at 10", () => {

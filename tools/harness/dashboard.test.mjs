@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as DR from "../../modules/wodx-storyteller/scripts/dashboard-rules.mjs";
+import * as DR from "../../modules/wodx-rules/storyteller/dashboard-rules.mjs";
 
 /* WoDX Storyteller 0.10.0: the Storyteller's dashboard. */
 test("time words: minutes, hours, days, ahead and behind", () => {

@@ -1,7 +1,7 @@
 /**
  * WoDX Library: the Foundry side of gambling (B3910; rules in gamble-rules.mjs).
  */
-import * as B from "./gamble-rules.mjs";
+import * as B from "../../wodx-rules/library/gamble-rules.mjs";
 import {rollPool} from "./arms-use.mjs";
 
 const MOD = "wodx-library";

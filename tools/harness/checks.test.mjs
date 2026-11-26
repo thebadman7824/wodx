@@ -11,7 +11,7 @@ import {installMock} from "./foundry-mock.mjs";
  * the stand-in for Foundry, with dice that always come up the same.
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const CK = await import(join(root, "modules/wodx-actions/scripts/checks-rules.js"));
+const CK = await import(join(root, "modules/wodx-rules/actions/checks-rules.js"));
 const ATTRS = ["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"];
 
 test("every common check is complete: group, label, pools, difficulty, note and a page", () => {
@@ -196,7 +196,7 @@ test("the Action dialog offers the checks and the new V20 systems among its pres
 
 test("every line's menu has the common checks next to the free roll", async () => {
   const PM = await import(join(root, "modules/wodx-actions/scripts/profile-menus.js"));
-  const TR = await import(join(root, "modules/wodx-actions/scripts/theme-rules.js"));
+  const TR = await import(join(root, "modules/wodx-rules/actions/theme-rules.js"));
   for ( const [kind, m] of Object.entries(PM.MENUS) ) {
     const roll = m.sections.find(([t]) => t === "Roll")[1].map(b => b[0]);
     assert.deepEqual(roll.slice(0, 2), ["action", "api:quickCheck"], `${kind}: free roll, then common checks`);

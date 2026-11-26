@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 import {readFileSync} from "node:fs";
-import * as SR from "../../modules/wodx-npc/scripts/supernatural-rules.mjs";
-import * as NR from "../../modules/wodx-npc/scripts/npc-rules.mjs";
-import * as R from "../../modules/wodx-npc/scripts/routine-rules.mjs";
+import * as SR from "../../modules/wodx-rules/npc/supernatural-rules.mjs";
+import * as NR from "../../modules/wodx-rules/npc/npc-rules.mjs";
+import * as R from "../../modules/wodx-rules/npc/routine-rules.mjs";
 
 /* Supernatural NPCs by line (WoDX NPC 0.24.0, B1009 to B1013) */
 

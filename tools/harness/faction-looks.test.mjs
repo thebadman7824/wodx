@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as R from "../../modules/wodx-npc/scripts/faction-look-rules.mjs";
+import * as R from "../../modules/wodx-rules/npc/faction-look-rules.mjs";
 
 /* Who holds a place, shown on its scene (B4631) */
 test("faction banners: two at a held scene's gates, one at a held place, none for a secret faction", () => {

@@ -5,7 +5,7 @@
  * makes is tagged with the cost; when that effect ends, the active GM pays it. A power that left no lasting effect
  * pays when the scene ends.
  */
-import * as AC from "./after-cost-rules.js";
+import * as AC from "../../wodx-rules/actions/after-cost-rules.js";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 

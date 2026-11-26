@@ -19,9 +19,9 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const A = p => pathToFileURL(path.join(ROOT, "modules/wodx-actions/scripts", p)).href;
-const E = await import(A("effects-rules.js"));
+const E = await import(A("../../wodx-rules/actions/effects-rules.js"));
 const SS = await import(A("summon-specs.js"));
-const TR = await import(A("turn-rules.js"));
+const TR = await import(A("../../wodx-rules/actions/turn-rules.js"));
 
 /** What bounds each keyword's result in play. ends: how it stops; control: who runs what it makes; resist: the roll against it. */
 export const BOUNDS = {

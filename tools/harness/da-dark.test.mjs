@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import * as PE from "../../modules/wodx-actions/scripts/path-effects.js";
 import * as BR from "../../modules/wodx-actions/scripts/book-rituals.js";
-import * as K from "../../modules/wodx-actions/scripts/kindred-rules.js";
-import * as I from "../../modules/wodx-actions/scripts/infernal-rules.js";
+import * as K from "../../modules/wodx-rules/actions/kindred-rules.js";
+import * as I from "../../modules/wodx-rules/actions/infernal-rules.js";
 
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 const LIB = JSON.parse(src("modules/wodx-actions/data/disciplines-daw.json"));

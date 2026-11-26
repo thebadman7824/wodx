@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import * as P from "../../modules/wodx-storyteller/scripts/patronage-rules.mjs";
-import * as R from "../../modules/wodx-storyteller/scripts/tasks-rules.mjs";
-import * as PR from "../../modules/wodx-storyteller/scripts/projects-rules.mjs";
+import * as P from "../../modules/wodx-rules/storyteller/patronage-rules.mjs";
+import * as R from "../../modules/wodx-rules/storyteller/tasks-rules.mjs";
+import * as PR from "../../modules/wodx-rules/storyteller/projects-rules.mjs";
 
 test("patronage: forms and fashions follow the year and the way of life", () => {
   const keys = y => P.formsFor(y).map(f => f.key);

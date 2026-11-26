@@ -6,8 +6,8 @@ import {dirname, join} from "node:path";
 
 /* B6779c: of the goods that only told, the ones with a light to give now light the token */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const U = await import(pathToFileURL(join(root, "modules/wodx-library/scripts/use-rules.mjs")));
-const C = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/carry-rules.mjs")));
+const U = await import(pathToFileURL(join(root, "modules/wodx-rules/library/use-rules.mjs")));
+const C = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/carry-rules.mjs")));
 const G = await import(pathToFileURL(join(root, "modules/wodx-library/data/goods.mjs")));
 const rows = G.GOODS ?? G.ALL_ROWS ?? G.ROWS;
 

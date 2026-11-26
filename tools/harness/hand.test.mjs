@@ -7,10 +7,10 @@ import {dirname, join} from "node:path";
 /* WoDX Storyteller 0.18.0: the Storyteller's hand (rules at a glance, call for a roll, before play, the wrap-up, the timer). */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const S = p => join(root, "modules/wodx-storyteller/scripts", p);
-const G = await import(S("glance-rules.mjs"));
-const CR = await import(S("callroll-rules.mjs"));
-const PF = await import(S("preflight-rules.mjs"));
-const WR = await import(S("wrapup-rules.mjs"));
+const G = await import(S("../../wodx-rules/storyteller/glance-rules.mjs"));
+const CR = await import(S("../../wodx-rules/storyteller/callroll-rules.mjs"));
+const PF = await import(S("../../wodx-rules/storyteller/preflight-rules.mjs"));
+const WR = await import(S("../../wodx-rules/storyteller/wrapup-rules.mjs"));
 
 test("rules at a glance: shared sections always, line sections only for the lines at the table", () => {
   const ids = s => s.map(x => x.id);

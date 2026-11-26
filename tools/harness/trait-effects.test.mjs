@@ -7,9 +7,9 @@ import {dirname, join} from "node:path";
 /* The trait effect table (WoDX Chronicle 0.18.0): matching, kinds on both sides, "Only when" tests, coverage */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const T = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/trait-rules.mjs")));
+const T = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/trait-rules.mjs")));
 const D = await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/trait-effects.mjs")));
-const W = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/when-rules.mjs")));
+const W = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/when-rules.mjs")));
 
 const feat = (name, kind = "merit", value = 0, flagKey = null) => ({id: name, name, kind, value, flagKey});
 
@@ -100,7 +100,7 @@ test("every background found in the book checks has a hook, and the V20 ones are
 });
 
 /* Step 2: merits and flaws on rolls (WoDX Actions 3.29.0) */
-const R = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/rules.js")));
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/rules.js")));
 const TH = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/trait-hooks.js")));
 
 test("roll effects read the tags, the item's own words and the other side's kind", () => {

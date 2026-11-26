@@ -105,7 +105,7 @@ export async function run() {
     });
 
     await G.step("7. obvious powers wait while mortals watch, unless cornered", async () => {
-      const PP = await import(`/modules/wodx-npc/scripts/power-pick-rules.mjs?${Date.now()}`);
+      const PP = await import(`/modules/wodx-rules/npc/power-pick-rules.mjs?${Date.now()}`);
       const st = {hasTarget: true, wounds: 0, boosted: true, mortalsSee: true};
       const watched = PP.pick(powers, st), cornered = PP.pick(powers, {...st, cornered: true});
       const anyObvious = powers.some(p => p.obvious && p.uses.some(u => ["attack", "hold"].includes(u)));
@@ -114,7 +114,7 @@ export async function run() {
     });
 
     await G.step("8. the NPC rolls its chosen power by itself", async () => {
-      const PP = await import(`/modules/wodx-npc/scripts/power-pick-rules.mjs?${Date.now()}`);
+      const PP = await import(`/modules/wodx-rules/npc/power-pick-rules.mjs?${Date.now()}`);
       const pk = PP.pick(powers, {hasTarget: true, wounds: 0, boosted: true});
       const since = Date.now();
       const open = () => Object.values(foundry.applications.instances ? Object.fromEntries(foundry.applications.instances) : {})

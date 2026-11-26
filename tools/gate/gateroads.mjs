@@ -88,7 +88,7 @@ export async function run() {
       const p = mine("roadBodhisattva", kj.id)[0];
       if ( p ) await chron().approvals.decide(p.id, "approve", "gateroads");
       await sleep(300);
-      const V = await import(`/modules/wodx-otherworlds/scripts/veil-look-rules.mjs?${Date.now()}`);
+      const V = await import(`/modules/wodx-rules/otherworlds/veil-look-rules.mjs?${Date.now()}`);
       const sees = V.sightsOf(kj.flags[ACT] ?? {}, game.time.worldTime).includes("shroud");
       const was = kj.getFlag(ACT, "bodhisattva") === true;
       await setAdv(kj, "dharma", 7);

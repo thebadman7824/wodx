@@ -17,6 +17,7 @@ Status is the last step a row has proof for: planned, built, wired, shown, gated
 | wodx-otherworlds | not yet | 0 | 0 | 0 |
 | wodx-paperdoll | not yet | 0 | 0 | 0 |
 | wodx-rothenstein | not yet | 0 | 0 | 0 |
+| wodx-rules | not yet | 0 | 0 | 0 |
 | wodx-senses | not yet | 0 | 0 | 0 |
 | wodx-sheets | yes | 20 | 0 | 0 |
 | wodx-solo | not yet | 0 | 0 | 0 |

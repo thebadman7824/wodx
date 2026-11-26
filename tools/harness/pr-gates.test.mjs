@@ -115,6 +115,12 @@ test("B7442: only files the branch itself changed since the last run count as it
   // a: main's change, b: the branch's own edit, c: both (counted as its own), d: a version stamp only
   assert.deepEqual(ownChanges(names, show, {prior: "prior", head: "head", norm}), ["modules/b/y.mjs", "modules/c/z.mjs"]);
   assert.deepEqual(ownChanges(["modules/a/x.mjs", "modules/d/v.json"], show, {prior: "prior", head: "head", norm}), []);
+  // B8066: first stops at the first own change and reads no file after it
+  const read = [];
+  const counting = (ref, f) => { read.push(f); return show(ref, f); };
+  assert.deepEqual(ownChanges(names, counting, {prior: "prior", head: "head", norm, first: true}), ["modules/b/y.mjs"]);
+  assert.equal(read.includes("modules/c/z.mjs"), false);
+  assert.deepEqual(ownChanges(["modules/a/x.mjs"], show, {prior: "prior", head: "head", norm, first: true}), []);
 });
 
 test("B7442: a since job is a touched run with --base, and its status says so", async () => {

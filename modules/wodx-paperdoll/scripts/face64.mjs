@@ -1,5 +1,5 @@
-import * as P from "./face64-rules.mjs";
-import {healthLevel} from "./doll-rules.mjs";
+import * as P from "../../wodx-rules/paperdoll/face64-rules.mjs";
+import {healthLevel} from "../../wodx-rules/paperdoll/doll-rules.mjs";
 import {FEATURES, featuresFor, rollFeatures} from "./face64-features.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as SEEN from "./face64-seen.mjs";

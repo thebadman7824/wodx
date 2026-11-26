@@ -7,7 +7,7 @@ import {readFileSync} from "node:fs";
 
 /* WoDX NPC 0.6.0: NPCs walk gridless scenes on a square lattice laid over them. */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const NR = await import(join(root, "modules/wodx-npc/scripts/npc-rules.mjs"));
+const NR = await import(join(root, "modules/wodx-rules/npc/npc-rules.mjs"));
 
 test("the lattice maps points to cells and back like a square grid", () => {
   const g = NR.latticeGrid(100);

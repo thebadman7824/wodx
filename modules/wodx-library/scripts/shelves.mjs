@@ -1,5 +1,5 @@
-import * as S from "./shelf-rules.mjs";
-import {MOD} from "./gear-rules.mjs";
+import * as S from "../../wodx-rules/library/shelf-rules.mjs";
+import {MOD} from "../../wodx-rules/library/gear-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 /**
@@ -24,7 +24,7 @@ export async function sources() {
     `${A}/gifts-daw.json`, `${A}/arcanoi-w20.json`, `${A}/arcanoi-gw.json`, `${A}/wraith-w20.json`, "modules/wodx-chronicle/data/eras.json"].map(json));
   let conditions = [], houseRules = null;
   try { conditions = (await import("../../wodx-chronicle/scripts/conditions.mjs")).CORE_CONDITIONS ?? []; } catch { /* Chronicle missing */ }
-  try { houseRules = (await import("../../wodx-chronicle/data/house-rules.mjs")).default; } catch { /* Chronicle missing */ }
+  try { houseRules = (await import("../../wodx-rules/chronicle/house-rules.mjs")).default; } catch { /* Chronicle missing */ }
   const idx = await json(`modules/${MOD}/data/encyclopedia/index.json`);
   const parts = await Promise.all((idx?.files ?? []).map(f => json(`modules/${MOD}/data/encyclopedia/${f}`)));
   const encyclopedia = {books: idx?.books ?? [], entries: parts.flatMap(p => (Array.isArray(p) ? p : p?.entries) ?? [])};

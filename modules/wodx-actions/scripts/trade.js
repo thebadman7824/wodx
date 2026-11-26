@@ -1,4 +1,4 @@
-import * as TR from "./trade-rules.js";
+import * as TR from "../../wodx-rules/actions/trade-rules.js";
 
 /**
  * WoDX Actions 3.36.0: trade with one NPC from "With this person". Buy from them, sell to them, or barter one thing

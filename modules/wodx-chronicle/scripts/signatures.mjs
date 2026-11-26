@@ -3,7 +3,7 @@ import {propose, registerHandler} from "./approvals.mjs";
 import {currentYear} from "./eras.mjs";
 import {getEngine, describeTime} from "./calendar.mjs";
 import * as events from "./events.mjs";
-import * as S from "./signature-rules.mjs";
+import * as S from "../../wodx-rules/chronicle/signature-rules.mjs";
 import * as POD from "./pod.mjs";
 import {registerTokenLook} from "./token-looks.mjs";
 import {on as ghoulNeedOn, isGhoul as needIsGhoul} from "./ghoul-need.mjs";

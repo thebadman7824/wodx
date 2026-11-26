@@ -6,7 +6,7 @@ import {dirname, join} from "node:path";
 import {installMock} from "./foundry-mock.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(join(root, "modules/wodx-chronicle/scripts/migrations-rules.mjs"));
+const R = await import(join(root, "modules/wodx-rules/chronicle/migrations-rules.mjs"));
 
 const step = name => ({name, run: async () => {}});
 

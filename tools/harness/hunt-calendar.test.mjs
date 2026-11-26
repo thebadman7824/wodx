@@ -8,11 +8,11 @@ import {dirname, join} from "node:path";
    blackout changes the hunting difficulty by name */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const HC = await import(join(root, "modules/wodx-npc/scripts/hunt-calendar-rules.mjs"));
-const C = await import(join(root, "modules/wodx-chronicle/scripts/church-rules.mjs"));
-const FR = await import(join(root, "modules/wodx-chronicle/scripts/faith-rules.mjs"));
-const F = await import(join(root, "modules/wodx-npc/scripts/faction-rules.mjs"));
-const AR = await import(join(root, "modules/wodx-actions/scripts/rules.js"));
+const HC = await import(join(root, "modules/wodx-rules/npc/hunt-calendar-rules.mjs"));
+const C = await import(join(root, "modules/wodx-rules/chronicle/church-rules.mjs"));
+const FR = await import(join(root, "modules/wodx-rules/chronicle/faith-rules.mjs"));
+const F = await import(join(root, "modules/wodx-rules/npc/faction-rules.mjs"));
+const AR = await import(join(root, "modules/wodx-rules/actions/rules.js"));
 const {DateEngine} = await import(join(root, "modules/wodx-chronicle/scripts/calendar-math.mjs"));
 
 const engine = new DateEngine({epoch: [1197, 1, 1], reform: "bohemia-1584"});

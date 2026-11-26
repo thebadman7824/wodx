@@ -10,8 +10,8 @@
  */
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import {currentYear} from "./eras.mjs";
-import * as L from "./law-rules.mjs";
-import * as P from "./law-papers-rules.mjs";
+import * as L from "../../wodx-rules/chronicle/law-rules.mjs";
+import * as P from "../../wodx-rules/chronicle/law-papers-rules.mjs";
 import * as place from "./place.mjs";
 
 const yearNow = () => { try { return currentYear(); } catch (e) { return 1197; } };

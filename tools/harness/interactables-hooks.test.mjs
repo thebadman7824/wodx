@@ -4,7 +4,7 @@ import "./win-paths.mjs";
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as H from "../../modules/wodx-interactables/scripts/hook-rules.mjs";
+import * as H from "../../modules/wodx-rules/interactables/hook-rules.mjs";
 
 const read = p => readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 

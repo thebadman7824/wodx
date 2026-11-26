@@ -8,7 +8,7 @@
  * that seat does it; with nobody in the chair the walker is told the Way waits.
  */
 import * as C from "./core.mjs";
-import * as WR from "./way-rules.mjs";
+import * as WR from "../../wodx-rules/storyteller/way-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = C.MOD;

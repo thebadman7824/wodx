@@ -2,6 +2,7 @@
 
 Newest first.
 
+- 0.17.2 (This module's rules files moved to the rules core, modules/wodx-rules/solo (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
 - 0.17.1 (Plain words (B8142, #2503): the longest setting hints are cut to one plain line)
 - 0.17.0 (Unlit interiors stay dark; a few squares of sight out of doors (B8096))
 - 0.16.0 (Fixes from the first solo test (B8045, B8050, B8051, B8056): spent time keeps a wait's guards, a trip's hours (up to a fortnight) pass on the world clock, the Storyteller's cards lose their dead chat controls, older cards can be pressed, the list can be cleared, and Carry the fallen lifts the body with the character's own token first)

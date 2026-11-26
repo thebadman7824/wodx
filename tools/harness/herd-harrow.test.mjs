@@ -21,7 +21,7 @@ game.modules.set("wodx-chronicle", {active: true});
 game.modules.set("wodx-storyteller", {active: true});
 const ST = () => game.modules.get("wodx-storyteller").api;
 const Q = () => game.modules.get("wodx-chronicle").api.approvals;
-const R = await import(join(root, "modules/wodx-storyteller/scripts/herd-rules.mjs"));
+const R = await import(join(root, "modules/wodx-rules/storyteller/herd-rules.mjs"));
 const Herds = await import(join(root, "modules/wodx-storyteller/scripts/herds.mjs"));
 const Up = await import(join(root, "modules/wodx-storyteller/scripts/upkeep.mjs"));
 const killed = [], harrowed = [];

@@ -8,8 +8,8 @@
  */
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import {currentYear} from "./eras.mjs";
-import * as L from "./law-rules.mjs";
-import * as T from "./law-trial-rules.mjs";
+import * as L from "../../wodx-rules/chronicle/law-rules.mjs";
+import * as T from "../../wodx-rules/chronicle/law-trial-rules.mjs";
 import {standingFor} from "./law-standing.mjs";
 
 const yearNow = () => { try { return currentYear(); } catch (e) { return 1197; } };

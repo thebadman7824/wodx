@@ -12,14 +12,14 @@
  * setup wizard, or game.wodx.creation.firstNight(actor).
  */
 import {MODULE_ID, esc, generationOf} from "./actor-data.mjs";
-import * as R from "./first-night-rules.mjs";
-import * as LP from "./lifepath-rules.mjs";
+import * as R from "../../wodx-rules/creation/first-night-rules.mjs";
+import * as LP from "../../wodx-rules/creation/lifepath-rules.mjs";
 import {lifepathOf, splatText, LifepathApp} from "./lifepath.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {postSeedCards, registerSeedCards} from "./first-night-seed.mjs";
 import {WizardApp, ledgerFor} from "./wizard.mjs";
 import {PreludeRunApp, writtenPrelude, sendTies, meetingJournal, registerTies} from "./first-night-prelude.mjs";
-import {underWay} from "./first-night-prelude-rules.mjs";
+import {underWay} from "../../wodx-rules/creation/first-night-prelude-rules.mjs";
 import {isLiveWorld} from "../../wodx-chronicle/scripts/live-worlds.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
@@ -184,7 +184,7 @@ export async function gather(actor) {
     src.traits = (t?.matched ?? []).map(m => ({key: m.key, name: m.name, kind: m.kind, value: m.value}));
   } catch (e) { src.traits = []; }
   try {
-    const TR = await import("../../wodx-chronicle/scripts/trait-rules.mjs");
+    const TR = await import("../../wodx-rules/chronicle/trait-rules.mjs");
     src.tables = {PULLS: TR.PULLS, LEDGER: TR.LEDGER, PROMPTS: TR.PROMPTS, TRIGGERS: TR.TRIGGERS, BG_WORLD: TR.BG_WORLD};
   } catch (e) { src.tables = {}; }
   try { src.plan = (T?.worldPlan?.(actor) ?? []).map(b => ({key: b.key, label: b.name, count: b.people ? b.count : 1, made: b.have})); } catch (e) { src.plan = []; }
@@ -328,7 +328,7 @@ export class FirstNightApp extends ApplicationV2 {
     const states = R.stepStates(rec, view, waiting);
     this.forecast ??= await forecastFor(a);
     const fit = await fitFor(a);
-    const tables = (await import("../../wodx-chronicle/scripts/trait-rules.mjs").catch(() => ({})));
+    const tables = (await import("../../wodx-rules/chronicle/trait-rules.mjs").catch(() => ({})));
     const flaws = features(a).filter(f => f.kind === "flaw");
     const extra = {
       build: view.build ? (!view.build.ok ? `${-view.build.left} freebie points too many.` : view.build.unspent ? `Points still to spend in ${view.build.unspent} ${view.build.unspent === 1 ? "step" : "steps"}; ${view.build.left} freebie points left.` : `Matches the book's totals; ${view.build.left} freebie points left.`) : "",

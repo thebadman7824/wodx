@@ -16,7 +16,7 @@ test("a Storyteller's drag of an NPC past the running speed is stopped, with Alt
 
 // #2485 (both): out of a fight, routine walks keep to the walking pace for the time that passed, and reactions to
 // three turns at a run
-const NR = await import(join(root, "modules/wodx-npc/scripts/npc-rules.mjs"));
+const NR = await import(join(root, "modules/wodx-rules/npc/npc-rules.mjs"));
 const RT = readFileSync(join(root, "modules/wodx-npc/scripts/routines.mjs"), "utf8");
 
 test("a routine walk reaches the walking pace times the turns that passed", () => {

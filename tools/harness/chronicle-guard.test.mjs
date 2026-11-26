@@ -55,7 +55,7 @@ test("a registered chronicle goes into play, and another can be put in play in i
 });
 
 test("a saga left running with its chronicle module off is found, and the one in play is not", async () => {
-  const S = await import("../../modules/wodx-chronicle/scripts/saga-rules.mjs");
+  const S = await import("../../modules/wodx-rules/chronicle/saga-rules.mjs");
   const CD = await import("../../modules/wodx-chronicle/scripts/chronicle-data.mjs");
   const chains = [{key: "saga:rothenstein:red-stone"}, {key: "saga:rothenstein:second"}, {key: "lp:abc"}, {key: "saga:other:x"}];
   const was = CD.currentId();

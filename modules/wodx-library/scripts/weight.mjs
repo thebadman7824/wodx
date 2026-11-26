@@ -5,7 +5,7 @@
  * Interactables reads it for what a container, a pile of loose gear and a body weigh; WoDX Combat reads it for a
  * swimmer's load. Each takes an optional year (the chronicle's year by default).
  */
-import * as W from "./weight-rules.mjs";
+import * as W from "../../wodx-rules/library/weight-rules.mjs";
 
 const MOD = "wodx-library";
 let goodsBy = null, plurals = {}, gearBy = null;

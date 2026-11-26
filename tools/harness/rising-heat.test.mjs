@@ -8,7 +8,7 @@ import {installMock} from "./foundry-mock.mjs";
 /* B6933: a rising that is put down gives its leaders law heat (the desk's rising-heat ruling). The put-down card names
    the player characters as possible leaders; pressing one adds a "leading a rising" deed through law-heat addDeed. */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const H = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/law-heat-rules.mjs")));
+const H = await import(pathToFileURL(join(root, "modules/wodx-rules/chronicle/law-heat-rules.mjs")));
 const mock = installMock({dataRoot: root});
 globalThis.canvas = null;
 await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));

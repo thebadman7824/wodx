@@ -8,14 +8,14 @@
  */
 import {MODULE_ID, esc, setting, setSetting, isActiveGM, rule} from "./util.mjs";
 import {currentYear} from "./eras.mjs";
-import * as L from "./law-rules.mjs";
+import * as L from "../../wodx-rules/chronicle/law-rules.mjs";
 import * as place from "./place.mjs";
 import {playerLine} from "./law-heat.mjs";
 import {playerMarks} from "./law-punish.mjs";
 import {cardLines as paperLines, checkSelves} from "./law-papers.mjs";
 import {playerTax} from "./law-tax.mjs";
 import {checkTurns} from "./law-regime.mjs";
-import {LINE_FUTURE} from "./law-future-rules.mjs";
+import {LINE_FUTURE} from "../../wodx-rules/chronicle/law-future-rules.mjs";
 
 export function registerLawSettings() {
   game.settings.register(MODULE_ID, "lawYear", {scope: "world", config: false, type: Number, default: 0});

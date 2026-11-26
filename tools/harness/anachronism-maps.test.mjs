@@ -7,7 +7,7 @@ import {dirname, join} from "node:path";
 /* The anachronism check reads the maps (WoDX Sheets 0.14.0): the Foundry side against a mock world */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const IR = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/interact-rules.mjs")).href);
+const IR = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/interact-rules.mjs")).href);
 
 const coll = docs => { const m = new Map(docs.map(d => [d.id, d])); m.contents = docs; m.getName = n => docs.find(d => d.name === n) ?? null; return m; };
 const doc = (id, data) => ({id, ...data, flags: data.flags ?? {}, async update(ch) {

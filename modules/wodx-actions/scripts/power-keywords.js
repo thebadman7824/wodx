@@ -10,7 +10,7 @@
  * summary and, for the elder powers, the page check of 11 November 2026 (keyword-roster-book-check-A).
  */
 import { PATH_EFFECTS } from "./path-effects.js";
-import { KEYWORDS } from "./effects-rules.js";
+import { KEYWORDS } from "../../wodx-rules/actions/effects-rules.js";
 import { LINE_KEYWORDS } from "./power-keywords-lines.js";
 
 export const POWER_KEYWORDS = {

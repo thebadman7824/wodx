@@ -16,27 +16,27 @@
 
 import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
-import * as K from "./kindred-rules.js";
+import * as K from "../../wodx-rules/actions/kindred-rules.js";
 import * as P from "./profiles.js";
 import * as GX from "./garou.js";
-import * as G from "./garou-rules.js";
+import * as G from "../../wodx-rules/actions/garou-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as PE from "./path-effects.js";
 import * as PK from "./power-keywords.js";
 import * as TH from "./trait-hooks.js";
-import * as WR from "./witness-rules.js";
-import { fogReaction } from "./wraith-rules.js";
-import * as MR from "./mummy-rules.js";
-import * as DR from "./demon-rules.js";
+import * as WR from "../../wodx-rules/actions/witness-rules.js";
+import { fogReaction } from "../../wodx-rules/actions/wraith-rules.js";
+import * as MR from "../../wodx-rules/actions/mummy-rules.js";
+import * as DR from "../../wodx-rules/actions/demon-rules.js";
 import * as BR from "./book-rituals.js";
 import * as DSX from "./daysleep.js";
-import * as DSR from "./daysleep-rules.js";
+import * as DSR from "../../wodx-rules/actions/daysleep-rules.js";
 import * as FOM from "./fomor.js";
-import * as FDR from "./fae-da-rules.js";
+import * as FDR from "../../wodx-rules/actions/fae-da-rules.js";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
-import * as CUR from "./inq-curses-rules.js";
+import * as CUR from "../../wodx-rules/actions/inq-curses-rules.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };

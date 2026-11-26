@@ -5,7 +5,7 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const F = await import(join(root, "modules/wodx-actions/scripts/flavor.js"));
-const CK = await import(join(root, "modules/wodx-actions/scripts/checks-rules.js"));
+const CK = await import(join(root, "modules/wodx-rules/actions/checks-rules.js"));
 
 test("a common check's card gets lines for that check, or for its group", () => {
   assert.equal(F.theme("Anna: Notice something", ""), "check:notice");

@@ -11,8 +11,8 @@
  *
  * Built by mage-household.js. Pure rules: mage-wonders-rules.js.
  */
-import * as W from "./mage-wonders-rules.js";
-import * as M from "./mage-da-rules.js";
+import * as W from "../../wodx-rules/actions/mage-wonders-rules.js";
+import * as M from "../../wodx-rules/actions/mage-da-rules.js";
 import * as P from "./profiles.js";
 import {DAY, HOUR, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
 

@@ -8,7 +8,7 @@
  */
 import {MODULE_ID, esc, emit, isActiveGM} from "./util.mjs";
 import {searchBox} from "./search.mjs";
-import {VIEWS} from "./player-view-rules.mjs";
+import {VIEWS} from "../../wodx-rules/chronicle/player-view-rules.mjs";
 
 /** The WoDX buttons a player sees by default, in toolbar order. */
 export const PLAYER_TOOLS = [

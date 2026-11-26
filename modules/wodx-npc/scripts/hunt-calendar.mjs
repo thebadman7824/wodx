@@ -2,7 +2,7 @@
  * WoDX NPC 0.54.0: the faith calendar of a town for a hunt (B2710). Reads the clock, the scene's faith and its
  * residents; the rules are in hunt-calendar-rules.mjs. Used by WoDX NPC's faction hunts and WoDX Actions' hunt window.
  */
-import {huntCalendar} from "./hunt-calendar-rules.mjs";
+import {huntCalendar} from "../../wodx-rules/npc/hunt-calendar-rules.mjs";
 
 const chron = () => { try { return game.modules.get("wodx-chronicle")?.active ? game.modules.get("wodx-chronicle").api : null; } catch (e) { return null; } };
 

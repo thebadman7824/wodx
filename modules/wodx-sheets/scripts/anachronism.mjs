@@ -16,8 +16,8 @@
  * grade), and the goods in containers become the everyday goods of that year where the scene stands. A second card
  * says what changed, names what has nothing like it in that year, and has Undo.
  */
-import * as AR from "./anachronism-rules.mjs";
-import {MOD} from "./extras-rules.mjs";
+import * as AR from "../../wodx-rules/sheets/anachronism-rules.mjs";
+import {MOD} from "../../wodx-rules/sheets/extras-rules.mjs";
 import {look, loadGoods} from "./extras.mjs";
 import {isLiveWorld} from "../../wodx-chronicle/scripts/live-worlds.mjs";
 

@@ -9,11 +9,11 @@ import {dirname, join} from "node:path";
    ruling): each named export is read by the play code that should call it. */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const C = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/c20-rules.js")));
-const D = await import(pathToFileURL(join(root, "modules/wodx-creation/scripts/derived-rules.mjs")));
+const C = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/c20-rules.js")));
+const D = await import(pathToFileURL(join(root, "modules/wodx-rules/creation/derived-rules.mjs")));
 
 test("C20: PRIMARY sets the cantrip's primary Realms, the Mists and the Musing time reach the cards", () => {
-  assert.match(src("modules/wodx-actions/scripts/c20-rules.js"), /used\.filter\(u => PRIMARY\.includes\(u\.realm\)\)/);
+  assert.match(src("modules/wodx-rules/actions/c20-rules.js"), /used\.filter\(u => PRIMARY\.includes\(u\.realm\)\)/);
   const c20 = src("modules/wodx-actions/scripts/c20.js");
   assert.match(c20, /C\.ownMists\(/);
   assert.match(c20, /C\.OWN_MISTS/);
@@ -24,7 +24,7 @@ test("C20: PRIMARY sets the cantrip's primary Realms, the Mists and the Musing t
 });
 
 test("C20: Creation's starting Tempers come from startingTempers", () => {
-  assert.match(src("modules/wodx-creation/scripts/derived-rules.mjs"), /startingTempers\(/);
+  assert.match(src("modules/wodx-rules/creation/derived-rules.mjs"), /startingTempers\(/);
   const row = (sys, opts) => Object.fromEntries(D.derivedTraits("c20", sys, opts).rows.map(r => [r.key, r.want]));
   const grump = row({seeming: "grump"});
   assert.deepEqual([grump.willpower, grump.glamour, grump.banality], [5, 4, 3]);
@@ -36,11 +36,11 @@ test("C20: Creation's starting Tempers come from startingTempers", () => {
 
 test("Dark Ages fae: havocStep lowers a havoc on the card, cantripCap sets the caps", () => {
   assert.match(src("modules/wodx-actions/scripts/fae-da.js"), /F\.havocStep\(/);
-  assert.match(src("modules/wodx-actions/scripts/fae-da-rules.js"), /cantripCap\(weaving, dominions\[d\], affinity && affinity === d \? 1 : 0\)/);
+  assert.match(src("modules/wodx-rules/actions/fae-da-rules.js"), /cantripCap\(weaving, dominions\[d\], affinity && affinity === d \? 1 : 0\)/);
 });
 
 /* B7110-B7114: the rest of the Dark Ages fae exports reach play. */
-const F = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/fae-da-rules.js")));
+const F = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/fae-da-rules.js")));
 test("Dark Ages fae: new Echoes from mortal eyes, forging and baptism, the warning signs, soak, blood and the Dominate shield are read in play", () => {
   const fx = src("modules/wodx-actions/scripts/fae-da.js");
   for ( const fn of ["newEchoPool", "newEchoOutcome", "forgeCheck", "baptismClears", "driftSigns"] ) assert.match(fx, new RegExp(`F\\.${fn}\\(`), fn);

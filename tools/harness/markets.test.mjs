@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const MK = await imp("modules/wodx-storyteller/scripts/market-rules.mjs");
+const MK = await imp("modules/wodx-rules/storyteller/market-rules.mjs");
 const G = await imp("modules/wodx-library/data/goods.mjs");
 const kinds = Object.keys(G.KINDS);
 const seq = (...v) => { let i = 0; return () => v[i++ % v.length]; };

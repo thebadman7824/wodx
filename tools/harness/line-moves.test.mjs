@@ -4,8 +4,8 @@ import {join, dirname} from "node:path";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {execFileSync} from "node:child_process";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const LR = await import(pathToFileURL(join(root, "modules/wodx-paperdoll/scripts/line-rules.mjs")));
-const SR = await import(pathToFileURL(join(root, "modules/wodx-paperdoll/scripts/sprite-rules.mjs")));
+const LR = await import(pathToFileURL(join(root, "modules/wodx-rules/paperdoll/line-rules.mjs")));
+const SR = await import(pathToFileURL(join(root, "modules/wodx-rules/paperdoll/sprite-rules.mjs")));
 
 test("a Garou goes through the forms between (B5813)", () => {
   assert.deepEqual(LR.stagesBetween("homid", "lupus"), ["glabro", "crinos", "hispo", "lupus"]);

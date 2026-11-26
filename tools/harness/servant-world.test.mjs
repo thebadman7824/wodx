@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 // Servants and Bonds Desk, step three (B5120-B5127): fomori, the Retinue, mummy cults, Social Conditioning programmes, NPC keepers.
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const W = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/servant-world-rules.mjs")));
+const W = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/servant-world-rules.mjs")));
 
 test("fomori get one to three different powers from the list WoDX Actions plays, named as it reads them", async () => {
   const FP = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/fomor-powers.js")));

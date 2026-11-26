@@ -1,6 +1,6 @@
 import {esc, emit, isActiveGM, rule, setting, setSetting} from "./util.mjs";
 import {searchBox} from "./search.mjs";
-import * as QR from "./approvals-rules.mjs";
+import * as QR from "../../wodx-rules/chronicle/approvals-rules.mjs";
 import {record as recordNight} from "./nightwork.mjs";
 
 /**

@@ -12,15 +12,15 @@
  *   Month     every 30 days of world time the active Storyteller's client turns every institution: empty seats fill
  *             with the town's NPCs, contests and scandals; one on a player character's seat waits in the queue
  */
-import * as I from "./institution-rules.mjs";
+import * as I from "../../wodx-rules/storyteller/institution-rules.mjs";
 import * as Markets from "./markets.mjs";
 import * as Towns from "./towns.mjs";
 import * as Rumours from "./rumours.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, gmIds, setting, log} from "./core.mjs";
-import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
-import * as Local from "../../wodx-chronicle/scripts/chronicle-local-rules.mjs";
-import {lawOf} from "../../wodx-chronicle/scripts/law-rules.mjs";
-import {sweepSeats} from "../../wodx-chronicle/scripts/law-regime-rules.mjs";
+import {faithFor} from "../../wodx-rules/chronicle/faith-rules.mjs";
+import * as Local from "../../wodx-rules/chronicle/chronicle-local-rules.mjs";
+import {lawOf} from "../../wodx-rules/chronicle/law-rules.mjs";
+import {sweepSeats} from "../../wodx-rules/chronicle/law-regime-rules.mjs";
 import {influenceOf} from "./ventures.mjs";
 import * as Reach from "./reach.mjs";
 import {MONTH} from "../../wodx-chronicle/scripts/terms.mjs";

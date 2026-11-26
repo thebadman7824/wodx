@@ -1,20 +1,11 @@
-import {DateEngine, REFORMS, moonPhase, sunTimes, formatHours, sunAltitude, isNightAt} from "./calendar-math.mjs";
+/**
+ * The WoDX calendar for Foundry (B8060). The date engine and the clock reading live in the rules core
+ * (wodx-rules/core/calendar.mjs) and are re-exported here; this file adds only the two pieces that need Foundry: the
+ * calendar class and its config, both built inside init.
+ */
+import {getEngine, EPOCH_YEAR} from "../../wodx-rules/core/calendar.mjs";
 
-/** Year shown for worldTime 0. The Dark Ages profile starts here (decision: 1197). */
-export const EPOCH_YEAR = 1197;
-
-let engine = new DateEngine({epoch: [EPOCH_YEAR, 1, 1], reform: "bohemia-1584"});
-
-/** The date engine in use. */
-export function getEngine() {
-  return engine;
-}
-
-/** Rebuild the engine for a reform key. */
-export function setReform(reform) {
-  engine = new DateEngine({epoch: [EPOCH_YEAR, 1, 1], reform: REFORMS[reform] ? reform : "bohemia-1584"});
-  return engine;
-}
+export * from "../../wodx-rules/core/calendar.mjs";
 
 /**
  * Build the calendar class. Called inside init, when foundry.data.CalendarData is available.
@@ -27,7 +18,7 @@ export function makeCalendarClass() {
   return class WoDXCalendar extends Base {
 
     timeToComponents(time = 0) {
-      const d = engine.timeToDate(time);
+      const d = getEngine().timeToDate(time);
       const components = {
         year: d.year - this.years.yearZero,
         day: d.dayOfYear,
@@ -57,18 +48,18 @@ export function makeCalendarClass() {
 
     componentsToTime(components) {
       const year = components.year ?? 0;
-      const jan1 = engine.jan1(year + this.years.yearZero);
-      const days = (jan1 - engine.epochJDN) + (components.day ?? 0);
+      const jan1 = getEngine().jan1(year + this.years.yearZero);
+      const days = (jan1 - getEngine().epochJDN) + (components.day ?? 0);
       return (days * 86400) + ((components.hour ?? 0) * 3600) + ((components.minute ?? 0) * 60) + (components.second ?? 0);
     }
 
     isLeapYear(year) {
-      return engine.isLeap(year + this.years.yearZero);
+      return getEngine().isLeap(year + this.years.yearZero);
     }
 
     countLeapYears(year) {
       let n = 0;
-      for ( let y = this.years.yearZero; y < year + this.years.yearZero; y++ ) if ( engine.isLeap(y) ) n++;
+      for ( let y = this.years.yearZero; y < year + this.years.yearZero; y++ ) if ( getEngine().isLeap(y) ) n++;
       return n;
     }
 
@@ -89,71 +80,3 @@ export function makeCalendarConfig() {
   config.years.firstWeekday = 2; // 1 January 1197 (Julian) was a Wednesday
   return config;
 }
-
-/* -------------------------------------------- */
-/*  Reading the clock                           */
-/* -------------------------------------------- */
-
-const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
-  "October", "November", "December"];
-const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
-/**
- * Everything the clock shows for a world time.
- * @param {number} time      World time in seconds
- * @param {number} latitude  Degrees north
- */
-export function describeTime(time, latitude) {
-  const d = engine.timeToDate(time);
-  const sun = sunTimes(d.jdn, latitude);
-  const nowHours = d.hour + (d.minute / 60) + ((d.second ?? 0) / 3600);
-  const moon = moonPhase(d.jdn - 0.5 + (nowHours / 24));
-  // B6381: night and day from the sun's altitude now, the same test WoDX Actions' sunlight makes (SUN_UP), to the second
-  const sunAlt = sunAltitude(d.jdn, latitude, nowHours);
-  const isNight = isNightAt(sunAlt);
-  return {
-    ...d,
-    monthName: MONTHS[d.month - 1],
-    weekday: WEEKDAYS[d.dayOfWeek],
-    dateLabel: `${WEEKDAYS[d.dayOfWeek]}, ${d.day} ${MONTHS[d.month - 1]} ${d.year}`,
-    timeLabel: `${String(d.hour).padStart(2, "0")}:${String(d.minute).padStart(2, "0")}`,
-    calendarLabel: d.calendar === "gregorian" ? "Gregorian" : "Julian",
-    sunrise: formatHours(sun.sunrise),
-    sunset: formatHours(sun.sunset),
-    darkHours: sun.darkHours,
-    sunAltitude: sunAlt,
-    isNight,
-    moon
-  };
-}
-
-/**
- * Seconds from a world time to the next sunset (dusk), at least a minute ahead.
- */
-export function secondsToNextDusk(time, latitude) {
-  for ( let dayOffset = 0; dayOffset < 3; dayOffset++ ) {
-    const d = engine.timeToDate(time + (dayOffset * 86400));
-    const sun = sunTimes(d.jdn, latitude);
-    if ( sun.sunset === null ) continue;
-    const dayStart = time + (dayOffset * 86400) - ((d.hour * 3600) + (d.minute * 60) + d.second);
-    // B6381: at or past the moment itself, so the clock moved to dusk or dawn reads night or day there
-    const dusk = dayStart + Math.ceil(sun.sunset * 3600);
-    if ( dusk - time >= 60 ) return dusk - time;
-  }
-  return 86400;
-}
-
-/** Seconds from a world time to the next sunrise (dawn). */
-export function secondsToNextDawn(time, latitude) {
-  for ( let dayOffset = 0; dayOffset < 3; dayOffset++ ) {
-    const d = engine.timeToDate(time + (dayOffset * 86400));
-    const sun = sunTimes(d.jdn, latitude);
-    if ( sun.sunrise === null ) continue;
-    const dayStart = time + (dayOffset * 86400) - ((d.hour * 3600) + (d.minute * 60) + d.second);
-    const dawn = dayStart + Math.ceil(sun.sunrise * 3600);
-    if ( dawn - time >= 60 ) return dawn - time;
-  }
-  return 86400;
-}
-
-export {MONTHS, WEEKDAYS, REFORMS};

@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import {join, dirname} from "node:path";
 import {fileURLToPath} from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const RR = await import(join(root, "modules/wodx-chronicle/scripts/reveal-rules.mjs"));
+const RR = await import(join(root, "modules/wodx-rules/chronicle/reveal-rules.mjs"));
 
 test("every twist shows a thing, a mark or a sound, and its people act", () => {
   assert.deepEqual(RR.validate(), []);

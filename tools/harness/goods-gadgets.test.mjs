@@ -9,10 +9,10 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const D = await imp("modules/wodx-library/scripts/gadget-rules.mjs");
+const D = await imp("modules/wodx-rules/library/gadget-rules.mjs");
 const C = await imp("modules/wodx-library/data/goods-crops.mjs");
 const G = await imp("modules/wodx-library/data/goods.mjs");
-const U = await imp("modules/wodx-library/scripts/use-rules.mjs");
+const U = await imp("modules/wodx-rules/library/use-rules.mjs");
 const good = n => G.GOODS.find(g => g.name === n);
 
 test("every seed grows into a good, and plant, strike and time do something", () => {

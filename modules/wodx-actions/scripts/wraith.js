@@ -19,13 +19,13 @@ import * as TH from "./trait-hooks.js";
 import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import { floatOver } from "./daysleep.js";
-import * as W from "./wraith-rules.js";
+import * as W from "../../wodx-rules/actions/wraith-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import { DAY } from "../../wodx-chronicle/scripts/terms.mjs";
-import * as Local from "../../wodx-chronicle/scripts/chronicle-local-rules.mjs";
+import * as Local from "../../wodx-rules/chronicle/chronicle-local-rules.mjs";
 import { current as chronicleNow } from "../../wodx-chronicle/scripts/chronicle-data.mjs";
 
 const MOD = "wodx-actions";

@@ -7,7 +7,7 @@ import {dirname, join} from "node:path";
 /* B6020-B6025: marks that used to sit on a sheet now change movement and rolls. */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const AU = await import(join(root, "modules/wodx-combat/scripts/auto.js"));
-const B = await import(join(root, "modules/wodx-actions/scripts/beast-marks-rules.js"));
+const B = await import(join(root, "modules/wodx-rules/actions/beast-marks-rules.js"));
 
 test("a body held by a condition does not move", () => {
   for ( const id of ["held", "immobilized", "staked", "torpor", "incapacitated", "asleep"] ) {
@@ -35,7 +35,7 @@ test("waking behind the age makes the old Abilities harder", () => {
 });
 
 /* B6030-B6034: the statuses nothing set before now come from play. */
-const H = await import(join(root, "modules/wodx-library/scripts/hygiene-rules.mjs"));
+const H = await import(join(root, "modules/wodx-rules/library/hygiene-rules.mjs"));
 const PE = await import(join(root, "modules/wodx-actions/scripts/power-effects.js"));
 
 test("a fall in the wet or a week unwashed makes a body Filthy", () => {

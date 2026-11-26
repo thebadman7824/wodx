@@ -2,9 +2,9 @@ import "./win-paths.mjs";
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as F from "../../modules/wodx-npc/scripts/faces-rules.mjs";
-import * as SR from "../../modules/wodx-actions/scripts/social-rules.js";
-import * as U from "../../modules/wodx-library/scripts/use-rules.mjs";
+import * as F from "../../modules/wodx-rules/npc/faces-rules.mjs";
+import * as SR from "../../modules/wodx-rules/actions/social-rules.js";
+import * as U from "../../modules/wodx-rules/library/use-rules.mjs";
 
 /* What a character can tell about a stranger (NPC 0.34.0, Actions 3.46.0), and players' own disguises (Library 0.15.0) */
 const src = p => readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");

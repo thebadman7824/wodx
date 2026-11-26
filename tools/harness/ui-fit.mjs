@@ -814,7 +814,7 @@ game.world.id = worldId;
 // Interactables 0.32.0: the case board (twelve cards, long words, lines, a hidden card); Library 0.17.0: What they could know
 {
   const CB = await import(join(root, "modules/wodx-interactables/scripts/case.mjs"));
-  const CR = await import(join(root, "modules/wodx-interactables/scripts/case-rules.mjs"));
+  const CR = await import(join(root, "modules/wodx-rules/interactables/case-rules.mjs"));
   let b = CR.emptyBoard();
   for ( let i = 0; i < 12; i++ ) b = CR.addCard(b, {kind: Object.keys(CR.KINDS)[i % 5], ref: i % 5 === 4 ? "" : `Actor.x${i}`, title: `A card with a long title to wrap, number ${i}`,
     text: "What the finder learned, written out at some length so the card has to scroll a little. ".repeat(2), hidden: i === 3, by: "Gamemaster Test"}).board;

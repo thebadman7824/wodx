@@ -10,9 +10,9 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const T = await imp("modules/wodx-chronicle/scripts/law-tax-rules.mjs");
-const L = await imp("modules/wodx-chronicle/scripts/law-rules.mjs");
-const H = await imp("modules/wodx-chronicle/scripts/law-heat-rules.mjs");
+const T = await imp("modules/wodx-rules/chronicle/law-tax-rules.mjs");
+const L = await imp("modules/wodx-rules/chronicle/law-rules.mjs");
+const H = await imp("modules/wodx-rules/chronicle/law-heat-rules.mjs");
 
 test("taxes: the usual share changes with the age and the land", () => {
   assert.equal(T.shareFor("latin", 1197), 0.15);

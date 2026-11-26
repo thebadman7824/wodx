@@ -6,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const R = await import("../../modules/wodx-chronicle/scripts/looks-rules.mjs");
+const R = await import("../../modules/wodx-rules/chronicle/looks-rules.mjs");
 
 test("a look's record: kind, where, how long", () => {
   assert.equal(R.normLook({ kind: "nonsense" }), null);

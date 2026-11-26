@@ -5,7 +5,7 @@
  * the head's outline; skipped under a hood or veil) and top (over everything,
  * before wounds). A face lists its features in S.features.
  */
-import {FEATURES, H} from "./face64-rules.mjs";
+import {FEATURES, H} from "../../wodx-rules/paperdoll/face64-rules.mjs";
 import "./face64-general.mjs";
 import "./face64-kindred.mjs";
 import "./face64-garou.mjs";

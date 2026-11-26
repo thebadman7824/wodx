@@ -1,4 +1,4 @@
-import * as WR from "./ways-rules.mjs";
+import * as WR from "../../wodx-rules/otherworlds/ways-rules.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {layersOf} from "./twins.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";

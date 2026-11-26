@@ -5,7 +5,7 @@
  * The harness (country.test.mjs) fails when the file is out of date.
  */
 import {writeFileSync} from "node:fs";
-import * as C from "../../modules/wodx-storyteller/scripts/country-rules.mjs";
+import * as C from "../../modules/wodx-rules/storyteller/country-rules.mjs";
 import * as D from "../../modules/wodx-storyteller/data/country.mjs";
 
 export function build() {

@@ -4,7 +4,7 @@
  * offers the Technica ways in and actions to a character with the Discipline on the sheet (a Power named Technica).
  */
 import {MODULE_ID} from "./ratings.mjs";
-import * as N from "./net-rules.mjs";
+import * as N from "../../wodx-rules/otherworlds/net-rules.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");

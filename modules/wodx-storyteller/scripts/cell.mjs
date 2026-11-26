@@ -13,7 +13,7 @@
  *   recipe (a household of the faithful before 1223).
  * Rules: cell-rules.mjs; rolls and the sheet: WoDX Actions hunter.js.
  */
-import * as R from "./cell-rules.mjs";
+import * as R from "../../wodx-rules/storyteller/cell-rules.mjs";
 import {MOD, esc, setting, mutate, gmIds, isPC, chron} from "./core.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import * as Builder from "./builder.mjs";

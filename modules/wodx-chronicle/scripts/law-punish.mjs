@@ -9,8 +9,8 @@
  */
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import {currentYear} from "./eras.mjs";
-import * as L from "./law-rules.mjs";
-import * as P from "./law-punish-rules.mjs";
+import * as L from "../../wodx-rules/chronicle/law-rules.mjs";
+import * as P from "../../wodx-rules/chronicle/law-punish-rules.mjs";
 import {standingFor} from "./law-standing.mjs";
 import {declareWanted} from "./law-heat.mjs";
 import {applyTimed} from "./timed.mjs";

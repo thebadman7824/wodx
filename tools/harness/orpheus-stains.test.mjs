@@ -8,7 +8,7 @@ import {fileURLToPath} from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const OS = await import("../../modules/wodx-actions/scripts/orpheus-stains.js");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
 const PM = await import("../../modules/wodx-actions/scripts/power-mods.js");
 
 test("the twenty Stains of the core book, each with a page, a look, a gain and a cost (B7832)", () => {
@@ -49,6 +49,6 @@ test("the Stain window is on the Orpheus menu, the sheet and the api, and its we
   assert.match(read("modules/wodx-actions/scripts/main.js"), /orphStain: withActor/);
   assert.match(read("modules/wodx-actions/scripts/main.js"), /registerReverter\?\.\("wodx-actions\.stainEnd"/);
   assert.match(read("modules/wodx-actions/scripts/profile-menus.js"), /api:orphStain/);
-  assert.match(read("modules/wodx-sheets/scripts/sheet-rules.mjs"), /"orphStain"/);
+  assert.match(read("modules/wodx-rules/sheets/sheet-rules.mjs"), /"orphStain"/);
   assert.match(read("modules/wodx-actions/scripts/orpheus.js"), /async function stain\(actor\)/);
 });

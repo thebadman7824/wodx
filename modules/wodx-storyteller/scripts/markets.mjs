@@ -10,9 +10,9 @@
  *   0.49.0: a market also shows what factions have laid on it (taxes, monopolies, smuggling), the roads a raid has
  *   closed and which shops have shut; the Storyteller sets or ends each by hand here (market-moves.mjs, caravans.mjs).
  */
-import * as MK from "./market-rules.mjs";
+import * as MK from "../../wodx-rules/storyteller/market-rules.mjs";
 import * as Money from "./money.mjs";
-import * as GP from "./goods-place-rules.mjs";
+import * as GP from "../../wodx-rules/storyteller/goods-place-rules.mjs";
 import {MOD, esc, isActiveGM, chron} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 

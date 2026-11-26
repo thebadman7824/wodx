@@ -23,7 +23,7 @@ export async function run() {
   const before = game.settings.get(CH, "homeland");
   try {
     const P = await import(`/modules/${ST}/data/primers-world.mjs`);
-    const S = await import(`/modules/${ST}/scripts/setup-rules.mjs`);
+    const S = await import(`/modules/wodx-rules/storyteller/setup-rules.mjs`);
     let j = [...game.journal].find(d => d.flags?.[ST]?.template?.kind === "primer");
     if ( !j ) {
       [j] = await G.make(JournalEntry, [{name: "The world in this era", flags: {[ST]: {template: {kind: "primer", version: S.TEMPLATE_VERSION}}},

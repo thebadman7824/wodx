@@ -7,9 +7,9 @@
  *   - hover help in plain words on traits and pools, and the first sentence of a power's own description
  * Full view draws the sheet as before. The rules are in beginner-rules.mjs.
  */
-import * as B from "./beginner-rules.mjs";
-import * as CK from "../../wodx-actions/scripts/checks-rules.js";
-import {MENU_PLAN} from "../../wodx-actions/scripts/theme-rules.js";
+import * as B from "../../wodx-rules/sheets/beginner-rules.mjs";
+import * as CK from "../../wodx-rules/actions/checks-rules.js";
+import {MENU_PLAN} from "../../wodx-rules/actions/theme-rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-sheets";

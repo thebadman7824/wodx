@@ -3,8 +3,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as WR from "../../modules/wodx-otherworlds/scripts/wild-rules.mjs";
-import * as RM from "../../modules/wodx-otherworlds/scripts/realm-maps-rules.mjs";
+import * as WR from "../../modules/wodx-rules/otherworlds/wild-rules.mjs";
+import * as RM from "../../modules/wodx-rules/otherworlds/realm-maps-rules.mjs";
 
 test("a piece is fixed by its seed and its place, and differs from its neighbours and from another seed", () => {
   for ( const wild of WR.WILD_ORDER ) {
@@ -152,7 +152,7 @@ test("wild land is wired and clean", () => {
   const ui = readFileSync(new URL("../../modules/wodx-otherworlds/scripts/realm-maps.mjs", import.meta.url), "utf8");
   assert.match(main, /drawWild: realmMaps\.drawWild, walkOn: realmMaps\.walkOn/);
   assert.match(ui, /name="wild" data-fixed/); assert.match(ui, /name="side" data-fixed/);
-  const all = JSON.stringify(WR.WILDS) + readFileSync(new URL("../../modules/wodx-otherworlds/scripts/wild-rules.mjs", import.meta.url), "utf8");
+  const all = JSON.stringify(WR.WILDS) + readFileSync(new URL("../../modules/wodx-rules/otherworlds/wild-rules.mjs", import.meta.url), "utf8");
   assert.doesNotMatch(all, /—/);
   assert.doesNotMatch(all, /\b(he|she|him|her|his|hers)\b/i);
   assert.doesNotMatch(all, /Ben|decision B\d|Daggerfall/);

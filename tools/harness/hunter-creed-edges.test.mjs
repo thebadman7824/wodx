@@ -3,7 +3,7 @@ import "./win-paths.mjs";
 import {test} from "node:test";
 import assert from "node:assert/strict";
 
-const K = await import("../../modules/wodx-actions/scripts/reckoning-rules.js");
+const K = await import("../../modules/wodx-rules/actions/reckoning-rules.js");
 const PK = await import("../../modules/wodx-actions/scripts/power-keywords.js");
 
 test("39 creed-book edges: five a book (Innocent four, its last page missing from the scan), each with its book and page", () => {
@@ -34,7 +34,7 @@ test("the Vision creeds' own paths, and the book edges keep the core rules (B783
 });
 
 test("Spiral's whirlwind works each turn, a yard and a half of radius a success (B7834)", async () => {
-  const TR = await import("../../modules/wodx-actions/scripts/turn-rules.js");
+  const TR = await import("../../modules/wodx-rules/actions/turn-rules.js");
   const r = TR.resolveRec(TR.everyTurnOf("Spiral", "Hunter (HtR)"), {successes: 4});
   assert.equal(r.area.yards, 6);
   assert.equal(r.counter.value, 4);

@@ -7,7 +7,7 @@
  *   character told and to the Storyteller. Setting "Cards for bonds", on by default.
  *   api.bonds.stepToward(thrall, regnant) and api.bonds.socialShift(regnant, thrall) are what WoDX Actions reads.
  */
-import * as BR from "./bond-rules.mjs";
+import * as BR from "../../wodx-rules/npc/bond-rules.mjs";
 
 const MOD = "wodx-npc";
 const isActiveGM = () => game.user?.isGM && game.users.activeGM?.id === game.user.id;

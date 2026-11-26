@@ -8,7 +8,7 @@
  *   await S.heal({scene, share: 0.25});   await S.undo(id, scene);   await S.undoFor({source, since});   S.list(scene);
  */
 import {MODULE_ID} from "./util.mjs";
-import * as R from "./scars-rules.mjs";
+import * as R from "../../wodx-rules/chronicle/scars-rules.mjs";
 import {isLightTouch, holdScar, holdHeal} from "./quiet.mjs";
 
 const FLAG = "scars";

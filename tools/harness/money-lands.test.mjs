@@ -9,8 +9,8 @@ import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const imp = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const R = await imp("modules/wodx-storyteller/scripts/money-rules.mjs");
-const P = await imp("modules/wodx-chronicle/scripts/place-rules.mjs");
+const R = await imp("modules/wodx-rules/storyteller/money-rules.mjs");
+const P = await imp("modules/wodx-rules/chronicle/place-rules.mjs");
 const LANDS = ["philippine", "indochinese", "balkan"];
 
 test("money of the lands: every year from 1197 to 2022 has its own money, coins and a wage", () => {

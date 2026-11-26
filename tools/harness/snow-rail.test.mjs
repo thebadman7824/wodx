@@ -3,10 +3,10 @@ import assert from "node:assert/strict";
 import {dirname, join} from "node:path";
 import {fileURLToPath} from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const C = await import(join(root, "modules/wodx-interactables/scripts/chase-rules.mjs"));
-const IR = await import(join(root, "modules/wodx-interactables/scripts/interact-rules.mjs"));
-const VR = await import(join(root, "modules/wodx-interactables/scripts/vehicle-sheet-rules.mjs"));
-const MT = await import(join(root, "modules/wodx-combat/scripts/mounted-rules.js"));
+const C = await import(join(root, "modules/wodx-rules/interactables/chase-rules.mjs"));
+const IR = await import(join(root, "modules/wodx-rules/interactables/interact-rules.mjs"));
+const VR = await import(join(root, "modules/wodx-rules/interactables/vehicle-sheet-rules.mjs"));
+const MT = await import(join(root, "modules/wodx-rules/combat/mounted-rules.js"));
 
 test("the new kinds are mounts, ways to run and vehicle sheets (B6070 to B6072)", () => {
   for ( const k of ["sled", "snowmobile", "train", "tram"] ) {

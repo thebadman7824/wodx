@@ -84,7 +84,7 @@ test("the People tables load on first use, with the feminine family names", asyn
 });
 
 test("an NPC household takes the feminine form once the names are handed over", async () => {
-  const RS = await import(join(root, "modules/wodx-npc/scripts/resident-rules.mjs"));
+  const RS = await import(join(root, "modules/wodx-rules/npc/resident-rules.mjs"));
   const P = await import(join(root, "modules/wodx-creation/scripts/people.mjs"));
   const fem = (await P.load()).feminine;
   const [origin, forms] = Object.entries(fem).find(([o]) => !["czech", "slovak", "german"].includes(o));

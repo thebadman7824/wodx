@@ -3,7 +3,7 @@
  * hotbar and the player list and puts words where roll cards show numbers. Alt+Q brings it all back, or tucks it
  * away again. The rules are in quiet-rules.mjs.
  */
-import * as Q from "./quiet-rules.mjs";
+import * as Q from "../../wodx-rules/senses/quiet-rules.mjs";
 
 const MOD = "wodx-senses";
 const on = () => { try { return !!game.settings.get(MOD, "quiet"); } catch (e) { return false; } };

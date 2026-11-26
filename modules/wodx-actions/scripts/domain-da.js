@@ -14,7 +14,7 @@
  *   with the vassal's own; cutting a vassal off takes them back and costs the liege a dot of that Background; an oath
  *   broken by the vassal is their word broken (the Roads that count it ask).
  */
-import * as D from "./domain-da-rules.js";
+import * as D from "../../wodx-rules/actions/domain-da-rules.js";
 import { DAY } from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";

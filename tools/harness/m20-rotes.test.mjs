@@ -8,8 +8,8 @@ import {fileURLToPath} from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const BR = await import("../../modules/wodx-actions/scripts/m20-rotes.js");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
-const M = await import("../../modules/wodx-actions/scripts/m20-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
+const M = await import("../../modules/wodx-rules/actions/m20-rules.js");
 
 test("the core book's 17 rotes, each with its Spheres, page, kind and keywords the Cast window knows (B7836)", () => {
   assert.equal(BR.ROTES.length, 17);

@@ -8,7 +8,7 @@ import {dirname, join} from "node:path";
 /* The binding card for a player character (B3528): which results bind, and what the card names. No hold on the token. */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const E = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/effects-rules.js")).href);
+const E = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/effects-rules.js")).href);
 
 test("only binding keywords make a card, with the command, how long and the resist roll", () => {
   for ( const k of E.BINDING_KEYS ) assert.ok(E.KEYWORDS[k], `${k} is a keyword`);

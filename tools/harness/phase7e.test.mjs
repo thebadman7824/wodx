@@ -6,7 +6,7 @@ import {dirname, join} from "node:path";
 
 /* Phase 7e: the open world's rules (WoDX Storyteller 0.1.0, world-rules.mjs). */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const W = await import(join(root, "modules/wodx-storyteller/scripts/world-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/storyteller/world-rules.mjs"));
 const H = 3600;
 
 test("the log: newest first, cleaned, capped", () => {

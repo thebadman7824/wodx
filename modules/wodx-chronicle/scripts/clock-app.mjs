@@ -8,11 +8,11 @@ import {HouseRulesApp} from "./house-rules-app.mjs";
 import {runEraTest} from "./era-test.mjs";
 import {searchBox} from "./search.mjs";
 import * as church from "./church.mjs";
-import {reckon} from "./reckoning-rules.mjs";
-import {countOf, OWN_COUNTS} from "./local-reckoning-rules.mjs";
-import {FAITHS, faithFounded} from "./faith-rules.mjs";
+import {reckon} from "../../wodx-rules/chronicle/reckoning-rules.mjs";
+import {countOf, OWN_COUNTS} from "../../wodx-rules/chronicle/local-reckoning-rules.mjs";
+import {FAITHS, faithFounded} from "../../wodx-rules/chronicle/faith-rules.mjs";
 import * as place from "./place.mjs";
-import {offsetWords} from "./place-rules.mjs";
+import {offsetWords} from "../../wodx-rules/chronicle/place-rules.mjs";
 import {paceLine} from "./pace.mjs";
 import * as TERMS from "./terms.mjs";
 

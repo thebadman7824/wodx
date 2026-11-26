@@ -28,7 +28,7 @@ export async function run() {
     await G.step("1. plant and harvest", async () => {
       await lib.use.run(seeds, "plant", a);
       const growing = !!a.items.get(seeds.id)?.flags?.["wodx-library"]?.planted;
-      const days = (await import("/modules/wodx-library/scripts/gadget-rules.mjs")).cropOf("seed potatoes")?.days ?? 101;
+      const days = (await import("/modules/wodx-rules/library/gadget-rules.mjs")).cropOf("seed potatoes")?.days ?? 101;
       // the clock moves past the days; the Storyteller's client harvests on the time change
       await game.time.advance(days * 86400 + 3600);
       await waitFor(() => !a.items.get(seeds.id) && a.items.some(i => i.name === "potatoes"), 8000);

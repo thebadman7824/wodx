@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
-const O = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/order-rules.mjs")));
+const O = await import(pathToFileURL(join(root, "modules/wodx-rules/npc/order-rules.mjs")));
 
 test("orders: only a follower that serves one of your characters, never a player's character", () => {
   assert.equal(O.canOrder({serves: ["pc1"], ownedActorIds: ["pc1"]}).ok, true);
@@ -176,7 +176,7 @@ test("orders: loyalty drifts a step at a time and never to Hostile", () => {
 });
 
 test("storyteller: helpers add their dots, at least one die each, and errands are kept on the task", async () => {
-  const R = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/tasks-rules.mjs")));
+  const R = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/tasks-rules.mjs")));
   assert.equal(R.helperDice([]), 0);
   assert.equal(R.helperDice([{dots: 3}, {dots: 0}]), 4);
   const t = R.normTask({kind: "other", helpers: ["a", "b"], errand: "buy", master: "pc1"});
@@ -188,7 +188,7 @@ test("storyteller: helpers add their dots, at least one die each, and errands ar
 });
 
 test("interactables: a follower joins a running chase level with the slowest pursuer", async () => {
-  const C = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/chase-rules.mjs")));
+  const C = await import(pathToFileURL(join(root, "modules/wodx-rules/interactables/chase-rules.mjs")));
   const st = C.newChase({quarry: {id: "q", way: "foot", lead: 10}, pursuers: [{id: "p1", way: "foot"}, {id: "p2", way: "foot"}]});
   st.pursuers[0].total = 3; st.pursuers[1].total = 1;
   const j = C.joinChase(st, {id: "f", way: "foot", name: "the ghoul"});

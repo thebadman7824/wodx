@@ -8,9 +8,9 @@ import { join, dirname } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
-const TB = await load("modules/wodx-chronicle/scripts/trait-bite-rules.mjs");
+const TB = await load("modules/wodx-rules/chronicle/trait-bite-rules.mjs");
 const TE = await load("modules/wodx-chronicle/data/trait-effects.mjs");
-const TR = await load("modules/wodx-chronicle/scripts/trait-rules.mjs");
+const TR = await load("modules/wodx-rules/chronicle/trait-rules.mjs");
 
 test("every bite belongs to a trait that has a moment", () => {
   for (const k of Object.keys(TB.BITES)) assert.ok(TE.PROMPTS[k], k);

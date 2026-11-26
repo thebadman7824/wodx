@@ -130,7 +130,7 @@ globalThis.canvas = {
 };
 
 /* ---- the module, with stand-in grid helpers ---- */
-const NR = await import(join(root, "modules/wodx-npc/scripts/npc-rules.mjs"));
+const NR = await import(join(root, "modules/wodx-rules/npc/npc-rules.mjs"));
 const {build} = await import(join(root, "modules/wodx-npc/scripts/routines.mjs"));
 const cellOf = tok => ({i: Math.floor(tok.document.y / SIZE), j: Math.floor(tok.document.x / SIZE)});
 const topLeftFor = (tok, c) => ({x: c.j * SIZE, y: c.i * SIZE});
@@ -318,7 +318,7 @@ test("the module: manifest declares the Reaction behaviour; in-game text is gend
   const {readFileSync} = await import("node:fs");
   const m = JSON.parse(readFileSync(join(root, "modules/wodx-npc/module.json"), "utf8"));
   assert.deepEqual(m.documentTypes, {RegionBehavior: {reaction: {}, alertZone: {}, trigger: {}}});
-  for ( const f of ["routines.mjs", "routine-rules.mjs"] ) {
+  for ( const f of ["routines.mjs", "../../wodx-rules/npc/routine-rules.mjs"] ) {
     const src = readFileSync(join(root, "modules/wodx-npc/scripts", f), "utf8");
     const strings = (src.match(/`[^`]*`|"[^"\n]*"/g) ?? []).join(" ").replace(/<[^>]+>/g, " ");
     assert.ok(!/\b(he|she|him|her|his|hers|himself|herself)\b/i.test(strings), `${f}: gender-neutral`);
@@ -328,7 +328,7 @@ test("the module: manifest declares the Reaction behaviour; in-game text is gend
 });
 
 /* ---- 0.4.0: alarms on places, and NPCs who hear the map ---- */
-const AR = await import(join(root, "modules/wodx-npc/scripts/alert-rules.mjs"));
+const AR = await import(join(root, "modules/wodx-rules/npc/alert-rules.mjs"));
 
 test("alarms: an hour on alarm, wary until the next dusk, then calm; raising it again starts the hour over", () => {
   const a = AR.raise(null, {now: 1000, cause: "a bell", toDusk: () => 5000});

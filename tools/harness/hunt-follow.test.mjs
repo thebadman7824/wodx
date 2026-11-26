@@ -5,8 +5,8 @@ import assert from "node:assert/strict";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const HF = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/hunt-follow-rules.mjs")));
-const K = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/kits-rules.mjs")));
+const HF = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/hunt-follow-rules.mjs")));
+const K = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/kits-rules.mjs")));
 
 test("h1: proof by who hunts, and the imbued burn", () => {
   assert.equal(HF.proofFor(1200, "church-courts").key, "church-courts");
@@ -53,7 +53,7 @@ test("h5: a found body feeds the hunters by cause and year, and the morgue from 
   assert.equal(HF.toMorgue(1850, "sickness"), false);
 });
 
-const RR = await import(pathToFileURL(join(root, "modules/wodx-storyteller/scripts/remains-rules.mjs")));
+const RR = await import(pathToFileURL(join(root, "modules/wodx-rules/storyteller/remains-rules.mjs")));
 test("B6666: who comes upon a body, and how far, read the same by remains and the hunters' own watch", () => {
   assert.equal(RR.finderOf({pc: true}), "pc");
   assert.equal(RR.finderOf({type: "Mortal"}), "town");

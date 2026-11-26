@@ -5,8 +5,8 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const K = await import(join(root, "modules/wodx-storyteller/scripts/clock-rules.mjs"));
-const P = await import(join(root, "modules/wodx-storyteller/scripts/pacing-rules.mjs"));
+const K = await import(join(root, "modules/wodx-rules/storyteller/clock-rules.mjs"));
+const P = await import(join(root, "modules/wodx-rules/storyteller/pacing-rules.mjs"));
 const DAY = 86400, WEEK = 7 * DAY;
 
 test("an own clock is cleaned: segments from the list, fill in range, who sees it", () => {

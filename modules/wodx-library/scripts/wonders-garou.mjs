@@ -2,7 +2,7 @@
  * WoDX Library: the Werewolf kit for the wonders registry (B3683). Wraps wonder-rules.mjs (B3630-B3636, B3680-B3682)
  * so WoDX Storyteller can treat Garou like every other line. No Foundry calls here.
  */
-import * as W from "./wonder-rules.mjs";
+import * as W from "../../wodx-rules/library/wonder-rules.mjs";
 import {registerLine} from "./wonder-registry.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);

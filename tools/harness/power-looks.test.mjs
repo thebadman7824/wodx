@@ -1,7 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as L from "../../modules/wodx-storyteller/scripts/power-look-rules.mjs";
+import * as L from "../../modules/wodx-rules/storyteller/power-look-rules.mjs";
 
 /* Places of power glow for those who could see them (B4635) */
 test("power looks: a Node glows for mages and dims when drained; a caern for werebeasts; a balefire for changelings", () => {

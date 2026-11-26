@@ -1,9 +1,9 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as R from "../../modules/wodx-creation/scripts/first-night-rules.mjs";
-import * as TR from "../../modules/wodx-chronicle/scripts/trait-rules.mjs";
-import * as RV from "../../modules/wodx-npc/scripts/rivalry-rules.mjs";
+import * as R from "../../modules/wodx-rules/creation/first-night-rules.mjs";
+import * as TR from "../../modules/wodx-rules/chronicle/trait-rules.mjs";
+import * as RV from "../../modules/wodx-rules/npc/rivalry-rules.mjs";
 import EVENTS from "../../modules/wodx-chronicle/data/events.mjs";
 import {readFileSync} from "node:fs";
 

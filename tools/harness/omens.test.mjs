@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import * as O from "../../modules/wodx-storyteller/scripts/omen-rules.mjs";
-import * as D from "../../modules/wodx-storyteller/scripts/dreams-rules.mjs";
+import * as O from "../../modules/wodx-rules/storyteller/omen-rules.mjs";
+import * as D from "../../modules/wodx-rules/storyteller/dreams-rules.mjs";
 
 const seq = (...v) => { let i = 0; return () => v[i++ % v.length]; };
 

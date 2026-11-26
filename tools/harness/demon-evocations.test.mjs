@@ -8,9 +8,9 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const D = await import("../../modules/wodx-actions/scripts/demon-rules.js");
+const D = await import("../../modules/wodx-rules/actions/demon-rules.js");
 const DE = await import("../../modules/wodx-actions/scripts/demon-evocations.js");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
 const x = a => a ?? [];
 
 test("every evocation in the Lore table has a card with effect, duration, range and high Torment (B3741)", () => {

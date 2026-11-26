@@ -11,7 +11,7 @@ const H = await imp("modules/wodx-library/data/wonders-hunter.mjs");
 const R = await imp("modules/wodx-library/scripts/wonder-registry.mjs");
 const HK = await imp("modules/wodx-library/scripts/wonders-hunter.mjs");
 const P = await imp("modules/wodx-library/scripts/wonder-powers.mjs");
-const T = await imp("modules/wodx-storyteller/scripts/tasks-rules.mjs");
+const T = await imp("modules/wodx-rules/storyteller/tasks-rules.mjs");
 const kit = HK.hunterKit;
 
 const actor = ({order = "john", conviction = 3, wp = 4} = {}) => ({name: "Sister Agnes", system: {advantages: {willpower: {temporary: wp, permanent: 6}}},

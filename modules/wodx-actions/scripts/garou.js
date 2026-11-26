@@ -6,16 +6,16 @@
  * Every card carries its page reference. Nothing here copies book text.
  */
 import * as SUM from "./summons.js";
-import * as SR from "./summon-rules.js";
+import * as SR from "../../wodx-rules/actions/summon-rules.js";
 import * as TH from "./trait-hooks.js";
 import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import { floatOver } from "./daysleep.js";
 import * as P from "./profiles.js";
-import * as G from "./garou-rules.js";
-import * as TOT from "./totem-rules.js";
-import * as DEED from "./garou-deeds-rules.js";
-export { bringsDelirium } from "./garou-rules.js";
+import * as G from "../../wodx-rules/actions/garou-rules.js";
+import * as TOT from "../../wodx-rules/actions/totem-rules.js";
+import * as DEED from "../../wodx-rules/actions/garou-deeds-rules.js";
+export { bringsDelirium } from "../../wodx-rules/actions/garou-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";

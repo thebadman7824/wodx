@@ -35,7 +35,7 @@ export async function run() {
   const t0 = game.time.worldTime, DAY = 86400;
   try {
     const HC = await import(`/modules/wodx-npc/scripts/hunt-calendar.mjs?${Date.now()}`);
-    const HR = await import(`/modules/wodx-npc/scripts/hunt-calendar-rules.mjs?${Date.now()}`);
+    const HR = await import(`/modules/wodx-rules/npc/hunt-calendar-rules.mjs?${Date.now()}`);
     const made = await Scene.create([{name: "WoDX gate: Cairo hunt", width: 1200, height: 1000, padding: 0.1, grid: {size: 100, distance: 5}},
       {name: "WoDX gate: Brno hunt", width: 1200, height: 1000, padding: 0.1, grid: {size: 100, distance: 5}}]);
     const cairo = made.find(s => s.name.endsWith("Cairo hunt")), brno = made.find(s => s.name.endsWith("Brno hunt"));

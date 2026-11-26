@@ -1,10 +1,10 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as S from "../../modules/wodx-senses/scripts/sight-rules.mjs";
-import * as B from "../../modules/wodx-combat/scripts/body-rules.js";
-import * as R from "../../modules/wodx-combat/scripts/rules.js";
-import * as L from "../../modules/wodx-interactables/scripts/living-rules.mjs";
+import * as S from "../../modules/wodx-rules/senses/sight-rules.mjs";
+import * as B from "../../modules/wodx-rules/combat/body-rules.js";
+import * as R from "../../modules/wodx-rules/combat/rules.js";
+import * as L from "../../modules/wodx-rules/interactables/living-rules.mjs";
 
 /* The Display-Only Systems Desk, batch A (B2900-B2904): systems that used to show something now feed the rules. */
 
@@ -86,10 +86,10 @@ test("B2904: living tiles switch walls, doors and lights", () => {
 });
 
 /* ---- Batch C (B2910-B2915) ---- */
-import * as GO from "../../modules/wodx-storyteller/scripts/go-rules.mjs";
-import * as DR from "../../modules/wodx-storyteller/scripts/dreams-rules.mjs";
-import * as MK from "../../modules/wodx-otherworlds/scripts/mark-rules.mjs";
-import * as WT from "../../modules/wodx-npc/scripts/wanted-rules.mjs";
+import * as GO from "../../modules/wodx-rules/storyteller/go-rules.mjs";
+import * as DR from "../../modules/wodx-rules/storyteller/dreams-rules.mjs";
+import * as MK from "../../modules/wodx-rules/otherworlds/mark-rules.mjs";
+import * as WT from "../../modules/wodx-rules/npc/wanted-rules.mjs";
 import {moodRule} from "../../modules/wodx-atmosphere/scripts/mood.mjs";
 
 test("B2910: Go turns a journey into days, meetings and seconds", () => {
@@ -133,7 +133,7 @@ test("B2914: a foreigner's description lasts longer and survives new clothes", (
 });
 
 test("B2915: realm Go rolls the realm's dangers each day", async () => {
-  const RW = await import("../../modules/wodx-otherworlds/scripts/realm-worlds-rules.mjs");
+  const RW = await import("../../modules/wodx-rules/otherworlds/realm-worlds-rules.mjs");
   const p = RW.goPlan({days: 2.5, squares: 10}, {hazards: ["a storm", "a hunter"], rand: () => 0.05});
   assert.equal(p.chance, 20); assert.equal(p.meetings.length, 3); assert.ok(["a storm", "a hunter"].includes(p.meetings[0].what));
   assert.equal(RW.goPlan({hidden: true}), null);
@@ -141,7 +141,7 @@ test("B2915: realm Go rolls the realm's dangers each day", async () => {
 });
 
 /* ---- Batch B (B3130-B3133) ---- */
-import * as DPR from "../../modules/wodx-actions/scripts/deeper-rules.js";
+import * as DPR from "../../modules/wodx-rules/actions/deeper-rules.js";
 
 test("B3130-B3133: Nightmares, a stranger in a crowd and codex research change the roll", () => {
   assert.equal(DPR.nightmareDice([{flags: {"wodx-storyteller": {diceLess: 1}}}, {disabled: true, flags: {"wodx-storyteller": {diceLess: 3}}}, {}]), 1);
@@ -152,9 +152,9 @@ test("B3130-B3133: Nightmares, a stranger in a crowd and codex research change t
 });
 
 /* ---- Batch B, Chronicle (B3160-B3163) ---- */
-import * as LST from "../../modules/wodx-chronicle/scripts/legend-standing-rules.mjs";
-import * as LGR from "../../modules/wodx-chronicle/scripts/legends-rules.mjs";
-import * as LNG from "../../modules/wodx-chronicle/scripts/languages-rules.mjs";
+import * as LST from "../../modules/wodx-rules/chronicle/legend-standing-rules.mjs";
+import * as LGR from "../../modules/wodx-rules/chronicle/legends-rules.mjs";
+import * as LNG from "../../modules/wodx-rules/chronicle/languages-rules.mjs";
 
 test("B3160, B3161: Legends deeds suggest Renown and Status for player characters only", () => {
   const lines = [
@@ -182,8 +182,8 @@ test("B3162, B3163: the language allowance holds, and a kindred tongue gives a r
 });
 
 /* ---- Batch B, Combat and Storyteller (B3170, B3171) ---- */
-import * as AFR from "../../modules/wodx-combat/scripts/aftermath-rules.js";
-import * as WUR from "../../modules/wodx-storyteller/scripts/wrapup-rules.mjs";
+import * as AFR from "../../modules/wodx-rules/combat/aftermath-rules.js";
+import * as WUR from "../../modules/wodx-rules/storyteller/wrapup-rules.mjs";
 
 test("B3170, B3171: a fight becomes a deed and marks real danger for the experience draft", () => {
   assert.ok(AFR.fightWon([{pc: true}, {pc: false, down: true}]));
@@ -196,13 +196,13 @@ test("B3170, B3171: a fight becomes a deed and marks real danger for the experie
 });
 
 /* ---- Batch D (B3440 to B3444) ---- */
-import * as GAR from "../../modules/wodx-actions/scripts/garou-rules.js";
-import * as DRD from "../../modules/wodx-actions/scripts/deeper-rules.js";
-import * as LKR from "../../modules/wodx-library/scripts/look-rules.mjs";
+import * as GAR from "../../modules/wodx-rules/actions/garou-rules.js";
+import * as DRD from "../../modules/wodx-rules/actions/deeper-rules.js";
+import * as LKR from "../../modules/wodx-rules/library/look-rules.mjs";
 import * as SEEN from "../../modules/wodx-paperdoll/scripts/face64-seen.mjs";
 import {FEATURES as F64} from "../../modules/wodx-paperdoll/scripts/face64-features.mjs";
-import * as TKR from "../../modules/wodx-npc/scripts/talk-rules.mjs";
-import * as WNR from "../../modules/wodx-npc/scripts/wanted-rules.mjs";
+import * as TKR from "../../modules/wodx-rules/npc/talk-rules.mjs";
+import * as WNR from "../../modules/wodx-rules/npc/wanted-rules.mjs";
 
 test("B3440: Crinos on the sheet or a war-form sprite brings the Delirium; Hispo does not", () => {
   assert.ok(GAR.bringsDelirium({form: "crinos"}));
@@ -267,7 +267,7 @@ test("gate finds: the fight note reaches Storyteller's hand api; a reader's clie
 });
 
 test("B3180: an elder's years before 1197 always offer a mark of their land", async () => {
-  const LD = await import("../../modules/wodx-creation/scripts/lifepath-drill-rules.mjs");
+  const LD = await import("../../modules/wodx-rules/creation/lifepath-drill-rules.mjs");
   const marks = LD.datedMarks("moravia", 477, 1196).map(m => m[0]);
   for ( const seed of ["wodx-gate", "a", "b", "c", "d", "e", "f", "g"] ) {
     const st = LD.sinceSteps(LD.newSince({turnYear: 330, nowYear: 1490, line: "vampire", seed, region: "moravia"})).find(s => s.from === 477);

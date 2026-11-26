@@ -9,10 +9,10 @@ import { join, dirname } from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const load = p => import(pathToFileURL(join(root, p)));
 const src = p => readFileSync(join(root, p), "utf8");
-const BR = await load("modules/wodx-npc/scripts/bond-rules.mjs");
-const H = await load("modules/wodx-npc/scripts/hearts-rules.mjs");
-const TRR = await load("modules/wodx-npc/scripts/trust-rules.mjs");
-const RR = await load("modules/wodx-storyteller/scripts/reach-rules.mjs");
+const BR = await load("modules/wodx-rules/npc/bond-rules.mjs");
+const H = await load("modules/wodx-rules/npc/hearts-rules.mjs");
+const TRR = await load("modules/wodx-rules/npc/trust-rules.mjs");
+const RR = await load("modules/wodx-rules/storyteller/reach-rules.mjs");
 
 test("a familiar's death costs Willpower and Quintessence, the shortfall as Paradox", () => {
   const c = BR.familiarCost(3, { willPerm: 6, willTemp: 6, quint: 4, paradox: 1 });
@@ -25,7 +25,7 @@ test("a familiar's death costs Willpower and Quintessence, the shortfall as Para
   assert.equal(rich.quintessence, 8);
   assert.equal(rich.paradox, 0);
   assert.equal(rich.willpower.temporary, 1);
-  assert.ok(!/Storyteller rules/.test(src("modules/wodx-npc/scripts/bond-rules.mjs")));
+  assert.ok(!/Storyteller rules/.test(src("modules/wodx-rules/npc/bond-rules.mjs")));
 });
 
 test("a heartbreak comes from warmth of 2 or more broken", () => {

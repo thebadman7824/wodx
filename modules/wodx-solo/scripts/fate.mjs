@@ -20,7 +20,7 @@
  *   flags.wodx-solo.fallen   {at}                     the death was seen and the heirs offered
  *   flags.wodx-solo.heirOf   {id, name, at}           on the heir: whom they carry on from
  */
-import * as F from "./fate-rules.mjs";
+import * as F from "../../wodx-rules/solo/fate-rules.mjs";
 import {addAsks, addActions, setFateUi, ask, SOCKET, characterOf, placeOf, tell, SoloPanel} from "./panel.mjs";
 
 const MOD = "wodx-solo";

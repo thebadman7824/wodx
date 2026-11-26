@@ -9,7 +9,7 @@ import {dirname, join} from "node:path";
  * 76% (Phase 10 test gaps). Each test pins the book behaviour the function is meant to give.
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/rules.js")).href);
+const R = await import(pathToFileURL(join(root, "modules/wodx-rules/actions/rules.js")).href);
 const roll = (successes, botch = false) => ({successes, botch});
 
 test("resisted rolls: margins, ties and botches", () => {

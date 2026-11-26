@@ -11,7 +11,7 @@ Before a build goes to Live, it is played in the solo world as a frozen release 
 3. UI fit passes: `node tools/harness/ui-fit.mjs "<path to foundry2.css>"`.
 4. Every package whose files changed since the last release has a higher version, and MODULES.md shows the same versions.
 5. The release log lists each module that changes, its version on Live and the new one, and any setting that has to change in the live world. A world setting changes only when Ben has said so for that setting.
-6. Any module that is new to Live stays off in the live world until Ben turns it on.
+6. Any module that is new to Live stays off in the live world until Ben turns it on. WoDX Rules (modules/wodx-rules, B8060) must be installed with the others from its first release on; the other modules load its files while it is off, so it needs no switching on.
 
 ## Release (PC helper, with Ben's go-ahead)
 

@@ -12,9 +12,9 @@
  *   Monstrous: when the maker's permanent Torment is 7 or more, or the maker chooses it, the high-Torment version is made
  *     (cursed objects, twisted souls; B3715).
  */
-import * as DR from "../../wodx-chronicle/scripts/derangement-rules.mjs";
+import * as DR from "../../wodx-rules/chronicle/derangement-rules.mjs";
 import * as Dm from "../data/wonders-demon.mjs";
-import * as D from "../../wodx-actions/scripts/demon-rules.js";
+import * as D from "../../wodx-rules/actions/demon-rules.js";
 import {registerLine} from "./wonder-registry.mjs";
 import {countSuccesses} from "./wonder-powers.mjs";
 

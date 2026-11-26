@@ -3,10 +3,10 @@
  * its sheet, turned the way it moves. Everything is drawn on each computer from the sheet; nothing is saved but the
  * flag and the still picture on the token. Rules in sprite-rules.mjs.
  */
-import * as SR from "./sprite-rules.mjs";
-import * as LR from "./line-rules.mjs";
-import * as FG from "./figure-rules.mjs";
-import {healthLevel, randomLook} from "./doll-rules.mjs";
+import * as SR from "../../wodx-rules/paperdoll/sprite-rules.mjs";
+import * as LR from "../../wodx-rules/paperdoll/line-rules.mjs";
+import * as FG from "../../wodx-rules/paperdoll/figure-rules.mjs";
+import {healthLevel, randomLook} from "../../wodx-rules/paperdoll/doll-rules.mjs";
 import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
 const MOD = "wodx-paperdoll";
 const states = new Map(), bases = new Map(), frames = new Map(), acts = new Map(), glows = new Map(), strides = new Map(), rides = new Map();

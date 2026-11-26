@@ -1,6 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import * as N from "../../modules/wodx-storyteller/scripts/naval-rules.mjs";
+import * as N from "../../modules/wodx-rules/storyteller/naval-rules.mjs";
 
 const all = f => k => Array(k).fill(f);
 const seq = faces => { let i = 0; return k => Array.from({length: k}, () => faces[i++ % faces.length]); };

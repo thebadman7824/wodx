@@ -1,7 +1,7 @@
-import * as RR from "./rumour-rules.mjs";
-import * as Reach from "./reach-rules.mjs";
-import * as T from "./tale-rules.mjs";
-import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
+import * as RR from "../../wodx-rules/storyteller/rumour-rules.mjs";
+import * as Reach from "../../wodx-rules/storyteller/reach-rules.mjs";
+import * as T from "../../wodx-rules/storyteller/tale-rules.mjs";
+import * as Media from "../../wodx-rules/chronicle/media-rules.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, setting, mutate} from "./core.mjs";
 import {nightNow} from "./night.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";

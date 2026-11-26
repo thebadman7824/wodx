@@ -8,8 +8,8 @@ import {readFileSync} from "node:fs";
 /* Phase 6i: the fallen (WoDX Actions 3.10.0, Demon: The Fallen) */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const D = await import(join(root, "modules/wodx-actions/scripts/demon-rules.js"));
-const V = await import(join(root, "modules/wodx-actions/scripts/voice-rules.js"));
+const D = await import(join(root, "modules/wodx-rules/actions/demon-rules.js"));
+const V = await import(join(root, "modules/wodx-rules/actions/voice-rules.js"));
 
 test("seven Houses with their starting Torment and three lores; 23 lore paths of five evocations (pp. 99–112, 171–215)", () => {
   assert.equal(Object.keys(D.HOUSES).length, 7);
@@ -119,7 +119,7 @@ test("wiring: Actions 3.10, the Demon menu and API, gender-neutral text (B48)", 
   const pm = readFileSync(join(root, "modules/wodx-actions/scripts/profile-menus.js"), "utf8");
   assert.match(pm, /MENUS\.demon = /);
   const words = /\b(he|she|him|her|his|hers|himself|herself)\b/i;
-  for ( const f of ["demon.js", "demon-rules.js"] ) {
+  for ( const f of ["demon.js", "../../wodx-rules/actions/demon-rules.js"] ) {
     const src = readFileSync(join(root, "modules/wodx-actions/scripts", f), "utf8");
     const strings = src.match(/`[^`]*`|"[^"\n]*"/g) ?? [];
     for ( const s of strings ) assert.ok(!words.test(s), `${f}: ${s.slice(0, 80)}`);

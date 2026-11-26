@@ -21,7 +21,7 @@ const chron = () => game.modules.get("wodx-chronicle")?.api;
 let D = null, loading = null;
 export function load() {
   if ( D ) return Promise.resolve(D);
-  loading ??= Promise.all([import("../data/people.mjs"), import("./people-rules.mjs"), import("../data/people-world.mjs")])
+  loading ??= Promise.all([import("../data/people.mjs"), import("../../wodx-rules/creation/people-rules.mjs"), import("../data/people-world.mjs")])
     .then(([data, rules, world]) => (D = {tables: data.PEOPLE_TABLES, sheets: data.TRADE_SHEETS, feminine: world.FEMININE, ...rules}))
     .catch(err => { loading = null; throw err; });
   return loading;

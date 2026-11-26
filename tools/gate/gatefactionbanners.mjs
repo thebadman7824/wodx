@@ -18,8 +18,8 @@ export async function run() {
   const G = gate("gatefactionbanners");
   const before = foundry.utils.deepClone(game.settings.get(MOD, "factions"));
   const TL = () => game.modules.get("wodx-storyteller")?.api?.upkeep?.townLooks;
-  const R = await import("/modules/wodx-npc/scripts/faction-look-rules.mjs");
-  const PR = await import("/modules/wodx-npc/scripts/passerby-rules.mjs");
+  const R = await import("/modules/wodx-rules/npc/faction-look-rules.mjs");
+  const PR = await import("/modules/wodx-rules/npc/passerby-rules.mjs");
   const wait = async (f, ms = 6000) => { for ( let t = 0; t < ms && !f(); t += 100 ) await new Promise(r => setTimeout(r, 100)); return f(); };
   try {
     const scene = await G.scene({width: 3000, height: 2000});

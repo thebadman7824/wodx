@@ -11,16 +11,16 @@ export async function allPowers() {
   for ( const p of J("arcanoi-w20.json").arts ) out.push({lib: "w20", id: p.id, name: p.n, group: `${p.d} ${p.l}`, text: p.e, diff: p.diff});
   for ( const p of J("arcanoi-gw.json").arts ) out.push({lib: "gw", id: p.id, name: p.n, group: `${p.d} ${p.l}`, text: p.e, diff: p.diff});
   for ( const p of J("gifts-daw.json").gifts ) out.push({lib: "gift", id: p.id, name: p.n, group: `${(p.g ?? []).join(",")} ${p.l}`, text: p.e, diff: p.d});
-  const D = await import(pathToFileURL(join(A, "scripts/demon-rules.js")));
+  const D = await import(pathToFileURL(join(A, "../wodx-rules/actions/demon-rules.js")));
   for ( const [k, L] of Object.entries(D.LORES) ) L.evo.forEach((e, i) => out.push({lib: "evo", id: `${k}:${i + 1}`, name: e.name, group: `${L.label} ${i + 1}`, text: ""}));
-  const R = await import(pathToFileURL(join(A, "scripts/reckoning-rules.js")));
+  const R = await import(pathToFileURL(join(A, "../wodx-rules/actions/reckoning-rules.js")));
   for ( const e of R.EDGES ) out.push({lib: "edge", id: e.id, name: e.name ?? e.id, group: `${e.virtue ?? e.path} ${e.level}`, text: e.e ?? e.text ?? "", diff: e.diff});
-  const O = await import(pathToFileURL(join(A, "scripts/orpheus-rules.js")));
+  const O = await import(pathToFileURL(join(A, "../wodx-rules/actions/orpheus-rules.js")));
   for ( const [k, h] of Object.entries(O.HORRORS) ) out.push({lib: "horror", id: k, name: h.label, group: h.shade, text: ""});
   // Hunter numina and mummy Hekau paths, tagged by path (Targeting 0.2.0, the untagged-powers sweep)
-  const H = await import(pathToFileURL(join(A, "scripts/hunter-rules.js")));
+  const H = await import(pathToFileURL(join(A, "../wodx-rules/actions/hunter-rules.js")));
   for ( const [k, v] of Object.entries(H.NUMINA) ) out.push({lib: "numina", id: k, name: v.label, group: v.kind, text: v.note ?? "", diff: v.diff});
-  const M = await import(pathToFileURL(join(A, "scripts/mummy-rules.js")));
+  const M = await import(pathToFileURL(join(A, "../wodx-rules/actions/mummy-rules.js")));
   for ( const [k, v] of Object.entries(M.HEKAU) ) out.push({lib: "hekau", id: k, name: v.label, group: "Hekau", text: ""});
   return out;
 }

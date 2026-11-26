@@ -90,7 +90,7 @@ export async function run() {
       ok("pieces meet", off <= 4, {off});
     });
     await step("Reflect underground", async () => {
-      const rules = await import(`/modules/${M}/scripts/reflect-rules.mjs`);
+      const rules = await import(`/modules/wodx-rules/otherworlds/reflect-rules.mjs`);
       const reg = (id, area) => ({id, label: id, rect: [2, 2, 4, 4], place: {kind: "sewer"}, area});
       const sc = {format: "wodx-map", version: 1, cells: [40, 30], underground: true, dress: "sewers", umbral: {year: 1930, places: {}, gone: []},
         regions: [reg("main-sewer-1", "main-sewer"), reg("outfall-1", "outfall"), reg("collapse-1", "collapse")]};

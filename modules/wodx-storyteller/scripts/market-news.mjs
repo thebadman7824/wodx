@@ -6,12 +6,12 @@
  * and supply, and the passers-by crowd (WoDX NPC) on scenes that have one. Apply changes them; Undo, or taking the
  * event back, puts them as they were. Nothing changes until the Storyteller applies it.
  */
-import * as N from "./market-news-rules.mjs";
-import * as MK from "./market-rules.mjs";
+import * as N from "../../wodx-rules/storyteller/market-news-rules.mjs";
+import * as MK from "../../wodx-rules/storyteller/market-rules.mjs";
 import * as Markets from "./markets.mjs";
 import * as Money from "./money.mjs";
 import {MOD, esc, isActiveGM, gmIds, setting, chron} from "./core.mjs";
-import {partOf} from "../../wodx-chronicle/scripts/events-rules.mjs";
+import {partOf} from "../../wodx-rules/chronicle/events-rules.mjs";
 
 const NPC = "wodx-npc";
 const H3 = "margin:0;font-size:1.05em";

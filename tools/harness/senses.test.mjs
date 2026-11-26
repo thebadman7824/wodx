@@ -11,7 +11,7 @@ import {readFileSync} from "node:fs";
  * says. The gate in Foundry checks the real canvas, lights and walls.
  */
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const R = await import(join(root, "modules/wodx-senses/scripts/senses-rules.mjs"));
+const R = await import(join(root, "modules/wodx-rules/senses/senses-rules.mjs"));
 const places = JSON.parse(readFileSync(join(root, "modules/wodx-senses/data/places.json"), "utf8"));
 const world = JSON.parse(readFileSync(join(root, "modules/wodx-senses/data/world.json"), "utf8"));
 const TABLES = {places, ...world};
@@ -275,7 +275,7 @@ globalThis.fetch = async url => {
   const f = String(url).replace(/^modules\//, "");
   return {ok: true, json: async () => JSON.parse(readFileSync(join(root, "modules", f), "utf8"))};
 };
-const IXR = await import(join(root, "modules/wodx-interactables/scripts/interact-rules.mjs"));
+const IXR = await import(join(root, "modules/wodx-rules/interactables/interact-rules.mjs"));
 globalThis.game = {
   users, get user() { return me; }, time: {worldTime: 0}, scenes: new Coll([["scn1", scene]]), world: {id: "w"},
   settings: {register: (m, k, cfg) => { if ( !settings.has(`${m}.${k}`) ) settings.set(`${m}.${k}`, cfg.default); }, get: (m, k) => { if ( !settings.has(`${m}.${k}`) ) throw new Error("no setting"); return settings.get(`${m}.${k}`); }},
@@ -424,7 +424,7 @@ test("runtime: Sense Wyrm smells the dead; a wraith in the Shadowlands gets that
 });
 
 test("runtime: Sense Wyrm finds a person tainted by WoDX Otherworlds' Wyrm corruption, and not a clean one (B6790)", async () => {
-  const CR = await import(join(root, "modules/wodx-otherworlds/scripts/corruption-rules.mjs"));
+  const CR = await import(join(root, "modules/wodx-rules/otherworlds/corruption-rules.mjs"));
   const taintOf = a => CR.normTaint(a?.flags?.["wodx-otherworlds"]?.taint ?? {});
   game.modules.set("wodx-otherworlds", {active: true, api: {corruption: {taintOf, rules: CR}}});
   const garou = actor("pc6", "Sees-the-Rot", {items: [{type: "Power", name: "Sense Wyrm", system: {value: 1}}], kind: "lupine"});
@@ -491,7 +491,7 @@ test("a scene made fully dark stays pitch indoors at dawn and dusk", () => {
 });
 
 /* Senses 0.5.0: the quiet interface. */
-import * as QR from "../../modules/wodx-senses/scripts/quiet-rules.mjs";
+import * as QR from "../../modules/wodx-rules/senses/quiet-rules.mjs";
 import {readFileSync as readQ} from "node:fs";
 test("difficulties in words, from V20's table, and only the difficulty changes", () => {
   assert.equal(QR.difficultyWord(6), "standard");
@@ -522,7 +522,7 @@ test("the quiet interface is per player, has a hotkey and leaves the scene contr
 });
 
 /* Senses 0.5.0: supernatural sight on the map. */
-import * as SR from "../../modules/wodx-senses/scripts/sight-rules.mjs";
+import * as SR from "../../modules/wodx-rules/senses/sight-rules.mjs";
 test("which sights a character has, and the button's order", () => {
   assert.deepEqual(SR.sightsFor({auspex: 0, profile: "mortal"}), []);
   assert.deepEqual(SR.sightsFor({auspex: 1, profile: "kindred"}), ["heightened"]);

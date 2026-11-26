@@ -141,7 +141,7 @@ export async function run() {
     });
 
     await step("10 ages and every region", async () => {
-      const D = await import(`/modules/${M}/scripts/lifepath-drill-rules.mjs`);
+      const D = await import(`/modules/wodx-rules/creation/lifepath-drill-rules.mjs`);
       const walk = d => { for ( let i = 0; i < 60 && D.current(d); i++ ) d = D.surprise(d); return d; };
       const bad = [];
       for ( const c of D.continents() ) for ( const r of c.regions ) for ( const y of [1197, 1620, 1916, 2005, 2050] ) {

@@ -4,8 +4,8 @@ import {test} from "node:test";
 import assert from "node:assert/strict";
 
 const IB = await import("../../modules/wodx-actions/scripts/inq-blessings.js");
-const E = await import("../../modules/wodx-actions/scripts/effects-rules.js");
-const H = await import("../../modules/wodx-actions/scripts/hunter-rules.js");
+const E = await import("../../modules/wodx-rules/actions/effects-rules.js");
+const H = await import("../../modules/wodx-rules/actions/hunter-rules.js");
 
 test("every Blessing has a kind, a page, a known keyword and results (B3755)", () => {
   const ids = new Set();

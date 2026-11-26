@@ -7,9 +7,9 @@
  * the Storyteller's copy has the dice and totals, an Undo for the turn, a button for crash damage and, once someone is
  * caught, a button that starts a fight through WoDX Combat. The chase lives in a scene flag, so it survives a reload.
  */
-import * as C from "./chase-rules.mjs";
-import {countSuccesses, clampDifficulty} from "../../wodx-actions/scripts/core-rules.js";
-import {actionPool} from "../../wodx-actions/scripts/rules.js";
+import * as C from "../../wodx-rules/interactables/chase-rules.mjs";
+import {countSuccesses, clampDifficulty} from "../../wodx-rules/actions/core-rules.js";
+import {actionPool} from "../../wodx-rules/actions/rules.js";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";

@@ -4,12 +4,12 @@
  */
 import assert from "node:assert/strict";
 import {test} from "node:test";
-import * as Road from "../../modules/wodx-storyteller/scripts/road-rules.mjs";
-import * as W from "../../modules/wodx-storyteller/scripts/world-rules.mjs";
-import * as RR from "../../modules/wodx-storyteller/scripts/rumour-rules.mjs";
-import * as R from "../../modules/wodx-npc/scripts/routine-rules.mjs";
-import * as F from "../../modules/wodx-npc/scripts/faction-rules.mjs";
-import * as Media from "../../modules/wodx-chronicle/scripts/media-rules.mjs";
+import * as Road from "../../modules/wodx-rules/storyteller/road-rules.mjs";
+import * as W from "../../modules/wodx-rules/storyteller/world-rules.mjs";
+import * as RR from "../../modules/wodx-rules/storyteller/rumour-rules.mjs";
+import * as R from "../../modules/wodx-rules/npc/routine-rules.mjs";
+import * as F from "../../modules/wodx-rules/npc/faction-rules.mjs";
+import * as Media from "../../modules/wodx-rules/chronicle/media-rules.mjs";
 
 test("travel: the ways open by year and road", () => {
   const ids = (k, y, o) => Road.modesFor(k, y, o).map(m => m.id);

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {dirname, join} from "node:path";
 import {fileURLToPath} from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const P = await import(join(root, "modules/wodx-paperdoll/scripts/face64-rules.mjs"));
+const P = await import(join(root, "modules/wodx-rules/paperdoll/face64-rules.mjs"));
 
 const LINES = Object.keys(P.LINES);
 const px = (rgba, x, y) => [rgba[(y * 64 + x) * 4], rgba[(y * 64 + x) * 4 + 1], rgba[(y * 64 + x) * 4 + 2]];

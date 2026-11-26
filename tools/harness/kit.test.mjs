@@ -6,12 +6,12 @@ import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const K = await import(join(root, "modules/wodx-creation/scripts/kit-rules.mjs"));
+const K = await import(join(root, "modules/wodx-rules/creation/kit-rules.mjs"));
 const {GOODS} = await import(join(root, "modules/wodx-library/data/goods.mjs"));
 const W = await import(join(root, "modules/wodx-library/data/goods-ways.mjs"));
 const T = await import(join(root, "modules/wodx-library/data/goods-tags.mjs"));
-const GR = await import(join(root, "modules/wodx-library/scripts/gear-rules.mjs"));
-const MR = await import(join(root, "modules/wodx-storyteller/scripts/money-rules.mjs"));
+const GR = await import(join(root, "modules/wodx-rules/library/gear-rules.mjs"));
+const MR = await import(join(root, "modules/wodx-rules/storyteller/money-rules.mjs"));
 const gear = JSON.parse(readFileSync(join(root, "modules/wodx-library/data/gear.json"), "utf8")).items;
 
 const year = 1197, place = {region: "moravia", way: "latin"};

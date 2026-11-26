@@ -4,10 +4,10 @@ import * as STOCK from "../../modules/wodx-npc/data/stock-talk.mjs";
 import * as MORE from "../../modules/wodx-npc/data/stock-talk-more.mjs";
 import {HOUSE} from "../../modules/wodx-npc/data/grammar/house.mjs";
 import {REGION_TALK} from "../../modules/wodx-npc/data/region-talk.mjs";
-import * as RT from "../../modules/wodx-npc/scripts/region-talk-rules.mjs";
+import * as RT from "../../modules/wodx-rules/npc/region-talk-rules.mjs";
 import * as G from "../../modules/wodx-npc/scripts/talk-grammar.mjs";
-import {WORLD_REGIONS, regionOf} from "../../modules/wodx-chronicle/scripts/world-rules.mjs";
-import {moneyFor} from "../../modules/wodx-storyteller/scripts/money-rules.mjs";
+import {WORLD_REGIONS, regionOf} from "../../modules/wodx-rules/chronicle/world-rules.mjs";
+import {moneyFor} from "../../modules/wodx-rules/storyteller/money-rules.mjs";
 
 /* Small talk and coin by home region (Chronicle Packs Desk d3, B7600-B7603) */
 

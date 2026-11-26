@@ -9,13 +9,13 @@
  * Players open the window from Property and building; their requests go to the active Storyteller's client by
  * socket. Hidden world state wodx-storyteller.ventureState = {v, list}. World setting ventures (on or off).
  */
-import * as VR from "./venture-rules.mjs";
-import * as MK from "./market-rules.mjs";
-import * as MV from "./market-moves-rules.mjs";
+import * as VR from "../../wodx-rules/storyteller/venture-rules.mjs";
+import * as MK from "../../wodx-rules/storyteller/market-rules.mjs";
+import * as MV from "../../wodx-rules/storyteller/market-moves-rules.mjs";
 import * as Markets from "./markets.mjs";
 import * as Money from "./money.mjs";
 import {MOD, SOCKET, esc, chron, isActiveGM, gmIds, setting, tripContext, moneyWords} from "./core.mjs";
-import {sphereFor} from "../../wodx-chronicle/scripts/world-rules.mjs";
+import {sphereFor} from "../../wodx-rules/chronicle/world-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const TYPE = `${MOD}.venture`;

@@ -1,5 +1,5 @@
 import {MODULE_ID} from "./ratings.mjs";
-import * as S from "./spirit-rules.mjs";
+import * as S from "../../wodx-rules/otherworlds/spirit-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 

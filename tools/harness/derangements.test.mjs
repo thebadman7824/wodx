@@ -4,7 +4,7 @@ import {test} from "node:test";
 import {readFileSync} from "node:fs";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
-import * as D from "../../modules/wodx-chronicle/scripts/derangement-rules.mjs";
+import * as D from "../../modules/wodx-rules/chronicle/derangement-rules.mjs";
 
 /* Derangements in play (B3913): what sets them off, the Willpower roll, a bout's roll effects, one from a loss */
 
@@ -94,7 +94,7 @@ test("derangements: a bout ends with its scene, not only after an hour (B6161)",
 
 // B6384: Chronicle data version 2 gives an old bout its scene
 test("an old bout gets the scene its token stands on, else the active one", async () => {
-  const D = await import("../../modules/wodx-chronicle/scripts/derangement-rules.mjs");
+  const D = await import("../../modules/wodx-rules/chronicle/derangement-rules.mjs");
   assert.deepEqual(D.boutWithScene({keys: ["paranoia"], at: 5}, {sceneOfToken: "s1", active: "s2"}), {keys: ["paranoia"], at: 5, sceneId: "s1"});
   assert.deepEqual(D.boutWithScene({keys: ["paranoia"], at: 5}, {active: "s2"}), {keys: ["paranoia"], at: 5, sceneId: "s2"});
   assert.equal(D.boutWithScene({keys: [], sceneId: "s3"}, {active: "s2"}), null);

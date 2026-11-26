@@ -14,20 +14,20 @@
  *   Credits     a journal listing every kit file's source, licence and credit.
  * Weather and light are small world changes made on the Storyteller's client; nothing waits in the approval queue.
  */
-import * as W from "./weather-rules.mjs";
-import * as K from "./kits-rules.mjs";
-import * as AR from "./adaptive-rules.mjs";
-import * as PR from "./print-rules.mjs";
-import * as OR from "./opening-rules.mjs";
-import {reckon} from "../../wodx-chronicle/scripts/reckoning-rules.mjs";
-import {countOf} from "../../wodx-chronicle/scripts/local-reckoning-rules.mjs";
+import * as W from "../../wodx-rules/atmosphere/weather-rules.mjs";
+import * as K from "../../wodx-rules/atmosphere/kits-rules.mjs";
+import * as AR from "../../wodx-rules/atmosphere/adaptive-rules.mjs";
+import * as PR from "../../wodx-rules/atmosphere/print-rules.mjs";
+import * as OR from "../../wodx-rules/atmosphere/opening-rules.mjs";
+import {reckon} from "../../wodx-rules/chronicle/reckoning-rules.mjs";
+import {countOf} from "../../wodx-rules/chronicle/local-reckoning-rules.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Mood from "./mood.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.18.7";
+const VERSION = "0.18.8";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);

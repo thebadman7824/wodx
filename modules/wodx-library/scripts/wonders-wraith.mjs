@@ -15,7 +15,7 @@
  * powers for the Use window: the Pathos it holds, what a use costs, the look on the map. Skin Artifacts need a slain
  * plasmic; Spectre Artifacts are made only by Spectres, who feed the soulfire with Angst (house).
  */
-import * as SF from "../../wodx-actions/scripts/soulforge-rules.js";
+import * as SF from "../../wodx-rules/actions/soulforge-rules.js";
 import * as D from "../data/wonders-wraith.mjs";
 import {registerLine} from "./wonder-registry.mjs";
 

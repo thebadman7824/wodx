@@ -18,8 +18,8 @@ await import(join(root, "modules/wodx-chronicle/scripts/main.mjs"));
 await import(join(root, "modules/wodx-creation/scripts/main.mjs"));
 game.modules.set(M, {});
 const api = () => game.modules.get(M).api;
-const W = await import(join(root, "modules/wodx-creation/scripts/wizard-rules.mjs"));
-const R = await import(join(root, "modules/wodx-creation/scripts/first-night-rules.mjs"));
+const W = await import(join(root, "modules/wodx-rules/creation/wizard-rules.mjs"));
+const R = await import(join(root, "modules/wodx-rules/creation/first-night-rules.mjs"));
 const {MERITS_FLAWS, BACKGROUNDS} = await import(join(root, "modules/wodx-chronicle/data/trait-effects.mjs"));
 
 const exact = () => ({attributes: {physical: 7, social: 5, mental: 3}, abilities: {talent: {dots: 13, aboveCap: 0}, skill: {dots: 9, aboveCap: 0}, knowledge: {dots: 5, aboveCap: 0}},
@@ -111,7 +111,7 @@ test("pick lists: Merits by the line's kind, Backgrounds by its book, powers by 
 });
 
 test("every line's powers have a way onto the sheet", async () => {
-  const {TOTALS} = await import(join(root, "modules/wodx-creation/scripts/totals-rules.mjs"));
+  const {TOTALS} = await import(join(root, "modules/wodx-rules/creation/totals-rules.mjs"));
   for ( const [line, L] of Object.entries(TOTALS) ) for ( const p of L.powers ?? [] ) assert.ok(W.POWER_KIND[p.key], `${line} ${p.key}`);
 });
 
@@ -181,8 +181,8 @@ test("the wizard window walks a vampire through the book and writes to the sheet
 });
 
 test("the Cyberpunks (B6612): a Future-branch bloodline from 2016 that brings Technica", async () => {
-  const R = await import("../../modules/wodx-creation/scripts/rules.mjs");
-  const LR = await import("../../modules/wodx-creation/scripts/lifepath-rules.mjs");
+  const R = await import("../../modules/wodx-rules/creation/rules.mjs");
+  const LR = await import("../../modules/wodx-rules/creation/lifepath-rules.mjs");
   const C = R.findClan("Cyberpunks");
   assert.deepEqual(W.clanDisciplines("Cyberpunks"), ["Celerity", "Potence", "Technica"]);
   assert.equal(R.clanOpen(C, {year: 2030, futureBranch: true}), true);

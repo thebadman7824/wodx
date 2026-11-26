@@ -10,7 +10,7 @@
  * whole peoples; medieval Europe outside Bohemia gets later family names as bynames; Japanese and Korean commoners
  * get family names before they bore them by law.
  */
-import {WORLD_REGIONS, ERA_GROUPS, mixFor, cultureOf} from "../../wodx-chronicle/scripts/world-rules.mjs";
+import {WORLD_REGIONS, ERA_GROUPS, mixFor, cultureOf} from "../../wodx-rules/chronicle/world-rules.mjs";
 import {haudenosauneeTables} from "./people-haudenosaunee.mjs";
 import {algonquianTables} from "./people-algonquian.mjs";
 import {plainsTables} from "./people-plains.mjs";

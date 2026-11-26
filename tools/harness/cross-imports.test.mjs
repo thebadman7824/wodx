@@ -9,8 +9,16 @@ import {fileURLToPath} from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const walk = d => readdirSync(d).flatMap(f => { const p = join(d, f); if ( f === "node_modules" || f === "tests" ) return []; return statSync(p).isDirectory() ? walk(p) : /\.m?js$/.test(f) ? [p] : []; });
-const exportsOf = f => {
+const exportsOf = (f, seen = new Set()) => {
   const s = readFileSync(f, "utf8"), names = new Set();
+  if ( seen.has(f) ) return names;
+  seen.add(f);
+  // B8060: a file that passes another on (export * from "...") has that file's names too, as the Chronicle copies of
+  // terms.mjs and calendar.mjs do for the rules core
+  for ( const m of s.matchAll(/export\s*\*\s*from\s*["']([^"']+)["']/g) ) {
+    const to = resolve(dirname(f), m[1]);
+    if ( existsSync(to) ) for ( const n of exportsOf(to, seen) ) if ( n !== "default" ) names.add(n);
+  }
   for ( const m of s.matchAll(/export\s+(?:async\s+)?(?:function\*?|const|let|class)\s+([A-Za-z_$][\w$]*)/g) ) names.add(m[1]);
   for ( const m of s.matchAll(/export\s*\{([^}]*)\}/g) ) for ( const n of m[1].split(",") ) { const x = n.trim().split(/\s+as\s+/).pop(); if ( x ) names.add(x); }
   if ( /export\s+default/.test(s) ) names.add("default");
