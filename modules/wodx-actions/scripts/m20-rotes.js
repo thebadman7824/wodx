@@ -1,6 +1,6 @@
 /**
- * WoDX Actions (B7836): the rotes, Adjustments and Procedures of Mage: The Ascension 20th Anniversary Edition
- * (Chapter Ten, Part VIII, pp. 601-611), as ready-made Cast window presets. Short summaries in our own words with the
+ * WoDX Actions (B7836): ready-made Cast window presets for the M20 core book's sample rotes, with the Technocracy's
+ * Adjustments and Procedures among them (Chapter Ten, Part VIII, pp. 601-611). Short summaries in our own words with the
  * page. Pure: no Foundry calls.
  *
  *   Each   id, name, kind (Adjustment, Procedure or rote), spheres (the least the Effect needs, on the nine Spheres:
@@ -139,7 +139,7 @@ export const HD_ROTES = [
     H("blink", "The Blink", { correspondence: 3 }, "p. 77", "vulgar", ["move"], "a skip through several places in a row: the Teleport Locations successes plus one for each blink"),
     H("batman", "The Batman", { forces: 2, correspondence: 3 }, "p. 77", "vulgar", ["light", "move"], "a cloak of smoke or shadow, and when it lifts the mage is gone; Mind 2 adds a chill", "Mind 2"),
     H("everywhere", "Everywhere at Once", { correspondence: 4 }, "p. 79", "vulgar", ["move"], "the mage in several places at once, each self one success more than the hardest place on the chart"),
-    H("warpgate", "The Warp-Gate", { correspondence: 3 }, "p. 80", "vulgar", ["move"], "a hole in space that lasts a turn or two, long enough to step through, by the Teleportation Locations successes", "Correspondence 4"),
+    H("warpgate", "The Warp-Gate", { correspondence: 3 }, "p. 80", "vulgar", ["move"], "an opening through space, held for one or two turns so the mage can pass; where it reaches follows the successes on the Teleportation Locations chart", "Correspondence 4"),
     // Necromancy (pp. 86-89)
     H("songofflies", "The Song of Flies", { mind: 2, prime: 1 }, "p. 86", "coincidental", ["know"], "the Resonance of a death site read for its cause, the people there and how it happened"),
     H("animatedead", "Animating the Dead", { life: 2, prime: 2 }, "pp. 87-88", "vulgar", ["make"], "dead flesh moved (Matter 2 and Prime 2 for bones); Spirit 2 invites or Spirit 4 locks a ghost in; Entropy 3 or Time 3 slows the rot", "Matter 2; Spirit 2 or 4; Entropy 3 or Time 3"),
