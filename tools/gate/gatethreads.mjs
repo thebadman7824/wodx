@@ -144,8 +144,10 @@ export async function run() {
       const i = log.findIndex(e => e.kind === "guest");
       app?.render?.(); await sleep(500);
       const undo = app?.element?.querySelector?.(`[data-action=undo][data-i="${i}"]`);
-      undo?.click(); await sleep(800);
-      const gone = !(game.actors.get(group.id).flags?.[CR]?.ties ?? []).some(t => t.kind === "guest" && t.from === guest.id);
+      // B8171: after gatecleanworld the box is busy (lane 9, 26 Nov: the undo landed after a fixed 800 ms), so wait for it
+      const tieGone = () => !(game.actors.get(group.id).flags?.[CR]?.ties ?? []).some(t => t.kind === "guest" && t.from === guest.id);
+      undo?.click(); await until(tieGone, 8000);
+      const gone = tieGone();
       await app?.close?.();
       ok("8 guest beat", btn && has && i >= 0 && !!undo && gone, {btn, has, logged: i >= 0, undo: !!undo, gone});
     });
