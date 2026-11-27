@@ -473,7 +473,7 @@ Next free block: B8190
 | B7910-B7919 | PC runners: the New PC first for pull request gate runs (used B7911) | tools (pcq) |
 | B7920-B7959 | Splat depth build, part 2: the infernal thrall of Dark Ages: Devil's Due (desk item infernal-voss); a mage's wonders and Tass (desk item mage-wonders); the missing merits, flaws, Blessings and Curses of the Dark Ages line books (desk item fill-lists) (used B7920-B7940) | Actions, Chronicle, Storyteller, Rothenstein |
 | B7960-B7969 | Merge train and PC runner fixes for issues 2121 and 2393 (used B7960-B7961) | PC tools |
-| B7980-B7989 | gates: gatemarketgoods scenes by name, gate7b runner back at its start, gateaftercare waits for the walk, gateplayerview names its cards (used B7980-B7983) | tools (gates) |
+| B7980-B7989 | gates: gateautomation waits for the fight-end check; gatespritecheck says what the probe saw (used B7980-B7985) | Combat |
 | B8000-B8009 | The New PC drives the merge train, the Main PC is its backup (used B8000) | tools |
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 | B8020-B8029 | Merge rules: release notes of a stamped branch are read inside a train batch (used B8020-B8026) | tools (release) |
@@ -16671,6 +16671,22 @@ detail now lists each new card (speaker, flavor, text, whether it holds a roll, 
 says where the extra card came from. The check itself is unchanged.
 
 Reverse: drop `which` from the step 17 detail.
+
+## B7984. One fight-end check at a time per fight (2026-11-27)
+WoDX Combat. Each turn change started its own fight-end check without waiting for the last one. When the fight ended,
+a check could still be writing the watch flag, or the next turn could be sent, while the fight was being deleted, and
+Foundry's own update handler then broke on the missing document (#2675, nightly 27 Nov). Checks for one fight now run
+in turn, a fight being ended takes no further check, and fightEnd.idle() resolves when none is running. gateautomation
+step 8 waits on it before each next turn.
+
+Reverse: drop the running and ending maps in modules/wodx-combat/scripts/fight-end.js and call checkOnce from the hook.
+
+## B7985. gatespritecheck says what the probe saw (2026-11-27)
+Tools (gates). Step 3's probe step now reports how many places the figure was drawn at, how often Foundry was
+animating it, the sprite state, and whether the token was visible, and the probe and the walk lead the step's detail
+so the job summary does not cut them off (#2598). No pass rule changed.
+
+Reverse: take the extra fields out of the probe in tools/gate/gatespritecheck.mjs.
 
 ## B8000. The Main PC stops driving the merge train (2026-11-25)
 tools/pcq/runner.json has `train: false`. Ben asked on 25 November for the merge train to move to the New PC, with

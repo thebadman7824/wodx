@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.52.5 (Fights that end by themselves run one end check at a time per fight, and none once the fight is being ended, so a quick Next turn no longer lands an update on a fight that is being deleted (B7984, #2675). The API gains fightEnd.idle() for gates)
 - 3.52.4 (Imports of the shared terms and the calendar point at the rules core, modules/wodx-rules/core, instead of Chronicle's old copies (B8068). Nothing changes in play)
 - 3.52.3 (Plain words (B8181, #2503): the last long or technical setting names and hints are reworded to say plainly what they do)
 - 3.52.2 (This module's rules files moved to the rules core, modules/wodx-rules/combat (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)
