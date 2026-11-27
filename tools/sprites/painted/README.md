@@ -18,9 +18,15 @@ not be there, because FLUX falls back on modern boots and caps.
 | cut-out and 3D | `cutout_birefnet.py`, then `run_trellis2.py <cutout> <dir> <name> 1024` (TRELLIS.2, D:\Claude Shares\tools) | 5 min cold, 45 s warm |
 | rig | `blender -b -P rig.py -- <model.glb> <rigged.blend>` | 10 s |
 | walk and render | `blender -b <rigged.blend> -P walk.py -- <frames_dir>` | 5 s |
+| portrait | `blender -b <rigged.blend> -P portrait.py -- <out.png> 1024` (head only: clothing, neck and shoulders are cut off the model; P_ORTHO=0.32 P_DROP=0.14), then `python img2img.py <render> <prefix> 0.6 <seed> "<prompt>"` for a light FLUX repaint | 10 s |
 | game sheet | `python pack.py <frames_dir> <out_dir> <actorId> [68]` writes `<id>.png` (9 by 4 frames of 96 by 112, standing frame last) and `<id>-still.png` | 2 s |
 
 ## What rig.py does beyond a plain auto-rig
+- The reference picture holds the arms out at about 40 degrees with a clear gap to the body (flux.py asks for it).
+  TRELLIS fuses arms that hang against the body into the torso, and then no weighting lets them swing without
+  stretching the torso (Ben, 27 Nov). Held-out arms are skinned cleanly by Blender's automatic weights; walk.py
+  lowers them to hang at the sides before it swings them. Hands held out in front sit at hip height, so rig.py
+  keeps the forearm and hand all arm, and the skirt step leaves them alone.
 - Fits the Rigify metarig to the mesh. The stock metarig holds its arms out at 45 degrees; a figure standing with
   its arms down then gets torso weights on its arms, and the arms barely swing.
 - Keeps arm weights only within 6 cm of the fitted arm line, so a swinging arm does not drag the coat with it.
@@ -37,4 +43,3 @@ walk.py turns every limb about the world X axis, whatever roll Rigify gave the F
 - A whole baked figure, not LPC layers: a change of dress is a new figure (about 1.5 minutes warm).
 - The own-sprite batch (tools/sprites/batch.py) rebuilds manifest.json from the roster, so a batch run redraws
   a painted figure as an LPC one until the batch learns to keep painted entries.
-- The hand on the back swing can show as a pale stripe in the side views at game size.

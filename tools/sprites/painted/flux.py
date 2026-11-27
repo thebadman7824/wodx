@@ -2,7 +2,7 @@
 import json, sys, time, urllib.request, os
 spec = json.load(open(sys.argv[1], encoding="utf-8")); seeds = [int(s) for s in sys.argv[2:]]
 P = (f"full body photo of {spec.get('subject','a historical reenactor')}, {spec['role']}, year {spec['era']}, {spec['person']}, wearing {spec['dress']}. "
-     "Standing still and straight, arms hanging down relaxed at the sides with a small gap between each arm and the body, "
+     "Standing still and straight in an A-pose: both arms held straight out and down at 40 degrees from the body, hands open, palms down, a wide clear gap between each arm and the body, "
      "feet slightly apart, facing the viewer, front view, whole figure visible head to toe including both feet, "
      "even soft studio lighting, plain light grey background, clean game character concept, realistic proportions, historically accurate costume")
 def wf(seed, prefix): return {

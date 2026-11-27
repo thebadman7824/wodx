@@ -19,9 +19,21 @@ SW, KN, AR = math.radians(20), math.radians(32), math.radians(20)
 from mathutils import Quaternion, Vector
 # Rotations are given about the world X axis (the walking swing axis), whatever roll Rigify gave each FK control.
 # Sign: positive swings a bone's lower end backward, negative forward.
-def wx(b, ang):
-    ax = (rig.data.bones[b.name].matrix_local.to_3x3().inverted() @ Vector((1, 0, 0))).normalized()
-    b.rotation_mode = "QUATERNION"; b.rotation_quaternion = Quaternion(ax, ang)
+def wrot(b, q):
+    """set a world-space rotation q on a bone, about its own head"""
+    rest = rig.data.bones[b.name].matrix_local.to_quaternion()
+    b.rotation_mode = "QUATERNION"; b.rotation_quaternion = rest.inverted() @ q @ rest
+def wx(b, ang): wrot(b, Quaternion(Vector((1, 0, 0)), ang))
+# Arms modelled held out (A-pose, often reaching a little forward) are first lowered to hang at the sides:
+# the turn that takes each upper arm from its modelled direction to straight down and 9 degrees out.
+DROP = {}
+for side, sg in (("L", 1), ("R", -1)):
+    bn = rig.data.bones[f"DEF-upper_arm.{side}"]
+    d = (bn.tail_local - bn.head_local).normalized()
+    want = Vector((sg * math.sin(math.radians(9)), 0, -math.cos(math.radians(9))))
+    DROP[side] = d.rotation_difference(want) if math.degrees(d.angle(want)) > 12 else Quaternion()
+def warm(b, side, swing):
+    wrot(b, Quaternion(Vector((1, 0, 0)), swing) @ DROP[side])
 def key(f, phase):
     s = math.sin(phase); c = math.cos(phase)
     for side, sg in (("L", 1), ("R", -1)):
@@ -32,7 +44,7 @@ def key(f, phase):
         bend = max(0.0, sg * c) * KN + 0.06      # knee bends while the leg swings through the passing pose
         wx(sh, bend)
         wx(ft, 0.3 * SW * a - 0.5 * bend)
-        wx(ua, AR * a)                            # each arm swings against the leg on its side
+        warm(ua, side, AR * a)                    # each arm hangs at the side and swings against the leg on its side
         wx(fa, 0.25 - 0.15 * max(0.0, -a))       # the mesh already holds an elbow bend: straighten it a little, less on the forward swing
         for bb in (th, sh, ft, ua, fa): bb.keyframe_insert("rotation_quaternion", frame=f)
     tor = pb["torso"]
@@ -41,7 +53,9 @@ def key(f, phase):
 def stand(f):
     for side in ("L", "R"):
         for n in ("thigh_fk", "shin_fk", "foot_fk", "upper_arm_fk", "forearm_fk"):
-            bb = pb[f"{n}.{side}"]; bb.rotation_mode = "QUATERNION"; bb.rotation_quaternion = Quaternion(); bb.keyframe_insert("rotation_quaternion", frame=f)
+            bb = pb[f"{n}.{side}"]; bb.rotation_mode = "QUATERNION"; bb.rotation_quaternion = Quaternion()
+            if n == "upper_arm_fk": warm(bb, side, 0.0)
+            bb.keyframe_insert("rotation_quaternion", frame=f)
     pb["torso"].location = (0, 0, 0); pb["torso"].keyframe_insert("location", frame=f)
 stand(0)
 for i in range(N): key(i + 1, 2 * math.pi * i / N)
