@@ -44,9 +44,13 @@ for side in ("L", "R"):
     th, sh, ft = (rig.data.bones[f"DEF-{n}.{side}"] for n in ("thigh", "shin", "foot"))
     d = (sh.tail_local - th.head_local).normalized()
     q = d.rotation_difference(Vector((0, 0, -1)))
-    f = q @ (ft.tail_local - ft.head_local); f.z = 0
-    yaw = Vector((f.x, f.y, 0)).normalized().rotation_difference(Vector((0, -1, 0))) if f.length > 1e-4 else Quaternion()
+    # the modelled foot's turn (measured on the mesh by rig.py) is taken out by turning the leg about the vertical
+    yaw = Quaternion(Vector((0, 0, 1)), -float(rig.get(f"wodx_foot_yaw_{side}", 0.0)))
     LEGQ[side] = yaw @ q
+# Hands modelled palm up are turned palm in, toward the thigh, by twisting the hand about the forearm's line.
+TWIST = {s: float(os.environ.get("WALK_PALM", "1.4")) * (1 if s == "L" else -1) for s in ("L", "R")}
+def palm(b, side):
+    b.rotation_mode = "QUATERNION"; b.rotation_quaternion = Quaternion(Vector((0, 1, 0)), TWIST[side])
 def warm(b, side, swing):
     wrot(b, Quaternion(Vector((1, 0, 0)), swing) @ DROP[side])
 def wleg(b, side, swing):
@@ -63,7 +67,8 @@ def key(f, phase):
         wx(ft, 0.3 * SW * a - 0.5 * bend)
         warm(ua, side, AR * a)                    # each arm hangs at the side and swings against the leg on its side
         wrot(fa, Quaternion(Vector((1, 0, 0)), -(0.15 + 0.3 * max(0.0, -a))) @ FORE[side])   # straight arm, the elbow bending forward on the forward swing
-        for bb in (th, sh, ft, ua, fa): bb.keyframe_insert("rotation_quaternion", frame=f)
+        hd = pb[f"hand_fk.{side}"]; palm(hd, side)
+        for bb in (th, sh, ft, ua, fa, hd): bb.keyframe_insert("rotation_quaternion", frame=f)
     tor = pb["torso"]
     tor.location = (0, 0, 0.018 * abs(math.cos(phase)) - 0.018) if f else (0, 0, 0)
     tor.keyframe_insert("location", frame=f)
@@ -73,6 +78,8 @@ def stand(f):
             bb = pb[f"{n}.{side}"]; bb.rotation_mode = "QUATERNION"; bb.rotation_quaternion = Quaternion()
             if n == "upper_arm_fk": warm(bb, side, 0.0)
             if n == "thigh_fk": wleg(bb, side, 0.0)
+            if n == "forearm_fk":
+                hd = pb[f"hand_fk.{side}"]; palm(hd, side); hd.keyframe_insert("rotation_quaternion", frame=f)
             if n == "forearm_fk": wrot(bb, Quaternion(Vector((1, 0, 0)), -0.15) @ FORE[side])
             bb.keyframe_insert("rotation_quaternion", frame=f)
     pb["torso"].location = (0, 0, 0); pb["torso"].keyframe_insert("location", frame=f)

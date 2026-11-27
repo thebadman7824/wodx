@@ -1,6 +1,6 @@
 # Blender: import the TRELLIS GLB, clean it, fit a Rigify human, generate the rig, skin the mesh.
 # blender -b -P rig.py -- <in.glb> <out.blend>
-import bpy, bmesh, sys, time, addon_utils
+import bpy, bmesh, sys, time, addon_utils, math
 from mathutils import Vector
 t0 = time.time()
 glb, out = sys.argv[sys.argv.index("--") + 1:][:2]
@@ -100,7 +100,7 @@ def leg_pt(z, side):
     sl = [c for c in slice_(z) if c.x * side > 0.01]
     xs = sorted(c.x for c in sl); ys = sorted(c.y for c in sl)
     return Vector((xs[len(xs) // 2], ys[len(ys) // 2], z))
-ARMX = {}; ARMPTS = {}; HELD = {}
+ARMX = {}; ARMPTS = {}; HELD = {}; FOOT_YAW = {}
 _pz = 0.53 * H
 _pv = sorted(c.x for c in V if abs(c.z - _pz) < 0.015 and abs(c.x) < 0.3)
 PELVIS_X = (_pv[0] + _pv[-1]) / 2 if _pv else 0.0
@@ -146,6 +146,11 @@ for side, sx in (("L", 1), ("R", -1)):
     kn = Vector((lp.x, lp.y - 0.015, 0.27 * H))      # knee a touch forward
     feet = [c for c in V if c.z < 0.04 and c.x * sx > 0.01]
     toe = Vector((an.x, min(c.y for c in feet) + 0.02, 0.01))
+    # how far the modelled foot turns out: heel to toe over the sole (the walk turns it back to point forward)
+    fy = sorted(feet, key=lambda c: c.y); k = max(5, len(fy) // 10)
+    tp = sum(fy[:k], Vector()) / k; hp = sum(fy[-k:], Vector()) / k
+    FOOT_YAW[side] = math.atan2(tp.x - hp.x, -(tp.y - hp.y))
+    print(side, "foot turned out by", round(math.degrees(FOOT_YAW[side]) * sx, 1), "degrees")
     # the hip joint sits under the pelvis, 9 cm out from its centre, whatever stance the legs were modelled in
     # (a leg modelled splayed out kept its hip above the foot in pass 2, and the figure limped)
     hip = Vector((PELVIS_X + sx * 0.09, kn.y + 0.015, eb[f"thigh.{side}"].head.z))
@@ -160,6 +165,7 @@ for side, sx in (("L", 1), ("R", -1)):
 bpy.ops.object.mode_set(mode="OBJECT")
 bpy.ops.pose.rigify_generate()
 rig = bpy.data.objects.get("rig") or [o for o in bpy.context.scene.objects if o.type == "ARMATURE" and o != meta][0]
+for k_, v_ in FOOT_YAW.items(): rig[f"wodx_foot_yaw_{k_}"] = v_
 print("rig", rig.name, len(rig.data.bones), "bones")
 
 # skin: automatic weights on a voxel proxy, then copy the weights to the textured mesh
