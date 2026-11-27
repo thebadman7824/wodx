@@ -4,3 +4,5 @@
 {"file":"tools/harness/fight-end-race.test.mjs","verdict":"working","how":"New test; fails on the old fight-end.js, passes on the new","hash":"7181d6ed30f6","at":"2026-11-27T08:47Z"}
 {"file":"changes/wodx-combat/fight-end-one-check.md","verdict":"working","how":"Patch note, read","hash":"8435f0b86ce6","at":"2026-11-27T08:47Z"}
 {"file":"changes/decisions/B7984.md","verdict":"working","how":"Decision sections B7984-B7985, read","hash":"5689c42f9cd0","at":"2026-11-27T08:47Z"}
+{"file":"registry/features/wodx-combat.json","verdict":"working","how":"Adds PR 2676 to combat.fight-end prs","hash":"0076b50d4343","at":"2026-11-27T08:48Z"}
+{"file":"changes/decisions/B7984.md","verdict":"working","how":"Decision sections B7984-B7985; block claimed by the earlier gates thread whose work this continues","hash":"72b5d71fbbaa","at":"2026-11-27T08:49Z"}
