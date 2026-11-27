@@ -473,7 +473,7 @@ Next free block: B8190
 | B7910-B7919 | PC runners: the New PC first for pull request gate runs (used B7911) | tools (pcq) |
 | B7920-B7959 | Splat depth build, part 2: the infernal thrall of Dark Ages: Devil's Due (desk item infernal-voss); a mage's wonders and Tass (desk item mage-wonders); the missing merits, flaws, Blessings and Curses of the Dark Ages line books (desk item fill-lists) (used B7920-B7940) | Actions, Chronicle, Storyteller, Rothenstein |
 | B7960-B7969 | Merge train and PC runner fixes for issues 2121 and 2393 (used B7960-B7961) | PC tools |
-| B7980-B7989 | gates: gateautomation waits for the fight-end check; gatespritecheck says what the probe saw (used B7980-B7985) | Combat |
+| B7980-B7989 | gates: gatespritecheck sees the routine walk (Paperdoll pose flags keep the move) (used B7980-B7986) | Paperdoll |
 | B8000-B8009 | The New PC drives the merge train, the Main PC is its backup (used B8000) | tools |
 | B8010-B8019 | The New PC turns its merge train on (step 2 of the move) (used B8010) | tools |
 | B8020-B8029 | Merge rules: release notes of a stamped branch are read inside a train batch (used B8020-B8026) | tools (release) |
@@ -16687,6 +16687,17 @@ animating it, the sprite state, and whether the token was visible, and the probe
 so the job summary does not cut them off (#2598). No pass rule changed.
 
 Reverse: take the extra fields out of the probe in tools/gate/gatespritecheck.mjs.
+
+## B7986. Paperdoll's pose flags no longer stop a token's move (2026-11-27)
+WoDX Paperdoll. Foundry 14's Token#_onUpdate stops every running animation, the move included, on any update that
+carries {animate: false} (foundry.mjs 14.369, read on the New PC). Paperdoll sent its pose, look, flash, veil, carry
+and need flags that way, and a seated or working figure gets up (rise) the moment its walk starts, so the walk was
+stopped at once and the token set down at the end, never seen moving (#2598, gatespritecheck step 3). The flags now
+go as plain updates; a flags-only update has nothing to animate. A harness test fails any flags update in
+sprites.mjs that passes animate: false.
+
+Reverse: put {animate: false} back on the seven flag updates in modules/wodx-paperdoll/scripts/sprites.mjs and drop
+tools/harness/sprite-flags-animate.test.mjs.
 
 ## B8000. The Main PC stops driving the merge train (2026-11-25)
 tools/pcq/runner.json has `train: false`. Ben asked on 25 November for the merge train to move to the New PC, with

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.33.5 (A figure that gets up to walk is seen walking: the pose and look flags no longer stop the token's move on the map, so a routine NPC leaving work or a seat walks there step by step instead of appearing at the end (B7986, #2598))
 - 0.33.4 (Imports of the shared terms and the calendar point at the rules core, modules/wodx-rules/core, instead of Chronicle's old copies (B8068). Nothing changes in play)
 - 0.33.3 (Plain words (B8181, #2503): the last long or technical setting names and hints are reworded to say plainly what they do)
 - 0.33.2 (This module's rules files moved to the rules core, modules/wodx-rules/paperdoll (B8065), and every import of them points there now. The rules themselves are unchanged. Files the solo-fix work is still editing stay in place until that work merges)

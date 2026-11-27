@@ -647,7 +647,7 @@
    "ageFacts"
   ],
   "uses": [
-   "modules/wodx-paperdoll/scripts/sprites.mjs:701"
+   "modules/wodx-paperdoll/scripts/sprites.mjs:703"
   ]
  },
  {
@@ -658,8 +658,8 @@
    "isMinor"
   ],
   "uses": [
-   "modules/wodx-paperdoll/scripts/sprites.mjs:708",
-   "modules/wodx-paperdoll/scripts/sprites.mjs:708"
+   "modules/wodx-paperdoll/scripts/sprites.mjs:710",
+   "modules/wodx-paperdoll/scripts/sprites.mjs:710"
   ]
  },
  {
@@ -1098,8 +1098,8 @@
    "modules/wodx-otherworlds/scripts/reflect.mjs:14",
    "modules/wodx-paperdoll/scripts/main.mjs:348",
    "modules/wodx-paperdoll/scripts/mounts.mjs:15",
-   "modules/wodx-paperdoll/scripts/sprites.mjs:795",
-   "modules/wodx-paperdoll/scripts/sprites.mjs:696",
+   "modules/wodx-paperdoll/scripts/sprites.mjs:797",
+   "modules/wodx-paperdoll/scripts/sprites.mjs:698",
    "modules/wodx-senses/scripts/main.mjs:163",
    "modules/wodx-senses/scripts/otherworld-sight.mjs:32",
    "modules/wodx-sheets/scripts/anachronism.mjs:31",

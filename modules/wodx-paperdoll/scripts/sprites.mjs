@@ -209,7 +209,7 @@ export async function play(tokenDoc, act = null, toward = null, {fx = null, face
   const was = states.get(tokenDoc.id)?.facing ?? "down";
   const facing = SR.ROW[face] !== undefined ? face : at ? SR.facingToward(me, at, was) : was;
   const look = move === "cast" ? (SR.fxOk(fx) ? fx : SR.FX_OWN[name] ?? SR.fxFor({})) : "";
-  await tokenDoc.update({flags: {[MOD]: {act: {name: move, facing, fx: look, hold: SR.HOLD.includes(move), by, blanket: move === "sleep" ? SR.hexColour(blanket) : null, look: LR.LOOK_HOLD.includes(hold) ? hold : null, n: (tokenDoc.flags?.[MOD]?.act?.n ?? 0) + 1}}}}, {animate: false});
+  await tokenDoc.update({flags: {[MOD]: {act: {name: move, facing, fx: look, hold: SR.HOLD.includes(move), by, blanket: move === "sleep" ? SR.hexColour(blanket) : null, look: LR.LOOK_HOLD.includes(hold) ? hold : null, n: (tokenDoc.flags?.[MOD]?.act?.n ?? 0) + 1}}}});
   return move;
 }
 
@@ -263,11 +263,13 @@ function onPower(actor, info = {}) {
 }
 
 /** Help a fallen figure up again: the held frame is let go on every screen. */
+/* #2598: the pose flags go without {animate: false}. Foundry 14 stops a token's running move on any update that carries
+   it, so a figure getting up as its walk starts was set down at the end at once, never seen walking (B7986). */
 export async function rise(tokenDoc) {
   tokenDoc = tokenDoc?.document ?? tokenDoc;
   const a = tokenDoc?.flags?.[MOD]?.act;
   if ( !a?.hold ) return false;
-  await tokenDoc.update({flags: {[MOD]: {act: {name: "", hold: false, fx: "", by: "", n: (a.n ?? 0) + 1}}}}, {animate: false});
+  await tokenDoc.update({flags: {[MOD]: {act: {name: "", hold: false, fx: "", by: "", n: (a.n ?? 0) + 1}}}});
   return true;
 }
 
@@ -315,7 +317,7 @@ function onFed(info = {}) {
     const name = by.document.flags[MOD].sprite, has = SR.ACTS[name] ?? [];
     const move = has.includes("quaff") && !ves0 ? "quaff" : has.includes("embrace") ? "embrace" : "feed";
     play(by.document, move, ves0?.document ?? null).catch(() => null);
-    if ( by.document.flags?.[MOD]?.need ) by.document.update({flags: {[MOD]: {need: false}}}, {animate: false}).catch(() => null);
+    if ( by.document.flags?.[MOD]?.need ) by.document.update({flags: {[MOD]: {need: false}}}).catch(() => null);
   }
   if ( ves && SR.hasAct(ves.document.flags[MOD].sprite, "swoon") && by0?.actor?.type === "Vampire" ) play(ves.document, "swoon", by0?.document ?? null).catch(() => null);
 }
@@ -431,7 +433,7 @@ export async function settle() {
     if ( a?.hold && !ours ) continue;                          // fallen, dead, or posed by hand
     if ( st?.moving || (st && now - st.last < 1200) || token.inCombat || doc.inCombat ) continue;
     const want = live ? lifeOf(doc) : null;
-    if ( !!f.carry !== !!want?.carry ) { await doc.update({flags: {[MOD]: {carry: !!want?.carry}}}, {animate: false}); n++; }
+    if ( !!f.carry !== !!want?.carry ) { await doc.update({flags: {[MOD]: {carry: !!want?.carry}}}); n++; }
     if ( !want?.pose ) { if ( ours ) { await rise(doc); n++; } continue; }
     if ( ours && a.name === want.pose && (a.name !== "sleep" || (a.facing === want.facing && (a.blanket ?? null) === want.blanket)) ) continue;
     await play(doc, want.pose, null, {face: want.facing, by: "routine", blanket: want.blanket}); n++;
@@ -470,14 +472,14 @@ function addLook(id, kind) {
 export async function flash(tokenDoc, kind) {
   tokenDoc = tokenDoc?.document ?? tokenDoc;
   if ( !tokenDoc || !(kind in LR.LOOK_MS) ) return false;
-  await tokenDoc.update({flags: {[MOD]: {flash: {kind, n: (tokenDoc.flags?.[MOD]?.flash?.n ?? 0) + 1}}}}, {animate: false});
+  await tokenDoc.update({flags: {[MOD]: {flash: {kind, n: (tokenDoc.flags?.[MOD]?.flash?.n ?? 0) + 1}}}});
   return true;
 }
 /** Put a veil on a figure or lift it (kind null): sunk into the earth, unseen, or riding another's body. */
 export async function veil(tokenDoc, kind = null) {
   tokenDoc = tokenDoc?.document ?? tokenDoc;
   if ( !tokenDoc ) return false;
-  await tokenDoc.update({flags: {[MOD]: {veil: LR.VEILS.includes(kind) ? {kind, since: Date.now()} : null}}}, {animate: false});
+  await tokenDoc.update({flags: {[MOD]: {veil: LR.VEILS.includes(kind) ? {kind, since: Date.now()} : null}}});
   return true;
 }
 function applyLooks(token, now) {
@@ -572,7 +574,7 @@ function onCrossing(info = {}) {
 function onCraving(info = {}) {
   if ( !on() || !mine() ) return;
   const t = spriteTokenOf(info.actor);
-  if ( t?.document.flags?.[MOD]?.sprite && info.result !== "none" ) t.document.update({flags: {[MOD]: {need: true}}}, {animate: false}).catch(() => null);
+  if ( t?.document.flags?.[MOD]?.sprite && info.result !== "none" ) t.document.update({flags: {[MOD]: {need: true}}}).catch(() => null);
 }
 /* Blood spent, Paradox gained, Banality gained: a short look on the figure. */
 const pools = new Map();
