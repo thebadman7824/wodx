@@ -16,10 +16,24 @@ not be there, because FLUX falls back on modern boots and caps.
 | era check | `python vcheck.py figures/<id>.json <draft.png> ...` (Ollama qwen2.5vl:7b), then look at the passes | 10 s each |
 | footwear fix | `python fixfeet.py <draft.png> <fixed.png>`: repaints light rubber-look soles and heels in the shoe's own leather | 1 s |
 | cut-out and 3D | `cutout_birefnet.py`, then `run_trellis2.py <cutout> <dir> <name> 1024` (TRELLIS.2, D:\Claude Shares\tools) | 5 min cold, 45 s warm |
-| rig | `blender -b -P rig.py -- <model.glb> <rigged.blend>` | 10 s |
-| walk and render | `blender -b <rigged.blend> -P walk.py -- <frames_dir>` | 5 s |
+| rig | `blender -b -P mocap_rig.py -- <model.glb> <rigged.blend>`: a plain skeleton fitted to the mesh, skinned | 5 s |
+| walk and render | `WALK_PALM=1.2 blender -b <rigged.blend> -P mocap_walk.py -- <frames_dir> <walk.bvh>`: a recorded walk, one gait cycle in 8 frames | 5 s |
+| frame check | `python check_walk.py <frames_dir> <out.png>`: each side-view frame above the recorded pose it came from | 1 s |
 | portrait | `blender -b <rigged.blend> -P portrait.py -- <out.png> 1024` (head only: clothing, neck and shoulders are cut off the model; P_ORTHO=0.32 P_DROP=0.14), then `python img2img.py <render> <prefix> 0.6 <seed> "<prompt>"` for a light FLUX repaint | 10 s |
 | game sheet | `python pack.py <frames_dir> <out_dir> <actorId> [68]` writes `<id>.png` (9 by 4 frames of 96 by 112, standing frame last) and `<id>-still.png` | 2 s |
+
+## The walk is a recording (27 Nov)
+Hand-made walks on a fitted Rigify rig kept coming out wrong (limp, duck feet, arms through the body), so the walk now
+comes from motion capture. The CMU Graphics Lab Motion Capture Database may be copied, modified or redistributed
+without permission (its FAQ). The BVH copies come from github.com/una-dinosauria/cmu-mocap; the first walk is
+subject 02, take 01 (`data/002/02_01.bvh`, 254 KB), kept in D:\Claude Shares	ools\mocap\cmu on the New PC.
+mocap_walk.py turns each bone to point the way the matching joints point in the recording (the figure keeps its own
+proportions), keeps the figure's own spine posture and adds the recording's movement around it, and brings each foot
+under its own hip. mocap_rig.py gives the feet and shins to one leg each, makes shoes stiff below the ankle, removes
+faces that join the two legs below the hem, keeps the forearm and hand all arm, and weights the skirt to the hips.
+Other moves (sit, carry, kneel, run) are other CMU takes through the same script.
+
+rig.py and walk.py (the Rigify rig and the hand-made walk) are kept for comparison only.
 
 ## What rig.py does beyond a plain auto-rig
 - The reference picture holds the arms out at about 40 degrees with a clear gap to the body (flux.py asks for it).
