@@ -1,0 +1,6 @@
+{"file":"modules/wodx-combat/scripts/fight-end.js","verdict":"working","how":"Read the whole of fight-end.js; checks now chain per fight id, a fight being ended takes no further write; harness fight-end-race.test.mjs is red on the old code (double delete) and green on the new","hash":"9893bdf53661","at":"2026-11-27T08:47Z"}
+{"file":"tools/gate/gateautomation.mjs","verdict":"working","how":"Step 8 now waits for fightEnd.idle() after each nextTurn (600 ms fallback when the API is older); node --check passes","hash":"d7091c976cbc","at":"2026-11-27T08:47Z"}
+{"file":"tools/gate/gatespritecheck.mjs","verdict":"working","how":"Probe reports places, animating, state counts and token view; probe and walk lead the detail; no pass rule changed; node --check passes","hash":"19225171a23d","at":"2026-11-27T08:47Z"}
+{"file":"tools/harness/fight-end-race.test.mjs","verdict":"working","how":"New test; fails on the old fight-end.js, passes on the new","hash":"7181d6ed30f6","at":"2026-11-27T08:47Z"}
+{"file":"changes/wodx-combat/fight-end-one-check.md","verdict":"working","how":"Patch note, read","hash":"8435f0b86ce6","at":"2026-11-27T08:47Z"}
+{"file":"changes/decisions/B7984.md","verdict":"working","how":"Decision sections B7984-B7985, read","hash":"5689c42f9cd0","at":"2026-11-27T08:47Z"}
