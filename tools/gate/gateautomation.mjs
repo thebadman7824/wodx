@@ -135,7 +135,10 @@ async function body() {
     await combat.startCombat();
     await sleep(500);
     await combat.combatants.find(c => c.tokenId === tf.id)?.update({defeated: true});
-    for ( let i = 0; i < 4 && game.combats.get(combat.id); i++ ) { await game.combats.get(combat.id)?.nextTurn(); await sleep(600); }
+    // #2675: the next turn waits for the fight-end check of the last one, or it can land on a fight being deleted
+    const FEnd = game.modules.get("wodx-combat").api?.fightEnd;
+    const settle = async () => { await sleep(100); await FEnd?.idle?.(); await sleep(FEnd?.idle ? 150 : 600); };
+    for ( let i = 0; i < 4 && game.combats.get(combat.id); i++ ) { await game.combats.get(combat.id)?.nextTurn(); await settle(); }
     const ended = !game.combats.get(combat.id);
     ok("8. fight ends", ended, {left: !!game.combats.get(combat.id), watch: game.combats.get(combat.id)?.getFlag("wodx-combat", "endWatch") ?? null});
     if ( game.combats.get(combat.id) ) await game.combats.get(combat.id).delete();

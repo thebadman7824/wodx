@@ -40,8 +40,23 @@ function fighters(combat) {
 }
 
 const posted = new Set();
-async function check(combat) {
-    if (!isActiveGM() || !combat?.started) return;
+/* #2675: one check at a time per fight, and none on a fight already being ended. Two checks in flight (a quick Next
+   turn, or the round and the turn changing together) could each write the watch flag or end the fight, and an update
+   that lands after the fight's delete breaks inside Foundry's own update handler. */
+const running = new Map(), ending = new Set();
+function check(combat) {
+    if (!combat?.id) return Promise.resolve();
+    const id = combat.id;
+    const next = (running.get(id) ?? Promise.resolve()).then(() => checkOnce(game.combats.get(id))).catch(e => console.error(`${MOD} | fight end`, e));
+    running.set(id, next);
+    next.finally(() => { if (running.get(id) === next) running.delete(id); });
+    return next;
+}
+/** Resolves once no fight-end check is running (gates wait on it before the next turn). */
+const idle = () => Promise.all([...running.values()]).then(() => undefined);
+const live = combat => !!combat?.id && !ending.has(combat.id) && !!game.combats.get(combat.id);
+async function checkOnce(combat) {
+    if (!isActiveGM() || !live(combat) || !combat.started) return;
     const mode = setting("fightEnd") ?? "suggest";
     if (mode === "off") return;
     const r = FE.fightOver(fighters(combat));
@@ -50,10 +65,13 @@ async function check(combat) {
     if (JSON.stringify(s.watch) !== JSON.stringify(was)) {
         if (s.watch) await combat.setFlag(MOD, "endWatch", s.watch); else await combat.unsetFlag(MOD, "endWatch");
     }
-    if (!s.end) return;
+    if (!s.end || !live(combat)) return;
     if (mode === "auto") {
-        await ChatMessage.create({ whisper: gmIds(), speaker: { alias: "WoDX" }, content: `<div class="wodx-card"><p><b>The fight is over:</b> ${esc(r.why)}.</p></div>` });
-        await combat.delete();
+        ending.add(combat.id);
+        try {
+            await ChatMessage.create({ whisper: gmIds(), speaker: { alias: "WoDX" }, content: `<div class="wodx-card"><p><b>The fight is over:</b> ${esc(r.why)}.</p></div>` });
+            if (game.combats.get(combat.id)) await combat.delete();
+        } finally { ending.delete(combat.id); }
         return;
     }
     if (posted.has(combat.id)) return;
@@ -66,9 +84,9 @@ async function check(combat) {
 export function installFightEnd() {
     Hooks.on("updateCombat", (combat, changes) => {
         if (!("round" in (changes ?? {}) || "turn" in (changes ?? {}))) return;
-        check(combat).catch(e => console.error(`${MOD} | fight end`, e));
+        check(combat);
     });
-    Hooks.on("deleteCombat", c => posted.delete(c.id));
+    Hooks.on("deleteCombat", c => { posted.delete(c.id); ending.delete(c.id); });
     Hooks.on("renderChatMessageHTML", (msg, el) => {
         const id = msg.flags?.[MOD]?.fightEnd;
         if (!id) return;
@@ -80,4 +98,4 @@ export function installFightEnd() {
     });
 }
 
-export const fightEndApi = { check, rules: FE };
+export const fightEndApi = { check, idle, rules: FE };

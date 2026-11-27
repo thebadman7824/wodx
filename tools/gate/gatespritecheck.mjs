@@ -141,7 +141,7 @@ export async function run() {
       await sleep(300);
       // the whole way in view, so the walk is animated on this screen (a fresh lane's first walk off-screen can be placed at once)
       await canvas.pan({x: 11 * g, y: 7 * g, scale: 0.6}); await sleep(400);
-      const from = {x: tok.x, y: tok.y};
+      const from = {x: tok.x, y: tok.y}, actionBefore = tok.movementAction ?? null;
       const turned = [];
       let movingSeen = 0, how = null;
       const seenAt = new Set(); let samples = 0, stateSeen = 0;
@@ -176,16 +176,24 @@ export async function run() {
         // it is sitting now, and a held seat stays put wherever the token is dragged until the figure gets up (B5666)
         const rose = await A.rise?.(tok); await sleep(900);
         await canvas.pan({x: tok.x, y: tok.y + g / 2, scale: 0.8}); await sleep(300);
-        const pw = setInterval(() => { const f = facingShown(tok); if ( A.state(tok.id)?.moving && f && pturned.at(-1) !== f ) pturned.push(f); }, 40);
+        // #2598: what Foundry did with the step: the places the figure was drawn at, and whether it animated at all
+        const pAt = new Set(); let pAnim = 0, pState = 0, pMoving = 0;
+        const pw = setInterval(() => {
+          const o = tok.object; if ( o ) pAt.add(`${Math.round(o.position.x)},${Math.round(o.position.y)}`);
+          if ( o?.movementAnimationPromise ) pAnim++;
+          const st = A.state(tok.id); if ( st ) pState++; if ( st?.moving ) pMoving++;
+          const f = facingShown(tok); if ( st?.moving && f && pturned.at(-1) !== f ) pturned.push(f); }, 40);
+        const view = {visible: !!tok.object?.visible, renderable: !!tok.object?.renderable, hidden: !!tok.hidden, mesh: !!tok.object?.mesh, act: tok.flags?.[PD]?.act?.name ?? null, sprite: tok.flags?.[PD]?.sprite ?? null};
         try {
           await tok.object.document.update({x: tok.x - 3 * g}, {animate: true, animation: {duration: 1500}});
           await (tok.object?.movementAnimationPromise ?? sleep(1600)); await sleep(300);
         } finally { clearInterval(pw); }
         await tok.update(back, {animate: false});
-        probe = {turned: pturned, rose};
+        probe = {turned: pturned, rose, places: pAt.size, animating: pAnim, stateSeen: pState, moving: pMoving, view};
       }
       const faced = turned.includes("right") || (!movingSeen && !!probe?.turned.includes("left"));
-      G.ok("3. it walks to the tavern facing the way it goes", faced, {turned, movingSeen, samples, stateSeen, places: seenAt.size, probe, from, to: {x: tok.x, y: tok.y}, how});
+      // #2598: the probe and the walk lead the detail, since the job summary cuts it short
+      G.ok("3. it walks to the tavern facing the way it goes", faced, {probe, walk: how?.walk ?? null, places: seenAt.size, action: {before: actionBefore, after: tok.movementAction ?? null}, turned, movingSeen, samples, stateSeen, from, to: {x: tok.x, y: tok.y}, how});
       G.ok("3. the seated figure is drawn upright, however the token was turned", rot.drawn === 0, rot);
     });
 
