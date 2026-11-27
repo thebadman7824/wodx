@@ -1,0 +1,18 @@
+{
+  "id": "townsman-1197",
+  "era": "1197",
+  "role": "townsman, Moravian market town",
+  "dress": "a knee-length undyed brown wool tunic with long sleeves, a plain leather belt with a small leather pouch, a lowered natural wool hood around the neck and shoulders, dark wool hose, and simple dark leather moccasins with a slightly pointed toe, gathered at the ankle with a cord, thin soft soles flat on the ground",
+  "person": "about 35 years old, short brown hair, short beard",
+  "check": [
+    "Look only at the feet. Are the shoes soft flat moccasin-like shoes with no laces across the top and no raised heel? Answer yes or no.",
+    "Is the person wearing a hood or no hat at all, and not a flat cap or beret? Answer yes or no.",
+    "Is any modern item visible, such as a zip, buttons down the front, a wristwatch, glasses, laced shoes, jeans or a modern cap? Answer yes or no."
+  ],
+  "expect": [
+    "yes",
+    "yes",
+    "no"
+  ],
+  "subject": "a medieval reenactor in authentic 12th century commoner's clothing"
+}
