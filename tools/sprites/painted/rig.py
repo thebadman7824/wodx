@@ -101,6 +101,10 @@ def leg_pt(z, side):
     xs = sorted(c.x for c in sl); ys = sorted(c.y for c in sl)
     return Vector((xs[len(xs) // 2], ys[len(ys) // 2], z))
 ARMX = {}; ARMPTS = {}; HELD = {}
+_pz = 0.53 * H
+_pv = sorted(c.x for c in V if abs(c.z - _pz) < 0.015 and abs(c.x) < 0.3)
+PELVIS_X = (_pv[0] + _pv[-1]) / 2 if _pv else 0.0
+print("pelvis centre x", round(PELVIS_X, 3))
 bpy.ops.object.mode_set(mode="EDIT")
 eb = meta.data.edit_bones
 def drop_children(name):
@@ -142,7 +146,9 @@ for side, sx in (("L", 1), ("R", -1)):
     kn = Vector((lp.x, lp.y - 0.015, 0.27 * H))      # knee a touch forward
     feet = [c for c in V if c.z < 0.04 and c.x * sx > 0.01]
     toe = Vector((an.x, min(c.y for c in feet) + 0.02, 0.01))
-    hip = Vector((kn.x, kn.y + 0.015, eb[f"thigh.{side}"].head.z))
+    # the hip joint sits under the pelvis, 9 cm out from its centre, whatever stance the legs were modelled in
+    # (a leg modelled splayed out kept its hip above the foot in pass 2, and the figure limped)
+    hip = Vector((PELVIS_X + sx * 0.09, kn.y + 0.015, eb[f"thigh.{side}"].head.z))
     eb[f"thigh.{side}"].head = hip; eb[f"thigh.{side}"].tail = kn
     eb[f"shin.{side}"].head = kn; eb[f"shin.{side}"].tail = an
     eb[f"foot.{side}"].head = an; eb[f"foot.{side}"].tail = toe
