@@ -2,34 +2,34 @@
  "host": "newpc",
  "day": "2026-11-28",
  "stepMin": 5,
- "samples": 172,
- "runnerUpMin": 860,
+ "samples": 173,
+ "runnerUpMin": 865,
  "lanes": {
   "10": {
-   "upMin": 860,
+   "upMin": 865,
    "busyMin": 0
   },
   "11": {
-   "upMin": 860,
+   "upMin": 865,
    "busyMin": 0
   },
   "12": {
-   "upMin": 860,
+   "upMin": 865,
    "busyMin": 5
   },
   "13": {
-   "upMin": 860,
+   "upMin": 865,
    "busyMin": 0
   }
  },
  "gpu": {
-  "busyMin": 345,
+  "busyMin": 350,
   "heldMin": {
-   "art": 340
+   "art": 345
   }
  },
  "comfyRenders": 0,
  "ocrWorkingMin": 0,
- "last": "2026-11-28T14:27:02.144Z",
+ "last": "2026-11-28T14:32:04.474Z",
  "laneBusyKnown": true
 }
