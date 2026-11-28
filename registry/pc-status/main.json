@@ -1,6 +1,6 @@
 {
  "host": "main",
- "time": "2026-11-28T10:23:20.529Z",
+ "time": "2026-11-28T10:28:24.858Z",
  "runnerUp": true,
  "lanes": [
   {
@@ -41,7 +41,7 @@
   "up": true,
   "running": 0,
   "pending": 0,
-  "lastDoneMin": 895,
+  "lastDoneMin": 900,
   "doneLast5": 0
  },
  "laneBusy": {
