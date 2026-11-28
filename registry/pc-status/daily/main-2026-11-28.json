@@ -2,23 +2,23 @@
  "host": "main",
  "day": "2026-11-28",
  "stepMin": 5,
- "samples": 209,
- "runnerUpMin": 1045,
+ "samples": 210,
+ "runnerUpMin": 1050,
  "lanes": {
   "2": {
-   "upMin": 1045,
+   "upMin": 1050,
    "busyMin": 5
   },
   "3": {
-   "upMin": 1045,
+   "upMin": 1050,
    "busyMin": 0
   },
   "4": {
-   "upMin": 1045,
+   "upMin": 1050,
    "busyMin": 0
   },
   "5": {
-   "upMin": 1040,
+   "upMin": 1045,
    "busyMin": 5
   },
   "6": {
@@ -32,6 +32,6 @@
  },
  "comfyRenders": 0,
  "ocrWorkingMin": 0,
- "last": "2026-11-28T17:39:26.349Z",
+ "last": "2026-11-28T17:44:30.408Z",
  "laneBusyKnown": true
 }
