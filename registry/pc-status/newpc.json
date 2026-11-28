@@ -1,6 +1,6 @@
 {
  "host": "newpc",
- "time": "2026-11-28T19:24:23.281Z",
+ "time": "2026-11-28T19:29:25.486Z",
  "runnerUp": true,
  "lanes": [
   {
@@ -21,12 +21,13 @@
   }
  ],
  "gpu": {
-  "tempC": 34,
-  "loadPct": 6,
-  "vramPct": 81,
-  "warning": "ok",
-  "jobHeld": false,
-  "waiting": 0
+  "tempC": 60,
+  "loadPct": 97,
+  "vramPct": 91,
+  "warning": "warn",
+  "jobHeld": true,
+  "waiting": 0,
+  "class": "art"
  },
  "laneBusy": {
   "10": false,
@@ -34,5 +35,5 @@
   "12": false,
   "13": false
  },
- "issues": 0
+ "issues": 1
 }
