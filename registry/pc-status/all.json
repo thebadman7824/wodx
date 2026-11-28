@@ -1,12 +1,12 @@
 {
- "time": "2026-11-28T09:42:46.249Z",
+ "time": "2026-11-28T09:47:51.273Z",
  "staleAfterMin": 15,
  "pcs": {
   "main": {
    "ageMin": 0,
    "stale": false,
    "host": "main",
-   "time": "2026-11-28T09:42:44.665Z",
+   "time": "2026-11-28T09:47:49.087Z",
    "runnerUp": true,
    "lanes": [
     {
@@ -23,7 +23,7 @@
     },
     {
      "id": 5,
-     "up": true
+     "up": false
     },
     {
      "id": 6,
@@ -31,9 +31,9 @@
     }
    ],
    "gpu": {
-    "tempC": 31,
-    "loadPct": 9,
-    "vramPct": 59,
+    "tempC": 32,
+    "loadPct": 0,
+    "vramPct": 57,
     "warning": "ok",
     "jobHeld": false,
     "waiting": 0
@@ -47,23 +47,23 @@
     "up": true,
     "running": 0,
     "pending": 0,
-    "lastDoneMin": 855,
+    "lastDoneMin": 860,
     "doneLast5": 0
    },
    "laneBusy": {
-    "2": true,
+    "2": false,
     "3": false,
     "4": false,
-    "5": false,
+    "5": true,
     "6": false
    },
    "issues": 1
   },
   "secondary": {
-   "ageMin": 1,
+   "ageMin": 2,
    "stale": false,
    "host": "secondary",
-   "time": "2026-11-28T09:41:16.375Z",
+   "time": "2026-11-28T09:46:20.235Z",
    "runnerUp": true,
    "lanes": [
     {
@@ -72,7 +72,7 @@
     }
    ],
    "gpu": {
-    "tempC": 33.1,
+    "tempC": 33,
     "loadPct": 0,
     "vramPct": 2,
     "warning": "ok",
@@ -82,7 +82,7 @@
    "ocr": {
     "workers": 0,
     "loopUp": false,
-    "lastOutputMin": 3363,
+    "lastOutputMin": 3368,
     "memWait": false,
     "gaveUp": false,
     "stopped": false
@@ -93,7 +93,7 @@
    "issues": 0
   },
   "laptop": {
-   "ageMin": 2333,
+   "ageMin": 2339,
    "stale": true,
    "host": "laptop",
    "time": "2026-11-26T18:49:17.673Z",
@@ -111,7 +111,7 @@
    "ageMin": 3,
    "stale": false,
    "host": "newpc",
-   "time": "2026-11-28T09:39:50.018Z",
+   "time": "2026-11-28T09:44:52.392Z",
    "runnerUp": true,
    "lanes": [
     {
@@ -133,7 +133,7 @@
    ],
    "gpu": {
     "tempC": 25,
-    "loadPct": 7,
+    "loadPct": 8,
     "vramPct": 74,
     "warning": "ok",
     "jobHeld": false,
