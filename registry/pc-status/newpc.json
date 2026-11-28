@@ -1,6 +1,6 @@
 {
  "host": "newpc",
- "time": "2026-11-28T21:10:22.812Z",
+ "time": "2026-11-28T21:15:29.936Z",
  "runnerUp": true,
  "lanes": [
   {
@@ -21,9 +21,9 @@
   }
  ],
  "gpu": {
-  "tempC": 60,
+  "tempC": 63,
   "loadPct": 99,
-  "vramPct": 91,
+  "vramPct": 92,
   "warning": "warn",
   "jobHeld": true,
   "waiting": 0,
