@@ -1,0 +1,31 @@
+{
+ "host": "secondary",
+ "time": "2026-11-28T04:01:00.830Z",
+ "runnerUp": true,
+ "lanes": [
+  {
+   "id": 8,
+   "up": true
+  }
+ ],
+ "gpu": {
+  "tempC": 34,
+  "loadPct": 0,
+  "vramPct": 2,
+  "warning": "ok",
+  "jobHeld": false,
+  "waiting": 0
+ },
+ "ocr": {
+  "workers": 0,
+  "loopUp": false,
+  "lastOutputMin": 3022,
+  "memWait": false,
+  "gaveUp": false,
+  "stopped": false
+ },
+ "laneBusy": {
+  "8": false
+ },
+ "issues": 0
+}

@@ -1,0 +1,153 @@
+{
+ "time": "2026-11-28T04:02:49.178Z",
+ "staleAfterMin": 15,
+ "pcs": {
+  "main": {
+   "ageMin": 0,
+   "stale": false,
+   "host": "main",
+   "time": "2026-11-28T04:02:47.809Z",
+   "runnerUp": true,
+   "lanes": [
+    {
+     "id": 2,
+     "up": true
+    },
+    {
+     "id": 3,
+     "up": true
+    },
+    {
+     "id": 4,
+     "up": true
+    },
+    {
+     "id": 5,
+     "up": true
+    },
+    {
+     "id": 6,
+     "up": false
+    }
+   ],
+   "gpu": {
+    "tempC": 36,
+    "loadPct": 1,
+    "vramPct": 57,
+    "warning": "ok",
+    "jobHeld": false,
+    "waiting": 0
+   },
+   "localAgents": {
+    "runnerUp": false,
+    "queued": 0,
+    "running": 0
+   },
+   "comfy": {
+    "up": true,
+    "running": 0,
+    "pending": 0,
+    "lastDoneMin": 515,
+    "doneLast5": 0
+   },
+   "laneBusy": {
+    "2": false,
+    "3": false,
+    "4": false,
+    "5": false,
+    "6": false
+   },
+   "issues": 1
+  },
+  "secondary": {
+   "ageMin": 2,
+   "stale": false,
+   "host": "secondary",
+   "time": "2026-11-28T04:01:00.830Z",
+   "runnerUp": true,
+   "lanes": [
+    {
+     "id": 8,
+     "up": true
+    }
+   ],
+   "gpu": {
+    "tempC": 34,
+    "loadPct": 0,
+    "vramPct": 2,
+    "warning": "ok",
+    "jobHeld": false,
+    "waiting": 0
+   },
+   "ocr": {
+    "workers": 0,
+    "loopUp": false,
+    "lastOutputMin": 3022,
+    "memWait": false,
+    "gaveUp": false,
+    "stopped": false
+   },
+   "laneBusy": {
+    "8": false
+   },
+   "issues": 0
+  },
+  "laptop": {
+   "ageMin": 1994,
+   "stale": true,
+   "host": "laptop",
+   "time": "2026-11-26T18:49:17.673Z",
+   "runnerUp": true,
+   "lanes": [
+    {
+     "id": 7,
+     "up": true
+    }
+   ],
+   "gpu": null,
+   "issues": 0
+  },
+  "newpc": {
+   "ageMin": 2,
+   "stale": false,
+   "host": "newpc",
+   "time": "2026-11-28T04:01:10.306Z",
+   "runnerUp": true,
+   "lanes": [
+    {
+     "id": 10,
+     "up": true
+    },
+    {
+     "id": 11,
+     "up": true
+    },
+    {
+     "id": 12,
+     "up": true
+    },
+    {
+     "id": 13,
+     "up": true
+    }
+   ],
+   "gpu": {
+    "tempC": 37,
+    "loadPct": 17,
+    "vramPct": 71,
+    "warning": "ok",
+    "jobHeld": false,
+    "waiting": 0
+   },
+   "laneBusy": {
+    "10": false,
+    "11": false,
+    "12": false,
+    "13": false
+   },
+   "issues": 0
+  }
+ },
+ "anyStale": true,
+ "issues": 1
+}

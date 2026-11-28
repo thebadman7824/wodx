@@ -1,0 +1,33 @@
+{
+ "host": "newpc",
+ "day": "2026-11-25",
+ "stepMin": 5,
+ "samples": 249,
+ "runnerUpMin": 1245,
+ "lanes": {
+  "10": {
+   "upMin": 1230,
+   "busyMin": 125
+  },
+  "11": {
+   "upMin": 1230,
+   "busyMin": 115
+  },
+  "12": {
+   "upMin": 1235,
+   "busyMin": 90
+  },
+  "13": {
+   "upMin": 1230,
+   "busyMin": 95
+  }
+ },
+ "gpu": {
+  "busyMin": 0,
+  "heldMin": {}
+ },
+ "comfyRenders": 0,
+ "ocrWorkingMin": 0,
+ "last": "2026-11-25T23:57:50.890Z",
+ "laneBusyKnown": true
+}

@@ -1,0 +1,39 @@
+{
+ "host": "main",
+ "day": "2026-11-25",
+ "stepMin": 5,
+ "samples": 277,
+ "runnerUpMin": 1385,
+ "lanes": {
+  "2": {
+   "upMin": 1380,
+   "busyMin": 65
+  },
+  "3": {
+   "upMin": 1375,
+   "busyMin": 70
+  },
+  "4": {
+   "upMin": 1375,
+   "busyMin": 70
+  },
+  "5": {
+   "upMin": 1360,
+   "busyMin": 70
+  },
+  "6": {
+   "upMin": 0,
+   "busyMin": 0
+  }
+ },
+ "gpu": {
+  "busyMin": 5,
+  "heldMin": {
+   "art": 5
+  }
+ },
+ "comfyRenders": 14,
+ "ocrWorkingMin": 0,
+ "last": "2026-11-25T23:58:54.441Z",
+ "laneBusyKnown": true
+}
