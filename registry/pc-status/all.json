@@ -1,12 +1,12 @@
 {
- "time": "2026-11-28T07:05:28.925Z",
+ "time": "2026-11-28T07:10:34.110Z",
  "staleAfterMin": 15,
  "pcs": {
   "main": {
    "ageMin": 0,
    "stale": false,
    "host": "main",
-   "time": "2026-11-28T07:05:27.373Z",
+   "time": "2026-11-28T07:10:32.703Z",
    "runnerUp": true,
    "lanes": [
     {
@@ -47,7 +47,7 @@
     "up": true,
     "running": 0,
     "pending": 0,
-    "lastDoneMin": 698,
+    "lastDoneMin": 703,
     "doneLast5": 0
    },
    "laneBusy": {
@@ -63,7 +63,7 @@
    "ageMin": 2,
    "stale": false,
    "host": "secondary",
-   "time": "2026-11-28T07:03:24.392Z",
+   "time": "2026-11-28T07:08:28.344Z",
    "runnerUp": true,
    "lanes": [
     {
@@ -72,18 +72,17 @@
     }
    ],
    "gpu": {
-    "tempC": 37.2,
-    "loadPct": 0,
-    "vramPct": 3,
+    "tempC": 37,
+    "loadPct": 36,
+    "vramPct": 6,
     "warning": "ok",
-    "jobHeld": true,
-    "waiting": 0,
-    "class": "other"
+    "jobHeld": false,
+    "waiting": 0
    },
    "ocr": {
     "workers": 0,
     "loopUp": false,
-    "lastOutputMin": 3205,
+    "lastOutputMin": 3210,
     "memWait": false,
     "gaveUp": false,
     "stopped": false
@@ -94,7 +93,7 @@
    "issues": 0
   },
   "laptop": {
-   "ageMin": 2176,
+   "ageMin": 2181,
    "stale": true,
    "host": "laptop",
    "time": "2026-11-26T18:49:17.673Z",
@@ -112,7 +111,7 @@
    "ageMin": 2,
    "stale": false,
    "host": "newpc",
-   "time": "2026-11-28T07:03:30.500Z",
+   "time": "2026-11-28T07:08:32.716Z",
    "runnerUp": true,
    "lanes": [
     {
@@ -133,12 +132,13 @@
     }
    ],
    "gpu": {
-    "tempC": 26,
-    "loadPct": 8,
-    "vramPct": 9,
-    "warning": "ok",
-    "jobHeld": false,
-    "waiting": 0
+    "tempC": 60,
+    "loadPct": 99,
+    "vramPct": 92,
+    "warning": "warn",
+    "jobHeld": true,
+    "waiting": 0,
+    "class": "art"
    },
    "laneBusy": {
     "10": false,
@@ -146,9 +146,9 @@
     "12": false,
     "13": false
    },
-   "issues": 0
+   "issues": 1
   }
  },
  "anyStale": true,
- "issues": 1
+ "issues": 2
 }
