@@ -2,12 +2,12 @@
  "host": "secondary",
  "day": "2026-11-28",
  "stepMin": 5,
- "samples": 87,
- "runnerUpMin": 435,
+ "samples": 88,
+ "runnerUpMin": 440,
  "lanes": {
   "8": {
-   "upMin": 430,
-   "busyMin": 140
+   "upMin": 435,
+   "busyMin": 145
   }
  },
  "gpu": {
@@ -18,6 +18,6 @@
  },
  "comfyRenders": 0,
  "ocrWorkingMin": 0,
- "last": "2026-11-28T07:18:39.286Z",
+ "last": "2026-11-28T07:23:55.126Z",
  "laneBusyKnown": true
 }
