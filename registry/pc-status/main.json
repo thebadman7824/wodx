@@ -1,6 +1,6 @@
 {
  "host": "main",
- "time": "2026-11-28T09:52:54.808Z",
+ "time": "2026-11-28T09:57:59.166Z",
  "runnerUp": true,
  "lanes": [
   {
@@ -25,7 +25,7 @@
   }
  ],
  "gpu": {
-  "tempC": 30,
+  "tempC": 28,
   "loadPct": 0,
   "vramPct": 57,
   "warning": "ok",
@@ -41,7 +41,7 @@
   "up": true,
   "running": 0,
   "pending": 0,
-  "lastDoneMin": 865,
+  "lastDoneMin": 870,
   "doneLast5": 0
  },
  "laneBusy": {
