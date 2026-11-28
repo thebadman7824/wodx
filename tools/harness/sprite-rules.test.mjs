@@ -326,3 +326,16 @@ test("a sleeper's blanket takes the colour of the bed (B5667)", () => {
   assert.equal(SR.poseFor("rest", {has: ["stool"], bed: by.bed}).blanket, null);
   assert.equal(SR.COVER, "sleepcover");
 });
+
+test("a sheet drawn finer keeps its grid of frames at k times the size, and only 2 to 4 are taken (ink figures, 28 Nov 2026)", () => {
+  assert.deepEqual(SR.rectOf({row: 2, col: 3}), {x: 3 * SR.FRAME_W, y: 2 * SR.FRAME_H, width: SR.FRAME_W, height: SR.FRAME_H});
+  assert.deepEqual(SR.rectOf({row: 2, col: 3}, 3), {x: 864, y: 672, width: 288, height: 336});
+  SR.learn("worlds/t/wodx-sprites", {sprites: {fine1: {name: "Fine", scale: 3}, plain1: {name: "Plain"}, odd1: {name: "Odd", scale: 9}, half1: {name: "Half", scale: 1.5}}});
+  assert.equal(SR.scaleOf(SR.ownName("fine1")), 3);
+  assert.equal(SR.scaleOf(SR.ownName("plain1")), 1);
+  assert.equal(SR.scaleOf(SR.ownName("odd1")), 1, "out of range falls back to the plain size");
+  assert.equal(SR.scaleOf(SR.ownName("half1")), 1);
+  assert.equal(SR.scaleOf("townsman-1888"), 1, "the test figures stay at the plain size");
+  SR.learn("x", null);
+  assert.equal(SR.scaleOf(SR.ownName("fine1")), 1, "a new manifest forgets the old scales");
+});

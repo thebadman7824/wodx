@@ -36,6 +36,7 @@ export function registerSpriteSettings() {
 const autoDrawOn = () => { try { return game.settings.get(MOD, "spriteAutoDraw") !== false; } catch (e) { return true; } };
 const lifeOn = () => { try { return game.settings.get(MOD, "spriteLife") !== false; } catch (e) { return true; } };
 
+/* Sheets at the 96 by 112 size are pixel art and stay crisp; a sheet drawn finer (SR.scaleOf) is shown smoothed. */
 const crisp = tex => { const b = tex?.baseTexture ?? tex?.source; if ( b ) b.scaleMode = globalThis.PIXI?.SCALE_MODES?.NEAREST ?? "nearest"; return tex; };
 
 /* A power's effect sheet is kept like a move of the figure named FX. */
@@ -46,7 +47,7 @@ function base(name, act = null) {
   if ( bases.has(id) ) return bases.get(id);
   bases.set(id, null);
   const load = foundry.canvas?.loadTexture ?? globalThis.loadTexture;
-  Promise.resolve(load(name === FX ? SR.fxPath(act) : act ? SR.actPath(name, act) : SR.sheetPath(name))).then(t => bases.set(id, crisp(t)), e => console.warn(`${MOD} | sprite sheet ${id}`, e));
+  Promise.resolve(load(name === FX ? SR.fxPath(act) : act ? SR.actPath(name, act) : SR.sheetPath(name))).then(t => bases.set(id, name !== FX && SR.scaleOf(name) > 1 ? t : crisp(t)), e => console.warn(`${MOD} | sprite sheet ${id}`, e));
   return null;
 }
 
@@ -55,7 +56,7 @@ function frame(name, f, act = null) {
   if ( !b ) return null;
   const key = `${name}:${act ?? ""}:${f.row}:${f.col}`;
   if ( !frames.has(key) ) {
-    const r = SR.rectOf(f);
+    const r = SR.rectOf(f, name === FX ? 1 : SR.scaleOf(name));
     frames.set(key, new PIXI.Texture(b.baseTexture ?? b.source ?? b, new PIXI.Rectangle(r.x, r.y, r.width, r.height)));
   }
   return frames.get(key);
@@ -115,7 +116,7 @@ function tick() {
     // B6145: a sprite turns by its rows, never by spinning the picture (a move with autoRotate turns the token itself)
     upright(token);
     if ( tex && token.mesh.texture !== tex ) token.mesh.texture = tex;
-    else if ( !tex ) crisp(token.mesh.texture);
+    else if ( !tex && SR.scaleOf(name) === 1 ) crisp(token.mesh.texture);
     try { applyLooks(token, now); } catch (e) { console.warn(`${MOD} | line look`, e); }
   }
   for ( const id of states.keys() ) if ( !seen.has(id) ) { states.delete(id); acts.delete(id); const g = glows.get(id); if ( g ) { if ( !g.destroyed ) g.destroy(); glows.delete(id); } const c = covers.get(id); if ( c ) { if ( !c.destroyed ) c.destroy(); covers.delete(id); } }
