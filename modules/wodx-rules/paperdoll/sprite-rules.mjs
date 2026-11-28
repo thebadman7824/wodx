@@ -69,8 +69,15 @@ export function frameOf(st, grid, stand = false) {
   return {row, col: Math.floor(st.dist / grid * FRAMES) % FRAMES};
 }
 
-/** The pixel box of a frame on its sheet. */
-export const rectOf = ({row, col}) => ({x: col * FRAME_W, y: row * FRAME_H, width: FRAME_W, height: FRAME_H});
+/**
+ * How many times the 96 by 112 frame a sprite's sheets are drawn at: a sheet drawn finer keeps the same grid of frames,
+ * each frame k times the size, so the figure stands the same size on the map with k times the detail (Ben, 28 Nov 2026:
+ * the ink figures at full resolution). Absent means 1; a manifest entry gives "scale": 2, 3 or 4.
+ */
+export const SCALE = {};
+export const scaleOf = name => SCALE[name] ?? 1;
+/** The pixel box of a frame on its sheet, for a sheet drawn k times finer. */
+export const rectOf = ({row, col}, k = 1) => ({x: col * FRAME_W * k, y: row * FRAME_H * k, width: FRAME_W * k, height: FRAME_H * k});
 
 /**
  * Attacks (B2580). Each sprite has an attack sheet per move it knows: six frames across, the four facings down, the
@@ -273,7 +280,7 @@ export function formShown(name) {
   return Object.entries(FORMS_OF[h] ?? {}).find(([, n]) => n === name)?.[0] ?? null;
 }
 export function learn(folder, manifest) {
-  for ( const k of Object.keys(OWN) ) { delete OWN[k]; delete SHEETS[k]; delete ACTS[k]; delete GAIT[k]; delete SQUARES[k]; delete STAND[k]; delete FORMS_OF[k]; delete SEEMING[k]; delete OF[k]; }
+  for ( const k of Object.keys(OWN) ) { delete OWN[k]; delete SHEETS[k]; delete ACTS[k]; delete GAIT[k]; delete SQUARES[k]; delete SCALE[k]; delete STAND[k]; delete FORMS_OF[k]; delete SEEMING[k]; delete OF[k]; }
   let n = 0;
   for ( const [id, e] of Object.entries(manifest?.sprites ?? {}) ) {
     if ( !/^[A-Za-z0-9]+$/.test(id) ) continue;
@@ -284,6 +291,7 @@ export function learn(folder, manifest) {
     GAIT[name] = (Array.isArray(e?.gaits) ? e.gaits : []).filter(g => GAITS.includes(g) || g === CARRY);
     if ( e?.stand === true ) STAND[name] = true;
     const sq = Number(e?.squares); if ( Number.isInteger(sq) && sq > 1 && sq <= 8 ) SQUARES[name] = sq;
+    const sc = Number(e?.scale); if ( Number.isInteger(sc) && sc > 1 && sc <= 4 ) SCALE[name] = sc;
     // a Garou's other forms and a changeling's mortal seeming are sprites of their own (B5813, B5819)
     if ( e?.forms && typeof e.forms === "object" ) FORMS_OF[name] = Object.fromEntries(Object.entries(e.forms).filter(([f, i]) => LR.FORMS.includes(f) && /^[A-Za-z0-9]+$/.test(i)).map(([f, i]) => [f, ownName(i)]));
     if ( /^[A-Za-z0-9]+$/.test(e?.seeming ?? "") ) SEEMING[name] = ownName(e.seeming);
